@@ -29,14 +29,6 @@ const player = new Player(client, {
     }
 });
 
-/*
-FFMPEG_OPTIONS: {
-        before_options:
-            '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-        options: '-vn'
-    },
-*/
-
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
@@ -74,7 +66,7 @@ client.on('interactionCreate', async (interaction) => {
 
     try {
         await interaction.deferReply();
-        await command.run({ client, interaction, player });
+        await command.run({ interaction, player });
         console.log(
             `Command '/${interaction.commandName}' was executed successfully.`
         );
