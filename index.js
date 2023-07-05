@@ -38,7 +38,13 @@ client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     // This method will load all the extractors from the @discord-player/extractor package
-    player.extractors.loadDefault();
+    client.player.extractors.loadDefault();
+
+    // Set Discord status
+    client.user.setActivity('/help', {
+        type: Discord.ActivityType.Watching,
+        name: '/play'
+    });
 });
 
 client.once('reconnecting', () => {
