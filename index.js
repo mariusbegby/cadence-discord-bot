@@ -69,11 +69,12 @@ client.on('interactionCreate', async (interaction) => {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    console.log(`Command '/${interaction.commandName}' was used.`);
-
     try {
         await interaction.deferReply();
         await command.run({ client, interaction });
+        console.log(
+            `Command '/${interaction.commandName}' was executed successfully.`
+        );
     } catch (error) {
         console.error(error);
         console.log(
@@ -84,10 +85,6 @@ client.on('interactionCreate', async (interaction) => {
             content: 'There was an error while executing this command!',
             ephemeral: true
         });
-    } finally {
-        console.log(
-            `Command '/${interaction.commandName}' was executed successfully.`
-        );
     }
 });
 
