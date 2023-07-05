@@ -50,7 +50,7 @@ module.exports = {
         let queueString = '';
 
         if (queue.tracks.data.length === 0) {
-            queueString = 'There are no tracks in the queue';
+            queueString = 'There are no tracks in the queue.';
         } else {
             queueString = queue.tracks.data
                 .slice(page * 10, page * 10 + 10)
