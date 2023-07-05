@@ -66,7 +66,7 @@ client.on('interactionCreate', async (interaction) => {
 
     try {
         await interaction.deferReply();
-        await command.run({ interaction, player });
+        await command.run({ interaction });
         console.log(
             `Command '/${interaction.commandName}' was executed successfully.`
         );
@@ -76,10 +76,9 @@ client.on('interactionCreate', async (interaction) => {
             `Command '/${interaction.commandName}' failed unexpectedly.`
         );
 
-        await interaction.editReply({
-            content: 'There was an error while executing this command!',
-            ephemeral: true
-        });
+        await interaction.editReply(
+            'There was an error while executing this command!'
+        );
     }
 });
 

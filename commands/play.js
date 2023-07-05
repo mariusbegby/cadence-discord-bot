@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
@@ -10,14 +12,16 @@ module.exports = {
                 .setDescription('Search terms or URL.')
                 .setRequired(true)
         ),
-    run: async ({ interaction, player }) => {
+    run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return interaction.editReply(
                 'You need to be in a voice channel to use this command.'
             );
         }
 
-        let query = interaction.options.getString('query');
+        const player = useMainPlayer();
+        const queue = useQueue(interaction.guild.id);
+        const query = interaction.options.getString('query');
 
         try {
             const { track } = await player.play(
@@ -45,6 +49,18 @@ module.exports = {
                         )
                         .setThumbnail(track.thumbnail)
                 ]
+                /* can add this to /queue command to skip tracks?
+                ,
+                components: [
+                    new ActionRowBuilder().addComponents([
+                        new ButtonBuilder()
+                            .setCustomId('skip')
+                            .setLabel('Skip track')
+                            .setStyle('Secondary')
+                            .setEmoji('⏭️')
+                    ])
+                ]
+                */
             });
         } catch (e) {
             console.log(`Error occured while trying to play track:\n\n${e}`);
