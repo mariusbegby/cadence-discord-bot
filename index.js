@@ -22,23 +22,26 @@ for (const file of commandFiles) {
 }
 
 // Create a new Player, and attach it to the bot client.
-client.player = new Player(client, {
+const player = new Player(client, {
     ytdlOptions: {
         quality: 'highestaudio',
         highWaterMark: 1 << 25
-    },
-    FFMPEG_OPTIONS: {
+    }
+});
+
+/*
+FFMPEG_OPTIONS: {
         before_options:
             '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
         options: '-vn'
-    }
-});
+    },
+*/
 
 client.once('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     // This method will load all the extractors from the @discord-player/extractor package
-    client.player.extractors.loadDefault();
+    player.extractors.loadDefault();
 
     // Set Discord status
     client.user.setActivity('/help', {
@@ -71,7 +74,7 @@ client.on('interactionCreate', async (interaction) => {
 
     try {
         await interaction.deferReply();
-        await command.run({ client, interaction });
+        await command.run({ client, interaction, player });
         console.log(
             `Command '/${interaction.commandName}' was executed successfully.`
         );
