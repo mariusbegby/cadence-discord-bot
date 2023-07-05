@@ -49,18 +49,6 @@ module.exports = {
                         )
                         .setThumbnail(track.thumbnail)
                 ]
-                /* can add this to /queue command to skip tracks?
-                ,
-                components: [
-                    new ActionRowBuilder().addComponents([
-                        new ButtonBuilder()
-                            .setCustomId('skip')
-                            .setLabel('Skip track')
-                            .setStyle('Secondary')
-                            .setEmoji('⏭️')
-                    ])
-                ]
-                */
             });
         } catch (e) {
             console.log(`Error occured while trying to play track:\n\n${e}`);
