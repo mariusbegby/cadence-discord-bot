@@ -10,14 +10,14 @@ module.exports = {
                 .setDescription('Search terms or URL.')
                 .setRequired(true)
         ),
-    run: async ({ client, interaction, player }) => {
+    run: async ({ interaction, player }) => {
         if (!interaction.member.voice.channel) {
             return interaction.editReply(
                 'You need to be in a voice channel to use this command.'
             );
         }
 
-        let query = interaction.options.getString('track');
+        let query = interaction.options.getString('query');
 
         try {
             const { track } = await player.play(
