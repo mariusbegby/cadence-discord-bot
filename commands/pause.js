@@ -13,7 +13,6 @@ module.exports = {
             );
         }
 
-        const player = useMainPlayer();
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
@@ -22,6 +21,7 @@ module.exports = {
             );
         }
 
+        // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
         if (queue.node.isPaused()) {
             await interaction.editReply({
