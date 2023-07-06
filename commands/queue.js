@@ -12,17 +12,6 @@ module.exports = {
                 .setDescription('Page number of the queue')
                 .setMinValue(1)
         ),
-    /* can add this to /queue command to skip tracks?
-        ,
-        components: [
-            new ActionRowBuilder().addComponents([
-                new ButtonBuilder()
-                    .setCustomId('skip')
-                    .setLabel('Skip track')
-                    .setStyle('Secondary')
-            ])
-        ]
-    */
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return interaction.editReply(
