@@ -5,7 +5,7 @@ const { EmbedBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('volume')
-        .setDescription('Set the playback volume for tracks.')
+        .setDescription('Show or set the playback volume for tracks.')
         .addNumberOption((option) =>
             option
                 .setName('percentage')
