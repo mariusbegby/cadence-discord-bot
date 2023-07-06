@@ -80,7 +80,7 @@ client.on('interactionCreate', async (interaction) => {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `There was an error while executing this command!`
+                        `**Error**\nThere was an error while executing this command!\n\nIf this issue persists, please submit an issue in the support server: https://discord.gg/t6Bm8wPpXB`
                     )
                     .setColor('#c70057')
             ]
