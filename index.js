@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const Discord = require('discord.js');
 const { Player } = require('discord-player');
-const { token } = require('./config.json');
+const { token, embedColors } = require('./config.json');
 
 // Setup required permissions for the bot to work
 const client = new Discord.Client({
@@ -19,6 +19,14 @@ const commandFiles = fs
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
+}
+
+const systemCommandFiles = fs
+    .readdirSync('./system-commands')
+    .filter((file) => file.endsWith('.js'));
+for (const file of systemCommandFiles) {
+    const systemCommand = require(`./system-commands/${file}`);
+    client.commands.set(systemCommand.data.name, systemCommand);
 }
 
 // Create a new Player, and attach it to the bot client.
@@ -83,7 +91,7 @@ client.on('interactionCreate', async (interaction) => {
 
     try {
         await interaction.deferReply();
-        await command.run({ interaction });
+        await command.run({ interaction, client });
         console.log(
             `Command '/${interaction.commandName}' was executed successfully.`
         );
@@ -99,7 +107,7 @@ client.on('interactionCreate', async (interaction) => {
                     .setDescription(
                         `**Error**\nThere was an error while executing this command!\n\nIf this issue persists, please submit an issue in the support server: https://discord.gg/t6Bm8wPpXB`
                     )
-                    .setColor('#c70057')
+                    .setColor(embedColors.colorError)
             ]
         });
     }
