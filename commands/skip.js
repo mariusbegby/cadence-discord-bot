@@ -20,7 +20,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `You need to be in a voice channel to use this command.`
+                            `**Error**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor('#c70057')
                 ]
@@ -33,7 +33,7 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`There are no tracks in the queue.`)
+                        .setDescription(`**Error**\nThere are no tracks in the queue.`)
                         .setColor('#c70057')
                 ]
             });
@@ -47,7 +47,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `There are \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track number \`${skipToTrack}\`.`
+                                `**Error**\nThere are \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track number \`${skipToTrack}\`.`
                             )
                             .setColor('#c70057')
                     ]

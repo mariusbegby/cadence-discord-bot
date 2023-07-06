@@ -18,7 +18,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `You need to be in a voice channel to use this command.`
+                            `**Error**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor('#c70057')
                 ]
