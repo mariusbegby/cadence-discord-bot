@@ -42,7 +42,9 @@ client.once('ready', async () => {
     });
 
     // Show how many guilds the bot is added to
-    console.log(`Info: ${client.user.tag} is currently added in ${client.guilds.cache.size} guilds!`);
+    console.log(
+        `Info: ${client.user.tag} is currently added in ${client.guilds.cache.size} guilds!`
+    );
 });
 
 client.once('reconnecting', () => {
@@ -58,6 +60,18 @@ client.on('warn', (info) => {
 });
 
 client.on('error', console.error);
+
+client.on('guildCreate', (guild) => {
+    console.log(
+        `Info: ${client.user.tag} has been added to server '${guild.name}'!`
+    );
+});
+
+client.on('guildDelete', (guild) => {
+    console.log(
+        `Info: ${client.user.tag} was removed from server '${guild.name}'!`
+    );
+});
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) {
