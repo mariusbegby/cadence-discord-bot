@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,7 +23,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -34,7 +35,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(`**Error**\nThere are no tracks in the queue.`)
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -49,7 +50,7 @@ module.exports = {
                             .setDescription(
                                 `**Error**\nThere are \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track number \`${skipToTrack}\`.`
                             )
-                            .setColor('#c70057')
+                            .setColor(embedColors.colorError)
                     ]
                 });
             } else {
@@ -67,7 +68,7 @@ module.exports = {
                                 `**Skipped**\n**[${skippedTrack.title}](${skippedTrack.url})**.`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
-                            .setColor('#4c73df')
+                            .setColor(embedColors.colorSuccess)
                     ]
                 });
             }
@@ -86,7 +87,7 @@ module.exports = {
                             `**Skipped**\n**[${skippedTrack.title}](${skippedTrack.url})**.`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorSuccess)
                 ]
             });
         }

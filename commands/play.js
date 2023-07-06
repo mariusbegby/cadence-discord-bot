@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,7 +21,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -43,6 +44,8 @@ module.exports = {
                 }
             );
 
+            // TODO: Add a check to see if the queue is empty, and if so, add a message to the embed saying that the track is now playing.
+            // TODO: YouTube thumbnail not shown? Different url than track.thumbnail?
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -54,7 +57,7 @@ module.exports = {
                             `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorSuccess)
                 ]
             });
         } catch (e) {

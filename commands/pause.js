@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -26,7 +27,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(`**Error**\nThere are no tracks in the queue.`)
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -45,7 +46,7 @@ module.exports = {
                             `**Paused**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorSuccess)
                 ]
             });
         } else {
@@ -60,7 +61,7 @@ module.exports = {
                             `**Resumed**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorSuccess)
                 ]
             });
         }

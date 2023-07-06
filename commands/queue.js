@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,7 +21,7 @@ module.exports = {
                         .setDescription(
                             `You need to be in a voice channel to use this command.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -38,7 +39,7 @@ module.exports = {
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(`**Queue**\n${queueString}`)
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorInfo)
                 ]
             });
         }
@@ -53,7 +54,7 @@ module.exports = {
                         .setDescription(
                             `Invalid page number. There are only a total of \`${totalPages}\` pages of tracks.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -85,7 +86,7 @@ module.exports = {
                         .setFooter({
                             text: `Page ${page + 1} of ${totalPages}`
                         })
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorInfo)
                 ]
             });
         } else {
@@ -114,7 +115,7 @@ module.exports = {
                         .setFooter({
                             text: `Page ${page + 1} of ${totalPages}`
                         })
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorInfo)
                 ]
             });
         }

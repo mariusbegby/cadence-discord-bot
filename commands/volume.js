@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -35,7 +36,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nThere are no tracks playing or in the queue.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         }
@@ -49,7 +50,7 @@ module.exports = {
                         .setDescription(
                             `**Volume**\nThe playback volume is currently set at \`${queue.node.volume}%\`.`
                         )
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorInfo)
                 ]
             });
         } else if (volume > 100 || volume < 1) {
@@ -59,7 +60,7 @@ module.exports = {
                         .setDescription(
                             `**Error**\nYou need to pick a number between \`1\` and \`100\`.`
                         )
-                        .setColor('#c70057')
+                        .setColor(embedColors.colorError)
                 ]
             });
         } else {
@@ -75,7 +76,7 @@ module.exports = {
                         .setDescription(
                             `**Volume changed**\nPlayback volume has been set to \`${volume}%\`.`
                         )
-                        .setColor('#4c73df')
+                        .setColor(embedColors.colorSuccess)
                 ]
             });
         }

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { embedColors } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,7 +21,7 @@ module.exports = {
                         `\`/queue\` - Show the list of tracks added to the queue.\n` +
                         `\`/volume\` \`[percentage]\` - Show or set the playback volume for tracks.\n`
                     )
-                    .setColor('#4c73df')
+                    .setColor(embedColors.colorInfo)
             ]
         });
     }
