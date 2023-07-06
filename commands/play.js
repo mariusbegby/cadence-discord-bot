@@ -14,9 +14,15 @@ module.exports = {
         ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply(
-                'You need to be in a voice channel to use this command.'
-            );
+            return interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `You need to be in a voice channel to use this command.`
+                        )
+                        .setColor('#c70057')
+                ]
+            });
         }
 
         const player = useMainPlayer();
@@ -48,6 +54,7 @@ module.exports = {
                             `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
+                        .setColor('#4c73df')
                 ]
             });
         } catch (e) {

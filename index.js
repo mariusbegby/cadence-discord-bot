@@ -76,9 +76,15 @@ client.on('interactionCreate', async (interaction) => {
             `Command '/${interaction.commandName}' failed unexpectedly.`
         );
 
-        await interaction.editReply(
-            'There was an error while executing this command!'
-        );
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `There was an error while executing this command!`
+                    )
+                    .setColor('#c70057')
+            ]
+        });
     }
 });
 

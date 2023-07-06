@@ -8,17 +8,27 @@ module.exports = {
         .setDescription('Pause the currently playing track.'),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply(
-                'You need to be in a voice channel to use this command.'
-            );
+            return interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `You need to be in a voice channel to use this command.`
+                        )
+                        .setColor('#c70057')
+                ]
+            });
         }
 
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            return await interaction.editReply(
-                'There are no tracks in the queue.'
-            );
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(`There are no tracks in the queue.`)
+                        .setColor('#c70057')
+                ]
+            });
         }
 
         // change paused state to opposite of current state
@@ -35,6 +45,7 @@ module.exports = {
                             `**Paused**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
+                        .setColor('#4c73df')
                 ]
             });
         } else {
@@ -49,6 +60,7 @@ module.exports = {
                             `**Resumed**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
+                        .setColor('#4c73df')
                 ]
             });
         }
