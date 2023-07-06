@@ -47,7 +47,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `There are ${queue.tracks.data.length} tracks in the queue. You cannot skip to track number ${skipToTrack}.`
+                                `There are \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track number \`${skipToTrack}\`.`
                             )
                             .setColor('#c70057')
                     ]

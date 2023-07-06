@@ -51,7 +51,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `Invalid page number. There are only a total of ${totalPages} pages of tracks.`
+                            `Invalid page number. There are only a total of \`${totalPages}\` pages of tracks.`
                         )
                         .setColor('#c70057')
                 ]
