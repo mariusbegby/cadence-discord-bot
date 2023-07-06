@@ -40,6 +40,9 @@ client.once('ready', async () => {
         type: Discord.ActivityType.Watching,
         name: '/play'
     });
+
+    // Show how many guilds the bot is added to
+    console.log(`Info: ${client.user.tag} is currently added in ${client.guilds.cache.size} guilds!`);
 });
 
 client.once('reconnecting', () => {
