@@ -93,12 +93,12 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.deferReply();
         await command.run({ interaction, client });
         console.log(
-            `Command '/${interaction.commandName}' was executed successfully.`
+            `${new Date().toISOString().substring(11, 19)}: ${interaction.guild.name} (#${interaction.guild.memberCount})> Command '/${interaction.commandName}' was executed successfully.`
         );
     } catch (error) {
         console.error(error);
         console.log(
-            `Command '/${interaction.commandName}' failed unexpectedly.`
+            `${new Date().toISOString().substring(11, 19)}: ${interaction.guild.name} (#${interaction.guild.memberCount})> Command '/${interaction.commandName}' failed unexpectedly.`
         );
 
         await interaction.editReply({
