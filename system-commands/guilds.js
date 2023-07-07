@@ -27,7 +27,7 @@ module.exports = {
         }
 
         let guildsList = client.guilds.cache
-            .map((guild) => `\`${guild.name}\``)
+            .map((guild) => `\`${guild.name} (#${guild.memberCount})\``)
             .join(', ');
 
         return await interaction.editReply({
