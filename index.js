@@ -38,7 +38,11 @@ const player = new Player(client, {
 });
 
 client.once('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    console.log(
+        `${new Date().toISOString().substring(11, 19)}: Info: Logged in as ${
+            client.user.tag
+        }!`
+    );
 
     // This method will load all the extractors from the @discord-player/extractor package
     player.extractors.loadDefault();
@@ -51,7 +55,9 @@ client.once('ready', async () => {
 
     // Show how many guilds the bot is added to
     console.log(
-        `Info: ${client.user.tag} is currently added in ${client.guilds.cache.size} guilds!`
+        `${new Date().toISOString().substring(11, 19)}: Info: ${
+            client.user.tag
+        } is currently added in ${client.guilds.cache.size} guilds!`
     );
 });
 
@@ -71,13 +77,17 @@ client.on('error', console.error);
 
 client.on('guildCreate', (guild) => {
     console.log(
-        `Info: ${client.user.tag} has been added to server '${guild.name}'!`
+        `${new Date().toISOString().substring(11, 19)}: Info: ${
+            client.user.tag
+        } has been added to server '${guild.name} (#${guild.memberCount})'!`
     );
 });
 
 client.on('guildDelete', (guild) => {
     console.log(
-        `Info: ${client.user.tag} was removed from server '${guild.name}'!`
+        `${new Date().toISOString().substring(11, 19)}: Info: ${
+            client.user.tag
+        } was removed from server '${guild.name} (#${guild.memberCount})'!`
     );
 });
 
@@ -93,12 +103,20 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.deferReply();
         await command.run({ interaction, client });
         console.log(
-            `${new Date().toISOString().substring(11, 19)}: ${interaction.guild.name} (#${interaction.guild.memberCount})> Command '/${interaction.commandName}' was executed successfully.`
+            `${new Date().toISOString().substring(11, 19)}: ${
+                interaction.guild.name
+            } (#${interaction.guild.memberCount})> Command '/${
+                interaction.commandName
+            }' was executed successfully.`
         );
     } catch (error) {
         console.error(error);
         console.log(
-            `${new Date().toISOString().substring(11, 19)}: ${interaction.guild.name} (#${interaction.guild.memberCount})> Command '/${interaction.commandName}' failed unexpectedly.`
+            `${new Date().toISOString().substring(11, 19)}: ${
+                interaction.guild.name
+            } (#${interaction.guild.memberCount})> Command '/${
+                interaction.commandName
+            }' failed unexpectedly.`
         );
 
         await interaction.editReply({
