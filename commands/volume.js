@@ -20,9 +20,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nYou need to be in a voice channel to use this command.`
+                            `**Failed**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -34,9 +34,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nThere are no tracks playing or in the queue.`
+                            `**Failed**\nThere are no tracks playing or in the queue.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }

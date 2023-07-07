@@ -13,9 +13,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nYou need to be in a voice channel to use this command.`
+                            `**Failed**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -26,14 +26,15 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`**Error**\nThere are no tracks in the queue.`)
-                        .setColor(embedColors.colorError)
+                        .setDescription(`**Failed**\nThere are no tracks in the queue.`)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
         // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
+
         if (queue.node.isPaused()) {
             await interaction.editReply({
                 embeds: [

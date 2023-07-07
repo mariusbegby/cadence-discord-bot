@@ -17,9 +17,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nYou need to be in a voice channel to use this command.`
+                            `**Failed**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -31,9 +31,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nNo tracks are currently playing, and the queue is empty. Use the \`/play\` command to play some music!`
+                            `**Failed**\nNo tracks are currently playing, and the queue is empty. Use the \`/play\` command to play some music!`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }

@@ -19,9 +19,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `You need to be in a voice channel to use this command.`
+                            `**Failed**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -52,7 +52,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `Invalid page number. There are only a total of \`${totalPages}\` pages of tracks.`
+                            `**Error**\nInvalid page number. There are only a total of \`${totalPages}\` pages of tracks.`
                         )
                         .setColor(embedColors.colorError)
                 ]

@@ -19,9 +19,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nYou need to be in a voice channel to use this command.`
+                            `**Failed**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -44,41 +44,35 @@ module.exports = {
             });
         }
 
-        try {
-            const { track } = await player.play(
-                interaction.member.voice.channel,
-                query,
-                {
-                    requestedBy: interaction.user,
-                    nodeOptions: {
-                        leaveOnEmptyCooldown: 60000,
-                        leaveOnEndCooldown: 60000,
-                        leaveOnStopCooldown: 60000
-                    }
+        const { track } = await player.play(
+            interaction.member.voice.channel,
+            query,
+            {
+                requestedBy: interaction.user,
+                nodeOptions: {
+                    leaveOnEmptyCooldown: 60000,
+                    leaveOnEndCooldown: 60000,
+                    leaveOnStopCooldown: 60000
                 }
-            );
+            }
+        );
 
-            // TODO: Add a check to see if the queue is empty, and if so, add a message to the embed saying that the track is now playing.
-            // TODO: YouTube thumbnail not shown? Different url than track.thumbnail?
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
-                        })
-                        .setDescription(
-                            `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
-                        )
-                        .setThumbnail(track.thumbnail)
-                        .setColor(embedColors.colorSuccess)
-                ]
-            });
-        } catch (e) {
-            console.log(
-                `Error: Error occured while trying to play track:\n\n${e}`
-            );
-            throw e;
-        }
+        // TODO: Add a check to see if the queue is empty, and if so, add a message to the embed saying that the track is now playing.
+        // TODO: YouTube thumbnail not shown? Different url than track.thumbnail?
+        throw new Error('Not implemented.');
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setAuthor({
+                        name: interaction.user.username,
+                        iconURL: interaction.user.avatarURL()
+                    })
+                    .setDescription(
+                        `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
+                    )
+                    .setThumbnail(track.thumbnail)
+                    .setColor(embedColors.colorSuccess)
+            ]
+        });
     }
 };
