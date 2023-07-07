@@ -25,6 +25,7 @@ module.exports = {
                 ]
             });
         }
+
         let guildsList = client.guilds.cache
             .map((guild) => `\`${guild.name}\``)
             .join(', ');
