@@ -101,14 +101,17 @@ client.on('interactionCreate', async (interaction) => {
     if (!command) return;
 
     try {
+        const inputTime = new Date();
         await interaction.deferReply();
         await command.run({ interaction, client });
+        const outputTime = new Date();
+        const executionTime = outputTime - inputTime;
         console.log(
             `${new Date().toISOString().substring(11, 19)}: ${
                 interaction.guild.name
-            } (#${interaction.guild.memberCount})> Command '/${
+            } (#${interaction.guild.memberCount})> Ran command '/${
                 interaction.commandName
-            }' was executed successfully.`
+            }' successfully in ${executionTime} ms.`
         );
     } catch (error) {
         // log error to console with full object depth
