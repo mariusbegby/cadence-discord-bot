@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const Discord = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { Player } = require('discord-player');
 const { token, embedColors } = require('./config.json');
 
@@ -110,7 +111,8 @@ client.on('interactionCreate', async (interaction) => {
             }' was executed successfully.`
         );
     } catch (error) {
-        console.error(error);
+        // log error to console with full object depth
+        console.dir(error, { depth: null });
         console.log(
             `${new Date().toISOString().substring(11, 19)}: ${
                 interaction.guild.name
@@ -118,12 +120,13 @@ client.on('interactionCreate', async (interaction) => {
                 interaction.commandName
             }' failed unexpectedly.`
         );
+        console.log(`Interaction input:\n${interaction}`);
 
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Error**\nThere was an error while executing this command!\n\nIf this issue persists, please submit an issue in the support server: https://discord.gg/t6Bm8wPpXB`
+                        `**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._`
                     )
                     .setColor(embedColors.colorError)
             ]
