@@ -78,7 +78,7 @@ client.on('error', console.error);
 
 client.on('guildCreate', (guild) => {
     console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: ${
+        `${new Date().toISOString().substring(11, 19)}: Info: ➡️ ${
             client.user.tag
         } has been added to server '${guild.name} (#${guild.memberCount})'!`
     );
@@ -86,7 +86,7 @@ client.on('guildCreate', (guild) => {
 
 client.on('guildDelete', (guild) => {
     console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: ${
+        `${new Date().toISOString().substring(11, 19)}: Info: ⬅️ ${
             client.user.tag
         } was removed from server '${guild.name} (#${guild.memberCount})'!`
     );
@@ -107,17 +107,17 @@ client.on('interactionCreate', async (interaction) => {
         const outputTime = new Date();
         const executionTime = outputTime - inputTime;
         console.log(
-            `${new Date().toISOString().substring(11, 19)}: ${
+            `${new Date().toISOString().substring(11, 19)}: Info: ${
                 interaction.guild.name
-            } (#${interaction.guild.memberCount})> Ran command '/${
+            } (#${interaction.guild.memberCount})> Command '/${
                 interaction.commandName
-            }' successfully in ${executionTime} ms.`
+            }' executed in ${executionTime} ms.`
         );
     } catch (error) {
         // log error to console with full object depth
         console.dir(error, { depth: null });
         console.log(
-            `${new Date().toISOString().substring(11, 19)}: ${
+            `${new Date().toISOString().substring(11, 19)}: Error: 🚨 ${
                 interaction.guild.name
             } (#${interaction.guild.memberCount})> Command '/${
                 interaction.commandName
