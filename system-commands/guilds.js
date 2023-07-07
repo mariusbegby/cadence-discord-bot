@@ -25,7 +25,9 @@ module.exports = {
                 ]
             });
         }
-        let guildsList = client.guilds.cache.map((guild) => guild.name).join(', ');
+        let guildsList = client.guilds.cache
+            .map((guild) => `\`${guild.name}\``)
+            .join(', ');
 
         return await interaction.editReply({
             embeds: [
