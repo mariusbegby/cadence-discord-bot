@@ -27,13 +27,22 @@ module.exports = {
         }
 
         let guildsList = client.guilds.cache
+            .map((guild) => {
+                return {
+                    name: guild.name,
+                    memberCount: guild.memberCount
+                }
+            })
+            .sort((a, b) => b.memberCount - a.memberCount)
             .map((guild) => `\`${guild.name} (#${guild.memberCount})\``)
             .join(', ');
 
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**Guilds**\n${guildsList}`)
+                    .setDescription(
+                        `**Guilds (${client.guilds.cache.size} total)**\n${guildsList}`
+                    )
                     .setColor(embedColors.colorInfo)
             ]
         });
