@@ -38,6 +38,20 @@ const player = new Player(client, {
     }
 });
 
+player.events.on('error', (queue, error) => {
+    // Emitted when the player queue encounters error
+    console.log(`General player error event: ${error.message}\n`);
+    console.log(error);
+    console.log(`\nQueue object: ${queue}`);
+});
+
+player.events.on('playerError', (queue, error) => {
+    // Emitted when the audio player errors while streaming audio track
+    console.log(`Player error event: ${error.message}\n`);
+    console.log(error);
+    console.log(`\nQueue object: ${queue}`);
+});
+
 client.once('ready', async () => {
     console.log(
         `${new Date().toISOString().substring(11, 19)}: Info: Logged in as ${
