@@ -59,7 +59,6 @@ module.exports = {
 
         // TODO: Add a check to see if the queue is empty, and if so, add a message to the embed saying that the track is now playing.
         // TODO: YouTube thumbnail not shown? Different url than track.thumbnail?
-        throw new Error('Not implemented.');
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
