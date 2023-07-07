@@ -30,6 +30,20 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
         const query = interaction.options.getString('query');
 
+        const results = await player.search(query);
+
+        if (!results || results.tracks.length === 0) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**No track found**\nNo results found for \`${query}\`.`
+                        )
+                        .setColor(embedColors.colorWarning)
+                ]
+            });
+        }
+
         try {
             const { track } = await player.play(
                 interaction.member.voice.channel,
@@ -61,7 +75,9 @@ module.exports = {
                 ]
             });
         } catch (e) {
-            console.log(`Error occured while trying to play track:\n\n${e}`);
+            console.log(
+                `Error: Error occured while trying to play track:\n\n${e}`
+            );
             throw e;
         }
     }
