@@ -89,7 +89,7 @@ client.on('error', console.error);
 
 client.on('guildCreate', (guild) => {
     console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: ➡️ ${
+        `${new Date().toISOString().substring(11, 19)}: Info: 🟢 ${
             client.user.tag
         } has been added to server '${guild.name} (#${guild.memberCount})'!`
     );
@@ -97,7 +97,7 @@ client.on('guildCreate', (guild) => {
 
 client.on('guildDelete', (guild) => {
     console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: ⬅️ ${
+        `${new Date().toISOString().substring(11, 19)}: Info: 🔴 ${
             client.user.tag
         } was removed from server '${guild.name} (#${guild.memberCount})'!`
     );
