@@ -1,4 +1,13 @@
 {
-    "clientId": "Your bot Application ID here",
-    "token": "Your bot token here"
+    "clientId": "Your bot Application ID here.",
+    "token": "Your bot auth token here.",
+    "systemServerGuildId": "Your Discord Server ID for system commands here.",
+    "botOwnerClientId": "Your own Discord user ID to access system commands here.",
+    "embedColors": {
+        "colorSuccess": "#23A55A",
+        "colorWarning": "#F0B232",
+        "colorError": "#F23F43",
+        "colorInfo": "#5865F2",
+        "colorNote": "#80848E"
+    }
 }
