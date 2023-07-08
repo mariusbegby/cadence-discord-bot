@@ -118,9 +118,9 @@ client.on('interactionCreate', async (interaction) => {
         console.log(
             `${new Date().toISOString().substring(11, 19)}: Info: ${
                 interaction.guild.name
-            } (#${interaction.guild.memberCount})> Command '/${
-                interaction.commandName
-            }' executed in ${executionTime} ms.`
+            } (#${
+                interaction.guild.memberCount
+            })> Command '${interaction}' executed in ${executionTime} ms.`
         );
     } catch (error) {
         // log error to console with full object depth
@@ -128,9 +128,9 @@ client.on('interactionCreate', async (interaction) => {
         console.log(
             `${new Date().toISOString().substring(11, 19)}: Error: 🚨 ${
                 interaction.guild.name
-            } (#${interaction.guild.memberCount})> Command '/${
-                interaction.commandName
-            }' failed unexpectedly.`
+            } (#${
+                interaction.guild.memberCount
+            })> Command '${interaction}' failed unexpectedly.`
         );
         console.log(`Interaction input:\n${interaction}`);
 
