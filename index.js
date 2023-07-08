@@ -31,12 +31,7 @@ for (const file of systemCommandFiles) {
 }
 
 // Create a new Player, and attach it to the bot client.
-const player = new Player(client, {
-    ytdlOptions: {
-        quality: 'highestaudio',
-        highWaterMark: 1 << 25
-    }
-});
+const player = new Player(client);
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
