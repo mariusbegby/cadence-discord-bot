@@ -36,15 +36,17 @@ const player = new Player(client);
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
     console.log(`General player error event: ${error.message}\n`);
-    console.log(error);
-    console.log(`\nQueue object: ${queue}`);
+    console.dir(error, { depth: null });
+    console.log(`\nQueue object:`);
+    console.dir(queue, { depth: null });
 });
 
 player.events.on('playerError', (queue, error) => {
     // Emitted when the audio player errors while streaming audio track
     console.log(`Player error event: ${error.message}\n`);
-    console.log(error);
-    console.log(`\nQueue object: ${queue}`);
+    console.dir(error, { depth: null });
+    console.log(`\nQueue object:`);
+    console.dir(queue, { depth: null });
 });
 
 client.once('ready', async () => {
