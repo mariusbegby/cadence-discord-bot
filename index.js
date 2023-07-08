@@ -127,14 +127,14 @@ client.on('interactionCreate', async (interaction) => {
     } catch (error) {
         // log error to console with full object depth
         console.dir(error, { depth: null });
-        console.log(
+        console.error(
             `${new Date().toISOString().substring(11, 19)}: Error: 🚨 ${
                 interaction.guild.name
             } (#${
                 interaction.guild.memberCount
             })> Command '${interaction}' failed unexpectedly.`
         );
-        console.log(`Interaction input:\n${interaction}`);
+        console.error(`Interaction input:\n${interaction}`);
 
         await interaction.editReply({
             embeds: [
