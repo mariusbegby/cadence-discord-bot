@@ -44,7 +44,7 @@ module.exports = {
 
         if (skipToTrack) {
             if (skipToTrack > queue.tracks.data.length) {
-                await interaction.editReply({
+                return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
@@ -57,7 +57,7 @@ module.exports = {
                 const skippedTrack = queue.currentTrack;
                 queue.node.skipTo(skipToTrack - 1);
 
-                await interaction.editReply({
+                return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
@@ -76,7 +76,7 @@ module.exports = {
             const skippedTrack = queue.currentTrack;
             queue.node.skip();
 
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
