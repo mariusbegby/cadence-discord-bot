@@ -15,7 +15,7 @@ module.exports = {
         ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -75,7 +75,7 @@ module.exports = {
         let currentTrack = queue.currentTrack;
 
         if (!currentTrack) {
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
@@ -95,7 +95,7 @@ module.exports = {
                 length: 13
             });
 
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({

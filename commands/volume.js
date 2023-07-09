@@ -16,7 +16,7 @@ module.exports = {
         ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(

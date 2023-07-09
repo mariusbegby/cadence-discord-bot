@@ -13,7 +13,7 @@ module.exports = {
     // todo, allow command to be executed if bot is only member in voice channel
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -41,7 +41,7 @@ module.exports = {
         if (!queue.deleted) {
             queue.delete();
 
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(

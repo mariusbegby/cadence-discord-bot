@@ -19,7 +19,7 @@ module.exports = {
         .setDescription('Toggle various audio filters during playback.'),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -140,7 +140,7 @@ module.exports = {
             // Enable provided filters
             queue.filters.ffmpeg.toggle(confirmation.values);
 
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
@@ -166,7 +166,7 @@ module.exports = {
             });
         } catch (e) {
             console.log(e);
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(

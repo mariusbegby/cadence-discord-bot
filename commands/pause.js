@@ -9,7 +9,7 @@ module.exports = {
         .setDescription('Pause the currently playing track.'),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
