@@ -15,7 +15,7 @@ module.exports = {
         ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
-            return interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -59,7 +59,7 @@ module.exports = {
 
         // TODO: Add a check to see if the queue is empty, and if so, add a message to the embed saying that the track is now playing.
         // TODO: YouTube thumbnail not shown? Different url than track.thumbnail?
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
