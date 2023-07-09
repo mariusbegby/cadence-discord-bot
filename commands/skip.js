@@ -34,7 +34,9 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`**Failed**\nThere are no tracks in the queue.`)
+                        .setDescription(
+                            `**Failed**\nThere are no tracks in the queue.`
+                        )
                         .setColor(embedColors.colorWarning)
                 ]
             });
