@@ -18,4 +18,4 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   release-type: node
                   package-name: release-please-action
-                  command: github-release
+                  command: release-pr
