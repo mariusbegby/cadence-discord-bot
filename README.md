@@ -17,8 +17,8 @@
         <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Support%20Server&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Cadence Discord support server"></a>&nbsp;
     <a href="https://github.com/mariusbegby/cadence-discord-bot/releases">
         <img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=Version&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release"></a>&nbsp;
-        <a href="https://github.com/mariusbegby/cadence-discord-bot/releases">
-        <img src="https://img.shields.io/github/license/mariusbegby/cadence-discord-bot?style=for-the-badge&label=License&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release">
+    <a href="https://github.com/mariusbegby/cadence-discord-bot/blob/main/LICENSE.md">
+        <img src="https://img.shields.io/github/license/mariusbegby/cadence-discord-bot?style=for-the-badge&label=License&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot license">
     </a>
 </p>
 
