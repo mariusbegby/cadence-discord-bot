@@ -31,18 +31,22 @@ module.exports = {
                 return {
                     name: guild.name,
                     memberCount: guild.memberCount
-                }
+                };
             })
             .sort((a, b) => b.memberCount - a.memberCount)
             .map((guild) => `\`${guild.name} (#${guild.memberCount})\``)
             .join(', ');
 
+        let embedDescription = `**Guilds (${client.guilds.cache.size} total)**\n${guildsList}`;
+
+        if (embedDescription.length >= 4000) {
+            embedDescription = `${embedDescription.slice(0, 3996)}...`;
+        }
+
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(
-                        `**Guilds (${client.guilds.cache.size} total)**\n${guildsList}`
-                    )
+                    .setDescription(embedDescription)
                     .setColor(embedColors.colorInfo)
             ]
         });
