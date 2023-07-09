@@ -26,7 +26,21 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`**Failed**\nThere are no tracks in the queue.`)
+                        .setDescription(
+                            `**Failed**\nThere are no tracks in the queue.`
+                        )
+                        .setColor(embedColors.colorWarning)
+                ]
+            });
+        }
+
+        if (!queue.currentTrack) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**Failed**\nThere are no tracks in the queue or currently playing.`
+                        )
                         .setColor(embedColors.colorWarning)
                 ]
             });
@@ -36,7 +50,7 @@ module.exports = {
         queue.node.setPaused(!queue.node.isPaused());
 
         if (queue.node.isPaused()) {
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
@@ -51,7 +65,7 @@ module.exports = {
                 ]
             });
         } else {
-            await interaction.editReply({
+            return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
