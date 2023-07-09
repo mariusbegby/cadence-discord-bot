@@ -20,7 +20,8 @@ module.exports = {
                             `\`/remove\` - Remove a track from the queue.\n` +
                             `\`/leave\` - Remove bot from voice channel and clear queue.\n` +
                             `\`/queue\` - Show the list of tracks added to the queue.\n` +
-                            `\`/volume\` \`[percentage]\` - Show or set the playback volume for tracks.\n`
+                            `\`/volume\` \`[percentage]\` - Show or set the playback volume for tracks.\n` +
+                            `\`/filters\` - Toggle various audio filters during playback.\n`
                     )
                     .setColor(embedColors.colorInfo)
             ]

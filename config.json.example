@@ -9,5 +9,56 @@
         "colorError": "#F23F43",
         "colorInfo": "#5865F2",
         "colorNote": "#80848E"
-    }
+    },
+    "filterThreadAmount": "4",
+    "filterList": [
+        {
+            "label": "Bass boost",
+            "value": "bassboost_low",
+            "description": "Boost the bass of the audio.",
+            "emoji": "🔉"
+        },
+        {
+            "label": "Bass boost high",
+            "value": "bassboost",
+            "description": "Boost the bass of the audio a lot.",
+            "emoji": "🔊"
+        },
+        {
+            "label": "Night core",
+            "value": "nightcore",
+            "description": "Speed up the audio (higher pitch).",
+            "emoji": "🐱"
+        },
+        {
+            "label": "Lo-fi",
+            "value": "lofi",
+            "description": "Low fidelity effect (lower quality).",
+            "emoji": "📻"
+        },
+        {
+            "label": "Vaporwave",
+            "value": "vaporwave",
+            "description": "Slow down the audio (lower pitch).",
+            "emoji": "🌸"
+        },
+        {
+            "label": "Ear rape",
+            "value": "earrape",
+            "description": "Extremely loud and distorted audio.",
+            "emoji": "👂"
+        },
+        {
+            "label": "8D",
+            "value": "8D",
+            "description": "Simulate 8D audio effect (surround).",
+            "emoji": "🎧"
+        },
+        {
+            "label": "Treble",
+            "value": "treble",
+            "description": "Increase the high frequencies.",
+            "emoji": "🎼"
+        }
+    ]
 }
