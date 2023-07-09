@@ -15,8 +15,7 @@
         <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=&logo=discord&logoColor=white" alt="Cadence Discord support server">
     </a>&nbsp;
     <a href="https://github.com/mariusbegby/cadence-discord-bot/releases">
-        <img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main
-?style=for-the-badge&label=&logo=github&logoColor=white&color=grey" alt="Cadence bot release">
+        <img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=&logo=github&logoColor=white&color=grey" alt="Cadence bot release">
     </a>
 </p>
 
