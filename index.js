@@ -127,6 +127,18 @@ client.on('interactionCreate', async (interaction) => {
         const executionTime = outputTime - inputTime;
 
         if (executionTime > 20000) {
+            // don't send warning message for filters command, as collector timeout happens after 60 seconds
+            if (command.name === 'filters' && executionTime > 55000) {
+                console.log(
+                    `${new Date().toISOString().substring(11, 19)}: Info: ${
+                        interaction.guild.name
+                    } (#${
+                        interaction.guild.memberCount
+                    })> Command '${interaction}' executed in ${executionTime} ms.`
+                );
+                return;
+            }
+
             console.log(
                 `${new Date().toISOString().substring(11, 19)}: Warning: ⚠️ ${
                     interaction.guild.name
