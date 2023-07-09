@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.0.1...v1.0.2) (2023-07-09)
+
+
+### Bug Fixes
+
+* Remove release-please command in workflow ([716eb8c](https://github.com/mariusbegby/cadence-discord-bot/commit/716eb8c96b31bb8845173dd93b2ab7510cd14139))
+
 ## [1.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.0.0...v1.0.1) (2023-07-09)
 
 
