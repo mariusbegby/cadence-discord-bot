@@ -35,18 +35,26 @@ const player = new Player(client);
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
-    console.log(`General player error event: ${error.message}\n`);
-    console.dir(error, { depth: 5 });
-    console.log(`\nQueue object:`);
-    console.dir(queue, { depth: 5 });
+    console.error(
+        `${new Date()
+            .toISOString()
+            .substring(11, 19)}: Error: 🚨 General player error event: ${
+            error.message
+        }\n`
+    );
+    console.error(error);
 });
 
 player.events.on('playerError', (queue, error) => {
     // Emitted when the audio player errors while streaming audio track
-    console.log(`Player error event: ${error.message}\n`);
-    console.dir(error, { depth: 5 });
-    console.log(`\nQueue object:`);
-    console.dir(queue, { depth: 5 });
+    console.error(
+        `${new Date()
+            .toISOString()
+            .substring(11, 19)}: Error: 🚨 Player error event: ${
+            error.message
+        }\n`
+    );
+    console.error(error);
 });
 
 client.once('ready', async () => {
@@ -117,13 +125,36 @@ client.on('interactionCreate', async (interaction) => {
         await command.run({ interaction, client });
         const outputTime = new Date();
         const executionTime = outputTime - inputTime;
-        console.log(
-            `${new Date().toISOString().substring(11, 19)}: Info: ${
-                interaction.guild.name
-            } (#${
-                interaction.guild.memberCount
-            })> Command '${interaction}' executed in ${executionTime} ms.`
-        );
+
+        if (executionTime > 20000) {
+            console.log(
+                `${new Date().toISOString().substring(11, 19)}: Warning: ⚠️ ${
+                    interaction.guild.name
+                } (#${
+                    interaction.guild.memberCount
+                })> Command '${interaction}' took ${executionTime} ms to execute.`
+            );
+
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**Warning**\n**This command took ${
+                                executionTime / 1000
+                            } seconds to execute.**\n\n_If you experienced problems with the command, please try again._`
+                        )
+                        .setColor(embedColors.colorWarning)
+                ]
+            });
+        } else {
+            console.log(
+                `${new Date().toISOString().substring(11, 19)}: Info: ${
+                    interaction.guild.name
+                } (#${
+                    interaction.guild.memberCount
+                })> Command '${interaction}' executed in ${executionTime} ms.`
+            );
+        }
     } catch (error) {
         // log error to console with full object depth
         console.dir(error, { depth: 5 });
