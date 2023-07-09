@@ -36,17 +36,17 @@ const player = new Player(client);
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
     console.log(`General player error event: ${error.message}\n`);
-    console.dir(error, { depth: null });
+    console.dir(error, { depth: 5 });
     console.log(`\nQueue object:`);
-    console.dir(queue, { depth: null });
+    console.dir(queue, { depth: 5 });
 });
 
 player.events.on('playerError', (queue, error) => {
     // Emitted when the audio player errors while streaming audio track
     console.log(`Player error event: ${error.message}\n`);
-    console.dir(error, { depth: null });
+    console.dir(error, { depth: 5 });
     console.log(`\nQueue object:`);
-    console.dir(queue, { depth: null });
+    console.dir(queue, { depth: 5 });
 });
 
 client.once('ready', async () => {
@@ -126,7 +126,7 @@ client.on('interactionCreate', async (interaction) => {
         );
     } catch (error) {
         // log error to console with full object depth
-        console.dir(error, { depth: null });
+        console.dir(error, { depth: 5 });
         console.error(
             `${new Date().toISOString().substring(11, 19)}: Error: 🚨 ${
                 interaction.guild.name
