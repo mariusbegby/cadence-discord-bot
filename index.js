@@ -70,7 +70,7 @@ client.once('ready', async () => {
     // Set Discord status
     client.user.setActivity('/help', {
         type: Discord.ActivityType.Watching,
-        name: '/play'
+        name: '/help'
     });
 
     // Show how many guilds the bot is added to
