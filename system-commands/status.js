@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
+const { useQueue } = require('discord-player');
 const {
     embedColors,
     systemServerGuildId,
@@ -31,6 +32,16 @@ module.exports = {
         uptimeDate.setSeconds(uptimeInSeconds.toFixed(0));
         let uptimeString = uptimeDate.toISOString().substring(11, 19);
 
+        let activeVoiceConnections = 0;
+
+        client.guilds.cache.forEach((guild) => {
+            const queue = useQueue(guild.id);
+
+            if (queue) {
+                activeVoiceConnections++;
+            }
+        });
+
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -49,7 +60,8 @@ module.exports = {
                             `Discord Player Version: \`v${
                                 require('discord-player').version
                             }\`\n` +
-                            `Joined guilds: \`${client.guilds.cache.size}\``
+                            `Joined guilds: \`${client.guilds.cache.size}\`` +
+                            `\nActive voice connections: \`${activeVoiceConnections}\``
                     )
                     .setColor(embedColors.colorInfo)
             ]
