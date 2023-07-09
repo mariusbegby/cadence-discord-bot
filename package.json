@@ -1,15 +1,27 @@
 {
     "name": "cadence-discord-bot",
     "version": "1.0.0",
-    "description": "⚡ A free music and audio bot for Discord.",
+    "description": "A free Discord music and audio bot.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mariusbegby/cadence-discord-bot"
+    },
+    "bugs": {
+        "url": "https://github.com/mariusbegby/cadence-discord-bot/issues"
+    },
+    "homepage": "https://github.com/mariusbegby/cadence-discord-bot#readme",
+    "author": {
+        "name": "Marius Begby",
+        "url": "https://github.com/mariusbegby"
+    },
+    "publisher": "mariusbegby",
+    "license": "MIT",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./index.js",
         "deploy": "node ./deploy-commands.js && node ./deploy-system-commands.js"
     },
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "@discord-player/extractor": "^4.3.1",
         "@discordjs/opus": "^0.9.0",
