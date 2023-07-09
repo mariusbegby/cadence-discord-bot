@@ -75,6 +75,18 @@ module.exports = {
                 });
             }
         } else {
+            if (queue.tracks.data.length === 0 && !queue.currentTrack) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**Failed**\nThere are no tracks in the queue and nothing currently playing.`
+                            )
+                            .setColor(embedColors.colorWarning)
+                    ]
+                });
+            }
+
             const skippedTrack = queue.currentTrack;
             queue.node.skip();
 
