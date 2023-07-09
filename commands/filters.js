@@ -99,7 +99,6 @@ module.exports = {
                 time: 60000
             });
 
-            console.log(confirmation.values);
             queue.filters.ffmpeg.setInputArgs([
                 '-threads',
                 filterThreadAmount,
