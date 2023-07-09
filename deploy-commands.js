@@ -16,8 +16,13 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        console.log("DEPLOYING BOT SLASH COMMANDS");
-        console.log("Commands: ", commands.map((command) => {return command.name}));
+        console.log('DEPLOYING BOT SLASH COMMANDS');
+        console.log(
+            'Commands: ',
+            commands.map((command) => {
+                return command.name;
+            })
+        );
 
         console.log('Started refreshing application (/) commands.');
 

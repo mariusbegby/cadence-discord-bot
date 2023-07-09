@@ -16,14 +16,22 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        console.log("DEPLOYING SYSTEM SLASH COMMANDS");
-        console.log("System Commands: ", systemCommands.map((systemCommand) => {return systemCommand.name}));
+        console.log('DEPLOYING SYSTEM SLASH COMMANDS');
+        console.log(
+            'System Commands: ',
+            systemCommands.map((systemCommand) => {
+                return systemCommand.name;
+            })
+        );
 
         console.log('Started refreshing application (/) system commands.');
 
-        await rest.put(Routes.applicationGuildCommands(clientId, systemServerGuildId), {
-            body: systemCommands
-        });
+        await rest.put(
+            Routes.applicationGuildCommands(clientId, systemServerGuildId),
+            {
+                body: systemCommands
+            }
+        );
 
         console.log('Successfully reloaded application (/) system commands.');
     } catch (error) {
