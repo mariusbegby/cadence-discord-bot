@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.1.0...v1.1.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* add page number also on empty queue ([0a7f31a](https://github.com/mariusbegby/cadence-discord-bot/commit/0a7f31a5652fd5b5e6758b939be621de0b01ff70))
+* Better handling and formatting of duration ([ebe4f74](https://github.com/mariusbegby/cadence-discord-bot/commit/ebe4f7419a0d218d4f333ba13b9b71c4f6e39fee))
+* format track amount as bold instead of code ([955bda9](https://github.com/mariusbegby/cadence-discord-bot/commit/955bda9d693fa10119deb7026bc0e4e1d25a49c1))
+* handle unsupported YouTube live stream source ([b8bd552](https://github.com/mariusbegby/cadence-discord-bot/commit/b8bd552335a20d5cf5cd5cf86d11e7bdbed863bc))
+* Removed "Failed" heading from reply ([7894867](https://github.com/mariusbegby/cadence-discord-bot/commit/789486747ba3d9f9f6a6bf2cabe92aa75be64ad5))
+
 ## [1.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.0.2...v1.1.0) (2023-07-10)
 
 
