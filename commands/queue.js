@@ -68,9 +68,14 @@ module.exports = {
             queueString = queue.tracks.data
                 .slice(page * 10, page * 10 + 10)
                 .map((track, index) => {
-                    return `**${page * 10 + index + 1}.** \`[${
-                        track.duration
-                    }]\` [${track.title}](${track.url})`;
+                    let durationFormat =
+                        track.raw.duration === 0 || track.duration === '0:00'
+                            ? ''
+                            : `\`[${track.duration}]\``;
+
+                    return `**${page * 10 + index + 1}.** ${durationFormat} [${
+                        track.title
+                    }](${track.url})`;
                 })
                 .join('\n');
         }
@@ -97,6 +102,13 @@ module.exports = {
                 queue: false,
                 length: 13
             });
+
+            if (
+                currentTrack.raw.duration === 0 ||
+                currentTrack.duration === '0:00'
+            ) {
+                bar = 'No duration available.';
+            }
 
             return await interaction.editReply({
                 embeds: [
