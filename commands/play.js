@@ -71,9 +71,9 @@ module.exports = {
                         .setDescription(
                             `**Added playlist to queue**\n\`[${
                                 track.duration
-                            }]\` **[${track.title}](${track.url})**\n\nAnd \`${
+                            }]\` **[${track.title}](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
-                            }\` more tracks... \`/queue\` to view all.`
+                            }** more tracks... \`/queue\` to view all.`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedColors.colorSuccess)
