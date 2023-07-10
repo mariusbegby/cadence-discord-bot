@@ -74,12 +74,6 @@ player.events.on('playerError', (queue, error) => {
     console.error(error);
 });
 
-player.events.on('debug', async (queue, message) => {
-    // Emitted when the player queue sends debug info
-    // Useful for seeing what state the current queue is at
-    console.log(`Player debug event: ${message}`);
-});
-
 client.once('ready', async () => {
     console.log(
         `${new Date().toISOString().substring(11, 19)}: Info: Logged in as ${
