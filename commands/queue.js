@@ -30,7 +30,7 @@ module.exports = {
         let queueString = '';
 
         if (!queue) {
-            queueString = `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`;
+            queueString = `There are no tracks in the queue. Add tracks with \`/play\`!`;
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -40,6 +40,9 @@ module.exports = {
                         })
                         .setDescription(`**Queue**\n${queueString}`)
                         .setColor(embedColors.colorInfo)
+                        .setFooter({
+                            text: `Page 1 of 1`
+                        })
                 ]
             });
         }
@@ -65,9 +68,14 @@ module.exports = {
             queueString = queue.tracks.data
                 .slice(page * 10, page * 10 + 10)
                 .map((track, index) => {
-                    return `**${page * 10 + index + 1}.** \`[${
-                        track.duration
-                    }]\` [${track.title}](${track.url})`;
+                    let durationFormat =
+                        track.raw.duration === 0 || track.duration === '0:00'
+                            ? ''
+                            : `\`[${track.duration}]\``;
+
+                    return `**${page * 10 + index + 1}.** ${durationFormat} [${
+                        track.title
+                    }](${track.url})`;
                 })
                 .join('\n');
         }
@@ -94,6 +102,13 @@ module.exports = {
                 queue: false,
                 length: 13
             });
+
+            if (
+                currentTrack.raw.duration === 0 ||
+                currentTrack.duration === '0:00'
+            ) {
+                bar = 'No duration available.';
+            }
 
             return await interaction.editReply({
                 embeds: [
