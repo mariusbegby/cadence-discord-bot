@@ -45,6 +45,22 @@ module.exports = {
             });
         }
 
+        if (
+            searchResult.tracks[0].raw.live &&
+            searchResult.tracks[0].raw.duration === 0 &&
+            searchResult.tracks[0].source === 'youtube'
+        ) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._`
+                        )
+                        .setColor(embedColors.colorWarning)
+                ]
+            });
+        }
+
         const { track } = await player.play(
             interaction.member.voice.channel,
             searchResult,
@@ -60,6 +76,16 @@ module.exports = {
             }
         );
 
+        if (track.source === 'arbitrary') {
+            track.thumbnail =
+                'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/icons/Cadence-icon-rounded-128px.png';
+        }
+
+        let durationFormat =
+            track.raw.duration === 0 || track.duration === '0:00'
+                ? ''
+                : `\`[${track.duration}]\``;
+
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             return await interaction.editReply({
                 embeds: [
@@ -69,9 +95,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Added playlist to queue**\n\`[${
-                                track.duration
-                            }]\` **[${track.title}](${track.url})**\n\nAnd **${
+                            `**Added playlist to queue**\n${durationFormat} **[${
+                                track.title
+                            }](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... \`/queue\` to view all.`
                         )
@@ -89,7 +115,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
+                        `**Added to queue**\n${durationFormat} **[${track.title}](${track.url})**`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(embedColors.colorSuccess)
