@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.0.2...v1.1.0) (2023-07-10)
+
+
+### Features
+
+* Add playlist support to /play command ([88b9566](https://github.com/mariusbegby/cadence-discord-bot/commit/88b95665199c9edfa2edf0ebd551070742be363a))
+
+
+### Bug Fixes
+
+* Explicitly set legacy ffmpeg to false, log loaded dependencies on startup ([325feed](https://github.com/mariusbegby/cadence-discord-bot/commit/325feed8fb0e418e1139fb9248986e1d669b9b59))
+* formatting ([f9c4c24](https://github.com/mariusbegby/cadence-discord-bot/commit/f9c4c24d6c91b30782dc57ff6761a4608f298cb1))
+* party solves playback immediately cuts off on longer duration yt videoes ([5716c67](https://github.com/mariusbegby/cadence-discord-bot/commit/5716c67523c2c2df2433274865e28d2b606e4439))
+* remove debug logging ([5a47630](https://github.com/mariusbegby/cadence-discord-bot/commit/5a476302a8e4b48caf0faa2a21467d375445d58d))
+* Set max queue and history size ([981c8ce](https://github.com/mariusbegby/cadence-discord-bot/commit/981c8ce7c1fba3fbe88a25f71f165f3088325266))
+* update user reply with info about /play on empty queue ([37f16a5](https://github.com/mariusbegby/cadence-discord-bot/commit/37f16a51fd5595e3f85a533115cd3929d97f5ec0))
+* Use yt-stream instead of play-dl, solves playback of longer duration yt videoes ([31a9d8f](https://github.com/mariusbegby/cadence-discord-bot/commit/31a9d8f034a8091add33cb2f0554beecb66bb789))
+
 ## [1.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.0.1...v1.0.2) (2023-07-09)
 
 
