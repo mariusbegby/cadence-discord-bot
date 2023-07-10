@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { useMainPlayer, useQueue } = require('discord-player');
+const { useMainPlayer } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const { embedColors } = require('../config.json');
 
@@ -29,7 +29,9 @@ module.exports = {
         const player = useMainPlayer();
         const query = interaction.options.getString('query');
 
-        const searchResult = await player.search(query);
+        const searchResult = await player.search(query, {
+            requestedBy: interaction.user
+        });
 
         if (!searchResult || searchResult.tracks.length === 0) {
             return await interaction.editReply({
@@ -43,20 +45,22 @@ module.exports = {
             });
         }
 
-        try {
-            const { track } = await player.play(
-                interaction.member.voice.channel,
-                searchResult.tracks[0].url,
-                {
-                    requestedBy: interaction.user,
-                    nodeOptions: {
-                        leaveOnEmptyCooldown: 60000,
-                        leaveOnEndCooldown: 60000,
-                        leaveOnStopCooldown: 60000
-                    }
+        const { track } = await player.play(
+            interaction.member.voice.channel,
+            searchResult,
+            {
+                requestedBy: interaction.user,
+                nodeOptions: {
+                    leaveOnEmptyCooldown: 60000,
+                    leaveOnEndCooldown: 60000,
+                    leaveOnStopCooldown: 60000,
+                    maxSize: 10000,
+                    maxHistorySize: 100
                 }
-            );
+            }
+        );
 
+        if (searchResult.playlist && searchResult.tracks.length > 1) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -65,74 +69,31 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
+                            `**Added playlist to queue**\n\`[${
+                                track.duration
+                            }]\` **[${track.title}](${track.url})**\n\nAnd \`${
+                                searchResult.tracks.length - 1
+                            }\` more tracks... \`/queue\` to view all.`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedColors.colorSuccess)
                 ]
             });
-        } catch (e) {
-            if (e.message.includes('Could not extract stream for this track')) {
-                if (searchResult.tracks.length > 1) {
-                    try {
-                        const { track } = await player.play(
-                            interaction.member.voice.channel,
-                            searchResult.tracks[1].url,
-                            {
-                                requestedBy: interaction.user,
-                                nodeOptions: {
-                                    leaveOnEmptyCooldown: 60000,
-                                    leaveOnEndCooldown: 60000,
-                                    leaveOnStopCooldown: 60000
-                                }
-                            }
-                        );
-
-                        return await interaction.editReply({
-                            embeds: [
-                                new EmbedBuilder()
-                                    .setAuthor({
-                                        name: interaction.user.username,
-                                        iconURL: interaction.user.avatarURL()
-                                    })
-                                    .setDescription(
-                                        `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
-                                    )
-                                    .setThumbnail(track.thumbnail)
-                                    .setColor(embedColors.colorSuccess)
-                            ]
-                        });
-                    } catch (e) {
-                        if (
-                            e.message.includes(
-                                'Could not extract stream for this track'
-                            )
-                        ) {
-                            return await interaction.editReply({
-                                embeds: [
-                                    new EmbedBuilder()
-                                        .setDescription(
-                                            `**Failed**\nFound a result for query \`${query}\` with source ${searchResult.tracks[1].url}, but was unable to extract audio stream from track.\n\nThis is most likely due to audio source blocking download from the bot. Please try another track or refine your query.`
-                                        )
-                                        .setColor(embedColors.colorError)
-                                ]
-                            });
-                        }
-                    }
-                } else {
-                    return await interaction.editReply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**Failed**\nFound a result for query \`${query}\` with source ${searchResult.tracks[0].url}, but was unable to extract audio stream from track.\n\nThis is most likely due to audio source blocking download from the bot or unsupported audio encoding. Please try another track or refine your query.`
-                                )
-                                .setColor(embedColors.colorError)
-                        ]
-                    });
-                }
-            } else {
-                throw e;
-            }
         }
+
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setAuthor({
+                        name: interaction.user.username,
+                        iconURL: interaction.user.avatarURL()
+                    })
+                    .setDescription(
+                        `**Added to queue**\n\`[${track.duration}]\` **[${track.title}](${track.url})**`
+                    )
+                    .setThumbnail(track.thumbnail)
+                    .setColor(embedColors.colorSuccess)
+            ]
+        });
     }
 };

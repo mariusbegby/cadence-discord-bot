@@ -35,7 +35,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks in the queue.`
+                            `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]

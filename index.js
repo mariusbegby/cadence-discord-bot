@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
-const { Player } = require('discord-player');
+const { Player, onBeforeCreateStream } = require('discord-player');
+const { stream } = require('yt-stream');
 const { token, embedColors } = require('./config.json');
 
 // Setup required permissions for the bot to work
@@ -31,7 +32,23 @@ for (const file of systemCommandFiles) {
 }
 
 // Create a new Player, and attach it to the bot client.
-const player = new Player(client);
+const player = new Player(client, {
+    useLegacyFFmpeg: false
+});
+
+onBeforeCreateStream(async (track) => {
+    if (track.source === 'youtube') {
+        return (
+            await stream(track.url, {
+                type: 'audio',
+                quality: 'high',
+                highWaterMark: 1 << 25
+            })
+        ).stream;
+    }
+
+    return null;
+});
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
@@ -65,7 +82,8 @@ client.once('ready', async () => {
     );
 
     // This method will load all the extractors from the @discord-player/extractor package
-    player.extractors.loadDefault();
+    await player.extractors.loadDefault();
+    console.log(player.scanDeps());
 
     // Set Discord status
     client.user.setActivity('/help', {
