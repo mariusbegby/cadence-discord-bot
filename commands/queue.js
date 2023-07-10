@@ -30,7 +30,7 @@ module.exports = {
         let queueString = '';
 
         if (!queue) {
-            queueString = 'There are no tracks in the queue. Add tracks with \`/play\`!';
+            queueString = `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`;
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
