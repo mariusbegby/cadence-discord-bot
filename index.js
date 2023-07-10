@@ -31,7 +31,9 @@ for (const file of systemCommandFiles) {
 }
 
 // Create a new Player, and attach it to the bot client.
-const player = new Player(client);
+const player = new Player(client, {
+    useLegacyFFmpeg: false
+});
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
@@ -65,7 +67,8 @@ client.once('ready', async () => {
     );
 
     // This method will load all the extractors from the @discord-player/extractor package
-    player.extractors.loadDefault();
+    await player.extractors.loadDefault();
+    console.log(player.scanDeps());
 
     // Set Discord status
     client.user.setActivity('/help', {
