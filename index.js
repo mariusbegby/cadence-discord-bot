@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const Discord = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
-const { Player } = require('discord-player');
+const { Player, onBeforeCreateStream } = require('discord-player');
+const { stream } = require('yt-stream');
 const { token, embedColors } = require('./config.json');
 
 // Setup required permissions for the bot to work
@@ -35,6 +36,20 @@ const player = new Player(client, {
     useLegacyFFmpeg: false
 });
 
+onBeforeCreateStream(async (track) => {
+    if (track.source === 'youtube') {
+        return (
+            await stream(track.url, {
+                type: 'audio',
+                quality: 'high',
+                highWaterMark: 1 << 25
+            })
+        ).stream;
+    }
+
+    return null;
+});
+
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
     console.error(
@@ -57,6 +72,12 @@ player.events.on('playerError', (queue, error) => {
         }\n`
     );
     console.error(error);
+});
+
+player.events.on('debug', async (queue, message) => {
+    // Emitted when the player queue sends debug info
+    // Useful for seeing what state the current queue is at
+    console.log(`Player debug event: ${message}`);
 });
 
 client.once('ready', async () => {
