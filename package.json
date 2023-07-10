@@ -29,6 +29,6 @@
         "@discordjs/voice": "^0.16.0",
         "discord-player": "^6.6.1",
         "discord.js": "^14.11.0",
-        "play-dl": "^1.9.6"
+        "yt-stream": "^1.4.8"
     }
 }
