@@ -40,6 +40,9 @@ module.exports = {
                         })
                         .setDescription(`**Queue**\n${queueString}`)
                         .setColor(embedColors.colorInfo)
+                        .setFooter({
+                            text: `Page 1 of 1`
+                        })
                 ]
             });
         }
