@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { useMainPlayer, useQueue } = require('discord-player');
+const { useMainPlayer } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const { embedColors } = require('../config.json');
 
@@ -52,7 +52,9 @@ module.exports = {
                     nodeOptions: {
                         leaveOnEmptyCooldown: 60000,
                         leaveOnEndCooldown: 60000,
-                        leaveOnStopCooldown: 60000
+                        leaveOnStopCooldown: 60000,
+                        maxSize: 10000,
+                        maxHistorySize: 100
                     }
                 }
             );
