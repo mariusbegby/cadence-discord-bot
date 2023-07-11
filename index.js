@@ -127,15 +127,18 @@ client.on('interactionCreate', async (interaction) => {
             // don't send warning message for filters command, as collector timeout happens after 60 seconds
             if (command.name === 'filters' && executionTime > 55000) {
                 logger.info(
-                    `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' executed in ${executionTime} ms.`
+                    `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' executed in ${executionTime} ms.`
                 );
                 return;
             }
 
             logger.warn(
-                `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' took ${executionTime} ms to execute.`
+                `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' took ${executionTime} ms to execute.`
             );
 
+            // todo: using interaction.editReply() might lead to "unknown interaction" error
+            // it might already have been replied to or deferred
+            // solution might be to use interaction.followUp() instead or send a message to the channel?
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -149,13 +152,13 @@ client.on('interactionCreate', async (interaction) => {
             });
         } else {
             logger.info(
-                `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' executed in ${executionTime} ms.`
+                `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' executed in ${executionTime} ms.`
             );
         }
     } catch (error) {
         logger.error(
             error,
-            `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' failed to execute.`
+            `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' failed to execute.`
         );
 
         // todo: using interaction.editReply() might lead to "unknown interaction" error
