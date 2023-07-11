@@ -164,7 +164,6 @@ module.exports = {
                 components: []
             });
         } catch (e) {
-            console.log(e);
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
