@@ -10,6 +10,7 @@
         "colorInfo": "#5865F2",
         "colorNote": "#80848E"
     },
+    "minimumLogLevel": "info",
     "filterThreadAmount": "4",
     "filterList": [
         {
