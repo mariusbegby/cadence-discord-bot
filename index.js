@@ -16,13 +16,6 @@ const logger = pino({
     }
 });
 
-logger.trace('Hello, World!');
-logger.debug('Hello, World!');
-logger.info('Hello, World!');
-logger.warn('Hello, World!');
-logger.error('Hello, World!');
-logger.fatal('Hello, World!');
-
 // Setup required permissions for the bot to work
 const client = new Discord.Client({
     intents: [
@@ -32,6 +25,7 @@ const client = new Discord.Client({
 });
 
 // Setup commands collection and load commands
+// todo: extract this logic to a separate file
 client.commands = new Discord.Collection();
 const commandFiles = fs
     .readdirSync('./commands')
@@ -49,7 +43,6 @@ for (const file of systemCommandFiles) {
     client.commands.set(systemCommand.data.name, systemCommand);
 }
 
-// Create a new Player, and attach it to the bot client.
 const player = new Player(client, {
     useLegacyFFmpeg: false
 });
@@ -70,80 +63,58 @@ onBeforeCreateStream(async (track) => {
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
-    console.error(
-        `${new Date()
-            .toISOString()
-            .substring(11, 19)}: Error: 🚨 General player error event: ${
-            error.message
-        }\n`
-    );
-    console.error(error);
+    logger.error(error, 'Player queue error event');
 });
 
 player.events.on('playerError', (queue, error) => {
     // Emitted when the audio player errors while streaming audio track
-    console.error(
-        `${new Date()
-            .toISOString()
-            .substring(11, 19)}: Error: 🚨 Player error event: ${
-            error.message
-        }\n`
-    );
-    console.error(error);
+    logger.error(error, 'Player audio stream error event');
 });
 
 client.once('ready', async () => {
-    console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: Logged in as ${
-            client.user.tag
-        }!`
-    );
-
     // This method will load all the extractors from the @discord-player/extractor package
     await player.extractors.loadDefault();
-    console.log(player.scanDeps());
 
-    // Set Discord status
+    logger.info(`discord-player loaded dependencies:\n${player.scanDeps()}`);
+    logger.info(`Logged in as ${client.user.tag}!`);
+    logger.info(
+        `${client.user.tag} is currently added in ${client.guilds.cache.size} guilds`
+    );
+
+    // Set Discord presence status for bot
     client.user.setActivity('/help', {
         type: Discord.ActivityType.Watching,
         name: '/help'
     });
-
-    // Show how many guilds the bot is added to
-    console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: ${
-            client.user.tag
-        } is currently added in ${client.guilds.cache.size} guilds!`
-    );
 });
 
 client.once('reconnecting', () => {
-    console.log('Reconnecting!');
+    logger.warn('${client.user.tag} is reconnecting to Discord APIs.');
 });
 
 client.once('disconnect', () => {
-    console.log('Disconnected');
+    logger.warn(
+        '${client.user.tag} lost connection to Discord APIs. Disconnected.'
+    );
 });
 
-client.on('warn', (info) => {
-    console.log(info);
+client.on('warn', (warning) => {
+    logger.warn(warning, 'Discord client warning event');
 });
 
-client.on('error', console.error);
+client.on('error', (error) => {
+    logger.error(error, 'Discord client error event');
+});
 
 client.on('guildCreate', (guild) => {
-    console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: 🟢 ${
-            client.user.tag
-        } has been added to server '${guild.name} (#${guild.memberCount})'!`
+    logger.info(
+        `Added to guild '${guild.name}' with ${guild.memberCount} members.`
     );
 });
 
 client.on('guildDelete', (guild) => {
-    console.log(
-        `${new Date().toISOString().substring(11, 19)}: Info: 🔴 ${
-            client.user.tag
-        } was removed from server '${guild.name} (#${guild.memberCount})'!`
+    logger.info(
+        `Removed from guild '${guild.name}' with ${guild.memberCount} members.`
     );
 });
 
@@ -165,22 +136,14 @@ client.on('interactionCreate', async (interaction) => {
         if (executionTime > 20000) {
             // don't send warning message for filters command, as collector timeout happens after 60 seconds
             if (command.name === 'filters' && executionTime > 55000) {
-                console.log(
-                    `${new Date().toISOString().substring(11, 19)}: Info: ${
-                        interaction.guild.name
-                    } (#${
-                        interaction.guild.memberCount
-                    })> Command '${interaction}' executed in ${executionTime} ms.`
+                logger.info(
+                    `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' executed in ${executionTime} ms.`
                 );
                 return;
             }
 
-            console.log(
-                `${new Date().toISOString().substring(11, 19)}: Warning: ⚠️ ${
-                    interaction.guild.name
-                } (#${
-                    interaction.guild.memberCount
-                })> Command '${interaction}' took ${executionTime} ms to execute.`
+            logger.warn(
+                `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' took ${executionTime} ms to execute.`
             );
 
             return await interaction.editReply({
@@ -195,26 +158,19 @@ client.on('interactionCreate', async (interaction) => {
                 ]
             });
         } else {
-            console.log(
-                `${new Date().toISOString().substring(11, 19)}: Info: ${
-                    interaction.guild.name
-                } (#${
-                    interaction.guild.memberCount
-                })> Command '${interaction}' executed in ${executionTime} ms.`
+            logger.info(
+                `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' executed in ${executionTime} ms.`
             );
         }
     } catch (error) {
-        // log error to console with full object depth
-        console.dir(error, { depth: 5 });
-        console.error(
-            `${new Date().toISOString().substring(11, 19)}: Error: 🚨 ${
-                interaction.guild.name
-            } (#${
-                interaction.guild.memberCount
-            })> Command '${interaction}' failed unexpectedly.`
+        logger.error(
+            error,
+            `${interaction.guild.name} (${interaction.guild.memberCount})> Command '${interaction}' failed to execute.`
         );
-        console.error(`Interaction input:\n${interaction}`);
 
+        // todo: using interaction.editReply() might lead to "unknown interaction" error
+        // it might already have been replied to or deferred
+        // solution might be to use interaction.followUp() instead or send a message to the channel?
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
