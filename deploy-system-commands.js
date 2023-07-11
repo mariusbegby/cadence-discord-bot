@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const logger = require('./services/logger.js');
 const { REST, Routes } = require('discord.js');
 const { token, clientId, systemServerGuildId } = require('./config.json');
 
@@ -16,15 +17,15 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        console.log('DEPLOYING SYSTEM SLASH COMMANDS');
-        console.log(
-            'System Commands: ',
+        logger.info('DEPLOYING SYSTEM SLASH COMMANDS');
+        logger.info(
             systemCommands.map((systemCommand) => {
                 return systemCommand.name;
-            })
+            }),
+            'System commands found:'
         );
 
-        console.log('Started refreshing application (/) system commands.');
+        logger.info('Started refreshing application (/) system commands.');
 
         await rest.put(
             Routes.applicationGuildCommands(clientId, systemServerGuildId),
@@ -33,8 +34,11 @@ const rest = new REST({ version: '10' }).setToken(token);
             }
         );
 
-        console.log('Successfully reloaded application (/) system commands.');
+        logger.info('Successfully refreshed application (/) system commands.');
     } catch (error) {
-        console.error(error);
+        logger.error(
+            error,
+            'Failed to refresh application (/) system commands.'
+        );
     }
 })();

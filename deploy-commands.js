@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const logger = require('./services/logger.js');
 const { REST, Routes } = require('discord.js');
 const { token, clientId } = require('./config.json');
 
@@ -16,22 +17,22 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-        console.log('DEPLOYING BOT SLASH COMMANDS');
-        console.log(
-            'Commands: ',
-            commands.map((command) => {
-                return command.name;
-            })
+        logger.info('DEPLOYING BOT SLASH COMMANDS');
+        logger.info(
+            commands.map((commands) => {
+                return commands.name;
+            }),
+            'Bot commands found:'
         );
 
-        console.log('Started refreshing application (/) commands.');
+        logger.info('Started refreshing application (/) bot commands.');
 
         await rest.put(Routes.applicationCommands(clientId), {
             body: commands
         });
 
-        console.log('Successfully reloaded application (/) commands.');
+        logger.info('Successfully refreshed application (/) bot commands.');
     } catch (error) {
-        console.error(error);
+        logger.error(error, 'Failed to refresh application (/) bot commands.');
     }
 })();
