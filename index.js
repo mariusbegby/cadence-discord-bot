@@ -1,20 +1,10 @@
 const fs = require('node:fs');
 const Discord = require('discord.js');
-const pino = require('pino');
+const logger = require('./services/logger.js');
 const { EmbedBuilder } = require('discord.js');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { token, embedColors, minimumLogLevel } = require('./config.json');
-
-const logger = pino({
-    level: minimumLogLevel,
-    transport: {
-        target: 'pino-pretty',
-        options: {
-            ignore: 'pid,hostname'
-        }
-    }
-});
+const { token, embedColors } = require('./config.json');
 
 // Setup required permissions for the bot to work
 const client = new Discord.Client({
