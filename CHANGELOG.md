@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.1.1...v1.2.0) (2023-07-12)
+
+
+### Features
+
+* Log events to file based on log level ([6bb602e](https://github.com/mariusbegby/cadence-discord-bot/commit/6bb602ebbb655373c61de96b592a0de40585aa72))
+
+
+### Bug Fixes
+
+* add pino and pino-pretty as dependencies for logging ([bb07e5d](https://github.com/mariusbegby/cadence-discord-bot/commit/bb07e5defde3a64c87d45dad322706229803a6e6))
+* added pino logging library ([4a2b60e](https://github.com/mariusbegby/cadence-discord-bot/commit/4a2b60e3ba63ad7e02e39e20861d294ca8048346))
+* changed position of guild member count in log calls ([3c345cf](https://github.com/mariusbegby/cadence-discord-bot/commit/3c345cf14c83402411f61a993954acccbe7756da))
+* Extract logger initialization to own file ([53d15b0](https://github.com/mariusbegby/cadence-discord-bot/commit/53d15b05e1ac13622cdda748e337f1bd094b3020))
+* implemented new logging service to command deployment ([4a2f47c](https://github.com/mariusbegby/cadence-discord-bot/commit/4a2f47c94967e121333f4e12ba6784dfedbc21f3))
+* remove console.log() statement in filters command ([6deec52](https://github.com/mariusbegby/cadence-discord-bot/commit/6deec529f9072e7e62b33c8cb2656fb64cb34df4))
+* update .gitignore to not track log files ([cf2aa06](https://github.com/mariusbegby/cadence-discord-bot/commit/cf2aa06f3983337bd1bb598c70aac87ceea3fcc1))
+* update config.json example with minimum log level ([c98bcdc](https://github.com/mariusbegby/cadence-discord-bot/commit/c98bcdce4951053f6a152b85650676b2aa302bda))
+* Updated logging to pino for index.js ([2fe5fce](https://github.com/mariusbegby/cadence-discord-bot/commit/2fe5fce324c1528c4f44a08e1324e93c9b929997))
+
 ## [1.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.1.0...v1.1.1) (2023-07-10)
 
 
