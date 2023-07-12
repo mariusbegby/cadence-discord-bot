@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { useMainPlayer } = require('discord-player');
+const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const { embedColors, playerOptions } = require('../config.json');
 
@@ -83,6 +83,20 @@ module.exports = {
             }
         );
 
+        const queue = useQueue(interaction.guild.id);
+
+        if (!queue) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**Failed**\nFailed to add track to queue. Please try again.`
+                        )
+                        .setColor(embedColors.colorError)
+                ]
+            });
+        }
+
         if (track.source === 'arbitrary') {
             track.thumbnail =
                 'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/icons/Cadence-icon-rounded-128px.png';
@@ -107,6 +121,23 @@ module.exports = {
                             }](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... \`/queue\` to view all.`
+                        )
+                        .setThumbnail(track.thumbnail)
+                        .setColor(embedColors.colorSuccess)
+                ]
+            });
+        }
+
+        if (queue.currentTrack === track) {
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setAuthor({
+                            name: interaction.user.username,
+                            iconURL: interaction.user.avatarURL()
+                        })
+                        .setDescription(
+                            `**Started playing**\n${durationFormat} **[${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedColors.colorSuccess)
