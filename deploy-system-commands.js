@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const logger = require('./services/logger.js');
 const { REST, Routes } = require('discord.js');
-const { token, clientId, systemServerGuildId } = require('./config.json');
+const { token, clientId, systemServerGuildIds } = require('./config.json');
 
 const systemCommands = [];
 const systemCommandFiles = fs
@@ -27,12 +27,14 @@ const rest = new REST({ version: '10' }).setToken(token);
 
         logger.info('Started refreshing application (/) system commands.');
 
-        await rest.put(
-            Routes.applicationGuildCommands(clientId, systemServerGuildId),
-            {
-                body: systemCommands
-            }
-        );
+        for (const systemServerGuildId of systemServerGuildIds) {
+            await rest.put(
+                Routes.applicationGuildCommands(clientId, systemServerGuildId),
+                {
+                    body: systemCommands
+                }
+            );
+        }
 
         logger.info('Successfully refreshed application (/) system commands.');
     } catch (error) {
