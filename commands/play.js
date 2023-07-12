@@ -68,11 +68,14 @@ module.exports = {
                 requestedBy: interaction.user,
                 nodeOptions: {
                     leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
-                    leaveOnEmptyCooldown: playerOptions.leaveOnEmptyCooldown ?? 60000,
+                    leaveOnEmptyCooldown:
+                        playerOptions.leaveOnEmptyCooldown ?? 60000,
                     leaveOnEnd: playerOptions.leaveOnEnd ?? true,
-                    leaveOnEndCooldown: playerOptions.leaveOnEndCooldown ?? 60000,
+                    leaveOnEndCooldown:
+                        playerOptions.leaveOnEndCooldown ?? 60000,
                     leaveOnStop: playerOptions.leaveOnStop ?? true,
-                    leaveOnStopCooldown: playerOptions.leaveOnStopCooldown ?? 60000,
+                    leaveOnStopCooldown:
+                        playerOptions.leaveOnStopCooldown ?? 60000,
                     maxSize: playerOptions.maxQueueSize ?? 1000,
                     maxHistorySize: playerOptions.maxHistorySize ?? 100,
                     volume: playerOptions.defaultVolume ?? 50
