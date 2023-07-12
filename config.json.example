@@ -10,6 +10,17 @@
         "colorInfo": "#5865F2",
         "colorNote": "#80848E"
     },
+    "playerOptions": {
+        "leaveOnEmpty": true,
+        "leaveOnEmptyCooldown": 60000,
+        "leaveOnEnd": true,
+        "leaveonEndCooldown": 60000,
+        "leaveOnStop": true,
+        "leaveOnStopCooldown": 60000,
+        "defaultVolume": 50,
+        "maxQueueSize": 1000,
+        "maxHistorySize": 100
+    },
     "minimumLogLevel": "debug",
     "minimumLogLevelConsole": "info",
     "filterThreadAmount": "4",

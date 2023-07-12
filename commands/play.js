@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, playerOptions } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -67,11 +67,18 @@ module.exports = {
             {
                 requestedBy: interaction.user,
                 nodeOptions: {
-                    leaveOnEmptyCooldown: 60000,
-                    leaveOnEndCooldown: 60000,
-                    leaveOnStopCooldown: 60000,
-                    maxSize: 10000,
-                    maxHistorySize: 100
+                    leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
+                    leaveOnEmptyCooldown:
+                        playerOptions.leaveOnEmptyCooldown ?? 60000,
+                    leaveOnEnd: playerOptions.leaveOnEnd ?? true,
+                    leaveOnEndCooldown:
+                        playerOptions.leaveOnEndCooldown ?? 60000,
+                    leaveOnStop: playerOptions.leaveOnStop ?? true,
+                    leaveOnStopCooldown:
+                        playerOptions.leaveOnStopCooldown ?? 60000,
+                    maxSize: playerOptions.maxQueueSize ?? 1000,
+                    maxHistorySize: playerOptions.maxHistorySize ?? 100,
+                    volume: playerOptions.defaultVolume ?? 50
                 }
             }
         );
