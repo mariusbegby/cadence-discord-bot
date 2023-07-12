@@ -21,7 +21,7 @@
         "maxHistorySize": 100
     },
     "progressBarOptions": {
-        "length": 10,
+        "length": 12,
         "timecodes": false,
         "separator": "┃",
         "indicator": "🔘",
