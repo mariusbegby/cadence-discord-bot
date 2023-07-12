@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, progressBarOptions } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -71,7 +71,7 @@ module.exports = {
                     let durationFormat =
                         track.raw.duration === 0 || track.duration === '0:00'
                             ? ''
-                            : `\`[${track.duration}]\``;
+                            : `\`${track.duration}\``;
 
                     return `**${page * 10 + index + 1}.** ${durationFormat} [${
                         track.title
@@ -98,10 +98,17 @@ module.exports = {
                 ]
             });
         } else {
-            let bar = queue.node.createProgressBar({
+            const timestamp = queue.node.getTimestamp();
+            let bar = `\`${
+                timestamp.current.label
+            }\` ${queue.node.createProgressBar({
                 queue: false,
-                length: 13
-            });
+                length: progressBarOptions.length ?? 12,
+                timecodes: progressBarOptions.timecodes ?? false,
+                indicator: progressBarOptions.indicator ?? '🔘',
+                leftChar: progressBarOptions.leftChar ?? '▬',
+                rightChar: progressBarOptions.rightChar ?? '▬'
+            })} \`${timestamp.total.label}\``;
 
             if (
                 currentTrack.raw.duration === 0 ||
