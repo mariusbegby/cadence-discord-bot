@@ -1,8 +1,7 @@
 {
     "clientId": "Your bot Application ID here.",
     "token": "Your bot auth token here.",
-    "systemServerGuildId": "Your Discord Server ID for system commands here.",
-    "botOwnerClientId": "Your own Discord user ID to access system commands here.",
+    "systemServerGuildIds": ["Server id where system commands can be used", "Another server id where system commands can be used"],
     "embedColors": {
         "colorSuccess": "#23A55A",
         "colorWarning": "#F0B232",
@@ -20,6 +19,14 @@
         "defaultVolume": 50,
         "maxQueueSize": 1000,
         "maxHistorySize": 100
+    },
+    "progressBarOptions": {
+        "length": 12,
+        "timecodes": false,
+        "separator": "┃",
+        "indicator": "🔘",
+        "leftChar": "▬",
+        "rightChar": "▬"
     },
     "minimumLogLevel": "debug",
     "minimumLogLevelConsole": "info",

@@ -1,21 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const {
-    embedColors,
-    systemServerGuildId,
-    botOwnerClientId
-} = require('../config.json');
+const { embedColors, systemServerGuildIds } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('status')
         .setDescription('Show bot status.'),
     run: async ({ interaction, client }) => {
-        if (
-            interaction.guildId !== systemServerGuildId ||
-            interaction.user.id !== botOwnerClientId
-        ) {
+        if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

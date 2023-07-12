@@ -105,7 +105,7 @@ module.exports = {
         let durationFormat =
             track.raw.duration === 0 || track.duration === '0:00'
                 ? ''
-                : `\`[${track.duration}]\``;
+                : `\`${track.duration}\``;
 
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             return await interaction.editReply({

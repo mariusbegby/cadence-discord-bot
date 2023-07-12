@@ -57,6 +57,11 @@ module.exports = {
                 });
             } else {
                 const skippedTrack = queue.currentTrack;
+                let durationFormat =
+                skippedTrack.raw.duration === 0 ||
+                skippedTrack.duration === '0:00'
+                    ? ''
+                    : `\`${skippedTrack.duration}\``;
                 queue.node.skipTo(skipToTrack - 1);
 
                 return await interaction.editReply({
@@ -67,7 +72,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**Skipped**\n**[${skippedTrack.title}](${skippedTrack.url})**.`
+                                `**Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedColors.colorSuccess)
@@ -88,6 +93,11 @@ module.exports = {
             }
 
             const skippedTrack = queue.currentTrack;
+            let durationFormat =
+                skippedTrack.raw.duration === 0 ||
+                skippedTrack.duration === '0:00'
+                    ? ''
+                    : `\`${skippedTrack.duration}\``;
             queue.node.skip();
 
             return await interaction.editReply({
@@ -98,7 +108,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Skipped**\n**[${skippedTrack.title}](${skippedTrack.url})**.`
+                            `**Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)

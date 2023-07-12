@@ -99,6 +99,8 @@ module.exports = {
                 time: 60000
             });
 
+            confirmation.deferUpdate();
+
             queue.filters.ffmpeg.setInputArgs([
                 '-threads',
                 filterThreadAmount,
@@ -164,16 +166,11 @@ module.exports = {
                 components: []
             });
         } catch (e) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**Cancelled**\nNo confirmation received within 1 minute.`
-                        )
-                        .setColor(embedColors.colorWarning)
-                ],
-                components: []
-            });
+            if (e.code === 'InteractionCollectorError') {
+                return;
+            }
+
+            throw e;
         }
     }
 };
