@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.2.0...v1.3.0) (2023-07-12)
+
+
+### Features
+
+* added /nowplaying command with interactive skip button ([16cc50b](https://github.com/mariusbegby/cadence-discord-bot/commit/16cc50b7eb708ff2940a423afe6a3067bde8b3d5))
+* set default player volume to 50%, allow player options to be configured from config ([6826fea](https://github.com/mariusbegby/cadence-discord-bot/commit/6826feaa100e2a825ec6eca32ee73da357f4afe4))
+* system commands are no longer restricted to bot owner id, and can be used in list of specified guilds ([cf5151f](https://github.com/mariusbegby/cadence-discord-bot/commit/cf5151fcd7236ca2d86d95684289245c3a4a71cc))
+
+
+### Bug Fixes
+
+* defer confirmation on filters command ([7534322](https://github.com/mariusbegby/cadence-discord-bot/commit/753432278479da9f27b4210507a8ed0442b771bd))
+* Fixed execution time warnings and unexpected error ([da05193](https://github.com/mariusbegby/cadence-discord-bot/commit/da0519319d97ad81d3c0a44ab8fecd904f4ea388))
+* formatting/linting ([550ec1a](https://github.com/mariusbegby/cadence-discord-bot/commit/550ec1ac9d1f29c53fa34e99aeee4b9c3f5cb23f))
+* reply with "started playing" when adding track to empty queue ([4885398](https://github.com/mariusbegby/cadence-discord-bot/commit/4885398f05c73eac12eb4cab9790d5df2386ccc5))
+* update config.json example with player options ([4622f18](https://github.com/mariusbegby/cadence-discord-bot/commit/4622f184a38d842ea33ef859c3f728c4e942b42d))
+* update default value for progress bar length ([cac18dd](https://github.com/mariusbegby/cadence-discord-bot/commit/cac18dda441517f16060949b44a4e8ecbb69ace5))
+* update progress bar in queue command ([df9b000](https://github.com/mariusbegby/cadence-discord-bot/commit/df9b0005ad369bc889cf0a46b2e958606bf39661))
+* updated duration format in messages ([f87d35e](https://github.com/mariusbegby/cadence-discord-bot/commit/f87d35e635c8d26c0b3886ae561915289f968007))
+
 ## [1.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.1.1...v1.2.0) (2023-07-12)
 
 
