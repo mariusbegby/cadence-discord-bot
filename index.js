@@ -124,8 +124,12 @@ client.on('interactionCreate', async (interaction) => {
         const executionTime = outputTime - inputTime;
 
         if (executionTime > 20000) {
-            // don't send warning message for filters command, as collector timeout happens after 60 seconds
-            if (command.name === 'filters' && executionTime > 55000) {
+            // don't send warning message for commands with collector timeouts, as collector timeout happens after 60 seconds
+            if (
+                (interaction.commandName === 'filters' ||
+                    interaction.commandName === 'nowplaying') &&
+                executionTime > 55000
+            ) {
                 logger.info(
                     `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' executed in ${executionTime} ms.`
                 );
@@ -139,7 +143,7 @@ client.on('interactionCreate', async (interaction) => {
             // todo: using interaction.editReply() might lead to "unknown interaction" error
             // it might already have been replied to or deferred
             // solution might be to use interaction.followUp() instead or send a message to the channel?
-            return await interaction.editReply({
+            return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -164,7 +168,7 @@ client.on('interactionCreate', async (interaction) => {
         // todo: using interaction.editReply() might lead to "unknown interaction" error
         // it might already have been replied to or deferred
         // solution might be to use interaction.followUp() instead or send a message to the channel?
-        await interaction.editReply({
+        await interaction.followUp({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
