@@ -6,7 +6,7 @@ const { embedColors, progressBarOptions } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
-        .setDescription('Show list of tracks added to queue.')
+        .setDescription('Show the list of tracks added to the queue.')
         .addNumberOption((option) =>
             option
                 .setName('page')

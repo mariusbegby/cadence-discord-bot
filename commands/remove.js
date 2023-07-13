@@ -6,11 +6,11 @@ const { embedColors } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('remove')
-        .setDescription('Remove a track from the queue.')
+        .setDescription('Remove a specific track from the queue.')
         .addNumberOption((option) =>
             option
                 .setName('tracknumber')
-                .setDescription('Remove specified track number from queue.')
+                .setDescription('Track number to remove from queue.')
                 .setMinValue(1)
                 .setRequired(true)
         ),

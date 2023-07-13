@@ -6,11 +6,11 @@ const { embedColors, playerOptions } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Play a track provided by search terms or URL.')
+        .setDescription('Add a track or playlist to the queue by searching or url.')
         .addStringOption((option) =>
             option
                 .setName('query')
-                .setDescription('Search terms or URL.')
+                .setDescription('Search query or URL.')
                 .setRequired(true)
         ),
     run: async ({ interaction }) => {
