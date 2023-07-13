@@ -88,7 +88,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.guild.name,
+                            name: `Channel: ${queue.channel.name} (${
+                                queue.channel.bitrate / 1000
+                            }kbps)`,
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(`**Queue**\n${queueString}`)
@@ -122,7 +124,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.guild.name,
+                            name: `Channel: ${queue.channel.name} (${
+                                queue.channel.bitrate / 1000
+                            }kbps)`,
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
