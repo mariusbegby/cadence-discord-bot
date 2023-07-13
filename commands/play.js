@@ -9,6 +9,7 @@ module.exports = {
         .setDescription(
             'Add a track or playlist to the queue by searching or url.'
         )
+        .setDMPermission(false)
         .addStringOption((option) =>
             option
                 .setName('query')

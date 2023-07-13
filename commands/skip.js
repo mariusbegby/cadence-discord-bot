@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
         .setDescription('Skip the current track.')
+        .setDMPermission(false)
         .addNumberOption((option) =>
             option
                 .setName('tracknumber')

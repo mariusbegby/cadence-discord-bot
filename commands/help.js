@@ -5,7 +5,8 @@ const { embedColors } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Show a list of commands and their usage.'),
+        .setDescription('Show a list of commands and their usage.')
+        .setDMPermission(false),
     run: async ({ interaction }) => {
         return await interaction.editReply({
             embeds: [

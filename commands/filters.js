@@ -16,7 +16,8 @@ const {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('filters')
-        .setDescription('Toggle various audio filters during playback.'),
+        .setDescription('Toggle various audio filters during playback.')
+        .setDMPermission(false),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({

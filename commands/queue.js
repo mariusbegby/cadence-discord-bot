@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
         .setDescription('Show the list of tracks added to the queue.')
+        .setDMPermission(false)
         .addNumberOption((option) =>
             option
                 .setName('page')

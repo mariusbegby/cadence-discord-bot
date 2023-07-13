@@ -6,7 +6,8 @@ const { embedColors } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('pause')
-        .setDescription('Pause or resume the current track.'),
+        .setDescription('Pause or resume the current track.')
+        .setDMPermission(false),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({

@@ -6,7 +6,8 @@ const { embedColors, progressBarOptions } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('nowplaying')
-        .setDescription('Show information about the track currently playing.'),
+        .setDescription('Show information about the track currently playing.')
+        .setDMPermission(false),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({

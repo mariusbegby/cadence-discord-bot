@@ -5,7 +5,8 @@ const { embedColors, systemServerGuildIds } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('guilds')
-        .setDescription('Show list of guilds where bot is added.'),
+        .setDescription('Show list of guilds where bot is added.')
+        .setDMPermission(false),
     run: async ({ interaction, client }) => {
         if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
