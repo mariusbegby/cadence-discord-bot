@@ -6,28 +6,35 @@ const transport = pino.transport({
         {
             target: 'pino/file',
             level: process.env.MINIMUM_LOG_LEVEL,
-            options: { destination: './app-all.log' }
-        },
-        {
-            target: 'pino/file',
-            level: 'debug',
-            options: { destination: './app-debug.log' }
+            options: {
+                destination: './app-all.log',
+                sync: false,
+                minLength: 4096
+            }
         },
         {
             target: 'pino/file',
             level: 'info',
-            options: { destination: './app-info.log' }
+            options: {
+                destination: './app-info.log',
+                sync: false,
+                minLength: 4096
+            }
         },
         {
             target: 'pino/file',
             level: 'error',
-            options: { destination: './app-error.log' }
+            options: {
+                destination: './app-error.log',
+                sync: false
+            }
         },
         {
             target: 'pino/file',
             level: process.env.MINIMUM_LOG_LEVEL_CONSOLE,
             options: {
-                colorize: true
+                colorize: true,
+                sync: false
             }
         }
     ]
