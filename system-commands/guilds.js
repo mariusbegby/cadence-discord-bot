@@ -12,7 +12,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**No permission**\nYou do not have permission to use this command.`
+                            '**No permission**\nYou do not have permission to use this command.'
                         )
                         .setColor(embedColors.colorError)
                 ]

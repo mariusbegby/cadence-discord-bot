@@ -19,7 +19,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -30,7 +30,8 @@ module.exports = {
         let queueString = '';
 
         if (!queue) {
-            queueString = `There are no tracks in the queue. Add tracks with \`/play\`!`;
+            queueString =
+                'There are no tracks in the queue. Add tracks with `/play`!';
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -41,7 +42,7 @@ module.exports = {
                         .setDescription(`**Queue**\n${queueString}`)
                         .setColor(embedColors.colorInfo)
                         .setFooter({
-                            text: `Page 1 of 1`
+                            text: 'Page 1 of 1'
                         })
                 ]
             });
@@ -125,7 +126,7 @@ module.exports = {
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            `**Currently playing**\n` +
+                            '**Currently playing**\n' +
                                 (currentTrack
                                     ? `**[${currentTrack.title}](${currentTrack.url})**`
                                     : 'None') +

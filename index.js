@@ -125,7 +125,9 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     const command = client.commands.get(interaction.commandName);
-    if (!command) return;
+    if (!command) {
+        return;
+    }
 
     try {
         const inputTime = new Date();
@@ -183,7 +185,7 @@ client.on('interactionCreate', async (interaction) => {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._`
+                        '**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._'
                     )
                     .setColor(embedColors.colorError)
             ]

@@ -20,7 +20,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./index.js",
-        "deploy": "node ./deploy-commands.js && node ./deploy-system-commands.js"
+        "deploy": "node ./deploy-commands.js && node ./deploy-system-commands.js",
+        "eslint": "eslint ./"
     },
     "dependencies": {
         "@discord-player/extractor": "^4.4.0",
@@ -33,5 +34,9 @@
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.1",
         "yt-stream": "^1.4.8"
+    },
+    "devDependencies": {
+        "eslint": "^8.44.0",
+        "prettier-eslint": "^15.0.1"
     }
 }

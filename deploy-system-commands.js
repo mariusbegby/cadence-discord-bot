@@ -14,7 +14,9 @@ for (const file of systemCommandFiles) {
     systemCommands.push(systemCommand.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
+const rest = new REST({ version: '10' }).setToken(
+    process.env.DISCORD_BOT_TOKEN
+);
 
 (async () => {
     try {
@@ -30,7 +32,10 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
 
         for (const systemServerGuildId of systemServerGuildIds) {
             await rest.put(
-                Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, systemServerGuildId),
+                Routes.applicationGuildCommands(
+                    process.env.DISCORD_CLIENT_ID,
+                    systemServerGuildId
+                ),
                 {
                     body: systemCommands
                 }
