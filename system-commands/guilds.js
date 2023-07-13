@@ -12,7 +12,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**No permission**\nYou do not have permission to use this command.'
+                            `**No permission**\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
                         )
                         .setColor(embedColors.colorError)
                 ]
