@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('volume')
         .setDescription('Show or set the playback volume for tracks.')
+        .setDMPermission(false)
         .addNumberOption((option) =>
             option
                 .setName('percentage')

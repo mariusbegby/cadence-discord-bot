@@ -8,7 +8,8 @@ const packageJson = require('../package.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('status')
-        .setDescription('Show bot status.'),
+        .setDescription('Show bot status.')
+        .setDMPermission(false),
     run: async ({ interaction, client }) => {
         if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({

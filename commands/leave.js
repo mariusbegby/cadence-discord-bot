@@ -8,7 +8,8 @@ module.exports = {
         .setName('leave')
         .setDescription(
             'Clear the track queue and remove the bot from voice channel.'
-        ),
+        )
+        .setDMPermission(false),
 
     // todo, allow command to be executed if bot is only member in voice channel
     run: async ({ interaction }) => {

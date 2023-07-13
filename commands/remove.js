@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('remove')
         .setDescription('Remove a specific track from the queue.')
+        .setDMPermission(false)
         .addNumberOption((option) =>
             option
                 .setName('tracknumber')
