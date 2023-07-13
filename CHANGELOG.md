@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.3.0...v1.4.0) (2023-07-13)
+
+
+### Features
+
+* Add support for trace level logging in logging service ([78dcc1b](https://github.com/mariusbegby/cadence-discord-bot/commit/78dcc1b2e9cc82b397d60545f1692d237a6adaad))
+* Added .env file, and moved some properties from config.json to .env file ([cc3fd95](https://github.com/mariusbegby/cadence-discord-bot/commit/cc3fd9569c8602b6f9c68b6e9532c2e052097f80))
+* Remove pino-pretty as dependency, logger will by default write json to console. ([02d9180](https://github.com/mariusbegby/cadence-discord-bot/commit/02d9180a8492f18d42cd8a803d94c9b38204a744))
+* Show channel name and bitrate in queue/nowplaying ([32bd63b](https://github.com/mariusbegby/cadence-discord-bot/commit/32bd63b4901719302830edfbaae84865ce523c4c))
+* Updated /status system command with more details ([c909afb](https://github.com/mariusbegby/cadence-discord-bot/commit/c909afb9c023fcebeb8ad163f1716059ea3b1a36))
+
+
+### Minor changes and bug fixes
+
+* add .gitattributes to for crlf line endings ([9feaca5](https://github.com/mariusbegby/cadence-discord-bot/commit/9feaca5b51591e5ad6062a1004e2fa8ec45e062c))
+* added .editorconfig ([ce3e2d6](https://github.com/mariusbegby/cadence-discord-bot/commit/ce3e2d63b523537466dc94567c2f828b4e39113b))
+* Added eslint and prettier-eslint for formatting and linting ([d0f1c41](https://github.com/mariusbegby/cadence-discord-bot/commit/d0f1c4103ac2a4bf44c5298a03a6fe221e6dcc01))
+* Added npm scripts to start and deploy with pino-pretty formatting ([3c85841](https://github.com/mariusbegby/cadence-discord-bot/commit/3c85841b878d24fd9b9b18c64b832864dcd797e1))
+* Do not allow console logging statements ([2d7abaa](https://github.com/mariusbegby/cadence-discord-bot/commit/2d7abaab6ce94e62306803179ab573fb9b28dd8b))
+* Make commands inaccessible in direct messages ([a4e7931](https://github.com/mariusbegby/cadence-discord-bot/commit/a4e7931daed55ed74baab629124e899c1a7d5e0b))
+* run 'npm run eslint' in CI workflow ([fe544ff](https://github.com/mariusbegby/cadence-discord-bot/commit/fe544ff35980f63d44aff92b8f9740999cabd750))
+* update error message for system commands no permission ([595c902](https://github.com/mariusbegby/cadence-discord-bot/commit/595c902027b57ab11e361779f99db364062fa47b))
+* update generated headings for release-please ([d9a86fb](https://github.com/mariusbegby/cadence-discord-bot/commit/d9a86fbab8cc681f11b070b13434331ffcf974c9))
+* Updated descriptions for commands and /help command ([19f65e9](https://github.com/mariusbegby/cadence-discord-bot/commit/19f65e951d6ed50ce7f9fa716b39f9389c55f15d))
+
 ## [1.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.2.0...v1.3.0) (2023-07-12)
 
 
