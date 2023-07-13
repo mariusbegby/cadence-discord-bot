@@ -6,13 +6,11 @@ const { embedColors } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('Skip the currently playing track.')
+        .setDescription('Skip the current track.')
         .addNumberOption((option) =>
             option
                 .setName('tracknumber')
-                .setDescription(
-                    'Skip to next track or the given track number in the queue.'
-                )
+                .setDescription('Track number to skip to in the queue.')
                 .setMinValue(1)
         ),
     run: async ({ interaction }) => {
@@ -58,10 +56,10 @@ module.exports = {
             } else {
                 const skippedTrack = queue.currentTrack;
                 let durationFormat =
-                skippedTrack.raw.duration === 0 ||
-                skippedTrack.duration === '0:00'
-                    ? ''
-                    : `\`${skippedTrack.duration}\``;
+                    skippedTrack.raw.duration === 0 ||
+                    skippedTrack.duration === '0:00'
+                        ? ''
+                        : `\`${skippedTrack.duration}\``;
                 queue.node.skipTo(skipToTrack - 1);
 
                 return await interaction.editReply({
