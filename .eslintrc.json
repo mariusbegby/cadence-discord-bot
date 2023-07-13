@@ -35,6 +35,7 @@
                 "ignoreComments": true
             }
         ],
-        "curly": ["error", "all"]
+        "curly": ["error", "all"],
+        "no-console": ["error"]
     }
 }
