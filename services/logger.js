@@ -5,6 +5,11 @@ const transport = pino.transport({
     targets: [
         {
             target: 'pino/file',
+            level: process.env.MINIMUM_LOG_LEVEL,
+            options: { destination: `./app-all.log` }
+        },
+        {
+            target: 'pino/file',
             level: 'debug',
             options: { destination: `./app-debug.log` }
         },

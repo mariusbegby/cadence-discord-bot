@@ -53,8 +53,12 @@ onBeforeCreateStream(async (track) => {
 });
 
 if (process.env.NODE_ENV === 'development') {
-    player.events.on('debug', (message) => {
+    player.on('debug', (message) => {
         logger.debug(message);
+    });
+
+    player.events.on('debug', (message) => {
+        logger.trace(message);
     });
 }
 
