@@ -2,7 +2,7 @@
     <br>
     Cadence - A free Discord music and audio bot
     <br><br>
-    <img src="./icons/Cadence-icon-rounded-128px.png" alt="Cadence icon">
+    <img src="./assets/logo-rounded-128px.png" alt="Cadence icon">
     <br><br>
 </h1>
 
