@@ -1,5 +1,5 @@
 const pino = require('pino');
-const { minimumLogLevel, minimumLogLevelConsole } = require('../config.json');
+require('dotenv').config();
 
 const transport = pino.transport({
     targets: [
@@ -19,7 +19,7 @@ const transport = pino.transport({
             options: { destination: `./app-error.log` }
         },
         {
-            level: minimumLogLevelConsole,
+            level: process.env.MINIMUM_LOG_LEVEL_CONSOLE,
             target: 'pino-pretty'
         }
     ]
@@ -27,7 +27,7 @@ const transport = pino.transport({
 
 module.exports = pino(
     {
-        level: minimumLogLevel,
+        level: process.env.MINIMUM_LOG_LEVEL,
         timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
         base: undefined
     },

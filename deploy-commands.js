@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const logger = require('./services/logger.js');
 const { REST, Routes } = require('discord.js');
-const { token, clientId } = require('./config.json');
+require('dotenv').config();
 
 const commands = [];
 const commandFiles = fs
@@ -13,7 +13,9 @@ for (const file of commandFiles) {
     commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(
+    process.env.DISCORD_BOT_TOKEN
+);
 
 (async () => {
     try {
@@ -27,9 +29,12 @@ const rest = new REST({ version: '10' }).setToken(token);
 
         logger.info('Started refreshing application (/) bot commands.');
 
-        await rest.put(Routes.applicationCommands(clientId), {
-            body: commands
-        });
+        await rest.put(
+            Routes.applicationCommands(process.env.DISCORD_CLIENT_ID),
+            {
+                body: commands
+            }
+        );
 
         logger.info('Successfully refreshed application (/) bot commands.');
     } catch (error) {

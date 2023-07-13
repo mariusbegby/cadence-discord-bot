@@ -4,7 +4,8 @@ const logger = require('./services/logger.js');
 const { EmbedBuilder } = require('discord.js');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { token, embedColors } = require('./config.json');
+const { embedColors } = require('./config.json');
+require('dotenv').config();
 
 // Setup required permissions for the bot to work
 const client = new Discord.Client({
@@ -50,6 +51,12 @@ onBeforeCreateStream(async (track) => {
 
     return null;
 });
+
+if (process.env.NODE_ENV === 'development') {
+    player.events.on('debug', (message) => {
+        logger.debug(message);
+    });
+}
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
@@ -180,4 +187,4 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
-client.login(token);
+client.login(process.env.DISCORD_BOT_TOKEN);

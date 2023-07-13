@@ -1,7 +1,8 @@
 {
-    "clientId": "Your bot Application ID here.",
-    "token": "Your bot auth token here.",
-    "systemServerGuildIds": ["Server id where system commands can be used", "Another server id where system commands can be used"],
+    "systemServerGuildIds": [
+        "Server id where system commands can be used",
+        "Another server id where system commands can be used"
+    ],
     "embedColors": {
         "colorSuccess": "#23A55A",
         "colorWarning": "#F0B232",
@@ -28,9 +29,7 @@
         "leftChar": "▬",
         "rightChar": "▬"
     },
-    "minimumLogLevel": "debug",
-    "minimumLogLevelConsole": "info",
-    "filterThreadAmount": "4",
+    "filterThreadAmount": "2",
     "filterList": [
         {
             "label": "Bass boost",

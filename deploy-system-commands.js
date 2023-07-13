@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const logger = require('./services/logger.js');
 const { REST, Routes } = require('discord.js');
-const { token, clientId, systemServerGuildIds } = require('./config.json');
+const { systemServerGuildIds } = require('./config.json');
+require('dotenv').config();
 
 const systemCommands = [];
 const systemCommandFiles = fs
@@ -13,7 +14,7 @@ for (const file of systemCommandFiles) {
     systemCommands.push(systemCommand.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 (async () => {
     try {
@@ -29,7 +30,7 @@ const rest = new REST({ version: '10' }).setToken(token);
 
         for (const systemServerGuildId of systemServerGuildIds) {
             await rest.put(
-                Routes.applicationGuildCommands(clientId, systemServerGuildId),
+                Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, systemServerGuildId),
                 {
                     body: systemCommands
                 }
