@@ -24,8 +24,11 @@ const transport = pino.transport({
             options: { destination: './app-error.log' }
         },
         {
+            target: 'pino/file',
             level: process.env.MINIMUM_LOG_LEVEL_CONSOLE,
-            target: 'pino-pretty'
+            options: {
+                colorize: true
+            }
         }
     ]
 });
