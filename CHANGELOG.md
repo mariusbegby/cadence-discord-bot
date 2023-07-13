@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.0...v1.4.1) (2023-07-13)
+
+
+### Minor changes and bug fixes
+
+* Add buffering to pino async logging ([67402a8](https://github.com/mariusbegby/cadence-discord-bot/commit/67402a8911642aed7015f4496440e48742f17425))
+* Added variables for node process args and YouTube cookie to .env file ([2df30c5](https://github.com/mariusbegby/cadence-discord-bot/commit/2df30c5d5fa1bbb1e3b52f663dd565eaa3576ab7))
+
 ## [1.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.3.0...v1.4.0) (2023-07-13)
 
 
