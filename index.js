@@ -44,7 +44,8 @@ onBeforeCreateStream(async (track) => {
             await stream(track.url, {
                 type: 'audio',
                 quality: 'high',
-                highWaterMark: 1 << 25
+                highWaterMark: 1 << 25,
+                cookie: process.env.YOUTUBE_COOKIE || ''
             })
         ).stream;
     }
