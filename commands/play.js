@@ -101,7 +101,7 @@ module.exports = {
 
         if (track.source === 'arbitrary') {
             track.thumbnail =
-                'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/icons/Cadence-icon-rounded-128px.png';
+                'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
         }
 
         let durationFormat =
