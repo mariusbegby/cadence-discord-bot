@@ -4,7 +4,8 @@ const logger = require('./services/logger.js');
 const { EmbedBuilder } = require('discord.js');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { token, embedColors } = require('./config.json');
+const { embedColors } = require('./config.json');
+require('dotenv').config();
 
 // Setup required permissions for the bot to work
 const client = new Discord.Client({
@@ -50,6 +51,16 @@ onBeforeCreateStream(async (track) => {
 
     return null;
 });
+
+if (process.env.NODE_ENV === 'development') {
+    player.on('debug', (message) => {
+        logger.debug(message);
+    });
+
+    player.events.on('debug', (message) => {
+        logger.trace(message);
+    });
+}
 
 player.events.on('error', (queue, error) => {
     // Emitted when the player queue encounters error
@@ -114,7 +125,9 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     const command = client.commands.get(interaction.commandName);
-    if (!command) return;
+    if (!command) {
+        return;
+    }
 
     try {
         const inputTime = new Date();
@@ -172,7 +185,7 @@ client.on('interactionCreate', async (interaction) => {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._`
+                        '**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._'
                     )
                     .setColor(embedColors.colorError)
             ]
@@ -180,4 +193,4 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
-client.login(token);
+client.login(process.env.DISCORD_BOT_TOKEN);

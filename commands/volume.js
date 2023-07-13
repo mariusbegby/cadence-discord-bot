@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { useMainPlayer, useQueue } = require('discord-player');
+const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
 const { embedColors } = require('../config.json');
 
@@ -20,7 +20,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -34,7 +34,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks playing or in the queue. Add tracks with \`/play\`!`
+                            '**Failed**\nThere are no tracks playing or in the queue. Add tracks with `/play`!'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -58,7 +58,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nYou need to pick a number between \`1\` and \`100\`.`
+                            '**Error**\nYou need to pick a number between `1` and `100`.'
                         )
                         .setColor(embedColors.colorError)
                 ]

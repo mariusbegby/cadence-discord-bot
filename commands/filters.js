@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { useMainPlayer, useQueue } = require('discord-player');
+const { useQueue } = require('discord-player');
 const {
     EmbedBuilder,
     StringSelectMenuBuilder,
@@ -23,7 +23,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -37,7 +37,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`
+                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -85,7 +85,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Toggle filters** (beta)\nToggle or disable audio filters for playback.`
+                        '**Toggle filters** (beta)\nToggle or disable audio filters for playback.'
                     )
                     .setColor(embedColors.colorInfo)
             ],
@@ -130,7 +130,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**Disabled filters**\nDisabled all audio filters.`
+                                '**Disabled filters**\nDisabled all audio filters.'
                             )
                             .setColor(embedColors.colorSuccess)
                     ],

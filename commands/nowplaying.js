@@ -13,7 +13,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -27,7 +27,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`
+                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -39,29 +39,29 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks in the queue or currently playing.`
+                            '**Failed**\nThere are no tracks in the queue or currently playing.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
-        const sourceStringsFormatted = {
-            youtube: 'YouTube',
-            soundcloud: 'SoundCloud',
-            spotify: 'Spotify',
-            apple_music: 'Apple Music',
-            arbitrary: 'Direct source'
-        };
+        const sourceStringsFormatted = new Map([
+            ['youtube', 'YouTube'],
+            ['soundcloud', 'SoundCloud'],
+            ['spotify', 'Spotify'],
+            ['apple_music', 'Apple Music'],
+            ['arbitrary', 'Direct source']
+        ]);
 
         const currentTrack = queue.currentTrack;
-        const author = currentTrack.author ? currentTrack.author : 'Unknown';
+        let author = currentTrack.author ? currentTrack.author : 'Unknown';
         if (author === 'cdn.discordapp.com') {
             author = 'Unknown';
         }
         const plays = currentTrack.views !== 0 ? currentTrack.views : 'Unknown';
         const source =
-            sourceStringsFormatted[currentTrack.raw.source] ?? 'Unknown';
+            sourceStringsFormatted.get(currentTrack.raw.source) ?? 'Unknown';
         const queueLength = queue.tracks.data.length;
         const timestamp = queue.node.getTimestamp();
         let bar = `\`${
@@ -98,8 +98,8 @@ module.exports = {
                     })
                     .setDescription(
                         (queue.node.isPaused()
-                            ? `**Currently Paused**\n`
-                            : `**Now Playing**\n`) +
+                            ? '**Currently Paused**\n'
+                            : '**Now Playing**\n') +
                             (currentTrack
                                 ? `**[${currentTrack.title}](${currentTrack.url})**`
                                 : 'None') +
@@ -152,7 +152,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**Failed**\nThere are no tracks in the queue and nothing currently playing.`
+                                    '**Failed**\nThere are no tracks in the queue and nothing currently playing.'
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],
@@ -165,7 +165,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**Failed to skip**\nThis track has already been skipped, or is no longer playing.`
+                                    '**Failed to skip**\nThis track has already been skipped, or is no longer playing.'
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],

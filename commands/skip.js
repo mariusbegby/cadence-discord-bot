@@ -19,7 +19,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -33,7 +33,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nThere are no tracks in the queue. Add tracks with \`/play\`!`
+                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -83,7 +83,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**Failed**\nThere are no tracks in the queue and nothing currently playing.`
+                                '**Failed**\nThere are no tracks in the queue and nothing currently playing.'
                             )
                             .setColor(embedColors.colorWarning)
                     ]

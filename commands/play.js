@@ -6,7 +6,9 @@ const { embedColors, playerOptions } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Add a track or playlist to the queue by searching or url.')
+        .setDescription(
+            'Add a track or playlist to the queue by searching or url.'
+        )
         .addStringOption((option) =>
             option
                 .setName('query')
@@ -19,7 +21,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nYou need to be in a voice channel to use this command.`
+                            '**Failed**\nYou need to be in a voice channel to use this command.'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -54,7 +56,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._`
+                            '**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._'
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -90,7 +92,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Failed**\nFailed to add track to queue. Please try again.`
+                            '**Failed**\nFailed to add track to queue. Please try again.'
                         )
                         .setColor(embedColors.colorError)
                 ]

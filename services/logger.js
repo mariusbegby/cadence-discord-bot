@@ -1,25 +1,30 @@
 const pino = require('pino');
-const { minimumLogLevel, minimumLogLevelConsole } = require('../config.json');
+require('dotenv').config();
 
 const transport = pino.transport({
     targets: [
         {
             target: 'pino/file',
+            level: process.env.MINIMUM_LOG_LEVEL,
+            options: { destination: './app-all.log' }
+        },
+        {
+            target: 'pino/file',
             level: 'debug',
-            options: { destination: `./app-debug.log` }
+            options: { destination: './app-debug.log' }
         },
         {
             target: 'pino/file',
             level: 'info',
-            options: { destination: `./app-info.log` }
+            options: { destination: './app-info.log' }
         },
         {
             target: 'pino/file',
             level: 'error',
-            options: { destination: `./app-error.log` }
+            options: { destination: './app-error.log' }
         },
         {
-            level: minimumLogLevelConsole,
+            level: process.env.MINIMUM_LOG_LEVEL_CONSOLE,
             target: 'pino-pretty'
         }
     ]
@@ -27,7 +32,7 @@ const transport = pino.transport({
 
 module.exports = pino(
     {
-        level: minimumLogLevel,
+        level: process.env.MINIMUM_LOG_LEVEL,
         timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
         base: undefined
     },
