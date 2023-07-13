@@ -20,7 +20,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./index.js",
+        "start-pretty": "node ./index.js | pino-pretty",
         "deploy": "node ./deploy-commands.js && node ./deploy-system-commands.js",
+        "deploy-pretty": "node ./deploy-commands.js | pino-pretty && node ./deploy-system-commands.js | pino-pretty",
         "eslint": "eslint ./"
     },
     "dependencies": {
