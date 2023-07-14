@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-const { embedColors, progressBarOptions } = require('../config.json');
+const {
+    embedColors,
+    embedIcons,
+    progressBarOptions
+} = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,7 +18,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -28,7 +32,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -40,7 +44,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue or currently playing.'
+                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -56,13 +60,15 @@ module.exports = {
         ]);
 
         const currentTrack = queue.currentTrack;
-        let author = currentTrack.author ? currentTrack.author : 'Unknown';
+        let author = currentTrack.author ? currentTrack.author : 'Unavailable';
         if (author === 'cdn.discordapp.com') {
-            author = 'Unknown';
+            author = 'Unavailable';
         }
-        const plays = currentTrack.views !== 0 ? currentTrack.views : 'Unknown';
+        const plays =
+            currentTrack.views !== 0 ? currentTrack.views : 'Unavailable';
         const source =
-            sourceStringsFormatted.get(currentTrack.raw.source) ?? 'Unknown';
+            sourceStringsFormatted.get(currentTrack.raw.source) ??
+            'Unavailable';
         const queueLength = queue.tracks.data.length;
         const timestamp = queue.node.getTimestamp();
         let bar = `\`${
@@ -88,6 +94,7 @@ module.exports = {
                 .setCustomId('nowplaying-skip')
                 .setLabel('Skip track')
                 .setStyle('Secondary')
+                .setEmoji(embedIcons.nextTrack)
         );
 
         const response = await interaction.editReply({
@@ -102,7 +109,7 @@ module.exports = {
                     .setDescription(
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
-                            : '**Now Playing**\n') +
+                            : `**${embedIcons.audioPlaying} Now Playing**\n`) +
                             (currentTrack
                                 ? `**[${currentTrack.title}](${currentTrack.url})**`
                                 : 'None') +
@@ -122,7 +129,7 @@ module.exports = {
                         },
                         {
                             name: '**Audio source**',
-                            value: `[${source}](${currentTrack.url})`,
+                            value: `**[${source}](${currentTrack.url})**`,
                             inline: true
                         }
                     )
@@ -155,7 +162,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    '**Failed**\nThere are no tracks in the queue and nothing currently playing.'
+                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],
@@ -192,7 +199,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
+                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedColors.colorSuccess)
