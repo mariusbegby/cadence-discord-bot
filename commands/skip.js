@@ -6,7 +6,7 @@ const { embedColors } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('Skip the current track.')
+        .setDescription('Skip current or specified track.')
         .setDMPermission(false)
         .addNumberOption((option) =>
             option
