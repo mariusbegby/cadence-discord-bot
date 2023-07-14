@@ -46,7 +46,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.success} Leaving**\nCleared the track queue and left voice channel. To play more music, use the \`/play\` command!`
+                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel. To play more music, use the \`/play\` command!`
                         )
                         .setColor(embedColors.colorSuccess)
                 ]
