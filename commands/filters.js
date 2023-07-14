@@ -25,7 +25,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -39,7 +39,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -81,13 +81,14 @@ module.exports = {
                 .setCustomId('disable-filters')
                 .setLabel('Disable all filters')
                 .setStyle('Secondary')
+                .setEmoji(embedIcons.disable)
         );
 
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Toggle filters** ${embedIcons.beta}\nToggle or disable audio filters for playback.`
+                        `**Toggle filters** ${embedIcons.beta}\nEnable or disable audio filters for playback from the menu.`
                     )
                     .setColor(embedColors.colorInfo)
             ],
@@ -132,7 +133,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                '**Disabled filters**\nDisabled all audio filters.'
+                                `**${embedIcons.success} Disabled filters**\nAll audio filters have been disabled.`
                             )
                             .setColor(embedColors.colorSuccess)
                     ],
@@ -151,7 +152,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Filters enabled**\nThese filters are now enabled:\n${confirmation.values
+                            `**${
+                                embedIcons.success
+                            } Filters toggled**\nNow using these filters:\n${confirmation.values
                                 .map(
                                     (enabled) =>
                                         `\`${
