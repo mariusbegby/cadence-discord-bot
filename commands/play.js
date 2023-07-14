@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors, playerOptions } = require('../config.json');
+const { embedColors, playerOptions, botInfo } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -57,7 +57,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](https://discord.gg/t6Bm8wPpXB)._'
+                            `**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](${botInfo.supportServerInviteUrl})._`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
