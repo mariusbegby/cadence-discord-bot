@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, embedIcons } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,7 +14,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -28,7 +28,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -40,7 +40,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue or currently playing.'
+                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -59,7 +59,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Paused**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
+                            `**${embedIcons.pauseResumed} Paused track**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)
@@ -74,7 +74,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Resumed**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
+                            `**${embedIcons.pauseResumed} Resumed track**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)
