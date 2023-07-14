@@ -13,7 +13,7 @@
 <p align="center">
     <a href="https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands">
         <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Add%20bot&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Add Cadence Discord bot"></a>&nbsp;
-    <a href="https://discord.gg/t6Bm8wPpXB">
+    <a href="https://discord.gg/cadence">
         <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Support%20Server&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Cadence Discord support server"></a>&nbsp;
     <a href="https://github.com/mariusbegby/cadence-discord-bot/releases">
         <img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=Version&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release"></a>&nbsp;
@@ -41,7 +41,7 @@ This bot is open-source, and if you want to host it yourself, you can do so by f
 
 ## Get help and support 🛟
 
-If you experience any issues, please open an issue on this repository or join the [Discord support server](https://discord.gg/t6Bm8wPpXB) for the Cadence bot.
+If you experience any issues, please open an issue on this repository or join the [Discord support server](https://discord.gg/cadence) for the Cadence bot.
 
 ## Credits and acknowledgments 🎉
 
