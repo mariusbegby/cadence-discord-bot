@@ -4,7 +4,7 @@ const logger = require('./services/logger.js');
 const { EmbedBuilder } = require('discord.js');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { embedColors, botInfo } = require('./config.json');
+const { embedColors, embedIcons, botInfo } = require('./config.json');
 require('dotenv').config();
 
 // Setup required permissions for the bot to work
@@ -186,7 +186,7 @@ client.on('interactionCreate', async (interaction) => {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**Unexpected Error**\nThere was an error while executing this command! Please try again.\n\n_If this issue persists, please submit a bug report in the bot [support server](${botInfo.supportServerInviteUrl})._`
+                        `**${embedIcons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
                     )
                     .setColor(embedColors.colorError)
             ]
