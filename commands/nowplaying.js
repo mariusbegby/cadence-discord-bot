@@ -139,7 +139,7 @@ module.exports = {
                             : ' '
                     })
                     .setThumbnail(queue.currentTrack.thumbnail)
-                    .setColor(embedColors.colorSuccess)
+                    .setColor(embedColors.colorInfo)
             ],
             components: [nowPlayingActionRow]
         });
