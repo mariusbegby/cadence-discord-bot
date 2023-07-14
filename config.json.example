@@ -28,7 +28,7 @@
         "maxHistorySize": 100
     },
     "progressBarOptions": {
-        "length": 12,
+        "length": 14,
         "timecodes": false,
         "separator": "┃",
         "indicator": "🔘",
@@ -37,6 +37,7 @@
     },
     "embedIcons": {
         "beta": "`beta`",
+        "new": "`new`",
         "rule": "📒",
         "support": "❓",
         "bot": "🤖"
