@@ -42,13 +42,15 @@
         "rule": "📒",
         "support": "❓",
         "bot": "🤖",
-        "audioPlaying": "✅",
-        "checkmark": "✅",
+        "audioPlaying": "🎶",
+        "audioStartedPlaying": "🎶",
         "success": "✅",
         "error": "⚠️",
         "warning": "⚠️",
         "disable": "🚫",
         "enable": "✅",
+        "disabled": "✅",
+        "enabled": "✅",
         "nextTrack": "⏭️",
         "previousTrack": "⏮️",
         "pauseResumeTrack": "⏯️",
@@ -57,7 +59,9 @@
         "back": "⏮️",
         "pauseResumed": "⏯️",
         "shuffled": "🔀",
-        "volume": "🔊"
+        "volume": "🔊",
+        "volumeChanged": "🔊",
+        "queue": "🎶"
     },
     "filterThreadAmount": "2",
     "filterList": [
