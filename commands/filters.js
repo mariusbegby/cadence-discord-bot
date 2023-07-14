@@ -9,6 +9,7 @@ const {
 } = require('discord.js');
 const {
     embedColors,
+    embedIcons,
     filterList,
     filterThreadAmount
 } = require('../config.json');
@@ -86,7 +87,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        '**Toggle filters** (beta)\nToggle or disable audio filters for playback.'
+                        `**Toggle filters** ${embedIcons.beta}\nToggle or disable audio filters for playback.`
                     )
                     .setColor(embedColors.colorInfo)
             ],

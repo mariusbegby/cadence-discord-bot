@@ -1,4 +1,10 @@
 {
+    "botInfo": {
+        "name": "Cadence",
+        "websiteUrl": "Unknown",
+        "botInviteUrl": "Unknown",
+        "supportServerInviteUrl": "Unknown"
+    },
     "systemServerGuildIds": [
         "Server id where system commands can be used",
         "Another server id where system commands can be used"
@@ -28,6 +34,12 @@
         "indicator": "🔘",
         "leftChar": "▬",
         "rightChar": "▬"
+    },
+    "embedIcons": {
+        "beta": "`beta`",
+        "rule": "📒",
+        "support": "❓",
+        "bot": "🤖"
     },
     "filterThreadAmount": "2",
     "filterList": [
