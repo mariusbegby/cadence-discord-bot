@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, embedIcons } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,7 +18,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -32,7 +32,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nNo tracks are currently playing, and the queue is empty. Use the `/play` command to play some music!'
+                            `**${embedIcons.warning} Oops!**\n_Hmm.._ It seems I am already not in a voice channel!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -46,7 +46,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Leaving**\nCleared the track queue and left voice channel. To play more music, use the `/play` command!'
+                            `**${embedIcons.success} Leaving**\nCleared the track queue and left voice channel. To play more music, use the \`/play\` command!`
                         )
                         .setColor(embedColors.colorSuccess)
                 ]
