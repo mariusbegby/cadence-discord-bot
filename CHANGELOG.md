@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.1...v1.4.2) (2023-07-14)
+
+
+### Minor changes and bug fixes
+
+* Added more configurable options for user replies ([65a94ce](https://github.com/mariusbegby/cadence-discord-bot/commit/65a94ceb6cacce0a98ec3f320083f539062950b4))
+
 ## [1.4.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.0...v1.4.1) (2023-07-13)
 
 
