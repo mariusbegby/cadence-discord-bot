@@ -32,7 +32,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\n_Hmm.._ It seems I am already not in a voice channel!`
+                            `**${embedIcons.warning} Oops!**\n_Hmm.._ It seems I am not in a voice channel!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -45,8 +45,14 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
+                        .setAuthor({
+                            name:
+                                interaction.member.nickname ||
+                                interaction.user.username,
+                            iconURL: interaction.user.avatarURL()
+                        })
                         .setDescription(
-                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel. To play more music, use the \`/play\` command!`
+                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the \`/play\` command!`
                         )
                         .setColor(embedColors.colorSuccess)
                 ]
