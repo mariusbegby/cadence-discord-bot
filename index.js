@@ -35,7 +35,14 @@ for (const file of systemCommandFiles) {
 }
 
 const player = new Player(client, {
-    useLegacyFFmpeg: false
+    useLegacyFFmpeg: false,
+    ytdlOptions: {
+        requestOptions: {
+            headers: {
+                cookie: process.env.YOUTUBE_COOKIE || ''
+            }
+        }
+    }
 });
 
 onBeforeCreateStream(async (track) => {

@@ -107,13 +107,16 @@ module.exports = {
             }
 
             if (
-                error.type === 'TypeError' &&
-                (error.message.includes(
-                    'Cannot read properties of null (reading \'createStream\')'
-                ) ||
-                    error.message.includes(
-                        'Failed to fetch resources for ytdl streaming'
-                    ))
+                (error.type === 'TypeError' &&
+                    (error.message.includes(
+                        'Cannot read properties of null (reading \'createStream\')'
+                    ) ||
+                        error.message.includes(
+                            'Failed to fetch resources for ytdl streaming'
+                        ))) ||
+                error.message.includes(
+                    'Could not extract stream for this track'
+                )
             ) {
                 return await interaction.editReply({
                     embeds: [
@@ -168,7 +171,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
+                            name:
+                                interaction.member.nickname ||
+                                interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -191,7 +196,10 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.member.nickname || interaction.user.username,
+                            name:
+                                interaction.member.nickname ||
+                                interaction.member.nickname ||
+                                interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -207,7 +215,9 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
+                        name:
+                            interaction.member.nickname ||
+                            interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
