@@ -164,7 +164,7 @@ module.exports = {
                                             ).label
                                         }\``
                                 )
-                                .join(', ')}`
+                                .join(', ')}.`
                         )
                         .setColor(embedColors.colorSuccess)
                 ],
