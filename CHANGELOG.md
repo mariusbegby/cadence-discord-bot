@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.1...v1.5.2) (2023-07-15)
+
+
+### Minor changes and bug fixes
+
+* Fixed retrieving play count for some tracks that does not have track.views set ([ea4df17](https://github.com/mariusbegby/cadence-discord-bot/commit/ea4df17195f2dc810843b3bd73f3e1c9e8653524))
+
 ## [1.5.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.0...v1.5.1) (2023-07-15)
 
 
