@@ -47,6 +47,12 @@ module.exports = {
             });
         }
 
+        let durationFormat =
+            queue.currentTrack.raw.duration === 0 ||
+            queue.currentTrack.duration === '0:00'
+                ? ''
+                : `\`${queue.currentTrack.duration}\``;
+
         // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
 
@@ -55,11 +61,11 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.pauseResumed} Paused track**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
+                            `**${embedIcons.pauseResumed} Paused track**\n**${durationFormat} [${queue.currentTrack.title}](${queue.currentTrack.url})**`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)
@@ -70,11 +76,11 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.pauseResumed} Resumed track**\n**[${queue.currentTrack.title}](${queue.currentTrack.url})**.`
+                            `**${embedIcons.pauseResumed} Resumed track**\n**${durationFormat} [${queue.currentTrack.title}](${queue.currentTrack.url})**`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)
