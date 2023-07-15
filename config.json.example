@@ -56,6 +56,7 @@
         "pauseResumeTrack": "⏯️",
         "shuffleQueue": "🔀",
         "loop": "🔁",
+        "loopAction": "🔁",
         "autoplay": "♾️",
         "looping": "🔁",
         "autoplaying": "♾️",
