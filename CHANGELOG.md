@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.2...v1.5.3) (2023-07-15)
+
+
+### Minor changes and bug fixes
+
+* Remove period after link to source in user message ([d31f4ed](https://github.com/mariusbegby/cadence-discord-bot/commit/d31f4ed95847942df86894ed4e6d51d78d73a207))
+* solve error if track.metadata.bridge is not set ([a426135](https://github.com/mariusbegby/cadence-discord-bot/commit/a426135170bf045417ad78bc5335974e2ea8b6c2))
+
 ## [1.5.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.1...v1.5.2) (2023-07-15)
 
 
