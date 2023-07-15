@@ -10,7 +10,7 @@ module.exports = {
         .setDMPermission(false)
         .addNumberOption((option) =>
             option
-                .setName('trackNumber')
+                .setName('tracknumber')
                 .setDescription('Track number to remove from queue.')
                 .setMinValue(1)
                 .setRequired(true)
@@ -42,7 +42,7 @@ module.exports = {
             });
         }
 
-        const removeTrackNumber = interaction.options.getNumber('trackNumber');
+        const removeTrackNumber = interaction.options.getNumber('tracknumber');
 
         if (removeTrackNumber > queue.tracks.data.length) {
             return await interaction.editReply({
