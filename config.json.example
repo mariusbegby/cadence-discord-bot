@@ -64,7 +64,9 @@
         "pauseResumed": "⏯️",
         "shuffled": "🔀",
         "volume": "🔊",
+        "volumeIsMuted": "🔇",
         "volumeChanged": "🔊",
+        "volumeMuted": "🔇",
         "queue": "🎶"
     },
     "filterThreadAmount": "2",
