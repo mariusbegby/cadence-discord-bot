@@ -41,7 +41,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
+                                `**${embedIcons.warning} Oops!**\nPage \`${
+                                    pageIndex + 1
+                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
                             )
                             .setColor(embedColors.colorWarning)
                     ]
@@ -74,7 +76,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
+                            `**${embedIcons.warning} Oops!**\nPage \`${
+                                pageIndex + 1
+                            }\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -92,9 +96,9 @@ module.exports = {
                             ? ''
                             : `\`${track.duration}\``;
 
-                    return `**${pageIndex * 10 + index + 1}.** ${durationFormat} **[${
-                        track.title
-                    }](${track.url})**`;
+                    return `**${
+                        pageIndex * 10 + index + 1
+                    }.** ${durationFormat} **[${track.title}](${track.url})**`;
                 })
                 .join('\n');
         }
