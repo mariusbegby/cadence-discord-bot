@@ -67,6 +67,7 @@ module.exports = {
         let plays = currentTrack.views !== 0 ? currentTrack.views : 0;
         if (
             plays === 0 &&
+            currentTrack.metadata.bridge &&
             currentTrack.metadata.bridge.views !== 0 &&
             currentTrack.metadata.bridge.views !== undefined
         ) {
