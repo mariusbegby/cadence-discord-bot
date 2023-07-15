@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.3...v1.5.4) (2023-07-15)
+
+
+### Minor changes and bug fixes
+
+* Add cookie to ytdlOptions ([5f081c0](https://github.com/mariusbegby/cadence-discord-bot/commit/5f081c087d5ec7c67286d1ecc2d18897e40b99bb))
+* Handle another player error from YouTube. ([de3657d](https://github.com/mariusbegby/cadence-discord-bot/commit/de3657d4febbf1319d6ee986ac5113740089b2d2))
+
 ## [1.5.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.2...v1.5.3) (2023-07-15)
 
 
