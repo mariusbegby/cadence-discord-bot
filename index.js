@@ -37,6 +37,8 @@ for (const file of systemCommandFiles) {
 const player = new Player(client, {
     useLegacyFFmpeg: false,
     ytdlOptions: {
+        quality: 'highestaudio',
+        highWaterMark: 1 << 25,
         requestOptions: {
             headers: {
                 cookie: process.env.YOUTUBE_COOKIE || ''
