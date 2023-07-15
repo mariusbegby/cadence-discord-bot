@@ -60,11 +60,13 @@ module.exports = {
         ]);
 
         const currentTrack = queue.currentTrack;
+
         let author = currentTrack.author ? currentTrack.author : 'Unavailable';
         if (author === 'cdn.discordapp.com') {
             author = 'Unavailable';
         }
         let plays = currentTrack.views !== 0 ? currentTrack.views : 0;
+
         if (
             plays === 0 &&
             currentTrack.metadata.bridge &&
@@ -72,9 +74,10 @@ module.exports = {
             currentTrack.metadata.bridge.views !== undefined
         ) {
             plays = currentTrack.metadata.bridge.views;
-        } else {
+        } else if (plays === 0) {
             plays = 'Unavailable';
         }
+
         const source =
             sourceStringsFormatted.get(currentTrack.raw.source) ??
             'Unavailable';
