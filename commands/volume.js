@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, embedIcons } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
             option
                 .setName('percentage')
                 .setDescription('Set volume percentage from 1% to 100%.')
-                .setMinValue(1)
+                .setMinValue(0)
                 .setMaxValue(100)
         ),
     run: async ({ interaction }) => {
@@ -21,7 +21,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -35,7 +35,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks playing or in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -44,28 +44,44 @@ module.exports = {
 
         const volume = interaction.options.getNumber('percentage');
 
-        if (!volume) {
+        if (!volume && volume !== 0) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Volume**\nThe playback volume is currently set at \`${queue.node.volume}%\`.`
+                            `**${embedIcons.volume} Playback volume**\nThe playback volume is currently set to \`${queue.node.volume}%\`.`
                         )
                         .setColor(embedColors.colorInfo)
                 ]
             });
-        } else if (volume > 100 || volume < 1) {
+        } else if (volume > 100 || volume < 0) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Error**\nYou need to pick a number between `1` and `100`.'
+                            `**${embedIcons.warning} Oops!**\nYou cannot set the volume to \`${volume}\`, please pick a value betwen \`1\`% and \`100\`%.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         } else {
             queue.node.setVolume(volume);
+
+            if (volume === 0) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setAuthor({
+                                name: interaction.user.username,
+                                iconURL: interaction.user.avatarURL()
+                            })
+                            .setDescription(
+                                `**${embedIcons.volumeChanged} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
+                            )
+                            .setColor(embedColors.colorSuccess)
+                    ]
+                });
+            }
 
             return await interaction.editReply({
                 embeds: [
@@ -75,7 +91,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Volume changed**\nPlayback volume has been set to \`${volume}%\`.`
+                            `**${embedIcons.volumeChanged} Volume changed**\nPlayback volume has been changed to \`${volume}%\`.`
                         )
                         .setColor(embedColors.colorSuccess)
                 ]
