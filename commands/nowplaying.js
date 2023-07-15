@@ -65,15 +65,14 @@ module.exports = {
             author = 'Unavailable';
         }
         let plays = currentTrack.views !== 0 ? currentTrack.views : 0;
-        if (plays === 0) {
-            if (
-                currentTrack.metadata.bridge.views !== 0 &&
-                currentTrack.metadata.bridge.views !== undefined
-            ) {
-                plays = currentTrack.metadata.bridge.views;
-            } else {
-                plays = 'Unavailable';
-            }
+        if (
+            plays === 0 &&
+            currentTrack.metadata.bridge.views !== 0 &&
+            currentTrack.metadata.bridge.views !== undefined
+        ) {
+            plays = currentTrack.metadata.bridge.views;
+        } else {
+            plays = 'Unavailable';
         }
         const source =
             sourceStringsFormatted.get(currentTrack.raw.source) ??
