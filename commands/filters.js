@@ -125,7 +125,7 @@ module.exports = {
                 confirmation.customId === 'disable-filters' ||
                 confirmation.values.length === 0
             ) {
-                return interaction.editReply({
+                return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
