@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.2...v1.5.0) (2023-07-15)
+
+
+### Features
+
+* Added configurable options for icons for use in embeds ([6a44a37](https://github.com/mariusbegby/cadence-discord-bot/commit/6a44a37c3220f6151b8409b9df6fe5f83fb42539))
+* More error handling in /play command, and overhauled user messages. ([c4f14ef](https://github.com/mariusbegby/cadence-discord-bot/commit/c4f14ef6ba6b2bfdf76adc7b9e2ac602ad35716d))
+
+
+### Minor changes and bug fixes
+
+* Add await in interaction reply when toggling filters ([3b496ad](https://github.com/mariusbegby/cadence-discord-bot/commit/3b496ad4a8f002024829efd3d3ce3ef368b35d52))
+* Add warning embed icon to /nowplaying that was missing ([d720eec](https://github.com/mariusbegby/cadence-discord-bot/commit/d720eeccfc723ba83538b739d66e8e91bf8984c6))
+* Corrected embed message color on info message in /nowplaying ([85e1e01](https://github.com/mariusbegby/cadence-discord-bot/commit/85e1e01b68496d3019ab389fa7ee45bf218b2dae))
+* Fixed invalid command option name (must be all lowercase) ([bf69d94](https://github.com/mariusbegby/cadence-discord-bot/commit/bf69d943540adc424288a247b8a72ecae1dce881))
+* Remove unnecessary checkmark icon, added more options. ([8f859bb](https://github.com/mariusbegby/cadence-discord-bot/commit/8f859bb551ab4642bd14297d758e71ccc0c0e5b7))
+* Removed icon for leaving. ([0aa810a](https://github.com/mariusbegby/cadence-discord-bot/commit/0aa810a1d4936da7254c30d101581a37d500ad85))
+* Update description of /skip command ([4560639](https://github.com/mariusbegby/cadence-discord-bot/commit/45606399703703ed83744381ef6172b90c590690))
+* Update layout and styling for /help command ([923697c](https://github.com/mariusbegby/cadence-discord-bot/commit/923697cce68f9bdc610744768c1213c546cafb00))
+* Update leaving channel message in /leave ([e64ba0a](https://github.com/mariusbegby/cadence-discord-bot/commit/e64ba0ab3767679006833ec2cc5f5483ae0bb45f))
+* Updated user message in status commands ([15f1a87](https://github.com/mariusbegby/cadence-discord-bot/commit/15f1a876e816b438b00defc2cf0113cf32a523ff))
+* Updated user messages for /filter command ([430e66a](https://github.com/mariusbegby/cadence-discord-bot/commit/430e66a1a3fe5bb44feb5487bf4699b60c9ec062))
+* Updated user messages for /leave command ([5b214ba](https://github.com/mariusbegby/cadence-discord-bot/commit/5b214bacb42ffdcd7972dc048f1b5f5dcc90ddb2))
+* Updated user messages for /nowplaying command ([79b4f07](https://github.com/mariusbegby/cadence-discord-bot/commit/79b4f075059472b1ec2ff5a5f8d86aa97e89186f))
+* Updated user messages for /pause command ([f4aa182](https://github.com/mariusbegby/cadence-discord-bot/commit/f4aa182fc2718eb68c9a12bce405252e765a2127))
+* Updated user messages for /queue command ([ee11b71](https://github.com/mariusbegby/cadence-discord-bot/commit/ee11b712a03be55867f738695f02a061c9ce7863))
+* Updated user messages for /remove ([0fc9815](https://github.com/mariusbegby/cadence-discord-bot/commit/0fc9815af150a922eb4379ae23ec95e442ee44c6))
+* Updated user messages for /skip command ([960d553](https://github.com/mariusbegby/cadence-discord-bot/commit/960d55359546ef593bad9f2a0b7384c757346410))
+* Updated user messages for /volume command ([5054da9](https://github.com/mariusbegby/cadence-discord-bot/commit/5054da995a428740bfda211ef836315c410c86cc))
+* Updated user messages for unexpected errors ([f36b4d9](https://github.com/mariusbegby/cadence-discord-bot/commit/f36b4d966822e0618572316223c339c25af2636d))
+
 ## [1.4.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.1...v1.4.2) (2023-07-14)
 
 
