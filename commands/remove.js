@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, embedIcons } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,7 +10,7 @@ module.exports = {
         .setDMPermission(false)
         .addNumberOption((option) =>
             option
-                .setName('tracknumber')
+                .setName('trackNumber')
                 .setDescription('Track number to remove from queue.')
                 .setMinValue(1)
                 .setRequired(true)
@@ -21,7 +21,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -35,29 +35,33 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
-        const removeTrackNumber = interaction.options.getNumber('tracknumber');
+        const removeTrackNumber = interaction.options.getNumber('trackNumber');
 
         if (removeTrackNumber > queue.tracks.data.length) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nThere are \`${queue.tracks.data.length}\` tracks in the queue. You cannot remove track number \`${removeTrackNumber}\`.`
+                            `**${embedIcons.warning} Oops!**\nTrack \`${removeTrackNumber}\` is not a valid track number. There are a total of\`${queue.tracks.data.length}\` tracks in the queue.\n\nView tracks added to the queue with \`/queue\`.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
         // Remove specified track number from queue
         const removedTrack = queue.node.remove(removeTrackNumber - 1);
+        let durationFormat =
+            removedTrack.raw.duration === 0 || removedTrack.duration === '0:00'
+                ? ''
+                : `\`${removedTrack.duration}\``;
 
         return await interaction.editReply({
             embeds: [
@@ -67,7 +71,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**Removed**\n**[${removedTrack.title}](${removedTrack.url})**.`
+                        `**${embedIcons.success} Removed track**\n${durationFormat} **[${removedTrack.title}](${removedTrack.url})**.`
                     )
                     .setThumbnail(removedTrack.thumbnail)
                     .setColor(embedColors.colorSuccess)
