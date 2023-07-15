@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors } = require('../config.json');
+const { embedColors, embedIcons } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('Skip the current track.')
+        .setDescription('Skip current or specified track.')
         .setDMPermission(false)
         .addNumberOption((option) =>
             option
@@ -20,7 +20,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -34,7 +34,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nThere are no tracks in the queue. Add tracks with `/play`!'
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -49,9 +49,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**Error**\nThere are \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track number \`${skipToTrack}\`.`
+                                `**${embedIcons.warning} Oops!**\nThere are only \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track \`${skipToTrack}\`.\n\nView tracks added to the queue with \`/queue\`.`
                             )
-                            .setColor(embedColors.colorError)
+                            .setColor(embedColors.colorWarning)
                     ]
                 });
             } else {
@@ -71,7 +71,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
+                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedColors.colorSuccess)
@@ -84,7 +84,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                '**Failed**\nThere are no tracks in the queue and nothing currently playing.'
+                                `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
                             )
                             .setColor(embedColors.colorWarning)
                     ]
@@ -107,7 +107,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
+                            `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
                         .setColor(embedColors.colorSuccess)

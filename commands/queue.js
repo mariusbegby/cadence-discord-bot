@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors, progressBarOptions } = require('../config.json');
+const {
+    embedColors,
+    embedIcons,
+    progressBarOptions
+} = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,19 +24,31 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
+        const pageIndex = (interaction.options.getNumber('page') || 1) - 1;
         const queue = useQueue(interaction.guild.id);
         let queueString = '';
 
         if (!queue) {
-            queueString =
-                'There are no tracks in the queue. Add tracks with `/play`!';
+            if (pageIndex >= 1) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
+                            )
+                            .setColor(embedColors.colorWarning)
+                    ]
+                });
+            }
+
+            queueString = 'The queue is empty, add some tracks with `/play`!';
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -40,7 +56,9 @@ module.exports = {
                             name: interaction.guild.name,
                             iconURL: interaction.guild.iconURL()
                         })
-                        .setDescription(`**Queue**\n${queueString}`)
+                        .setDescription(
+                            `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                        )
                         .setColor(embedColors.colorInfo)
                         .setFooter({
                             text: 'Page 1 of 1'
@@ -50,34 +68,33 @@ module.exports = {
         }
 
         const totalPages = Math.ceil(queue.tracks.data.length / 10) || 1;
-        const page = (interaction.options.getNumber('page') || 1) - 1;
 
-        if (page > totalPages - 1) {
+        if (pageIndex > totalPages - 1) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Error**\nInvalid page number. There are only a total of \`${totalPages}\` pages of tracks.`
+                            `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
         if (queue.tracks.data.length === 0) {
-            queueString = 'There are no tracks in the queue.';
+            queueString = 'The queue is empty, add some tracks with `/play`!';
         } else {
             queueString = queue.tracks.data
-                .slice(page * 10, page * 10 + 10)
+                .slice(pageIndex * 10, pageIndex * 10 + 10)
                 .map((track, index) => {
                     let durationFormat =
                         track.raw.duration === 0 || track.duration === '0:00'
                             ? ''
                             : `\`${track.duration}\``;
 
-                    return `**${page * 10 + index + 1}.** ${durationFormat} [${
+                    return `**${pageIndex * 10 + index + 1}.** ${durationFormat} **[${
                         track.title
-                    }](${track.url})`;
+                    }](${track.url})**`;
                 })
                 .join('\n');
         }
@@ -94,9 +111,11 @@ module.exports = {
                             }kbps)`,
                             iconURL: interaction.guild.iconURL()
                         })
-                        .setDescription(`**Queue**\n${queueString}`)
+                        .setDescription(
+                            `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                        )
                         .setFooter({
-                            text: `Page ${page + 1} of ${totalPages}`
+                            text: `Page ${pageIndex + 1} of ${totalPages}`
                         })
                         .setColor(embedColors.colorInfo)
                 ]
@@ -118,7 +137,7 @@ module.exports = {
                 currentTrack.raw.duration === 0 ||
                 currentTrack.duration === '0:00'
             ) {
-                bar = 'No duration available.';
+                bar = '_No duration available._';
             }
 
             return await interaction.editReply({
@@ -131,17 +150,17 @@ module.exports = {
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            '**Currently playing**\n' +
+                            `**${embedIcons.audioPlaying} Now playing**\n` +
                                 (currentTrack
                                     ? `**[${currentTrack.title}](${currentTrack.url})**`
                                     : 'None') +
                                 `\nRequested by: <@${currentTrack.requestedBy.id}>` +
                                 `\n ${bar}` +
-                                `\n\n**Queue**\n${queueString}`
+                                `\n\n**${embedIcons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setFooter({
-                            text: `Page ${page + 1} of ${totalPages}`
+                            text: `Page ${pageIndex + 1} of ${totalPages}`
                         })
                         .setColor(embedColors.colorInfo)
                 ]

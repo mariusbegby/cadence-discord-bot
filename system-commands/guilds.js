@@ -1,6 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors, systemServerGuildIds } = require('../config.json');
+const {
+    embedColors,
+    embedIcons,
+    systemServerGuildIds
+} = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,9 +17,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**No permission**\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
+                            `**${embedIcons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -27,11 +31,16 @@ module.exports = {
                     memberCount: guild.memberCount
                 };
             })
+            .slice(0, 50)
             .sort((a, b) => b.memberCount - a.memberCount)
-            .map((guild) => `\`${guild.name} (#${guild.memberCount})\``)
-            .join(', ');
+            .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
+            .join('\n');
 
-        let embedDescription = `**Guilds (${client.guilds.cache.size} total)**\n${guildsList}`;
+        let embedDescription = `**${embedIcons.bot} ${
+            client.guilds.cache.size < 50
+                ? 'Guilds'
+                : `Top ${client.guilds.cache.size} guilds`
+        } by member count (${client.guilds.cache.size} total)**\n${guildsList}`;
 
         if (embedDescription.length >= 4000) {
             embedDescription = `${embedDescription.slice(0, 3996)}...`;

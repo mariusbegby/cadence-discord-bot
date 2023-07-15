@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { embedColors, systemServerGuildIds } = require('../config.json');
+const {
+    embedColors,
+    embedIcons,
+    systemServerGuildIds
+} = require('../config.json');
 const osu = require('node-os-utils');
 const packageJson = require('../package.json');
 
@@ -16,9 +20,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**No permission**\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
+                            `**${embedIcons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedColors.colorWarning)
                 ]
             });
         }
@@ -56,7 +60,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        '**System and bot status**\n' +
+                        `**${embedIcons.bot} System and bot status**\n` +
                             `Uptime: \`${uptimeString}\`\n` +
                             `Platform: \`${platform}\`\n` +
                             `CPU cores: \`${cpuCores}\`\n` +

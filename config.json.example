@@ -28,7 +28,7 @@
         "maxHistorySize": 100
     },
     "progressBarOptions": {
-        "length": 12,
+        "length": 14,
         "timecodes": false,
         "separator": "┃",
         "indicator": "🔘",
@@ -36,10 +36,32 @@
         "rightChar": "▬"
     },
     "embedIcons": {
+        "logo": "🤖",
         "beta": "`beta`",
+        "new": "`new`",
         "rule": "📒",
         "support": "❓",
-        "bot": "🤖"
+        "bot": "🤖",
+        "audioPlaying": "🎶",
+        "audioStartedPlaying": "🎶",
+        "success": "✅",
+        "error": "⚠️",
+        "warning": "⚠️",
+        "disable": "🚫",
+        "enable": "✅",
+        "disabled": "✅",
+        "enabled": "✅",
+        "nextTrack": "⏭️",
+        "previousTrack": "⏮️",
+        "pauseResumeTrack": "⏯️",
+        "shuffleQueue": "🔀",
+        "skipped": "⏭️",
+        "back": "⏮️",
+        "pauseResumed": "⏯️",
+        "shuffled": "🔀",
+        "volume": "🔊",
+        "volumeChanged": "🔊",
+        "queue": "🎶"
     },
     "filterThreadAmount": "2",
     "filterList": [

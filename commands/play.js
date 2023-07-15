@@ -1,7 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors, playerOptions, botInfo } = require('../config.json');
+const {
+    embedColors,
+    embedIcons,
+    playerOptions,
+    botInfo
+} = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,7 +27,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nYou need to be in a voice channel to use this command.'
+                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -41,7 +46,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**No track found**\nNo results found for \`${query}\`.`
+                            `**${embedIcons.warning} No track found**\nNo results found for \`${query}\`.\n\nIf you specified a URL, please make sure it is valid and public.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -57,43 +62,91 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Unsupported Source**\nThis audio source is a YouTube live stream, which is currently not a supported format.\n\n_If you think that this is incorrect, please submit a bug report in the bot [support server](${botInfo.supportServerInviteUrl})._`
+                            `**${embedIcons.warning} Unsupported audio source**\nYouTube live streams are currently not supported. This is due to issues with extracting audio from the livestream.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
-        const { track } = await player.play(
-            interaction.member.voice.channel,
-            searchResult,
-            {
-                requestedBy: interaction.user,
-                nodeOptions: {
-                    leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
-                    leaveOnEmptyCooldown:
-                        playerOptions.leaveOnEmptyCooldown ?? 60000,
-                    leaveOnEnd: playerOptions.leaveOnEnd ?? true,
-                    leaveOnEndCooldown:
-                        playerOptions.leaveOnEndCooldown ?? 60000,
-                    leaveOnStop: playerOptions.leaveOnStop ?? true,
-                    leaveOnStopCooldown:
-                        playerOptions.leaveOnStopCooldown ?? 60000,
-                    maxSize: playerOptions.maxQueueSize ?? 1000,
-                    maxHistorySize: playerOptions.maxHistorySize ?? 100,
-                    volume: playerOptions.defaultVolume ?? 50
-                }
-            }
-        );
+        let track;
 
-        const queue = useQueue(interaction.guild.id);
+        try {
+            ({ track } = await player.play(
+                interaction.member.voice.channel,
+                searchResult,
+                {
+                    requestedBy: interaction.user,
+                    nodeOptions: {
+                        leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
+                        leaveOnEmptyCooldown:
+                            playerOptions.leaveOnEmptyCooldown ?? 60000,
+                        leaveOnEnd: playerOptions.leaveOnEnd ?? true,
+                        leaveOnEndCooldown:
+                            playerOptions.leaveOnEndCooldown ?? 60000,
+                        leaveOnStop: playerOptions.leaveOnStop ?? true,
+                        leaveOnStopCooldown:
+                            playerOptions.leaveOnStopCooldown ?? 60000,
+                        maxSize: playerOptions.maxQueueSize ?? 1000,
+                        maxHistorySize: playerOptions.maxHistorySize ?? 100,
+                        volume: playerOptions.defaultVolume ?? 50
+                    }
+                }
+            ));
+        } catch (error) {
+            if (error.message.includes('Sign in to confirm your age')) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedIcons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            )
+                            .setColor(embedColors.colorWarning)
+                    ]
+                });
+            }
+
+            if (
+                error.type === 'TypeError' &&
+                (error.message.includes(
+                    'Cannot read properties of null (reading \'createStream\')'
+                ) ||
+                    error.message.includes(
+                        'Failed to fetch resources for ytdl streaming'
+                    ))
+            ) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedIcons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            )
+                            .setColor(embedColors.colorError)
+                    ]
+                });
+            }
+
+            if (error.message === 'Cancelled') {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedIcons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            )
+                            .setColor(embedColors.colorError)
+                    ]
+                });
+            }
+        }
+
+        let queue = useQueue(interaction.guild.id);
 
         if (!queue) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            '**Failed**\nFailed to add track to queue. Please try again.'
+                            `**${embedIcons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
                         )
                         .setColor(embedColors.colorError)
                 ]
@@ -119,7 +172,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Added playlist to queue**\n${durationFormat} **[${
+                            `**${
+                                embedIcons.success
+                            } Added playlist to queue**\n${durationFormat} **[${
                                 track.title
                             }](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
@@ -140,7 +195,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**Started playing**\n${durationFormat} **[${track.title}](${track.url})**`
+                            `**${embedIcons.audioStartedPlaying} Started playing**\n${durationFormat} **[${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedColors.colorSuccess)
@@ -156,7 +211,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**Added to queue**\n${durationFormat} **[${track.title}](${track.url})**`
+                        `${embedIcons.success} **Added to queue**\n${durationFormat} **[${track.title}](${track.url})**`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(embedColors.colorSuccess)
