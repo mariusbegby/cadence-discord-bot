@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.0...v1.5.1) (2023-07-15)
+
+
+### Minor changes and bug fixes
+
+* Show user nickname in interaction reply if set instead of username ([923e7a6](https://github.com/mariusbegby/cadence-discord-bot/commit/923e7a6845f4c5db51bac7f61d0e0ee8328a9540))
+
 ## [1.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.4.2...v1.5.0) (2023-07-15)
 
 
