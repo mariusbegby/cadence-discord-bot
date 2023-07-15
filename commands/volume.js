@@ -45,11 +45,17 @@ module.exports = {
         const volume = interaction.options.getNumber('percentage');
 
         if (!volume && volume !== 0) {
+            const currentVolume = queue.node.volume;
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.volume} Playback volume**\nThe playback volume is currently set to \`${queue.node.volume}%\`.`
+                            `**${
+                                currentVolume === 0
+                                    ? embedIcons.volumeIsMuted
+                                    : embedIcons.volume
+                            } Playback volume**\nThe playback volume is currently set to \`${currentVolume}%\`.`
                         )
                         .setColor(embedColors.colorInfo)
                 ]
@@ -72,11 +78,13 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
+                                name:
+                                    interaction.member.nickname ||
+                                    interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.volumeChanged} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
+                                `**${embedIcons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
                             )
                             .setColor(embedColors.colorSuccess)
                     ]
@@ -87,7 +95,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
+                            name:
+                                interaction.member.nickname ||
+                                interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
