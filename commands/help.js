@@ -17,6 +17,7 @@ module.exports = {
                             '- `/pause` - Pause or resume the current track.\n' +
                             '- `/queue` `[page]` - Show the list of tracks added to the queue.\n' +
                             `- \`/nowplaying\` - ${embedIcons.new} Show information about the track currently playing.\n` +
+                            `- \`/loop\` \`mode\` - ${embedIcons.new} Toggle looping a track or the whole queue.\n` +
                             `- \`/filters\` - ${embedIcons.beta} Toggle various audio filters during playback.\n` +
                             '- `/volume` `[percentage]` - Show or set the playback volume for tracks.\n' +
                             '- `/skip` `[trackNumber]` - Skip current or specified track.\n' +
