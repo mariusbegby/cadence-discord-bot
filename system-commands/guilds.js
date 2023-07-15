@@ -31,9 +31,12 @@ module.exports = {
                     memberCount: guild.memberCount
                 };
             })
-            .slice(0, 50)
             .sort((a, b) => b.memberCount - a.memberCount)
-            .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
+            .slice(0, 50)
+            .map(
+                (guild, index) =>
+                    `${index + 1}. \`${guild.name} (#${guild.memberCount})\``
+            )
             .join('\n');
 
         let embedDescription = `**${embedIcons.bot} ${
