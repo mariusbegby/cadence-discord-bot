@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.6.0...v1.7.0) (2023-07-16)
+
+
+### Features
+
+* Added /seek command ([2a35c18](https://github.com/mariusbegby/cadence-discord-bot/commit/2a35c1864fe06bffac423fa7faffb4de7d89fb49))
+
+
+### Minor changes and bug fixes
+
+* Fixed showing top x guild count on /guilds system command ([c11fd9c](https://github.com/mariusbegby/cadence-discord-bot/commit/c11fd9c542729c11d29e491efc50e9048a2de868))
+* Make commands bold when referenced in replies. ([ae134a7](https://github.com/mariusbegby/cadence-discord-bot/commit/ae134a78ff7486d059c5d8232d804475e4c1a21c))
+* Update duration format in places to have bold text ([8ecad8a](https://github.com/mariusbegby/cadence-discord-bot/commit/8ecad8a02e3ca765bed74db0eb0b351a06813730))
+* Updated /help with seek command ([2f1974d](https://github.com/mariusbegby/cadence-discord-bot/commit/2f1974d2ba7f12f5ab3fb67f99066d3fb81221d9))
+
 ## [1.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.4...v1.6.0) (2023-07-16)
 
 
