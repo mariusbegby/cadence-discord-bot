@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.1...v1.7.2) (2023-07-16)
+
+
+### Minor changes and bug fixes
+
+* fixed formatted string not being formatted correctly ([1828995](https://github.com/mariusbegby/cadence-discord-bot/commit/1828995a5d610803ab9507e5f698b95e26c72ee2))
+
 ## [1.7.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.0...v1.7.1) (2023-07-16)
 
 
