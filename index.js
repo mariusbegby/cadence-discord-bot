@@ -64,11 +64,11 @@ onBeforeCreateStream(async (track) => {
 
 if (process.env.NODE_ENV === 'development') {
     player.on('debug', (message) => {
-        logger.debug(message);
+        logger.debug(`player debug event: ${message}`);
     });
 
     player.events.on('debug', (message) => {
-        logger.trace(message);
+        logger.trace(`player queue debug event: ${message}`);
     });
 }
 
@@ -80,6 +80,14 @@ player.events.on('error', (queue, error) => {
 player.events.on('playerError', (queue, error) => {
     // Emitted when the audio player errors while streaming audio track
     logger.error(error, 'Player audio stream error event');
+});
+
+player.events.on('playerStart', (queue, track) => {
+    logger.debug(`playerStart event: Started playing '${track.title}'.`);
+});
+
+player.events.on('playerSkip', (queue, track) => {
+    logger.debug(`playerSkip event: Failed to play '${track.title}'.`);
 });
 
 client.once('ready', async () => {
@@ -167,9 +175,11 @@ client.on('interactionCreate', async (interaction) => {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**Warning**\n**This command took ${
+                            `**${
+                                embedIcons.warning
+                            } Warning**\nThis command took ${
                                 executionTime / 1000
-                            } seconds to execute.**\n\n_If you experienced problems with the command, please try again._`
+                            } seconds to execute.\n\n_If you experienced problems with the command, please try again._`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
