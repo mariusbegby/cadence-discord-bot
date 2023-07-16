@@ -1,13 +1,21 @@
+const path = require('path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons } = require('../config.json');
+const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('pause')
-        .setDescription('Pause or resume the current track.')
-        .setDMPermission(false),
+        .setName('remove')
+        .setDescription('Remove a specific track from the queue.')
+        .setDMPermission(false)
+        .addNumberOption((option) =>
+            option
+                .setName('tracknumber')
+                .setDescription('Track number to remove from queue.')
+                .setMinValue(1)
+                .setRequired(true)
+        ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
@@ -35,26 +43,26 @@ module.exports = {
             });
         }
 
-        if (!queue.currentTrack) {
+        const removeTrackNumber = interaction.options.getNumber('tracknumber');
+
+        if (removeTrackNumber > queue.tracks.data.length) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedIcons.warning} Oops!**\nTrack \`${removeTrackNumber}\` is not a valid track number. There are a total of\`${queue.tracks.data.length}\` tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
             });
         }
 
+        // Remove specified track number from queue
+        const removedTrack = queue.node.remove(removeTrackNumber - 1);
         let durationFormat =
-            queue.currentTrack.raw.duration === 0 ||
-            queue.currentTrack.duration === '0:00'
+            removedTrack.raw.duration === 0 || removedTrack.duration === '0:00'
                 ? ''
-                : `\`${queue.currentTrack.duration}\``;
-
-        // change paused state to opposite of current state
-        queue.node.setPaused(!queue.node.isPaused());
+                : `\`${removedTrack.duration}\``;
 
         return await interaction.editReply({
             embeds: [
@@ -66,15 +74,9 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedIcons.pauseResumed} ${
-                            queue.node.isPaused()
-                                ? 'Paused Track'
-                                : 'Resumed track'
-                        }**\n**${durationFormat} [${
-                            queue.currentTrack.title
-                        }](${queue.currentTrack.url})**`
+                        `**${embedIcons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${removedTrack.url})**`
                     )
-                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setThumbnail(removedTrack.thumbnail)
                     .setColor(embedColors.colorSuccess)
             ]
         });

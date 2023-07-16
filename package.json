@@ -19,10 +19,10 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node ./index.js",
-        "start-pretty": "node ./index.js | pino-pretty",
-        "deploy": "node ./deploy-commands.js && node ./deploy-system-commands.js",
-        "deploy-pretty": "node ./deploy-commands.js | pino-pretty && node ./deploy-system-commands.js | pino-pretty",
+        "start": "node ./src/index.js",
+        "start-pretty": "node ./src/index.js | pino-pretty",
+        "deploy": "node ./src/deploy-commands.js && node ./src/deploy-system-commands.js",
+        "deploy-pretty": "node ./src/deploy-commands.js | pino-pretty && node ./src/deploy-system-commands.js | pino-pretty",
         "eslint": "eslint ./"
     },
     "dependencies": {

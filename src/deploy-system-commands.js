@@ -1,16 +1,17 @@
+const path = require('path');
 const fs = require('node:fs');
-const logger = require('./services/logger.js');
+const logger = require(path.resolve('./src/services/logger.js'));
 const { REST, Routes } = require('discord.js');
-const { systemServerGuildIds } = require('./config.json');
+const { systemServerGuildIds } = require(path.resolve('./config.json'));
 require('dotenv').config();
 
 const systemCommands = [];
 const systemCommandFiles = fs
-    .readdirSync('./system-commands')
+    .readdirSync(path.resolve('./src/system-commands'))
     .filter((file) => file.endsWith('.js'));
 
 for (const file of systemCommandFiles) {
-    const systemCommand = require(`./system-commands/${file}`);
+    const systemCommand = require(path.resolve(`./src/system-commands/${file}`));
     systemCommands.push(systemCommand.data.toJSON());
 }
 

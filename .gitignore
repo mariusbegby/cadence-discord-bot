@@ -2,3 +2,5 @@
 /config.json
 /.env
 /app-*.log
+/logs
+/logs/app-*.log

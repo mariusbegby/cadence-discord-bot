@@ -1,15 +1,16 @@
+const path = require('path');
 const fs = require('node:fs');
-const logger = require('./services/logger.js');
+const logger = require(path.resolve('./src/services/logger.js'));
 const { REST, Routes } = require('discord.js');
 require('dotenv').config();
 
 const commands = [];
 const commandFiles = fs
-    .readdirSync('./commands')
+    .readdirSync(path.resolve('./src/commands'))
     .filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+    const command = require(path.resolve(`./src/commands/${file}`));
     commands.push(command.data.toJSON());
 }
 

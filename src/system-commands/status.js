@@ -1,3 +1,4 @@
+const path = require('path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
@@ -5,9 +6,9 @@ const {
     embedColors,
     embedIcons,
     systemServerGuildIds
-} = require('../config.json');
+} = require(path.resolve('./config.json'));
 const osu = require('node-os-utils');
-const packageJson = require('../package.json');
+const packageJson = require(path.resolve('./package.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
