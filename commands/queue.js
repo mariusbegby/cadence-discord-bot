@@ -105,6 +105,25 @@ module.exports = {
 
         let currentTrack = queue.currentTrack;
 
+        const loopModesFormatted = new Map([
+            [0, 'disabled'],
+            [1, 'track'],
+            [2, 'queue'],
+            [3, 'autoplay']
+        ]);
+
+        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+
+        let repeatModeString = `${
+            queue.repeatMode === 0
+                ? ''
+                : `**${
+                    queue.repeatMode === 3
+                        ? embedIcons.autoplay
+                        : embedIcons.loop
+                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.\n\n`
+        }`;
+
         if (!currentTrack) {
             return await interaction.editReply({
                 embeds: [
@@ -116,7 +135,8 @@ module.exports = {
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                            `${repeatModeString}` +
+                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages}`
@@ -159,8 +179,9 @@ module.exports = {
                                     ? `**[${currentTrack.title}](${currentTrack.url})**`
                                     : 'None') +
                                 `\nRequested by: <@${currentTrack.requestedBy.id}>` +
-                                `\n ${bar}` +
-                                `\n\n**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                                `\n ${bar}\n\n` +
+                                `${repeatModeString}` +
+                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setFooter({

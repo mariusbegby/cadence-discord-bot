@@ -109,6 +109,15 @@ module.exports = {
                 .setEmoji(embedIcons.nextTrack)
         );
 
+        const loopModesFormatted = new Map([
+            [0, 'disabled'],
+            [1, 'track'],
+            [2, 'queue'],
+            [3, 'autoplay']
+        ]);
+
+        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -122,11 +131,18 @@ module.exports = {
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
                             : `**${embedIcons.audioPlaying} Now Playing**\n`) +
-                            (currentTrack
-                                ? `**[${currentTrack.title}](${currentTrack.url})**`
-                                : 'None') +
+                            `**[${currentTrack.title}](${currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy.id}>` +
-                            `\n ${bar}\n\n`
+                            `\n ${bar}\n\n` +
+                            `${
+                                queue.repeatMode === 0
+                                    ? ''
+                                    : `**${
+                                        queue.repeatMode === 3
+                                            ? embedIcons.autoplay
+                                            : embedIcons.loop
+                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.`
+                            }`
                     )
                     .addFields(
                         {
