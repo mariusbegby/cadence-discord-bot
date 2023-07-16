@@ -32,7 +32,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -44,7 +44,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -83,16 +83,16 @@ module.exports = {
             'Unavailable';
         const queueLength = queue.tracks.data.length;
         const timestamp = queue.node.getTimestamp();
-        let bar = `\`${
+        let bar = `**\`${
             timestamp.current.label
-        }\` ${queue.node.createProgressBar({
+        }\`** ${queue.node.createProgressBar({
             queue: false,
             length: progressBarOptions.length ?? 12,
             timecodes: progressBarOptions.timecodes ?? false,
             indicator: progressBarOptions.indicator ?? '🔘',
             leftChar: progressBarOptions.leftChar ?? '▬',
             rightChar: progressBarOptions.rightChar ?? '▬'
-        })} \`${timestamp.total.label}\``;
+        })} **\`${timestamp.total.label}\`**`;
 
         if (
             currentTrack.raw.duration === 0 ||
@@ -141,7 +141,7 @@ module.exports = {
                                         queue.repeatMode === 3
                                             ? embedIcons.autoplay
                                             : embedIcons.loop
-                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.`
+                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
                     .addFields(
@@ -190,7 +190,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
+                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],
@@ -233,7 +233,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**` +
+                                `**${embedIcons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
                                     `${
                                         queue.repeatMode === 0
                                             ? ''
@@ -241,7 +241,7 @@ module.exports = {
                                                 queue.repeatMode === 3
                                                     ? embedIcons.autoplaying
                                                     : embedIcons.looping
-                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with \`/loop\`.`
+                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                                     }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)

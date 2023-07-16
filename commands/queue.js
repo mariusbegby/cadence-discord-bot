@@ -43,7 +43,7 @@ module.exports = {
                             .setDescription(
                                 `**${embedIcons.warning} Oops!**\nPage \`${
                                     pageIndex + 1
-                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
+                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
                             )
                             .setColor(embedColors.colorWarning)
                     ]
@@ -98,7 +98,7 @@ module.exports = {
 
                     return `**${
                         pageIndex * 10 + index + 1
-                    }.** ${durationFormat} **[${track.title}](${track.url})**`;
+                    }.** **${durationFormat} [${track.title}](${track.url})**`;
                 })
                 .join('\n');
         }
@@ -121,7 +121,7 @@ module.exports = {
                     queue.repeatMode === 3
                         ? embedIcons.autoplay
                         : embedIcons.loop
-                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.\n\n`
+                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.\n\n`
         }`;
 
         if (!currentTrack) {
@@ -146,16 +146,16 @@ module.exports = {
             });
         } else {
             const timestamp = queue.node.getTimestamp();
-            let bar = `\`${
+            let bar = `**\`${
                 timestamp.current.label
-            }\` ${queue.node.createProgressBar({
+            }\`** ${queue.node.createProgressBar({
                 queue: false,
                 length: progressBarOptions.length ?? 12,
                 timecodes: progressBarOptions.timecodes ?? false,
                 indicator: progressBarOptions.indicator ?? '🔘',
                 leftChar: progressBarOptions.leftChar ?? '▬',
                 rightChar: progressBarOptions.rightChar ?? '▬'
-            })} \`${timestamp.total.label}\``;
+            })} **\`${timestamp.total.label}\`**`;
 
             if (
                 currentTrack.raw.duration === 0 ||

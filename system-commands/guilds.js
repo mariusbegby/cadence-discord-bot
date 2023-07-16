@@ -41,8 +41,8 @@ module.exports = {
 
         let embedDescription = `**${embedIcons.bot} ${
             client.guilds.cache.size < 50
-                ? 'Guilds'
-                : `Top ${client.guilds.cache.size} guilds`
+                ? `Top ${client.guilds.cache.size} guilds`
+                : 'Top 50 guilds'
         } by member count (${client.guilds.cache.size} total)**\n${guildsList}`;
 
         if (embedDescription.length >= 4000) {

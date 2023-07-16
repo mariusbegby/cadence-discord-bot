@@ -39,7 +39,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]

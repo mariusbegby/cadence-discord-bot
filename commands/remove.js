@@ -35,7 +35,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -49,7 +49,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nTrack \`${removeTrackNumber}\` is not a valid track number. There are a total of\`${queue.tracks.data.length}\` tracks in the queue.\n\nView tracks added to the queue with \`/queue\`.`
+                            `**${embedIcons.warning} Oops!**\nTrack \`${removeTrackNumber}\` is not a valid track number. There are a total of\`${queue.tracks.data.length}\` tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -73,7 +73,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedIcons.success} Removed track**\n${durationFormat} **[${removedTrack.title}](${removedTrack.url})**`
+                        `**${embedIcons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${removedTrack.url})**`
                     )
                     .setThumbnail(removedTrack.thumbnail)
                     .setColor(embedColors.colorSuccess)

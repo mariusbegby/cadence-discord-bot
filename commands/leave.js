@@ -52,7 +52,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the \`/play\` command!`
+                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
                         )
                         .setColor(embedColors.colorSuccess)
                 ]
