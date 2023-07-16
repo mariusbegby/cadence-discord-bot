@@ -41,7 +41,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
+                                `**${embedIcons.warning} Oops!**\nPage \`${
+                                    pageIndex + 1
+                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
                             )
                             .setColor(embedColors.colorWarning)
                     ]
@@ -74,7 +76,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nPage \`${pageIndex + 1}\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
+                            `**${embedIcons.warning} Oops!**\nPage \`${
+                                pageIndex + 1
+                            }\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -92,14 +96,33 @@ module.exports = {
                             ? ''
                             : `\`${track.duration}\``;
 
-                    return `**${pageIndex * 10 + index + 1}.** ${durationFormat} **[${
-                        track.title
-                    }](${track.url})**`;
+                    return `**${
+                        pageIndex * 10 + index + 1
+                    }.** ${durationFormat} **[${track.title}](${track.url})**`;
                 })
                 .join('\n');
         }
 
         let currentTrack = queue.currentTrack;
+
+        const loopModesFormatted = new Map([
+            [0, 'disabled'],
+            [1, 'track'],
+            [2, 'queue'],
+            [3, 'autoplay']
+        ]);
+
+        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+
+        let repeatModeString = `${
+            queue.repeatMode === 0
+                ? ''
+                : `**${
+                    queue.repeatMode === 3
+                        ? embedIcons.autoplay
+                        : embedIcons.loop
+                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.\n\n`
+        }`;
 
         if (!currentTrack) {
             return await interaction.editReply({
@@ -112,7 +135,8 @@ module.exports = {
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                            `${repeatModeString}` +
+                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages}`
@@ -155,8 +179,9 @@ module.exports = {
                                     ? `**[${currentTrack.title}](${currentTrack.url})**`
                                     : 'None') +
                                 `\nRequested by: <@${currentTrack.requestedBy.id}>` +
-                                `\n ${bar}` +
-                                `\n\n**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                                `\n ${bar}\n\n` +
+                                `${repeatModeString}` +
+                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setFooter({

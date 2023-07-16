@@ -129,7 +129,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
+                                name:
+                                    interaction.member.nickname ||
+                                    interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
@@ -148,7 +150,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
+                            name:
+                                interaction.member.nickname ||
+                                interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -164,7 +168,7 @@ module.exports = {
                                             ).label
                                         }\``
                                 )
-                                .join(', ')}`
+                                .join(', ')}.`
                         )
                         .setColor(embedColors.colorSuccess)
                 ],

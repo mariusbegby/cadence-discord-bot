@@ -60,11 +60,13 @@ module.exports = {
         ]);
 
         const currentTrack = queue.currentTrack;
+
         let author = currentTrack.author ? currentTrack.author : 'Unavailable';
         if (author === 'cdn.discordapp.com') {
             author = 'Unavailable';
         }
         let plays = currentTrack.views !== 0 ? currentTrack.views : 0;
+
         if (
             plays === 0 &&
             currentTrack.metadata.bridge &&
@@ -72,9 +74,10 @@ module.exports = {
             currentTrack.metadata.bridge.views !== undefined
         ) {
             plays = currentTrack.metadata.bridge.views;
-        } else {
+        } else if (plays === 0) {
             plays = 'Unavailable';
         }
+
         const source =
             sourceStringsFormatted.get(currentTrack.raw.source) ??
             'Unavailable';
@@ -106,6 +109,15 @@ module.exports = {
                 .setEmoji(embedIcons.nextTrack)
         );
 
+        const loopModesFormatted = new Map([
+            [0, 'disabled'],
+            [1, 'track'],
+            [2, 'queue'],
+            [3, 'autoplay']
+        ]);
+
+        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -119,11 +131,18 @@ module.exports = {
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
                             : `**${embedIcons.audioPlaying} Now Playing**\n`) +
-                            (currentTrack
-                                ? `**[${currentTrack.title}](${currentTrack.url})**`
-                                : 'None') +
+                            `**[${currentTrack.title}](${currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy.id}>` +
-                            `\n ${bar}\n\n`
+                            `\n ${bar}\n\n` +
+                            `${
+                                queue.repeatMode === 0
+                                    ? ''
+                                    : `**${
+                                        queue.repeatMode === 3
+                                            ? embedIcons.autoplay
+                                            : embedIcons.loop
+                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.`
+                            }`
                     )
                     .addFields(
                         {
@@ -200,6 +219,10 @@ module.exports = {
                         : `\`${skippedTrack.duration}\``;
                 queue.node.skip();
 
+                const repeatModeUserString = loopModesFormatted.get(
+                    queue.repeatMode
+                );
+
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -210,7 +233,16 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**.`
+                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**` +
+                                    `${
+                                        queue.repeatMode === 0
+                                            ? ''
+                                            : `\n\n**${
+                                                queue.repeatMode === 3
+                                                    ? embedIcons.autoplaying
+                                                    : embedIcons.looping
+                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with \`/loop\`.`
+                                    }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedColors.colorSuccess)

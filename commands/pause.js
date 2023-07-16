@@ -56,36 +56,27 @@ module.exports = {
         // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
 
-        if (queue.node.isPaused()) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
-                        })
-                        .setDescription(
-                            `**${embedIcons.pauseResumed} Paused track**\n**${durationFormat} [${queue.currentTrack.title}](${queue.currentTrack.url})**`
-                        )
-                        .setThumbnail(queue.currentTrack.thumbnail)
-                        .setColor(embedColors.colorSuccess)
-                ]
-            });
-        } else {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
-                        })
-                        .setDescription(
-                            `**${embedIcons.pauseResumed} Resumed track**\n**${durationFormat} [${queue.currentTrack.title}](${queue.currentTrack.url})**`
-                        )
-                        .setThumbnail(queue.currentTrack.thumbnail)
-                        .setColor(embedColors.colorSuccess)
-                ]
-            });
-        }
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setAuthor({
+                        name:
+                            interaction.member.nickname ||
+                            interaction.user.username,
+                        iconURL: interaction.user.avatarURL()
+                    })
+                    .setDescription(
+                        `**${embedIcons.pauseResumed} ${
+                            queue.node.isPaused()
+                                ? 'Paused Track'
+                                : 'Resumed track'
+                        }**\n**${durationFormat} [${
+                            queue.currentTrack.title
+                        }](${queue.currentTrack.url})**`
+                    )
+                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setColor(embedColors.colorSuccess)
+            ]
+        });
     }
 };
