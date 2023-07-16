@@ -69,7 +69,12 @@
         "volumeIsMuted": "🔇",
         "volumeChanged": "🔊",
         "volumeMuted": "🔇",
-        "queue": "🎶"
+        "queue": "🎶",
+        "sourceArbitrary": "🎵",
+        "sourceAppleMusic": "🎵",
+        "sourceYouTube": "🎵",
+        "sourceSoundCloud": "🎵",
+        "sourceSpotify": "🎵"
     },
     "filterThreadAmount": "2",
     "filterList": [
