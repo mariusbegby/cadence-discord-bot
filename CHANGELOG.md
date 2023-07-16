@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.0...v1.7.1) (2023-07-16)
+
+
+### Minor changes and bug fixes
+
+* add more debug logging ([52ef374](https://github.com/mariusbegby/cadence-discord-bot/commit/52ef374be3c0aa53b662835d9b20e3562b9ee193))
+* add support for configurable icons for different sources ([9010060](https://github.com/mariusbegby/cadence-discord-bot/commit/9010060a1561c3f02f533a9b236cb5b8a3253b2e))
+* make text where command is referenced bold ([de84385](https://github.com/mariusbegby/cadence-discord-bot/commit/de84385de1eac7b26a4050dde3b1a59acb4424fd))
+* now showing icon for source in /nowplaying ([a554551](https://github.com/mariusbegby/cadence-discord-bot/commit/a554551022980bcf58f422d937e693c574edfc83))
+
 ## [1.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.6.0...v1.7.0) (2023-07-16)
 
 
