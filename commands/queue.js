@@ -43,7 +43,7 @@ module.exports = {
                             .setDescription(
                                 `**${embedIcons.warning} Oops!**\nPage \`${
                                     pageIndex + 1
-                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with \`/play\`!`
+                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
                             )
                             .setColor(embedColors.colorWarning)
                     ]
@@ -121,7 +121,7 @@ module.exports = {
                     queue.repeatMode === 3
                         ? embedIcons.autoplay
                         : embedIcons.loop
-                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.\n\n`
+                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.\n\n`
         }`;
 
         if (!currentTrack) {

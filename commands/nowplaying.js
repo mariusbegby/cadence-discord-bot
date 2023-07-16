@@ -32,7 +32,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -44,7 +44,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
+                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
                         .setColor(embedColors.colorWarning)
                 ]
@@ -141,7 +141,7 @@ module.exports = {
                                         queue.repeatMode === 3
                                             ? embedIcons.autoplay
                                             : embedIcons.loop
-                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with \`/loop\`.`
+                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
                     .addFields(
@@ -190,7 +190,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with \`/play\`!`
+                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],
@@ -241,7 +241,7 @@ module.exports = {
                                                 queue.repeatMode === 3
                                                     ? embedIcons.autoplaying
                                                     : embedIcons.looping
-                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with \`/loop\`.`
+                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                                     }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
