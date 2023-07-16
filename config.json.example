@@ -58,6 +58,7 @@
         "loop": "🔁",
         "loopAction": "🔁",
         "autoplay": "♾️",
+        "autoplayAction": "♾️",
         "looping": "🔁",
         "autoplaying": "♾️",
         "skipped": "⏭️",
