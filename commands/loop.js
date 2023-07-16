@@ -6,12 +6,12 @@ const { embedColors, embedIcons, botInfo } = require('../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('loop')
-        .setDescription('Toggle looping a track or the whole queue.')
+        .setDescription('Toggle looping a track, the whole queue or autoplay.')
         .setDMPermission(false)
         .addStringOption((option) =>
             option
                 .setName('mode')
-                .setDescription('Track number to remove from queue.')
+                .setDescription('Mode to set for looping.')
                 .setRequired(false)
                 .addChoices(
                     { name: 'Track', value: '1' },
