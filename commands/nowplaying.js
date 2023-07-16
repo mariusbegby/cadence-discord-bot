@@ -59,6 +59,14 @@ module.exports = {
             ['arbitrary', 'Direct source']
         ]);
 
+        const sourceIcons = new Map([
+            ['youtube', embedIcons.sourceYouTube],
+            ['soundcloud', embedIcons.sourceSoundCloud],
+            ['spotify', embedIcons.sourceSpotify],
+            ['apple_music', embedIcons.sourceAppleMusic],
+            ['arbitrary', embedIcons.sourceArbitrary]
+        ]);
+
         const currentTrack = queue.currentTrack;
 
         let author = currentTrack.author ? currentTrack.author : 'Unavailable';
@@ -157,7 +165,9 @@ module.exports = {
                         },
                         {
                             name: '**Audio source**',
-                            value: `**[${source}](${currentTrack.url})**`,
+                            value: `**${sourceIcons.get(
+                                currentTrack.raw.source
+                            )} [${source}](${currentTrack.url})**`,
                             inline: true
                         }
                     )
