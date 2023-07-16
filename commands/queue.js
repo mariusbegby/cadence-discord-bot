@@ -50,7 +50,7 @@ module.exports = {
                 });
             }
 
-            queueString = 'The queue is empty, add some tracks with `/play`!';
+            queueString = 'The queue is empty, add some tracks with **`/play`**!';
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -86,7 +86,7 @@ module.exports = {
         }
 
         if (queue.tracks.data.length === 0) {
-            queueString = 'The queue is empty, add some tracks with `/play`!';
+            queueString = 'The queue is empty, add some tracks with **`/play`**!';
         } else {
             queueString = queue.tracks.data
                 .slice(pageIndex * 10, pageIndex * 10 + 10)
