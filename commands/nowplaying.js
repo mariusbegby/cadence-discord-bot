@@ -83,16 +83,16 @@ module.exports = {
             'Unavailable';
         const queueLength = queue.tracks.data.length;
         const timestamp = queue.node.getTimestamp();
-        let bar = `\`${
+        let bar = `**\`${
             timestamp.current.label
-        }\` ${queue.node.createProgressBar({
+        }\`** ${queue.node.createProgressBar({
             queue: false,
             length: progressBarOptions.length ?? 12,
             timecodes: progressBarOptions.timecodes ?? false,
             indicator: progressBarOptions.indicator ?? '🔘',
             leftChar: progressBarOptions.leftChar ?? '▬',
             rightChar: progressBarOptions.rightChar ?? '▬'
-        })} \`${timestamp.total.label}\``;
+        })} **\`${timestamp.total.label}\`**`;
 
         if (
             currentTrack.raw.duration === 0 ||
@@ -233,7 +233,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**` +
+                                `**${embedIcons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
                                     `${
                                         queue.repeatMode === 0
                                             ? ''

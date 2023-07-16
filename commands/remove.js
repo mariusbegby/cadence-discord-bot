@@ -73,7 +73,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedIcons.success} Removed track**\n${durationFormat} **[${removedTrack.title}](${removedTrack.url})**`
+                        `**${embedIcons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${removedTrack.url})**`
                     )
                     .setThumbnail(removedTrack.thumbnail)
                     .setColor(embedColors.colorSuccess)

@@ -179,7 +179,7 @@ module.exports = {
                         .setDescription(
                             `**${
                                 embedIcons.success
-                            } Added playlist to queue**\n${durationFormat} **[${
+                            } Added playlist to queue**\n**${durationFormat} [${
                                 track.title
                             }](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
@@ -203,7 +203,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.audioStartedPlaying} Started playing**\n${durationFormat} **[${track.title}](${track.url})**`
+                            `**${embedIcons.audioStartedPlaying} Started playing**\n**${durationFormat} [${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedColors.colorSuccess)
@@ -221,7 +221,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `${embedIcons.success} **Added to queue**\n${durationFormat} **[${track.title}](${track.url})**`
+                        `${embedIcons.success} **Added to queue**\n**${durationFormat} [${track.title}](${track.url})**`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(embedColors.colorSuccess)

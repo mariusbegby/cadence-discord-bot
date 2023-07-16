@@ -98,7 +98,7 @@ module.exports = {
 
                     return `**${
                         pageIndex * 10 + index + 1
-                    }.** ${durationFormat} **[${track.title}](${track.url})**`;
+                    }.** **${durationFormat} [${track.title}](${track.url})**`;
                 })
                 .join('\n');
         }
@@ -146,16 +146,16 @@ module.exports = {
             });
         } else {
             const timestamp = queue.node.getTimestamp();
-            let bar = `\`${
+            let bar = `**\`${
                 timestamp.current.label
-            }\` ${queue.node.createProgressBar({
+            }\`** ${queue.node.createProgressBar({
                 queue: false,
                 length: progressBarOptions.length ?? 12,
                 timecodes: progressBarOptions.timecodes ?? false,
                 indicator: progressBarOptions.indicator ?? '🔘',
                 leftChar: progressBarOptions.leftChar ?? '▬',
                 rightChar: progressBarOptions.rightChar ?? '▬'
-            })} \`${timestamp.total.label}\``;
+            })} **\`${timestamp.total.label}\`**`;
 
             if (
                 currentTrack.raw.duration === 0 ||
