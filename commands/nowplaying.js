@@ -219,6 +219,10 @@ module.exports = {
                         : `\`${skippedTrack.duration}\``;
                 queue.node.skip();
 
+                const repeatModeUserString = loopModesFormatted.get(
+                    queue.repeatMode
+                );
+
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -229,7 +233,16 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**`
+                                `**${embedIcons.skipped} Skipped track**\n${durationFormat} **[${skippedTrack.title}](${skippedTrack.url})**` +
+                                    `${
+                                        queue.repeatMode === 0
+                                            ? ''
+                                            : `\n\n**${
+                                                queue.repeatMode === 3
+                                                    ? embedIcons.autoplaying
+                                                    : embedIcons.looping
+                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with \`/loop\`.`
+                                    }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedColors.colorSuccess)
