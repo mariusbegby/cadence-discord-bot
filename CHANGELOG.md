@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.4...v1.6.0) (2023-07-16)
+
+
+### Features
+
+* Added /loop command with support for track, queue or autoplay looping ([34d50a9](https://github.com/mariusbegby/cadence-discord-bot/commit/34d50a92358c2e25dc4b9d6d1f254a66aa6073ea))
+
+
+### Minor changes and bug fixes
+
+* /nowplaying and /queue now indicate looping mode if enabled ([3b147bd](https://github.com/mariusbegby/cadence-discord-bot/commit/3b147bd0b05fd714a5477fe6c884dec2980415a0))
+* /nowplaying showing 'unavailable' views when track.views is set properly ([c59fce1](https://github.com/mariusbegby/cadence-discord-bot/commit/c59fce19c74bcb0f069807e02e2a1612e9241bad))
+* Add configurable icon for autoplay action ([21e9587](https://github.com/mariusbegby/cadence-discord-bot/commit/21e95878f0881a7dbad72f0271f55d7ae92754db))
+* Add more configurable options for loop and autoplay icons ([783f6ad](https://github.com/mariusbegby/cadence-discord-bot/commit/783f6ade356011c7563091305e278a5112db49e9))
+* added /loop command in /help message ([18504f4](https://github.com/mariusbegby/cadence-discord-bot/commit/18504f46d77bb2a49f07c0c3d3c9cb2804163f04))
+* Added configurable icon for loop action ([8450025](https://github.com/mariusbegby/cadence-discord-bot/commit/845002595f1529f51f2479e9114363bd0b384a6c))
+* added configurable options for muted icon ([457dfa1](https://github.com/mariusbegby/cadence-discord-bot/commit/457dfa1ad77f2f65049f779b10d778679d52e2c4))
+* Added period after sentence in message for toggling filters. ([798b65b](https://github.com/mariusbegby/cadence-discord-bot/commit/798b65b7810864488319c297af8978a9317bbe39))
+* fixed /guilds command slicing array before sorting ([7e1054d](https://github.com/mariusbegby/cadence-discord-bot/commit/7e1054dbdad90e97ab058ade518146298296f6ab))
+* fixed typo in /loop command description ([74b9fa0](https://github.com/mariusbegby/cadence-discord-bot/commit/74b9fa0e4361b486120517431922973b1b25f812))
+* Improved user messages for muted audio in /volume ([d5eb032](https://github.com/mariusbegby/cadence-discord-bot/commit/d5eb032543f8b70a99e9ec8fcdbfdfe072d375fb))
+* Indicate looping mode in skipping messages if enabled ([434bc67](https://github.com/mariusbegby/cadence-discord-bot/commit/434bc6730f4cfc0a88e678dcd6d283b58e10457e))
+* remove period after url when skipping during /nowplaying ([8a15400](https://github.com/mariusbegby/cadence-discord-bot/commit/8a15400bbc49064367d7abe47cdbc0b01f45f57f))
+* Set quality and highWaterMark in ytdlOptions ([7bc50d6](https://github.com/mariusbegby/cadence-discord-bot/commit/7bc50d6a8422f74b1329aad3e4152b6acd948b7a))
+* Update text in help command ([d873ada](https://github.com/mariusbegby/cadence-discord-bot/commit/d873adacba8a54489a49419c8ae5418d0938f4c5))
+
 ## [1.5.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.5.3...v1.5.4) (2023-07-15)
 
 
