@@ -213,7 +213,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    '**${embedIcons.warning} Oops!**\nThis track has already been skipped or is no longer playing.'
+                                    `**${embedIcons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
                                 )
                                 .setColor(embedColors.colorWarning)
                         ],
