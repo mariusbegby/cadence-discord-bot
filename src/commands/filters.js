@@ -1,3 +1,4 @@
+const path = require('path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const {
@@ -12,7 +13,7 @@ const {
     embedIcons,
     filterList,
     filterThreadAmount
-} = require('../config.json');
+} = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()

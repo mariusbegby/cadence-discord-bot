@@ -7,7 +7,8 @@ const transport = pino.transport({
             target: 'pino/file',
             level: process.env.MINIMUM_LOG_LEVEL,
             options: {
-                destination: './app-all.log',
+                destination: './logs/app-all.log',
+                mkdir: true,
                 sync: false,
                 minLength: 4096
             }
@@ -16,7 +17,8 @@ const transport = pino.transport({
             target: 'pino/file',
             level: 'info',
             options: {
-                destination: './app-info.log',
+                destination: './logs/app-info.log',
+                mkdir: true,
                 sync: false,
                 minLength: 4096
             }
@@ -25,7 +27,8 @@ const transport = pino.transport({
             target: 'pino/file',
             level: 'error',
             options: {
-                destination: './app-error.log',
+                destination: './logs/app-error.log',
+                mkdir: true,
                 sync: false
             }
         },

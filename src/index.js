@@ -1,10 +1,13 @@
 const fs = require('node:fs');
+const path = require('path');
 const Discord = require('discord.js');
-const logger = require('./services/logger.js');
+const logger = require(path.resolve('./src/services/logger.js'));
 const { EmbedBuilder } = require('discord.js');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { embedColors, embedIcons, botInfo } = require('./config.json');
+const { embedColors, embedIcons, botInfo } = require(path.resolve(
+    './config.json'
+));
 require('dotenv').config();
 
 // Setup required permissions for the bot to work
@@ -19,18 +22,20 @@ const client = new Discord.Client({
 // todo: extract this logic to a separate file
 client.commands = new Discord.Collection();
 const commandFiles = fs
-    .readdirSync('./commands')
+    .readdirSync(path.resolve('./src/commands'))
     .filter((file) => file.endsWith('.js'));
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+    const command = require(path.resolve(`./src/commands/${file}`));
     client.commands.set(command.data.name, command);
 }
 
 const systemCommandFiles = fs
-    .readdirSync('./system-commands')
+    .readdirSync(path.resolve('./src/system-commands'))
     .filter((file) => file.endsWith('.js'));
 for (const file of systemCommandFiles) {
-    const systemCommand = require(`./system-commands/${file}`);
+    const systemCommand = require(path.resolve(
+        `./src/system-commands/${file}`
+    ));
     client.commands.set(systemCommand.data.name, systemCommand);
 }
 
@@ -64,11 +69,11 @@ onBeforeCreateStream(async (track) => {
 
 if (process.env.NODE_ENV === 'development') {
     player.on('debug', (message) => {
-        logger.debug(`player debug event: ${message}`);
+        logger.debug(message);
     });
 
     player.events.on('debug', (message) => {
-        logger.trace(`player queue debug event: ${message}`);
+        logger.trace(message);
     });
 }
 
