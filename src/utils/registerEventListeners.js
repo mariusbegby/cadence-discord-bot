@@ -26,12 +26,15 @@ exports.registerEventListeners = (client, player) => {
                         }
                     }
                     break;
+
                 case 'interactions':
                     client.on(event.name, (...args) => event.execute(...args, { client }));
                     break;
+
                 case 'process':
                     process.on(event.name, (...args) => event.execute(...args));
                     break;
+
                 case 'player':
                     if (
                         !event.isDebug ||
@@ -46,6 +49,7 @@ exports.registerEventListeners = (client, player) => {
                         }
                     }
                     break;
+
                 default:
                     logger.error(`Unknown event folder '${folder}' while trying to register events.`);
             }
