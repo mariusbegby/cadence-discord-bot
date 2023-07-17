@@ -34,9 +34,13 @@ module.exports = {
             .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
             .join('\n');
 
-        let embedDescription = `**${embedIcons.bot} ${
-            client.guilds.cache.size < 50 ? `Top ${client.guilds.cache.size} guilds` : 'Top 50 guilds'
-        } by member count (${client.guilds.cache.size} total)**\n${guildsList}`;
+        const totalMemberCount = client.guilds.cache.reduce((a, b) => a + b.memberCount, 0);
+
+        let embedDescription =
+            `**${embedIcons.bot} ${
+                client.guilds.cache.size < 50 ? `Top ${client.guilds.cache.size} guilds` : 'Top 50 guilds'
+            } by member count (${client.guilds.cache.size} total)**\n${guildsList}` +
+            `\n\n**Total members:** \`${totalMemberCount}\``;
 
         if (embedDescription.length >= 4000) {
             embedDescription = `${embedDescription.slice(0, 3996)}...`;
