@@ -63,22 +63,6 @@ for (const folder of commandFolders) {
     }
 }
 
-const eventFolders = fs.readdirSync(path.resolve('./src/events'));
-for (const folder of eventFolders) {
-    const eventFiles = fs
-        .readdirSync(path.resolve(`./src/events/${folder}`))
-        .filter((file) => file.endsWith('.js'));
-
-    for (const file of eventFiles) {
-        const event = require(path.resolve(`./src/events/${folder}/${file}`));
-        if (event.once) {
-            client.once(event.name, (...args) => event.execute(...args));
-        } else {
-            client.on(event.name, (...args) => event.execute(...args));
-        }
-    }
-}
-
 if (process.env.NODE_ENV === 'development') {
     player.on('debug', (message) => {
         logger.debug(message);
