@@ -60,14 +60,14 @@ module.exports = {
         let durationArray = durationInput.split(':');
 
         switch (durationArray.length) {
-        case 1:
-            durationArray.unshift('00', '00');
-            break;
-        case 2:
-            durationArray.unshift('00');
-            break;
-        default:
-            break;
+            case 1:
+                durationArray.unshift('00', '00');
+                break;
+            case 2:
+                durationArray.unshift('00');
+                break;
+            default:
+                break;
         }
 
         if (durationArray.length === 0 || durationArray.length > 3) {
