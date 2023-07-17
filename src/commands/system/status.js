@@ -11,6 +11,7 @@ const osu = require('node-os-utils');
 const packageJson = require(path.resolve('./package.json'));
 
 module.exports = {
+    isSystemCommand: true,
     data: new SlashCommandBuilder()
         .setName('status')
         .setDescription('Show bot status.')

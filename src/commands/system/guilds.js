@@ -8,6 +8,7 @@ const {
 } = require(path.resolve('./config.json'));
 
 module.exports = {
+    isSystemCommand: true,
     data: new SlashCommandBuilder()
         .setName('guilds')
         .setDescription('Show list of guilds where bot is added.')

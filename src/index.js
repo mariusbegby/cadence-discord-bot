@@ -18,27 +18,6 @@ const client = new Discord.Client({
     ]
 });
 
-// Setup commands collection and load commands
-// todo: extract this logic to a separate file
-client.commands = new Discord.Collection();
-const commandFiles = fs
-    .readdirSync(path.resolve('./src/commands'))
-    .filter((file) => file.endsWith('.js'));
-for (const file of commandFiles) {
-    const command = require(path.resolve(`./src/commands/${file}`));
-    client.commands.set(command.data.name, command);
-}
-
-const systemCommandFiles = fs
-    .readdirSync(path.resolve('./src/system-commands'))
-    .filter((file) => file.endsWith('.js'));
-for (const file of systemCommandFiles) {
-    const systemCommand = require(path.resolve(
-        `./src/system-commands/${file}`
-    ));
-    client.commands.set(systemCommand.data.name, systemCommand);
-}
-
 const player = new Player(client, {
     useLegacyFFmpeg: false,
     ytdlOptions: {
@@ -66,6 +45,39 @@ onBeforeCreateStream(async (track) => {
 
     return null;
 });
+
+// Setup commands collection and load commands
+// todo: extract this logic to a separate file
+client.commands = new Discord.Collection();
+const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
+for (const folder of commandFolders) {
+    const commandFiles = fs
+        .readdirSync(path.resolve(`./src/commands/${folder}`))
+        .filter((file) => file.endsWith('.js'));
+
+    for (const file of commandFiles) {
+        const command = require(path.resolve(
+            `./src/commands/${folder}/${file}`
+        ));
+        client.commands.set(command.data.name, command);
+    }
+}
+
+const eventFolders = fs.readdirSync(path.resolve('./src/events'));
+for (const folder of eventFolders) {
+    const eventFiles = fs
+        .readdirSync(path.resolve(`./src/events/${folder}`))
+        .filter((file) => file.endsWith('.js'));
+
+    for (const file of eventFiles) {
+        const event = require(path.resolve(`./src/events/${folder}/${file}`));
+        if (event.once) {
+            client.once(event.name, (...args) => event.execute(...args));
+        } else {
+            client.on(event.name, (...args) => event.execute(...args));
+        }
+    }
+}
 
 if (process.env.NODE_ENV === 'development') {
     player.on('debug', (message) => {
