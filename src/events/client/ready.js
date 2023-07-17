@@ -1,6 +1,7 @@
 const path = require('node:path');
 const logger = require(path.resolve('./src/services/logger.js'));
 const { Events, ActivityType, PresenceUpdateStatus } = require('discord.js');
+const { postBotStats } = require(path.resolve('./src/utils/postBotStats.js'));
 
 module.exports = {
     name: Events.ClientReady,
@@ -17,5 +18,8 @@ module.exports = {
                 }
             ]
         });
+
+        // Post bot stats to bot lists in production
+        process.env.NODE_ENV === 'production' ? postBotStats(client) : null;
     }
 };
