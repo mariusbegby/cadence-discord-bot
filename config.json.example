@@ -9,6 +9,8 @@
         "Server id where system commands can be used",
         "Another server id where system commands can be used"
     ],
+    "systemMessageChannelId": "",
+    "systemUserId": "",
     "embedColors": {
         "colorSuccess": "#23A55A",
         "colorWarning": "#F0B232",
