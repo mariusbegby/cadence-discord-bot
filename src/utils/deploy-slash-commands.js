@@ -14,18 +14,14 @@ for (const folder of commandFolders) {
         .filter((file) => file.endsWith('.js'));
 
     for (const file of commandFiles) {
-        const command = require(path.resolve(
-            `./src/commands/${folder}/${file}`
-        ));
+        const command = require(path.resolve(`./src/commands/${folder}/${file}`));
         command.isSystemCommand
             ? systemCommands.push(command.data.toJSON())
             : slashCommands.push(command.data.toJSON());
     }
 }
 
-const rest = new REST({ version: '10' }).setToken(
-    process.env.DISCORD_BOT_TOKEN
-);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 (async () => {
     try {
@@ -38,12 +34,9 @@ const rest = new REST({ version: '10' }).setToken(
         );
 
         logger.info('Started refreshing application (/) bot commands.');
-        await rest.put(
-            Routes.applicationCommands(process.env.DISCORD_CLIENT_ID),
-            {
-                body: slashCommands
-            }
-        );
+        await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), {
+            body: slashCommands
+        });
 
         logger.info('Successfully refreshed application (/) bot commands.');
     } catch (error) {
@@ -61,25 +54,14 @@ const rest = new REST({ version: '10' }).setToken(
 
         logger.info('Started refreshing application (/) system commands.');
         for (const systemServerGuildId of systemServerGuildIds) {
-            logger.info(
-                `Refreshing system commands for guild id ${systemServerGuildId}.`
-            );
-            await rest.put(
-                Routes.applicationGuildCommands(
-                    process.env.DISCORD_CLIENT_ID,
-                    systemServerGuildId
-                ),
-                {
-                    body: systemCommands
-                }
-            );
+            logger.info(`Refreshing system commands for guild id ${systemServerGuildId}.`);
+            await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, systemServerGuildId), {
+                body: systemCommands
+            });
         }
 
         logger.info('Successfully refreshed application (/) system commands.');
     } catch (error) {
-        logger.error(
-            error,
-            'Failed to refresh application (/) system commands.'
-        );
+        logger.error(error, 'Failed to refresh application (/) system commands.');
     }
 })();
