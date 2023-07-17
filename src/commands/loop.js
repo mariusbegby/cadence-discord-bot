@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');

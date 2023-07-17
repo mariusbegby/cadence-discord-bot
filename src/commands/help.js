@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { embedColors, embedIcons, botInfo } = require(path.resolve('./config.json'));

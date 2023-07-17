@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const fs = require('node:fs');
 const logger = require(path.resolve('./src/services/logger.js'));
 const { REST, Routes } = require('discord.js');

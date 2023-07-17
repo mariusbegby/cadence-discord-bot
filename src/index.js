@@ -1,5 +1,5 @@
 const fs = require('node:fs');
-const path = require('path');
+const path = require('node:path');
 const Discord = require('discord.js');
 const logger = require(path.resolve('./src/services/logger.js'));
 const { EmbedBuilder } = require('discord.js');
