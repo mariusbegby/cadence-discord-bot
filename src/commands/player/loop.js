@@ -66,9 +66,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                currentMode === 3
-                                    ? embedIcons.autoplay
-                                    : embedIcons.loop
+                                currentMode === 3 ? embedIcons.autoplay : embedIcons.loop
                             } Current loop mode**\nThe looping mode is currently set to \`${currentModeUserString}\`.`
                         )
                         .setColor(embedColors.colorInfo)
@@ -80,9 +78,7 @@ module.exports = {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(
-                            `**${embedIcons.warning} Oops!**\nLoop mode is already \`${modeUserString}\`.`
-                        )
+                        .setDescription(`**${embedIcons.warning} Oops!**\nLoop mode is already \`${modeUserString}\`.`)
                         .setColor(embedColors.colorWarning)
                 ]
             });
@@ -107,9 +103,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -125,9 +119,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -142,9 +134,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name:
-                            interaction.member.nickname ||
-                            interaction.user.username,
+                        name: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(

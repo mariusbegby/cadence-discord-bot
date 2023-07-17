@@ -49,8 +49,7 @@ module.exports = {
         }
 
         let durationFormat =
-            queue.currentTrack.raw.duration === 0 ||
-            queue.currentTrack.duration === '0:00'
+            queue.currentTrack.raw.duration === 0 || queue.currentTrack.duration === '0:00'
                 ? ''
                 : `\`${queue.currentTrack.duration}\``;
 
@@ -61,19 +60,13 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name:
-                            interaction.member.nickname ||
-                            interaction.user.username,
+                        name: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
                         `**${embedIcons.pauseResumed} ${
-                            queue.node.isPaused()
-                                ? 'Paused Track'
-                                : 'Resumed track'
-                        }**\n**${durationFormat} [${
-                            queue.currentTrack.title
-                        }](${queue.currentTrack.url})**`
+                            queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
+                        }**\n**${durationFormat} [${queue.currentTrack.title}](${queue.currentTrack.url})**`
                     )
                     .setThumbnail(queue.currentTrack.thumbnail)
                     .setColor(embedColors.colorSuccess)

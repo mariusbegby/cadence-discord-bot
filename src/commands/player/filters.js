@@ -8,12 +8,7 @@ const {
     ActionRowBuilder,
     ButtonBuilder
 } = require('discord.js');
-const {
-    embedColors,
-    embedIcons,
-    filterList,
-    filterThreadAmount
-} = require(path.resolve('./config.json'));
+const { embedColors, embedIcons, filterList, filterThreadAmount } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -73,9 +68,7 @@ module.exports = {
             .setMaxValues(filterOptions.length)
             .addOptions(filterOptions);
 
-        const filterActionRow = new ActionRowBuilder().addComponents(
-            filterSelect
-        );
+        const filterActionRow = new ActionRowBuilder().addComponents(filterSelect);
 
         const disableFiltersActionRow = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -122,17 +115,12 @@ module.exports = {
                 queue.filters.ffmpeg.setFilters(false);
             }
 
-            if (
-                confirmation.customId === 'disable-filters' ||
-                confirmation.values.length === 0
-            ) {
+            if (confirmation.customId === 'disable-filters' || confirmation.values.length === 0) {
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name:
-                                    interaction.member.nickname ||
-                                    interaction.user.username,
+                                name: interaction.member.nickname || interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
@@ -151,24 +139,12 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${
-                                embedIcons.success
-                            } Filters toggled**\nNow using these filters:\n${confirmation.values
-                                .map(
-                                    (enabled) =>
-                                        `\`${
-                                            filterList.find(
-                                                (filter) =>
-                                                    enabled == filter.value
-                                            ).label
-                                        }\``
-                                )
+                            `**${embedIcons.success} Filters toggled**\nNow using these filters:\n${confirmation.values
+                                .map((enabled) => `\`${filterList.find((filter) => enabled == filter.value).label}\``)
                                 .join(', ')}.`
                         )
                         .setColor(embedColors.colorSuccess)

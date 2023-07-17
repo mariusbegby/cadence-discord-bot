@@ -1,11 +1,7 @@
 const path = require('node:path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
-const {
-    embedColors,
-    embedIcons,
-    systemServerGuildIds
-} = require(path.resolve('./config.json'));
+const { embedColors, embedIcons, systemServerGuildIds } = require(path.resolve('./config.json'));
 
 module.exports = {
     isSystemCommand: true,
@@ -35,16 +31,11 @@ module.exports = {
             })
             .sort((a, b) => b.memberCount - a.memberCount)
             .slice(0, 50)
-            .map(
-                (guild, index) =>
-                    `${index + 1}. \`${guild.name} (#${guild.memberCount})\``
-            )
+            .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
             .join('\n');
 
         let embedDescription = `**${embedIcons.bot} ${
-            client.guilds.cache.size < 50
-                ? `Top ${client.guilds.cache.size} guilds`
-                : 'Top 50 guilds'
+            client.guilds.cache.size < 50 ? `Top ${client.guilds.cache.size} guilds` : 'Top 50 guilds'
         } by member count (${client.guilds.cache.size} total)**\n${guildsList}`;
 
         if (embedDescription.length >= 4000) {
@@ -52,11 +43,7 @@ module.exports = {
         }
 
         return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(embedDescription)
-                    .setColor(embedColors.colorInfo)
-            ]
+            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedColors.colorInfo)]
         });
     }
 };

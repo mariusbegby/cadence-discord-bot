@@ -2,26 +2,14 @@ const path = require('node:path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { useMainPlayer, useQueue } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
-const {
-    embedColors,
-    embedIcons,
-    playerOptions,
-    botInfo
-} = require(path.resolve('./config.json'));
+const { embedColors, embedIcons, playerOptions, botInfo } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription(
-            'Add a track or playlist to the queue by searching or url.'
-        )
+        .setDescription('Add a track or playlist to the queue by searching or url.')
         .setDMPermission(false)
-        .addStringOption((option) =>
-            option
-                .setName('query')
-                .setDescription('Search query or URL.')
-                .setRequired(true)
-        ),
+        .addStringOption((option) => option.setName('query').setDescription('Search query or URL.').setRequired(true)),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
@@ -73,27 +61,20 @@ module.exports = {
         let track;
 
         try {
-            ({ track } = await player.play(
-                interaction.member.voice.channel,
-                searchResult,
-                {
-                    requestedBy: interaction.user,
-                    nodeOptions: {
-                        leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
-                        leaveOnEmptyCooldown:
-                            playerOptions.leaveOnEmptyCooldown ?? 60000,
-                        leaveOnEnd: playerOptions.leaveOnEnd ?? true,
-                        leaveOnEndCooldown:
-                            playerOptions.leaveOnEndCooldown ?? 60000,
-                        leaveOnStop: playerOptions.leaveOnStop ?? true,
-                        leaveOnStopCooldown:
-                            playerOptions.leaveOnStopCooldown ?? 60000,
-                        maxSize: playerOptions.maxQueueSize ?? 1000,
-                        maxHistorySize: playerOptions.maxHistorySize ?? 100,
-                        volume: playerOptions.defaultVolume ?? 50
-                    }
+            ({ track } = await player.play(interaction.member.voice.channel, searchResult, {
+                requestedBy: interaction.user,
+                nodeOptions: {
+                    leaveOnEmpty: playerOptions.leaveOnEmpty ?? true,
+                    leaveOnEmptyCooldown: playerOptions.leaveOnEmptyCooldown ?? 60000,
+                    leaveOnEnd: playerOptions.leaveOnEnd ?? true,
+                    leaveOnEndCooldown: playerOptions.leaveOnEndCooldown ?? 60000,
+                    leaveOnStop: playerOptions.leaveOnStop ?? true,
+                    leaveOnStopCooldown: playerOptions.leaveOnStopCooldown ?? 60000,
+                    maxSize: playerOptions.maxQueueSize ?? 1000,
+                    maxHistorySize: playerOptions.maxHistorySize ?? 100,
+                    volume: playerOptions.defaultVolume ?? 50
                 }
-            ));
+            }));
         } catch (error) {
             if (error.message.includes('Sign in to confirm your age')) {
                 return await interaction.editReply({
@@ -109,15 +90,9 @@ module.exports = {
 
             if (
                 (error.type === 'TypeError' &&
-                    (error.message.includes(
-                        'Cannot read properties of null (reading \'createStream\')'
-                    ) ||
-                        error.message.includes(
-                            'Failed to fetch resources for ytdl streaming'
-                        ))) ||
-                error.message.includes(
-                    'Could not extract stream for this track'
-                )
+                    (error.message.includes('Cannot read properties of null (reading \'createStream\')') ||
+                        error.message.includes('Failed to fetch resources for ytdl streaming'))) ||
+                error.message.includes('Could not extract stream for this track')
             ) {
                 return await interaction.editReply({
                     embeds: [
@@ -162,27 +137,20 @@ module.exports = {
                 'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
         }
 
-        let durationFormat =
-            track.raw.duration === 0 || track.duration === '0:00'
-                ? ''
-                : `\`${track.duration}\``;
+        let durationFormat = track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${
-                                embedIcons.success
-                            } Added playlist to queue**\n**${durationFormat} [${
-                                track.title
-                            }](${track.url})**\n\nAnd **${
+                            `**${embedIcons.success} Added playlist to queue**\n**${durationFormat} [${track.title}](${
+                                track.url
+                            })**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
@@ -198,9 +166,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setAuthor({
                             name:
-                                interaction.member.nickname ||
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                                interaction.member.nickname || interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -216,9 +182,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name:
-                            interaction.member.nickname ||
-                            interaction.user.username,
+                        name: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(

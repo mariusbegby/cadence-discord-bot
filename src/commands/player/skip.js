@@ -10,10 +10,7 @@ module.exports = {
         .setDescription('Skip current or specified track.')
         .setDMPermission(false)
         .addNumberOption((option) =>
-            option
-                .setName('tracknumber')
-                .setDescription('Track number to skip to in the queue.')
-                .setMinValue(1)
+            option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
     run: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
@@ -58,8 +55,7 @@ module.exports = {
             } else {
                 const skippedTrack = queue.currentTrack;
                 let durationFormat =
-                    skippedTrack.raw.duration === 0 ||
-                    skippedTrack.duration === '0:00'
+                    skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
                 queue.node.skipTo(skipToTrack - 1);
@@ -68,9 +64,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name:
-                                    interaction.member.nickname ||
-                                    interaction.user.username,
+                                name: interaction.member.nickname || interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
@@ -96,8 +90,7 @@ module.exports = {
 
             const skippedTrack = queue.currentTrack;
             let durationFormat =
-                skippedTrack.raw.duration === 0 ||
-                skippedTrack.duration === '0:00'
+                skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                     ? ''
                     : `\`${skippedTrack.duration}\``;
             queue.node.skip();
@@ -115,9 +108,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
@@ -126,9 +117,7 @@ module.exports = {
                                     queue.repeatMode === 0
                                         ? ''
                                         : `\n\n**${
-                                            queue.repeatMode === 3
-                                                ? embedIcons.autoplaying
-                                                : embedIcons.looping
+                                            queue.repeatMode === 3 ? embedIcons.autoplaying : embedIcons.looping
                                         } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                                 }`
                         )

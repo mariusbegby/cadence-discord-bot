@@ -2,20 +2,13 @@ const path = require('node:path');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const {
-    embedColors,
-    embedIcons,
-    systemServerGuildIds
-} = require(path.resolve('./config.json'));
+const { embedColors, embedIcons, systemServerGuildIds } = require(path.resolve('./config.json'));
 const osu = require('node-os-utils');
 const packageJson = require(path.resolve('./package.json'));
 
 module.exports = {
     isSystemCommand: true,
-    data: new SlashCommandBuilder()
-        .setName('status')
-        .setDescription('Show bot status.')
-        .setDMPermission(false),
+    data: new SlashCommandBuilder().setName('status').setDescription('Show bot status.').setDMPermission(false),
     run: async ({ interaction, client }) => {
         if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
@@ -34,14 +27,8 @@ module.exports = {
         let uptimeDate = new Date(0);
         uptimeDate.setSeconds(uptimeInSeconds.toFixed(0));
         const uptimeString = uptimeDate.toISOString().substring(11, 19);
-        const nodeProcessMemUsageInMb = (
-            process.memoryUsage().heapUsed /
-            1024 /
-            1024
-        ).toFixed(2);
-        const usedMemoryInMB = Math.ceil(
-            (await osu.mem.info()).usedMemMb
-        ).toLocaleString('en-US');
+        const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
         const cpuCores = await osu.cpu.count();
         const platform = await osu.os.platform();

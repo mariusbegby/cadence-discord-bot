@@ -53,9 +53,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                currentVolume === 0
-                                    ? embedIcons.volumeIsMuted
-                                    : embedIcons.volume
+                                currentVolume === 0 ? embedIcons.volumeIsMuted : embedIcons.volume
                             } Playback volume**\nThe playback volume is currently set to \`${currentVolume}%\`.`
                         )
                         .setColor(embedColors.colorInfo)
@@ -79,9 +77,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name:
-                                    interaction.member.nickname ||
-                                    interaction.user.username,
+                                name: interaction.member.nickname || interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
@@ -96,9 +92,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(

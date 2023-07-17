@@ -7,9 +7,7 @@ const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('leave')
-        .setDescription(
-            'Clear the track queue and remove the bot from voice channel.'
-        )
+        .setDescription('Clear the track queue and remove the bot from voice channel.')
         .setDMPermission(false),
 
     // todo, allow command to be executed if bot is only member in voice channel
@@ -47,9 +45,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name:
-                                interaction.member.nickname ||
-                                interaction.user.username,
+                            name: interaction.member.nickname || interaction.user.username,
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(

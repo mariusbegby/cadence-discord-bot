@@ -12,9 +12,7 @@ module.exports = {
         .addStringOption((option) =>
             option
                 .setName('duration')
-                .setDescription(
-                    'Duration in format 00:00:00 (HH:mm:ss) to seek to.'
-                )
+                .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
                 .setRequired(true)
         ),
     run: async ({ interaction }) => {
@@ -131,10 +129,7 @@ module.exports = {
         }
 
         const currentTrackMaxDurationInMs = queue.currentTrack.durationMS;
-        const durationInMilliseconds =
-            durationArray[0] * 3600000 +
-            durationArray[1] * 60000 +
-            durationArray[2] * 1000;
+        const durationInMilliseconds = durationArray[0] * 3600000 + durationArray[1] * 60000 + durationArray[2] * 1000;
 
         if (durationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
             return await interaction.editReply({
@@ -153,9 +148,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name:
-                            interaction.member.nickname ||
-                            interaction.user.username,
+                        name: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(

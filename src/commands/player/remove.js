@@ -60,17 +60,13 @@ module.exports = {
         // Remove specified track number from queue
         const removedTrack = queue.node.remove(removeTrackNumber - 1);
         let durationFormat =
-            removedTrack.raw.duration === 0 || removedTrack.duration === '0:00'
-                ? ''
-                : `\`${removedTrack.duration}\``;
+            removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name:
-                            interaction.member.nickname ||
-                            interaction.user.username,
+                        name: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
