@@ -10,7 +10,6 @@ exports.postBotStats = (client) => {
         /* eslint-disable camelcase */
         const sites = [
             {
-                name: 'top.gg',
                 hostname: 'top.gg',
                 path: `/api/bots/${process.env.DISCORD_CLIENT_ID}/stats`,
                 method: 'POST',
@@ -18,7 +17,6 @@ exports.postBotStats = (client) => {
                 token: process.env.BOTLIST_TOP_GG_API_TOKEN
             },
             {
-                name: 'discordbotlist.com',
                 hostname: 'discordbotlist.com',
                 path: `/api/v1/bots/${process.env.DISCORD_CLIENT_ID}/stats`,
                 method: 'POST',
@@ -26,7 +24,6 @@ exports.postBotStats = (client) => {
                 token: process.env.BOTLIST_DISCORD_BOT_LIST_COM_API_TOKEN
             },
             {
-                name: 'discords.com',
                 hostname: 'discords.com',
                 path: `/bots/api/bot/${process.env.DISCORD_CLIENT_ID}`,
                 method: 'POST',
@@ -34,7 +31,6 @@ exports.postBotStats = (client) => {
                 token: process.env.BOTLIST_DISCORDS_COM_API_TOKEN
             },
             {
-                name: 'discord.bots.gg',
                 hostname: 'discord.bots.gg',
                 path: `/api/v1/bots/${process.env.DISCORD_CLIENT_ID}/stats`,
                 method: 'POST',
@@ -42,7 +38,13 @@ exports.postBotStats = (client) => {
                 token: process.env.BOTLIST_DISCORD_BOTS_GG_API_TOKEN
             },
             {
-                name: 'discordlist.gg',
+                hostname: 'api.botlist.me',
+                path: `/api/v1/bots/${process.env.DISCORD_CLIENT_ID}/stats`,
+                method: 'POST',
+                body: { server_count: guildCount },
+                token: process.env.BOTLIST_BOTLIST_ME_API_TOKEN
+            },
+            {
                 hostname: 'api.discordlist.gg',
                 path: `/v0/bots/${process.env.DISCORD_CLIENT_ID}/guilds?count=${guildCount}`,
                 method: 'PUT',
@@ -67,8 +69,8 @@ exports.postBotStats = (client) => {
 
             let request = https.request(options, (res) => {
                 res.statusCode === 200
-                    ? logger.info(`Request to ${site.name}: statusCode: ${res.statusCode}`)
-                    : logger.warn(`Request to ${site.name}: statusCode: ${res.statusCode}`);
+                    ? logger.info(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
+                    : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
             });
 
             request.write(JSON.stringify(site.body));
