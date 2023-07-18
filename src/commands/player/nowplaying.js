@@ -126,7 +126,7 @@ module.exports = {
                             inline: true
                         },
                         {
-                            name: '**Audio source**',
+                            name: '**Track source**',
                             value: `**${sourceIcons.get(currentTrack.raw.source)} [${source}](${currentTrack.url})**`,
                             inline: true
                         }
