@@ -1,4 +1,4 @@
-const logger = require('../services/logger');
+const logger = require('../../services/logger');
 const Discord = require('discord.js');
 
 exports.createClient = async () => {

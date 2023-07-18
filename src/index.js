@@ -2,8 +2,8 @@ require('dotenv').config();
 const logger = require('./services/logger');
 const { registerEventListeners } = require('./utils/registerEventListeners.js');
 const { registerClientCommands } = require('./utils/registerClientCommands.js');
-const { createClient } = require('./utils/createClient.js');
-const { createPlayer } = require('./utils/createPlayer.js');
+const { createClient } = require('./utils/factory/createClient.js');
+const { createPlayer } = require('./utils/factory/createPlayer.js');
 
 (async () => {
     const client = await createClient();
