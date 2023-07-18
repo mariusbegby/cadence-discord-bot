@@ -1,5 +1,6 @@
 const { embedOptions, playerOptions, botOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
+const { transformQuery } = require('../../utils/validation/searchQueryValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
 
@@ -17,7 +18,9 @@ module.exports = {
         const player = useMainPlayer();
         const query = interaction.options.getString('query');
 
-        const searchResult = await player.search(query, {
+        const transformedQuery = await transformQuery(query);
+
+        const searchResult = await player.search(transformedQuery, {
             requestedBy: interaction.user
         });
 
@@ -26,7 +29,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} No track found**\nNo results found for \`${query}\`.\n\nIf you specified a URL, please make sure it is valid and public.`
+                            `**${embedOptions.icons.warning} No track found**\nNo results found for \`${transformedQuery}\`.\n\nIf you specified a URL, please make sure it is valid and public.`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -151,7 +154,7 @@ module.exports = {
             });
         }
 
-        if (queue.currentTrack === track) {
+        if (queue.currentTrack === track && queue.tracks.data.length === 0) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
