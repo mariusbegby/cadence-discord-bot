@@ -1,4 +1,5 @@
 const { embedOptions, playerOptions, botOptions } = require('../../config');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
 
@@ -9,16 +10,8 @@ module.exports = {
         .setDMPermission(false)
         .addStringOption((option) => option.setName('query').setDescription('Search query or URL.').setRequired(true)),
     execute: async ({ interaction }) => {
-        if (!interaction.member.voice.channel) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await notInVoiceChannel(interaction)) {
+            return;
         }
 
         const player = useMainPlayer();
