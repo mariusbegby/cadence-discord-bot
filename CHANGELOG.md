@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.2...v2.0.0) (2023-07-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Extracted logic from index.js to separate files
+* Updated configuration and moved config location
+* Extract logic with registering event listeners to a separate file
+* New event handling
+* Updated command folder structure for new command handler
+* Moved source into /src folder
+
+### Features
+
+* Automatically send guildCount stats to botlist sites on startup ([547f3ca](https://github.com/mariusbegby/cadence-discord-bot/commit/547f3ca7c2a9f3a5133d1fb5e6d2846356129f6c))
+* Extract logic with registering event listeners to a separate file ([9184722](https://github.com/mariusbegby/cadence-discord-bot/commit/9184722030bef24e2270ed089fad045bd7a29dfe))
+* Extracted logic from index.js to separate files ([2818778](https://github.com/mariusbegby/cadence-discord-bot/commit/2818778663b3c921914619bd3ff97d770e8c6fb1))
+* Moved source into /src folder ([ee274fe](https://github.com/mariusbegby/cadence-discord-bot/commit/ee274feb2bda3ab51beff8d6ce411b6c94fd0804))
+* New event handling ([12d9234](https://github.com/mariusbegby/cadence-discord-bot/commit/12d9234271ae142d6ed5ced850677914bba7eca6))
+* Setup caching in discord.js client for optimization ([623502c](https://github.com/mariusbegby/cadence-discord-bot/commit/623502c48afe0929e16240007e17463fd748bef1))
+* Updated command folder structure for new command handler ([421734b](https://github.com/mariusbegby/cadence-discord-bot/commit/421734be2691a49417336557c7817b7dace233df))
+* Updated configuration and moved config location ([dd4b56a](https://github.com/mariusbegby/cadence-discord-bot/commit/dd4b56ae675ca26575ff2ebdb68daa0ac4c17f12))
+
+
+### Minor changes and bug fixes
+
+* Add support for sending client ready, reconnect and disconnect events to system channel ([6fdd943](https://github.com/mariusbegby/cadence-discord-bot/commit/6fdd943e56445a3728260d49c7a57d91da958603))
+* Add total member count in /guilds system command ([d895128](https://github.com/mariusbegby/cadence-discord-bot/commit/d8951284cb49286717738f334d7e8117aea8e624))
+* Added another botlist site to auto post stats ([17d4295](https://github.com/mariusbegby/cadence-discord-bot/commit/17d4295862de45abc5c8b11d2c217a8d3f2ed709))
+* Changed command logic to be in property execute instead of run ([2d0df79](https://github.com/mariusbegby/cadence-discord-bot/commit/2d0df79dac3844b7081365f621576a93f60b41ac))
+* Changed name of deploy slash commands ([13f0b02](https://github.com/mariusbegby/cadence-discord-bot/commit/13f0b02472e09458da2f51f97ee65397e5ad4e13))
+* Enforce indention in switch statements ([a4d5ab5](https://github.com/mariusbegby/cadence-discord-bot/commit/a4d5ab5ae4cecc18b740e98622e6dfcb706ce15c))
+* Formatting ([1d520e9](https://github.com/mariusbegby/cadence-discord-bot/commit/1d520e95bdef27f0eb87e47a7e829e856fda72c6))
+* Formatting to new eslint rules ([bcc4f8f](https://github.com/mariusbegby/cadence-discord-bot/commit/bcc4f8ffac9fe3a8db3750c72d258385c10d6ee2))
+* Update presence status to use discord.js type ([6d132c7](https://github.com/mariusbegby/cadence-discord-bot/commit/6d132c774974ec7501e8dea4505c871bf07940b6))
+* Update require of path node module to have node: prefix to bypass require cache ([3da8275](https://github.com/mariusbegby/cadence-discord-bot/commit/3da82753598d194ac09cd0b397fa0c4e36b5a767))
+* Updated formatting rules ([22f4a22](https://github.com/mariusbegby/cadence-discord-bot/commit/22f4a22c0e00d87137ecc52a1da7175a4a045b1f))
+
 ## [1.7.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.1...v1.7.2) (2023-07-16)
 
 
