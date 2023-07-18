@@ -5,3 +5,5 @@
 /app-*.log
 /logs
 /logs/app-*.log
+/cookies.json
+/cookies.txt
