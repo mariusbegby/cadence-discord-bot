@@ -1,4 +1,6 @@
 const { embedOptions, botOptions } = require('../../config');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
+const { queueDoesNotExist } = require('../../utils/validation/queueValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
@@ -20,30 +22,14 @@ module.exports = {
                 )
         ),
     execute: async ({ interaction }) => {
-        if (!interaction.member.voice.channel) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await notInVoiceChannel(interaction)) {
+            return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (!queue) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await queueDoesNotExist(interaction, queue)) {
+            return;
         }
 
         const loopModesFormatted = new Map([

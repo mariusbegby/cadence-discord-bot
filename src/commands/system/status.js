@@ -1,4 +1,5 @@
-const { embedOptions, systemOptions } = require('../../config');
+const { embedOptions } = require('../../config');
+const { notValidGuildId } = require('../../utils/validation/systemCommandValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 const osu = require('node-os-utils');
@@ -8,16 +9,8 @@ module.exports = {
     isSystemCommand: true,
     data: new SlashCommandBuilder().setName('status').setDescription('Show bot status.').setDMPermission(false),
     execute: async ({ interaction, client }) => {
-        if (!systemOptions.systemGuildIds.includes(interaction.guildId)) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await notValidGuildId(interaction)) {
+            return;
         }
 
         const interactionLatency = Date.now() - interaction.createdTimestamp;

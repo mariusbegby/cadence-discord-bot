@@ -1,4 +1,6 @@
 const { embedOptions, ffmpegFilterOptions } = require('../../config');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
+const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
 const {
     SlashCommandBuilder,
     EmbedBuilder,
@@ -15,30 +17,18 @@ module.exports = {
         .setDescription('Toggle various audio filters during playback.')
         .setDMPermission(false),
     execute: async ({ interaction }) => {
-        if (!interaction.member.voice.channel) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await notInVoiceChannel(interaction)) {
+            return;
         }
 
-        const queue = await useQueue(interaction.guild.id);
+        const queue = useQueue(interaction.guild.id);
 
-        if (!queue) {
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue. First add some tracks with **\`/play\`**!`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await queueDoesNotExist(interaction, queue)) {
+            return;
+        }
+
+        if (await queueNoCurrentTrack(interaction, queue)) {
+            return;
         }
 
         let filterOptions = [];
