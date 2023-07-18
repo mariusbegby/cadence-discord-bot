@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.1...v2.1.2) (2023-07-18)
+
+
+### Minor changes and bug fixes
+
+* added util for parsing cookies from json and convert to single-line string to .txt ([06a3b68](https://github.com/mariusbegby/cadence-discord-bot/commit/06a3b68850f96d0e0528d1f38ab7961473802d78))
+
 ## [2.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.0...v2.1.1) (2023-07-18)
 
 
