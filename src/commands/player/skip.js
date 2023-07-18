@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
@@ -31,6 +32,9 @@ module.exports = {
 
         if (skipToTrack) {
             if (skipToTrack > queue.tracks.data.length) {
+                logger.debug(
+                    `User used command ${interaction.commandName} but track number was higher than total tracks.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -48,6 +52,7 @@ module.exports = {
                         : `\`${skippedTrack.duration}\``;
                 queue.node.skipTo(skipToTrack - 1);
 
+                logger.debug(`User used command ${interaction.commandName} and skipped to track.`);
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -65,6 +70,9 @@ module.exports = {
             }
         } else {
             if (queue.tracks.data.length === 0 && !queue.currentTrack) {
+                logger.debug(
+                    `User used command ${interaction.commandName} but there was no tracks in queue or current track.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -92,6 +100,7 @@ module.exports = {
 
             const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
+            logger.debug(`User used command ${interaction.commandName} and skipped track.`);
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

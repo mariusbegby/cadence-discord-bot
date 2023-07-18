@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions, playerOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
@@ -92,6 +93,8 @@ module.exports = {
 
         const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
+        logger.debug(`User used command ${interaction.commandName}, finished intializing data.`);
+
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -140,6 +143,8 @@ module.exports = {
             components: [nowPlayingActionRow]
         });
 
+        logger.debug(`User used command ${interaction.commandName}, finished sending response.`);
+
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
             const confirmation = await response.awaitMessageComponent({
@@ -150,7 +155,11 @@ module.exports = {
             confirmation.deferUpdate();
 
             if (confirmation.customId === 'nowplaying-skip') {
+                logger.debug(`User used command ${interaction.commandName}, received skip confirmation.`);
                 if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
+                    logger.debug(
+                        `User used command ${interaction.commandName} and tried skipping but there was no queue.`
+                    );
                     return await interaction.followUp({
                         embeds: [
                             new EmbedBuilder()
@@ -164,6 +173,9 @@ module.exports = {
                 }
 
                 if (queue.currentTrack !== currentTrack) {
+                    logger.debug(
+                        `User used command ${interaction.commandName} and tried skipping but the track was already removed.`
+                    );
                     return await interaction.followUp({
                         embeds: [
                             new EmbedBuilder()
@@ -185,6 +197,7 @@ module.exports = {
 
                 const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
 
+                logger.debug(`User used command ${interaction.commandName} and skipped the track.`);
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -210,12 +223,14 @@ module.exports = {
                     components: []
                 });
             }
-        } catch (e) {
-            if (e.code === 'InteractionCollectorError') {
+        } catch (error) {
+            if (error.code === 'InteractionCollectorError') {
+                logger.debug(`User used command ${interaction.commandName} but did not respond to the skip prompt.`);
                 return;
             }
 
-            throw e;
+            logger.debug(error, `User used command ${interaction.commandName} but there was an unhandled error.`);
+            throw error;
         }
     }
 };

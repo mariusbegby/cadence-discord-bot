@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
@@ -31,6 +32,7 @@ module.exports = {
 
         // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
+        logger.debug(`User used command ${interaction.commandName} and set paused state to ${queue.node.isPaused()}.`);
 
         return await interaction.editReply({
             embeds: [

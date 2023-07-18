@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { EmbedBuilder } = require('discord.js');
 
@@ -12,6 +13,9 @@ exports.queueDoesNotExist = async (interaction, queue) => {
                     .setColor(embedOptions.colors.warning)
             ]
         });
+
+        logger.debug(`User tried to use command ${interaction.commandName} but there was no queue.`);
+
         return true;
     }
 
@@ -29,6 +33,9 @@ exports.queueNoCurrentTrack = async (interaction, queue) => {
                     .setColor(embedOptions.colors.warning)
             ]
         });
+
+        logger.debug(`User tried to use command ${interaction.commandName} but there was no current track.`);
+
         return true;
     }
 
