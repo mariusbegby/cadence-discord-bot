@@ -1,5 +1,4 @@
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
+const logger = require('../../services/logger');
 const { Events } = require('discord.js');
 
 module.exports = {

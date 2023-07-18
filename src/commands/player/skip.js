@@ -1,8 +1,6 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,9 +16,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -32,9 +30,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -47,9 +45,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Oops!**\nThere are only \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track \`${skipToTrack}\`.\n\nView tracks added to the queue with **\`/queue\`**.`
+                                `**${embedOptions.icons.warning} Oops!**\nThere are only \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track \`${skipToTrack}\`.\n\nView tracks added to the queue with **\`/queue\`**.`
                             )
-                            .setColor(embedColors.colorWarning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             } else {
@@ -68,10 +66,10 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**`
+                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
-                            .setColor(embedColors.colorSuccess)
+                            .setColor(embedOptions.colors.success)
                     ]
                 });
             }
@@ -81,9 +79,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                                `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                             )
-                            .setColor(embedColors.colorWarning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             }
@@ -112,17 +110,19 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
+                            `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
                                 `${
                                     queue.repeatMode === 0
                                         ? ''
                                         : `\n\n**${
-                                            queue.repeatMode === 3 ? embedIcons.autoplaying : embedIcons.looping
+                                            queue.repeatMode === 3
+                                                ? embedOptions.icons.autoplaying
+                                                : embedOptions.icons.looping
                                         } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                                 }`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
-                        .setColor(embedColors.colorSuccess)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }

@@ -1,8 +1,6 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions, playerOptions, botOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons, playerOptions, botInfo } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,9 +14,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -35,9 +33,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} No track found**\nNo results found for \`${query}\`.\n\nIf you specified a URL, please make sure it is valid and public.`
+                            `**${embedOptions.icons.warning} No track found**\nNo results found for \`${query}\`.\n\nIf you specified a URL, please make sure it is valid and public.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -51,9 +49,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Unsupported audio source**\nYouTube live streams are currently not supported. This is due to issues with extracting audio from the livestream.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            `**${embedOptions.icons.warning} Unsupported audio source**\nYouTube live streams are currently not supported. This is due to issues with extracting audio from the livestream.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -81,9 +79,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                                `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
-                            .setColor(embedColors.colorWarning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             }
@@ -98,9 +96,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                                `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
-                            .setColor(embedColors.colorError)
+                            .setColor(embedOptions.colors.error)
                     ]
                 });
             }
@@ -110,9 +108,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                                `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
-                            .setColor(embedColors.colorError)
+                            .setColor(embedOptions.colors.error)
                     ]
                 });
             }
@@ -125,9 +123,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedOptions.colors.error)
                 ]
             });
         }
@@ -148,14 +146,14 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.success} Added playlist to queue**\n**${durationFormat} [${track.title}](${
-                                track.url
-                            })**\n\nAnd **${
+                            `**${embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
+                                track.title
+                            }](${track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
                         .setThumbnail(track.thumbnail)
-                        .setColor(embedColors.colorSuccess)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }
@@ -170,10 +168,10 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.audioStartedPlaying} Started playing**\n**${durationFormat} [${track.title}](${track.url})**`
+                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${track.title}](${track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
-                        .setColor(embedColors.colorSuccess)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }
@@ -186,10 +184,10 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `${embedIcons.success} **Added to queue**\n**${durationFormat} [${track.title}](${track.url})**`
+                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${track.url})**`
                     )
                     .setThumbnail(track.thumbnail)
-                    .setColor(embedColors.colorSuccess)
+                    .setColor(embedOptions.colors.success)
             ]
         });
     }

@@ -1,23 +1,21 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
+const { embedOptions, systemOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { embedColors, embedIcons, systemServerGuildIds } = require(path.resolve('./config.json'));
 const osu = require('node-os-utils');
-const packageJson = require(path.resolve('./package.json'));
+const { version, dependencies } = require('../../../package.json');
 
 module.exports = {
     isSystemCommand: true,
     data: new SlashCommandBuilder().setName('status').setDescription('Show bot status.').setDMPermission(false),
     execute: async ({ interaction, client }) => {
-        if (!systemServerGuildIds.includes(interaction.guildId)) {
+        if (!systemOptions.systemGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
+                            `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -32,9 +30,9 @@ module.exports = {
         const cpuUsage = await osu.cpu.usage();
         const cpuCores = await osu.cpu.count();
         const platform = await osu.os.platform();
-        const releaseVersion = packageJson.version;
-        const discordJsVersion = packageJson.dependencies['discord.js'];
-        const discordPlayerVersion = packageJson.dependencies['discord-player'];
+        const releaseVersion = version;
+        const discordJsVersion = dependencies['discord.js'];
+        const discordPlayerVersion = dependencies['discord-player'];
         const discordApiLatency = client.ws.ping;
         let activeVoiceConnections = 0;
         client.guilds.cache.forEach((guild) => {
@@ -49,7 +47,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedIcons.bot} System and bot status**\n` +
+                        `**${embedOptions.icons.bot} System and bot status**\n` +
                             `Uptime: \`${uptimeString}\`\n` +
                             `Platform: \`${platform}\`\n` +
                             `CPU cores: \`${cpuCores}\`\n` +
@@ -65,7 +63,7 @@ module.exports = {
                             `Active voice connections: \`${activeVoiceConnections}\`\n` +
                             `Joined guilds: \`${client.guilds.cache.size}\``
                     )
-                    .setColor(embedColors.colorInfo)
+                    .setColor(embedOptions.colors.info)
             ]
         });
     }

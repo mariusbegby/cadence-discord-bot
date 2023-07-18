@@ -1,8 +1,6 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,9 +19,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -35,9 +33,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -47,9 +45,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -73,12 +71,12 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
                                 '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- `/seek` **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -98,12 +96,12 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
                                 '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- `/seek` **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -118,12 +116,12 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
                                 '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- `/seek` **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -136,9 +134,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou entered **\`${durationString}\`**, which is a duration that is longer than the duration for the current track.\n\nPlease try a duration that is less than the duration of the track (**\`${queue.currentTrack.duration}\`**).`
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered **\`${durationString}\`**, which is a duration that is longer than the duration for the current track.\n\nPlease try a duration that is less than the duration of the track (**\`${queue.currentTrack.duration}\`**).`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -152,10 +150,10 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedIcons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
+                        `**${embedOptions.icons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
                     )
                     .setThumbnail(queue.currentTrack.thumbnail)
-                    .setColor(embedColors.colorSuccess)
+                    .setColor(embedOptions.colors.success)
             ]
         });
     }

@@ -1,7 +1,5 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons, systemServerGuildIds } = require(path.resolve('./config.json'));
+const { embedOptions, systemOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     isSystemCommand: true,
@@ -10,14 +8,14 @@ module.exports = {
         .setDescription('Show list of guilds where bot is added.')
         .setDMPermission(false),
     execute: async ({ interaction, client }) => {
-        if (!systemServerGuildIds.includes(interaction.guildId)) {
+        if (!systemOptions.systemGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
+                            `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command \`${interaction.commandName}\` cannot be executed in this server.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -37,7 +35,7 @@ module.exports = {
         const totalMemberCount = client.guilds.cache.reduce((a, b) => a + b.memberCount, 0);
 
         let embedDescription =
-            `**${embedIcons.bot} ${
+            `**${embedOptions.icons.bot} ${
                 client.guilds.cache.size < 50 ? `Top ${client.guilds.cache.size} guilds` : 'Top 50 guilds'
             } by member count (${client.guilds.cache.size} total)**\n${guildsList}` +
             `\n\n**Total members:** \`${totalMemberCount}\``;
@@ -47,7 +45,7 @@ module.exports = {
         }
 
         return await interaction.editReply({
-            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedColors.colorInfo)]
+            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedOptions.colors.info)]
         });
     }
 };

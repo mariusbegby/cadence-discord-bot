@@ -1,6 +1,4 @@
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
-require('dotenv').config();
+const logger = require('../../services/logger');
 
 module.exports = {
     name: 'uncaughtException',

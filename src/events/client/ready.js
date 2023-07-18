@@ -1,8 +1,7 @@
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
+const logger = require('../../services/logger');
+const { embedOptions, systemOptions } = require('../../config');
 const { Events, ActivityType, PresenceUpdateStatus, EmbedBuilder } = require('discord.js');
-const { postBotStats } = require(path.resolve('./src/utils/postBotStats.js'));
-const { systemMessageChannelId, embedColors, embedIcons } = require(path.resolve('./config.json'));
+const { postBotStats } = require('../../utils/postBotStats.js');
 
 module.exports = {
     name: Events.ClientReady,
@@ -24,12 +23,12 @@ module.exports = {
         process.env.NODE_ENV === 'production' ? postBotStats(client) : null;
 
         // send message to system message channel for event
-        if (systemMessageChannelId) {
-            await client.channels.cache.get(systemMessageChannelId).send({
+        if (systemOptions.systemMessageChannelId) {
+            await client.channels.cache.get(systemOptions.systemMessageChannelId).send({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`${embedIcons.success} **${client.user.tag}** is now **\`online\`**!`)
-                        .setColor(embedColors.colorSuccess)
+                        .setDescription(`${embedOptions.icons.success} **${client.user.tag}** is now **\`online\`**!`)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }

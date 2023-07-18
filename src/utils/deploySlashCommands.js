@@ -1,20 +1,17 @@
-const path = require('node:path');
-const fs = require('node:fs');
-const logger = require(path.resolve('./src/services/logger.js'));
-const { REST, Routes } = require('discord.js');
-const { systemServerGuildIds } = require(path.resolve('./config.json'));
 require('dotenv').config();
+const logger = require('../services/logger');
+const fs = require('node:fs');
+const { REST, Routes } = require('discord.js');
+const { systemOptions } = require('../config');
 
 const slashCommands = [];
 const systemCommands = [];
-const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
+const commandFolders = fs.readdirSync('./src/commands');
 for (const folder of commandFolders) {
-    const commandFiles = fs
-        .readdirSync(path.resolve(`./src/commands/${folder}`))
-        .filter((file) => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(`./src/commands/${folder}`).filter((file) => file.endsWith('.js'));
 
     for (const file of commandFiles) {
-        const command = require(path.resolve(`./src/commands/${folder}/${file}`));
+        const command = require(`../commands/${folder}/${file}`);
         command.isSystemCommand
             ? systemCommands.push(command.data.toJSON())
             : slashCommands.push(command.data.toJSON());
@@ -34,7 +31,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         );
 
         logger.info('Started refreshing application (/) bot commands.');
-        await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), {
+        await rest.put(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), {
             body: slashCommands
         });
 
@@ -53,9 +50,9 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         );
 
         logger.info('Started refreshing application (/) system commands.');
-        for (const systemServerGuildId of systemServerGuildIds) {
-            logger.info(`Refreshing system commands for guild id ${systemServerGuildId}.`);
-            await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, systemServerGuildId), {
+        for (const systemGuildId of systemOptions.systemGuildIds) {
+            logger.info(`Refreshing system commands for guild id ${systemGuildId}.`);
+            await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, systemGuildId), {
                 body: systemCommands
             });
         }

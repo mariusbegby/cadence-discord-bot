@@ -1,17 +1,13 @@
+const logger = require('../services/logger');
 const fs = require('node:fs');
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
-require('dotenv').config();
 
 exports.registerEventListeners = (client, player) => {
-    const eventFolders = fs.readdirSync(path.resolve('./src/events'));
+    const eventFolders = fs.readdirSync('./src/events');
     for (const folder of eventFolders) {
-        const eventFiles = fs
-            .readdirSync(path.resolve(`./src/events/${folder}`))
-            .filter((file) => file.endsWith('.js'));
+        const eventFiles = fs.readdirSync(`./src/events/${folder}`).filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {
-            const event = require(path.resolve(`./src/events/${folder}/${file}`));
+            const event = require(`../events/${folder}/${file}`);
             switch (folder) {
                 case 'client':
                     if (event.once) {

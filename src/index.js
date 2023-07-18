@@ -1,11 +1,10 @@
+require('dotenv').config();
 const fs = require('node:fs');
-const path = require('node:path');
 const Discord = require('discord.js');
-const logger = require(path.resolve('./src/services/logger.js'));
+const logger = require('./services/logger');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
-const { registerEventListeners } = require(path.resolve('./src/utils/registerEventListeners.js'));
-require('dotenv').config();
+const { registerEventListeners } = require('./utils/registerEventListeners.js');
 
 const client = new Discord.Client({
     intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
@@ -62,14 +61,12 @@ onBeforeCreateStream(async (track) => {
 });
 
 client.commands = new Discord.Collection();
-const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
+const commandFolders = fs.readdirSync('./src/commands');
 for (const folder of commandFolders) {
-    const commandFiles = fs
-        .readdirSync(path.resolve(`./src/commands/${folder}`))
-        .filter((file) => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(`./src/commands/${folder}`).filter((file) => file.endsWith('.js'));
 
     for (const file of commandFiles) {
-        const command = require(path.resolve(`./src/commands/${folder}/${file}`));
+        const command = require(`./commands/${folder}/${file}`);
         client.commands.set(command.data.name, command);
     }
 }

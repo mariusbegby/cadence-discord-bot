@@ -1,7 +1,6 @@
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
+const logger = require('../../services/logger');
+const { embedOptions, botOptions } = require('../../config');
 const { Events, EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons, botInfo } = require(path.resolve('./config.json'));
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -46,11 +45,11 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Warning**\nThis command took ${
+                                `**${embedOptions.icons.warning} Warning**\nThis command took ${
                                     executionTime / 1000
                                 } seconds to execute.\n\n_If you experienced problems with the command, please try again._`
                             )
-                            .setColor(embedColors.colorWarning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             } else {
@@ -68,9 +67,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botInfo.supportServerInviteUrl})**._`
+                            `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
-                        .setColor(embedColors.colorError)
+                        .setColor(embedOptions.colors.error)
                 ]
             });
         }

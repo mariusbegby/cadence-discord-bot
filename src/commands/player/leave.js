@@ -1,8 +1,6 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,9 +15,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -31,9 +29,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\n_Hmm.._ It seems I am not in a voice channel!`
+                            `**${embedOptions.icons.warning} Oops!**\n_Hmm.._ It seems I am not in a voice channel!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -49,9 +47,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
+                            `**${embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
                         )
-                        .setColor(embedColors.colorSuccess)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }

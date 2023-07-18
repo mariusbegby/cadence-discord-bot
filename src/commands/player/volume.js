@@ -1,8 +1,6 @@
-const path = require('node:path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const { embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,9 +20,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -36,9 +34,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -53,10 +51,10 @@ module.exports = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                currentVolume === 0 ? embedIcons.volumeIsMuted : embedIcons.volume
+                                currentVolume === 0 ? embedOptions.icons.volumeIsMuted : embedOptions.icons.volume
                             } Playback volume**\nThe playback volume is currently set to \`${currentVolume}%\`.`
                         )
-                        .setColor(embedColors.colorInfo)
+                        .setColor(embedOptions.colors.info)
                 ]
             });
         } else if (volume > 100 || volume < 0) {
@@ -64,9 +62,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou cannot set the volume to \`${volume}\`, please pick a value betwen \`1\`% and \`100\`%.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou cannot set the volume to \`${volume}\`, please pick a value betwen \`1\`% and \`100\`%.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         } else {
@@ -81,9 +79,9 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
+                                `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
                             )
-                            .setColor(embedColors.colorSuccess)
+                            .setColor(embedOptions.colors.success)
                     ]
                 });
             }
@@ -96,9 +94,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedIcons.volumeChanged} Volume changed**\nPlayback volume has been changed to \`${volume}%\`.`
+                            `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to \`${volume}%\`.`
                         )
-                        .setColor(embedColors.colorSuccess)
+                        .setColor(embedOptions.colors.success)
                 ]
             });
         }

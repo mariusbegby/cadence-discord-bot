@@ -1,7 +1,6 @@
-const path = require('node:path');
-const logger = require(path.resolve('./src/services/logger.js'));
+const logger = require('../../services/logger');
+const { embedOptions, systemOptions } = require('../../config');
 const { EmbedBuilder } = require('discord.js');
-const { systemMessageChannelId, systemUserId, embedColors, embedIcons } = require(path.resolve('./config.json'));
 
 module.exports = {
     name: 'disconnect',
@@ -11,15 +10,15 @@ module.exports = {
         logger.warn(`${client.user.tag} lost connection to Discord APIs. Disconnected.`);
 
         // send message to system message channel for event
-        if (systemMessageChannelId && systemUserId) {
-            await client.channels.cache.get(systemMessageChannelId).send({
+        if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
+            await client.channels.cache.get(systemOptions.systemMessageChannelId).send({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `${embedIcons.warning} **${client.user.tag}** is **\`disconnected\`**!` +
-                                `\n<@${systemUserId}>`
+                            `${embedOptions.icons.warning} **${client.user.tag}** is **\`disconnected\`**!` +
+                                `\n<@${systemOptions.systemUserId}>`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
