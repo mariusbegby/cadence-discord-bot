@@ -1,4 +1,4 @@
-const logger = require('../services/logger');
+const logger = require('../../services/logger');
 const { Player, onBeforeCreateStream } = require('discord-player');
 const { stream } = require('yt-stream');
 

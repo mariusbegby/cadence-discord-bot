@@ -1,7 +1,7 @@
 const logger = require('../../services/logger');
 const { embedOptions, systemOptions } = require('../../config');
 const { Events, ActivityType, PresenceUpdateStatus, EmbedBuilder } = require('discord.js');
-const { postBotStats } = require('../../utils/postBotStats.js');
+const { postBotStats } = require('../../utils/other/postBotStats.js');
 
 module.exports = {
     name: Events.ClientReady,

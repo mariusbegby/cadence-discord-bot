@@ -1,4 +1,4 @@
-const logger = require('../services/logger');
+const logger = require('../../services/logger');
 const https = require('node:https');
 
 exports.postBotStats = (client) => {
