@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.0...v2.2.1) (2023-07-18)
+
+
+### Minor changes and bug fixes
+
+* Add more logging to /play command ([389e60b](https://github.com/mariusbegby/cadence-discord-bot/commit/389e60baadff9501e03319dcc0cd2c1688c12c16))
+* Add more logging to all commands ([8ab4cbe](https://github.com/mariusbegby/cadence-discord-bot/commit/8ab4cbead2371162176c27e475d09b9b7d600ab2))
+
 ## [2.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.3...v2.2.0) (2023-07-18)
 
 
