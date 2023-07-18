@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.0...v2.1.1) (2023-07-18)
+
+
+### Minor changes and bug fixes
+
+* add --legacy-peer-deps flag when installing npm packages in CI pipeline ([06c66d7](https://github.com/mariusbegby/cadence-discord-bot/commit/06c66d78ce46811457696825cb1aaa537ac0ead9))
+* Moved some utility into categorized folders ([29ba4cc](https://github.com/mariusbegby/cadence-discord-bot/commit/29ba4ccb50e5db4710854db16357a854f60816b4))
+
 ## [2.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.0.0...v2.1.0) (2023-07-18)
 
 
