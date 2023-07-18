@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions, ffmpegFilterOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
@@ -77,6 +78,7 @@ module.exports = {
             ],
             components: [filterActionRow, disableFiltersActionRow]
         });
+        logger.debug(`Sent embed for command ${interaction.commandName}, awaiting interaction response.`);
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
@@ -84,6 +86,8 @@ module.exports = {
                 filter: collectorFilter,
                 time: 60000
             });
+
+            logger.debug(`Received interaction response for command ${interaction.commandName}.`);
 
             confirmation.deferUpdate();
 
@@ -124,6 +128,8 @@ module.exports = {
             // Enable provided filters
             queue.filters.ffmpeg.toggle(confirmation.values);
 
+            logger.debug(`Enabled filters ${confirmation.values.join(', ')} for command ${interaction.commandName}.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -149,12 +155,17 @@ module.exports = {
                 ],
                 components: []
             });
-        } catch (e) {
-            if (e.code === 'InteractionCollectorError') {
+        } catch (error) {
+            if (error.code === 'InteractionCollectorError') {
+                logger.debug(`Interaction response timed out for command ${interaction.commandName}.`);
                 return;
             }
 
-            throw e;
+            logger.debug(
+                error,
+                `Unhandled error while awaiting interaction response for command ${interaction.commandName}, throwing error.`
+            );
+            throw error;
         }
     }
 };

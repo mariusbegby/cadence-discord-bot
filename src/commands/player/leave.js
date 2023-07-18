@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
@@ -18,6 +19,7 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
+            logger.debug(`User used command ${interaction.commandName} but there was no queue.`);
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -31,6 +33,7 @@ module.exports = {
 
         if (!queue.deleted) {
             queue.delete();
+            logger.debug(`User used command ${interaction.commandName} and deleted the queue.`);
 
             return await interaction.editReply({
                 embeds: [

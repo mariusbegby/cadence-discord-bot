@@ -11,6 +11,7 @@ exports.transformQuery = async (query) => {
 
             // if country-based, transform to normal Spotify url
             if (isCountryBased) {
+                logger.debug(`Transforming country-based Spotify url to normal Spotify url from query ${query}.`);
                 const trackId = query.match(regex)[2];
                 query = `https://open.spotify.com/track/${trackId}`;
             }

@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist } = require('../../utils/validation/queueValidation');
@@ -30,6 +31,8 @@ module.exports = {
         const removeTrackNumber = interaction.options.getNumber('tracknumber');
 
         if (removeTrackNumber > queue.tracks.data.length) {
+            logger.debug(`User used command ${interaction.commandName} but track number was higher than total tracks.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -46,6 +49,7 @@ module.exports = {
         let durationFormat =
             removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
+        logger.debug(`User used command ${interaction.commandName} and removed track.`);
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions, botOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { queueDoesNotExist } = require('../../utils/validation/queueValidation');
@@ -45,6 +46,8 @@ module.exports = {
         const currentModeUserString = loopModesFormatted.get(currentMode);
 
         if (!mode && mode !== 0) {
+            logger.debug(`User used command ${interaction.commandName} but no mode was provided.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -59,6 +62,10 @@ module.exports = {
         }
 
         if (mode === currentMode) {
+            logger.debug(
+                `User used command ${interaction.commandName} but loop mode was already set to ${modeUserString}.`
+            );
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -73,6 +80,8 @@ module.exports = {
         queue.setRepeatMode(mode);
 
         if (!queue.repeatMode === mode) {
+            logger.debug(`User used command ${interaction.commandName} but failed to change loop mode.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -85,6 +94,8 @@ module.exports = {
         }
 
         if (queue.repeatMode === 0) {
+            logger.debug(`User used command ${interaction.commandName} and disabled loop mode.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -101,6 +112,8 @@ module.exports = {
         }
 
         if (queue.repeatMode === 3) {
+            logger.debug(`User used command ${interaction.commandName} and enabled autoplay.`);
+
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -115,6 +128,8 @@ module.exports = {
                 ]
             });
         }
+
+        logger.debug(`User used command ${interaction.commandName} and enabled loop mode.`);
 
         return await interaction.editReply({
             embeds: [
