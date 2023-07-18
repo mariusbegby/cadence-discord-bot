@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.2...v2.1.3) (2023-07-18)
+
+
+### Minor changes and bug fixes
+
+* Added player query validation, will transform country-based Spotify URLs ([4020442](https://github.com/mariusbegby/cadence-discord-bot/commit/40204420fa7adf967e2ff6b1a3e55a516b82155a))
+* Adjusted check on query URL domain ([5ac130a](https://github.com/mariusbegby/cadence-discord-bot/commit/5ac130ab45141c2fd4fe220f9cd8e83c276cadf8))
+* Update text in /nowplaying for audio source ([2445337](https://github.com/mariusbegby/cadence-discord-bot/commit/2445337cccd3a6cdbc2bd29d15b6c3f8edf4ec3b))
+
 ## [2.1.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.1...v2.1.2) (2023-07-18)
 
 
