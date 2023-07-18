@@ -8,7 +8,18 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "indent": ["error", 4],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "max-len": [
+            "error",
+            {
+                "code": 120,
+                "ignoreTemplateLiterals": true,
+                "ignoreStrings": true,
+                "ignoreComments": true,
+                "ignoreRegExpLiterals": true,
+                "ignoreUrls": true
+            }
+        ],
         "linebreak-style": ["error", "windows"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"],

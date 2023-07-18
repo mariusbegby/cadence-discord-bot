@@ -21,8 +21,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./src/index.js",
         "start-pretty": "node ./src/index.js | pino-pretty",
-        "deploy": "node ./src/deploy-commands.js && node ./src/deploy-system-commands.js",
-        "deploy-pretty": "node ./src/deploy-commands.js | pino-pretty && node ./src/deploy-system-commands.js | pino-pretty",
+        "deploy": "node ./src/utils/deploySlashCommands.js",
+        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty",
         "eslint": "eslint ./"
     },
     "dependencies": {

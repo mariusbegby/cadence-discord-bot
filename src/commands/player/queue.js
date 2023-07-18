@@ -1,33 +1,22 @@
-const path = require('path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions, playerOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder } = require('discord.js');
-const {
-    embedColors,
-    embedIcons,
-    progressBarOptions
-} = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
         .setDescription('Show the list of tracks added to the queue.')
         .setDMPermission(false)
-        .addNumberOption((option) =>
-            option
-                .setName('page')
-                .setDescription('Page number of the queue')
-                .setMinValue(1)
-        ),
-    run: async ({ interaction }) => {
+        .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -42,11 +31,11 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedIcons.warning} Oops!**\nPage \`${
+                                `**${embedOptions.icons.warning} Oops!**\nPage \`${
                                     pageIndex + 1
                                 }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
                             )
-                            .setColor(embedColors.colorWarning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             }
@@ -59,10 +48,8 @@ module.exports = {
                             name: interaction.guild.name,
                             iconURL: interaction.guild.iconURL()
                         })
-                        .setDescription(
-                            `**${embedIcons.queue} Tracks in queue**\n${queueString}`
-                        )
-                        .setColor(embedColors.colorInfo)
+                        .setDescription(`**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`)
+                        .setColor(embedOptions.colors.info)
                         .setFooter({
                             text: 'Page 1 of 1'
                         })
@@ -77,11 +64,11 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nPage \`${
+                            `**${embedOptions.icons.warning} Oops!**\nPage \`${
                                 pageIndex + 1
                             }\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -93,13 +80,9 @@ module.exports = {
                 .slice(pageIndex * 10, pageIndex * 10 + 10)
                 .map((track, index) => {
                     let durationFormat =
-                        track.raw.duration === 0 || track.duration === '0:00'
-                            ? ''
-                            : `\`${track.duration}\``;
+                        track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
-                    return `**${
-                        pageIndex * 10 + index + 1
-                    }.** **${durationFormat} [${track.title}](${track.url})**`;
+                    return `**${pageIndex * 10 + index + 1}.** **${durationFormat} [${track.title}](${track.url})**`;
                 })
                 .join('\n');
         }
@@ -119,9 +102,7 @@ module.exports = {
             queue.repeatMode === 0
                 ? ''
                 : `**${
-                    queue.repeatMode === 3
-                        ? embedIcons.autoplay
-                        : embedIcons.loop
+                    queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
                 } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.\n\n`
         }`;
 
@@ -130,38 +111,30 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: `Channel: ${queue.channel.name} (${
-                                queue.channel.bitrate / 1000
-                            }kbps)`,
+                            name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            `${repeatModeString}` +
-                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                            `${repeatModeString}` + `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages}`
                         })
-                        .setColor(embedColors.colorInfo)
+                        .setColor(embedOptions.colors.info)
                 ]
             });
         } else {
             const timestamp = queue.node.getTimestamp();
-            let bar = `**\`${
-                timestamp.current.label
-            }\`** ${queue.node.createProgressBar({
+            let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
                 queue: false,
-                length: progressBarOptions.length ?? 12,
-                timecodes: progressBarOptions.timecodes ?? false,
-                indicator: progressBarOptions.indicator ?? '🔘',
-                leftChar: progressBarOptions.leftChar ?? '▬',
-                rightChar: progressBarOptions.rightChar ?? '▬'
+                length: playerOptions.progressBar.length ?? 12,
+                timecodes: playerOptions.progressBar.timecodes ?? false,
+                indicator: playerOptions.progressBar.indicator ?? '🔘',
+                leftChar: playerOptions.progressBar.leftChar ?? '▬',
+                rightChar: playerOptions.progressBar.rightChar ?? '▬'
             })} **\`${timestamp.total.label}\`**`;
 
-            if (
-                currentTrack.raw.duration === 0 ||
-                currentTrack.duration === '0:00'
-            ) {
+            if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
                 bar = '_No duration available._';
             }
 
@@ -169,26 +142,22 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: `Channel: ${queue.channel.name} (${
-                                queue.channel.bitrate / 1000
-                            }kbps)`,
+                            name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
                             iconURL: interaction.guild.iconURL()
                         })
                         .setDescription(
-                            `**${embedIcons.audioPlaying} Now playing**\n` +
-                                (currentTrack
-                                    ? `**[${currentTrack.title}](${currentTrack.url})**`
-                                    : 'None') +
+                            `**${embedOptions.icons.audioPlaying} Now playing**\n` +
+                                (currentTrack ? `**[${currentTrack.title}](${currentTrack.url})**` : 'None') +
                                 `\nRequested by: <@${currentTrack.requestedBy.id}>` +
                                 `\n ${bar}\n\n` +
                                 `${repeatModeString}` +
-                                `**${embedIcons.queue} Tracks in queue**\n${queueString}`
+                                `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages}`
                         })
-                        .setColor(embedColors.colorInfo)
+                        .setColor(embedOptions.colors.info)
                 ]
             });
         }

@@ -1,27 +1,21 @@
-const path = require('path');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { embedOptions, playerOptions } = require('../../config');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-const {
-    embedColors,
-    embedIcons,
-    progressBarOptions
-} = require(path.resolve('./config.json'));
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('nowplaying')
         .setDescription('Show information about the track currently playing.')
         .setDMPermission(false),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou need to be in a voice channel to use this command.`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -33,9 +27,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -45,9 +39,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedColors.colorWarning)
+                        .setColor(embedOptions.colors.warning)
                 ]
             });
         }
@@ -61,11 +55,11 @@ module.exports = {
         ]);
 
         const sourceIcons = new Map([
-            ['youtube', embedIcons.sourceYouTube],
-            ['soundcloud', embedIcons.sourceSoundCloud],
-            ['spotify', embedIcons.sourceSpotify],
-            ['apple_music', embedIcons.sourceAppleMusic],
-            ['arbitrary', embedIcons.sourceArbitrary]
+            ['youtube', embedOptions.icons.sourceYouTube],
+            ['soundcloud', embedOptions.icons.sourceSoundCloud],
+            ['spotify', embedOptions.icons.sourceSpotify],
+            ['apple_music', embedOptions.icons.sourceAppleMusic],
+            ['arbitrary', embedOptions.icons.sourceArbitrary]
         ]);
 
         const currentTrack = queue.currentTrack;
@@ -87,26 +81,19 @@ module.exports = {
             plays = 'Unavailable';
         }
 
-        const source =
-            sourceStringsFormatted.get(currentTrack.raw.source) ??
-            'Unavailable';
+        const source = sourceStringsFormatted.get(currentTrack.raw.source) ?? 'Unavailable';
         const queueLength = queue.tracks.data.length;
         const timestamp = queue.node.getTimestamp();
-        let bar = `**\`${
-            timestamp.current.label
-        }\`** ${queue.node.createProgressBar({
+        let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
-            length: progressBarOptions.length ?? 12,
-            timecodes: progressBarOptions.timecodes ?? false,
-            indicator: progressBarOptions.indicator ?? '🔘',
-            leftChar: progressBarOptions.leftChar ?? '▬',
-            rightChar: progressBarOptions.rightChar ?? '▬'
+            length: playerOptions.progressBar.length ?? 12,
+            timecodes: playerOptions.progressBar.timecodes ?? false,
+            indicator: playerOptions.progressBar.indicator ?? '🔘',
+            leftChar: playerOptions.progressBar.leftChar ?? '▬',
+            rightChar: playerOptions.progressBar.rightChar ?? '▬'
         })} **\`${timestamp.total.label}\`**`;
 
-        if (
-            currentTrack.raw.duration === 0 ||
-            currentTrack.duration === '0:00'
-        ) {
+        if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
             bar = 'No duration available.';
         }
 
@@ -115,7 +102,7 @@ module.exports = {
                 .setCustomId('nowplaying-skip')
                 .setLabel('Skip track')
                 .setStyle('Secondary')
-                .setEmoji(embedIcons.nextTrack)
+                .setEmoji(embedOptions.icons.nextTrack)
         );
 
         const loopModesFormatted = new Map([
@@ -131,15 +118,13 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: `Channel: ${queue.channel.name} (${
-                            queue.channel.bitrate / 1000
-                        }kbps)`,
+                        name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
                         iconURL: interaction.guild.iconURL()
                     })
                     .setDescription(
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
-                            : `**${embedIcons.audioPlaying} Now Playing**\n`) +
+                            : `**${embedOptions.icons.audioPlaying} Now Playing**\n`) +
                             `**[${currentTrack.title}](${currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy.id}>` +
                             `\n ${bar}\n\n` +
@@ -147,9 +132,7 @@ module.exports = {
                                 queue.repeatMode === 0
                                     ? ''
                                     : `**${
-                                        queue.repeatMode === 3
-                                            ? embedIcons.autoplay
-                                            : embedIcons.loop
+                                        queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
                                     } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
@@ -166,19 +149,15 @@ module.exports = {
                         },
                         {
                             name: '**Audio source**',
-                            value: `**${sourceIcons.get(
-                                currentTrack.raw.source
-                            )} [${source}](${currentTrack.url})**`,
+                            value: `**${sourceIcons.get(currentTrack.raw.source)} [${source}](${currentTrack.url})**`,
                             inline: true
                         }
                     )
                     .setFooter({
-                        text: queueLength
-                            ? `${queueLength} other tracks in the queue...`
-                            : ' '
+                        text: queueLength ? `${queueLength} other tracks in the queue...` : ' '
                     })
                     .setThumbnail(queue.currentTrack.thumbnail)
-                    .setColor(embedColors.colorInfo)
+                    .setColor(embedOptions.colors.info)
             ],
             components: [nowPlayingActionRow]
         });
@@ -193,17 +172,14 @@ module.exports = {
             confirmation.deferUpdate();
 
             if (confirmation.customId === 'nowplaying-skip') {
-                if (
-                    !queue ||
-                    (queue.tracks.data.length === 0 && !queue.currentTrack)
-                ) {
+                if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
                     return await interaction.followUp({
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedIcons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                                    `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                                 )
-                                .setColor(embedColors.colorWarning)
+                                .setColor(embedOptions.colors.warning)
                         ],
                         components: []
                     });
@@ -214,9 +190,9 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedIcons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                                    `**${embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
                                 )
-                                .setColor(embedColors.colorWarning)
+                                .setColor(embedOptions.colors.warning)
                         ],
                         components: []
                     });
@@ -224,39 +200,34 @@ module.exports = {
 
                 const skippedTrack = queue.currentTrack;
                 let durationFormat =
-                    skippedTrack.raw.duration === 0 ||
-                    skippedTrack.duration === '0:00'
+                    skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
                 queue.node.skip();
 
-                const repeatModeUserString = loopModesFormatted.get(
-                    queue.repeatMode
-                );
+                const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
 
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name:
-                                    interaction.member.nickname ||
-                                    interaction.user.username,
+                                name: interaction.member.nickname || interaction.user.username,
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedIcons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
+                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
                                     `${
                                         queue.repeatMode === 0
                                             ? ''
                                             : `\n\n**${
                                                 queue.repeatMode === 3
-                                                    ? embedIcons.autoplaying
-                                                    : embedIcons.looping
+                                                    ? embedOptions.icons.autoplaying
+                                                    : embedOptions.icons.looping
                                             } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                                     }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
-                            .setColor(embedColors.colorSuccess)
+                            .setColor(embedOptions.colors.success)
                     ],
                     components: []
                 });

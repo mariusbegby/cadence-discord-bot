@@ -1,11 +1,11 @@
 const pino = require('pino');
-require('dotenv').config();
+const { loggerOptions } = require('../config');
 
 const transport = pino.transport({
     targets: [
         {
             target: 'pino/file',
-            level: process.env.MINIMUM_LOG_LEVEL,
+            level: loggerOptions.minimumLogLevel,
             options: {
                 destination: './logs/app-all.log',
                 mkdir: true,
@@ -34,7 +34,7 @@ const transport = pino.transport({
         },
         {
             target: 'pino/file',
-            level: process.env.MINIMUM_LOG_LEVEL_CONSOLE,
+            level: loggerOptions.minimumLogLevelConsole,
             options: {
                 colorize: true,
                 sync: false
@@ -45,7 +45,7 @@ const transport = pino.transport({
 
 module.exports = pino(
     {
-        level: process.env.MINIMUM_LOG_LEVEL,
+        level: loggerOptions.minimumLogLevel,
         timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
         base: undefined
     },
