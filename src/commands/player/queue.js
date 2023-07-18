@@ -44,13 +44,14 @@ module.exports = {
                         .setDescription(`**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`)
                         .setColor(embedOptions.colors.info)
                         .setFooter({
-                            text: 'Page 1 of 1'
+                            text: 'Page 1 of 1 (0 tracks)'
                         })
                 ]
             });
         }
 
-        const totalPages = Math.ceil(queue.tracks.data.length / 10) || 1;
+        const queueLength = queue.tracks.data.length;
+        const totalPages = Math.ceil(queueLength / 10) || 1;
 
         if (pageIndex > totalPages - 1) {
             return await interaction.editReply({
@@ -98,6 +99,7 @@ module.exports = {
                     queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
                 } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.\n\n`
         }`;
+        
 
         if (!currentTrack) {
             return await interaction.editReply({
@@ -111,7 +113,7 @@ module.exports = {
                             `${repeatModeString}` + `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setFooter({
-                            text: `Page ${pageIndex + 1} of ${totalPages}`
+                            text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })
                         .setColor(embedOptions.colors.info)
                 ]
@@ -148,7 +150,7 @@ module.exports = {
                         )
                         .setThumbnail(queue.currentTrack.thumbnail)
                         .setFooter({
-                            text: `Page ${pageIndex + 1} of ${totalPages}`
+                            text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })
                         .setColor(embedOptions.colors.info)
                 ]
