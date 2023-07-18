@@ -16,7 +16,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setDescription(
                             `${embedOptions.icons.warning} **${client.user.tag}** is **\`reconnecting\`**!` +
-                                `\n<@${systemOptions.systemUserId}>`
+                                `\n\n<@${systemOptions.systemUserId}>`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]

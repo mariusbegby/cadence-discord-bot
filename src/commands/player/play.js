@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions, playerOptions, botOptions } = require('../../config');
 const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
 const { transformQuery } = require('../../utils/validation/searchQueryValidation');
@@ -20,9 +21,16 @@ module.exports = {
 
         const transformedQuery = await transformQuery(query);
 
-        const searchResult = await player.search(transformedQuery, {
-            requestedBy: interaction.user
-        });
+        let searchResult;
+
+        try {
+            searchResult = await player.search(transformedQuery, {
+                requestedBy: interaction.user
+            });
+        } catch (error) {
+            logger.error('Failed to search for track with player.search()');
+            logger.error(error);
+        }
 
         if (!searchResult || searchResult.tracks.length === 0) {
             return await interaction.editReply({
@@ -66,7 +74,13 @@ module.exports = {
                     leaveOnStopCooldown: playerOptions.leaveOnStopCooldown ?? 60000,
                     maxSize: playerOptions.maxQueueSize ?? 1000,
                     maxHistorySize: playerOptions.maxHistorySize ?? 100,
-                    volume: playerOptions.defaultVolume ?? 50
+                    volume: playerOptions.defaultVolume ?? 50,
+                    metadata: {
+                        channel: interaction.channel,
+                        client: interaction.client,
+                        requestedBy: interaction.user,
+                        track: searchResult.tracks[0]
+                    }
                 }
             }));
         } catch (error) {
@@ -110,6 +124,9 @@ module.exports = {
                     ]
                 });
             }
+
+            logger.error('Failed to play track with player.play()');
+            logger.error(error);
         }
 
         let queue = useQueue(interaction.guild.id);
