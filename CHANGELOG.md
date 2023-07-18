@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.0.0...v2.1.0) (2023-07-18)
+
+
+### Features
+
+* Added common logic for validating command execution ([c7400f9](https://github.com/mariusbegby/cadence-discord-bot/commit/c7400f9fcdefe2ba4e290438d08cad1ac39e3758))
+
 ## [2.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v1.7.2...v2.0.0) (2023-07-18)
 
 
