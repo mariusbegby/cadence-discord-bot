@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.3...v2.2.0) (2023-07-18)
+
+
+### Features
+
+* Added metadata to queue, and added more logging and handling of error events ([0bdf572](https://github.com/mariusbegby/cadence-discord-bot/commit/0bdf572d0de54b06bf4bc6cc9e2fa2b900ce1c55))
+
+
+### Minor changes and bug fixes
+
+* fixed typo in leaveOnEndCooldown in playerOptions ([9c47811](https://github.com/mariusbegby/cadence-discord-bot/commit/9c47811aea9bebe2835907bc5311daa1e40c8a17))
+* Show total amount of tracks in queue footer besides pages ([3f15094](https://github.com/mariusbegby/cadence-discord-bot/commit/3f15094cf88ace4ac1e054231cd4a6dfb3b9ddc8))
+
 ## [2.1.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.1.2...v2.1.3) (2023-07-18)
 
 
