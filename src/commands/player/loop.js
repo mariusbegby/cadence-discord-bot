@@ -21,7 +21,7 @@ module.exports = {
                     { name: 'Disabled', value: '0' }
                 )
         ),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

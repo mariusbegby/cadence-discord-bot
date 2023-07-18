@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('Show the list of tracks added to the queue.')
         .setDMPermission(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

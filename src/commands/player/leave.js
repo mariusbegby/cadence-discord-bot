@@ -11,7 +11,7 @@ module.exports = {
         .setDMPermission(false),
 
     // todo, allow command to be executed if bot is only member in voice channel
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

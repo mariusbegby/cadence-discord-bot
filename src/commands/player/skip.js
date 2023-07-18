@@ -12,7 +12,7 @@ module.exports = {
         .addNumberOption((option) =>
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

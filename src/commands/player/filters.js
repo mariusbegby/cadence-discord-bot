@@ -15,7 +15,7 @@ module.exports = {
         .setName('filters')
         .setDescription('Toggle various audio filters during playback.')
         .setDMPermission(false),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

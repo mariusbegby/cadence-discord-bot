@@ -16,7 +16,7 @@ module.exports = {
                 .setMinValue(0)
                 .setMaxValue(100)
         ),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

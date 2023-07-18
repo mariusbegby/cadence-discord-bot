@@ -13,13 +13,16 @@ module.exports = {
 
         const command = client.commands.get(interaction.commandName);
         if (!command) {
+            logger.warn(`Interaction created but command '${interaction.commandName}' was not found.`);
             return;
         }
 
         try {
             const inputTime = new Date();
+
             await interaction.deferReply();
-            await command.run({ interaction, client });
+            await command.execute({ interaction, client });
+
             const outputTime = new Date();
             const executionTime = outputTime - inputTime;
 

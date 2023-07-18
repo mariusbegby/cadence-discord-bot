@@ -9,7 +9,7 @@ module.exports = {
         .setName('pause')
         .setDescription('Pause or resume the current track.')
         .setDMPermission(false),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

@@ -9,7 +9,7 @@ module.exports = {
         .setName('nowplaying')
         .setDescription('Show information about the track currently playing.')
         .setDMPermission(false),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

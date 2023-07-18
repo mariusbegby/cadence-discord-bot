@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('Add a track or playlist to the queue by searching or url.')
         .setDMPermission(false)
         .addStringOption((option) => option.setName('query').setDescription('Search query or URL.').setRequired(true)),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

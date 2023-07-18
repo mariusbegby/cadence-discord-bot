@@ -8,7 +8,7 @@ module.exports = {
         .setName('help')
         .setDescription('Show a list of commands and their usage.')
         .setDMPermission(false),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

@@ -15,7 +15,7 @@ module.exports = {
                 .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
                 .setRequired(true)
         ),
-    run: async ({ interaction }) => {
+    execute: async ({ interaction }) => {
         if (!interaction.member.voice.channel) {
             return await interaction.editReply({
                 embeds: [

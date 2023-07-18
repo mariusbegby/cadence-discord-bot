@@ -9,7 +9,7 @@ const packageJson = require(path.resolve('./package.json'));
 module.exports = {
     isSystemCommand: true,
     data: new SlashCommandBuilder().setName('status').setDescription('Show bot status.').setDMPermission(false),
-    run: async ({ interaction, client }) => {
+    execute: async ({ interaction, client }) => {
         if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
                 embeds: [

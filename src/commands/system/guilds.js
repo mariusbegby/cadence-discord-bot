@@ -9,7 +9,7 @@ module.exports = {
         .setName('guilds')
         .setDescription('Show list of guilds where bot is added.')
         .setDMPermission(false),
-    run: async ({ interaction, client }) => {
+    execute: async ({ interaction, client }) => {
         if (!systemServerGuildIds.includes(interaction.guildId)) {
             return await interaction.editReply({
                 embeds: [
