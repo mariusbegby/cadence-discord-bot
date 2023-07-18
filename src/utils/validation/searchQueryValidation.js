@@ -1,7 +1,7 @@
 const logger = require('../../services/logger');
 
 exports.transformQuery = async (query) => {
-    if (query.includes('open.spotify.com')) {
+    if (query.startsWith('https://open.spotify.com/')) {
         try {
             // regex to check for country-based Spotify url
             const regex = new RegExp(
