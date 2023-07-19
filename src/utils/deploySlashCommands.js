@@ -27,17 +27,12 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
     try {
         logger.info('DEPLOYING BOT SLASH COMMANDS');
         logger.info(
-            slashCommands.map((command) => {
-                return command.name;
-            }),
+            slashCommands.map((command) => command.name),
             'Bot commands found:'
         );
 
         logger.info('Started refreshing application (/) bot commands.');
-        await rest.put(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), {
-            body: slashCommands
-        });
-
+        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), slashCommands);
         logger.info('Successfully refreshed application (/) bot commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh application (/) bot commands.');
@@ -46,22 +41,26 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
     try {
         logger.info('DEPLOYING SYSTEM SLASH COMMANDS');
         logger.info(
-            systemCommands.map((systemCommand) => {
-                return systemCommand.name;
-            }),
+            systemCommands.map((systemCommand) => systemCommand.name),
             'System commands found:'
         );
 
         logger.info('Started refreshing application (/) system commands.');
-        for (const systemGuildId of systemOptions.systemGuildIds) {
-            logger.info(`Refreshing system commands for guild id ${systemGuildId}.`);
-            await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, systemGuildId), {
-                body: systemCommands
-            });
-        }
-
+        const systemGuildIds = systemOptions.systemGuildIds;
+        await Promise.all(
+            systemGuildIds.map((systemGuildId) =>
+                refreshCommands(
+                    Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, systemGuildId),
+                    systemCommands
+                )
+            )
+        );
         logger.info('Successfully refreshed application (/) system commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh application (/) system commands.');
     }
 })();
+
+async function refreshCommands(route, commands) {
+    await rest.put(route, { body: commands });
+}
