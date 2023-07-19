@@ -26,7 +26,7 @@
 
 To add the bot to your Discord server, click [here](https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands). This will invite the bot to your Discord server.
 
-Once the bot has joined your Discord server, there is no additional configuration. Execute the `/help` command to view a list of commands to use.
+Once the bot has joined your Discord server, there is no additional configuration. Execute the **`/help`** command to view a list of commands to use.
 
 ## Hosting the bot yourself 🔓
 
@@ -34,10 +34,16 @@ This bot is open-source, and if you want to host it yourself, you can do so by f
 
 1. Install [Node.js](https://nodejs.org/en/download/) v18.16 LTS.
 2. Install [FFmpeg](https://ffmpeg.org/download.html) latest release build.
-3. After cloning this repository, install dependencies with `npm install`.
-4. Create and configure the `config.json` document which contains configurable options and values such as `token` and `clientId`. This is required for the bot to communicate with Discord APIs and work properly. See `config.json.example` for an example, and [Discord developer portal](https://discord.com/developers/applications) to get `token` and `clientId`.
-5. Deploy slash commands via Discord API by running `npm run deploy`. This is required to make the commands accessible for Discord servers.
-6. Run `npm start` to start the bot. If everything is configured and setup correctly, the bot should be online and ready to use. You will need to invite the bot to a server, see [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) article for help.
+3. After cloning this repository, install dependencies with `npm install`. If you get an error, try using `npm install --legacy-peer-deps` instead, which should resolve the issue.
+4. Create and configure the `config.js` document in `/src/config.js` which contains configurable options and customization for the bot. See the `/src/config_example.js` for an example.
+5. Setup your `.env` file in the root directory to configure bot `token` and `clientId`, which you get from [Discord developer portal](https://discord.com/developers/applications). See the `.env.example` file in root directory to see example.
+6. Deploy slash commands via Discord API by running `npm run deploy`. This is required to make the commands accessible for Discord servers.
+7. Run `npm start` to start the bot. If everything is configured and setup correctly, the bot should be online and ready to use. You will need to invite the bot to a server, see [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) article for help.
+
+Additional information:
+
+-   You can use `npm run deploy-pretty` and `npm run start-pretty` to get formatted, colorized output to console instead of JSON format. For this to work, you need the npm package `pino-pretty` installed, `npm install pino-pretty -g` to install it globally.
+-   Logs are stored in `/logs` directory, you can configure the logging level to file and console under `loggerOptions` in `/src/config.js`.
 
 ## Get help and support 🛟
 
