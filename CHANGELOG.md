@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.2...v2.2.3) (2023-07-19)
+
+
+### Minor changes and bug fixes
+
+* small changes to logging ([800f4a3](https://github.com/mariusbegby/cadence-discord-bot/commit/800f4a30db32e3efe2c95489c66065cf0170f1b8))
+* updated logging service to log levels separately ([b95be75](https://github.com/mariusbegby/cadence-discord-bot/commit/b95be75768ce41558010a3c0d7128c2bb2a12d40))
+
+
+### Miscellaneous
+
+* Updated README.md ([2f7e392](https://github.com/mariusbegby/cadence-discord-bot/commit/2f7e39236e8abb82f4edff9d2273da80f51e0565))
+
 ## [2.2.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.1...v2.2.2) (2023-07-19)
 
 
