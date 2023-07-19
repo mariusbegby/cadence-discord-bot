@@ -13,7 +13,7 @@ exports.createPlayer = async (client) => {
                 highWaterMark: 1 << 25,
                 requestOptions: {
                     headers: {
-                        cookie: process.env.YOUTUBE_COOKIE || ''
+                        cookie: process.env.YT_COOKIE || ''
                     }
                 }
             }
@@ -26,7 +26,7 @@ exports.createPlayer = async (client) => {
                         type: 'audio',
                         quality: 'high',
                         highWaterMark: 1 << 25,
-                        cookie: process.env.YOUTUBE_COOKIE || ''
+                        cookie: process.env.YT_COOKIE || ''
                     })
                 ).stream;
             }
