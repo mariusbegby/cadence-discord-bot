@@ -24,6 +24,11 @@ for (const folder of commandFolders) {
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 (async () => {
+    if (!process.env.DISCORD_APPLICATION_ID || !process.env.DISCORD_BOT_TOKEN) {
+        logger.error('Missing required environment variables for deployment.');
+        logger.error('Provide valid DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN in .env file.');
+    }
+
     try {
         logger.info('DEPLOYING BOT SLASH COMMANDS');
         logger.info(
@@ -48,16 +53,18 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         logger.info('Started refreshing application (/) system commands.');
         const systemGuildIds = systemOptions.systemGuildIds;
         await Promise.all(
-            systemGuildIds.map((systemGuildId) =>
+            systemGuildIds.map((systemGuildId) => {
+                logger.info(`Refreshing system commands for guild id: ${systemGuildId}.`);
                 refreshCommands(
                     Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, systemGuildId),
                     systemCommands
-                )
-            )
+                );
+            })
         );
         logger.info('Successfully refreshed application (/) system commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh application (/) system commands.');
+        logger.error('Make sure the bot is in the system guilds provided.');
     }
 })();
 
