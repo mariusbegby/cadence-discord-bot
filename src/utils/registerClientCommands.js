@@ -1,14 +1,15 @@
 const logger = require('../services/logger');
 const fs = require('node:fs');
+const path = require('node:path');
 const { Collection } = require('discord.js');
 
 exports.registerClientCommands = (client) => {
     logger.debug('Registering client commands...');
 
     client.commands = new Collection();
-    const commandFolders = fs.readdirSync('./src/commands');
+    const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
     for (const folder of commandFolders) {
-        const commandFiles = fs.readdirSync(`./src/commands/${folder}`).filter((file) => file.endsWith('.js'));
+        const commandFiles = fs.readdirSync(path.resolve(`./src/commands/${folder}`)).filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
             logger.debug(`Registering command ${folder}/${file}...`);

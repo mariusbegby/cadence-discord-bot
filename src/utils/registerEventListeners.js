@@ -1,12 +1,13 @@
 const logger = require('../services/logger');
 const fs = require('node:fs');
+const path = require('node:path');
 
 exports.registerEventListeners = (client, player) => {
     logger.debug('Registering event listeners...');
 
-    const eventFolders = fs.readdirSync('./src/events');
+    const eventFolders = fs.readdirSync(path.resolve('./src/events'));
     for (const folder of eventFolders) {
-        const eventFiles = fs.readdirSync(`./src/events/${folder}`).filter((file) => file.endsWith('.js'));
+        const eventFiles = fs.readdirSync(path.resolve(`./src/events/${folder}`)).filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {
             const event = require(`../events/${folder}/${file}`);
