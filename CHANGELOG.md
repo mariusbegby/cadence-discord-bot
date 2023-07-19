@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.1...v2.2.2) (2023-07-19)
+
+
+### Minor changes and bug fixes
+
+* fix requiring local files ([cd83f72](https://github.com/mariusbegby/cadence-discord-bot/commit/cd83f7287f67f7fe95c02c4b32195bd1397407e5))
+
 ## [2.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.0...v2.2.1) (2023-07-18)
 
 
