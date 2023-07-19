@@ -2,7 +2,7 @@ const logger = require('../../services/logger');
 
 module.exports = {
     name: 'playerStart',
-    isDebug: true,
+    isDebug: false,
     isPlayerEvent: true,
     execute: async (queue, track) => {
         logger.debug(`playerStart event: Started playing '${track.raw.source}'.`);

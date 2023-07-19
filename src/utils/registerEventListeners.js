@@ -7,7 +7,9 @@ exports.registerEventListeners = (client, player) => {
 
     const eventFolders = fs.readdirSync(path.resolve('./src/events'));
     for (const folder of eventFolders) {
-        const eventFiles = fs.readdirSync(path.resolve(`./src/events/${folder}`)).filter((file) => file.endsWith('.js'));
+        const eventFiles = fs
+            .readdirSync(path.resolve(`./src/events/${folder}`))
+            .filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {
             const event = require(`../events/${folder}/${file}`);
@@ -17,11 +19,7 @@ exports.registerEventListeners = (client, player) => {
                     if (event.once) {
                         client.once(event.name, (...args) => event.execute(...args));
                     } else {
-                        if (
-                            !event.isDebug ||
-                            process.env.NODE_ENV === 'development' ||
-                            process.env.MINIMUM_LOG_LEVEL === 'debug'
-                        ) {
+                        if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
                             client.on(event.name, (...args) => event.execute(...args));
                         }
                     }
