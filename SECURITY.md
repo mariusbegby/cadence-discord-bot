@@ -14,7 +14,7 @@ The following versions of our project are currently being supported with securit
 
 | Version | Supported          |
 | ------- | ------------------ |
-| ^1.4.0   | :white_check_mark: |
+| ^2.2.0   | :white_check_mark: |
 
 We strongly encourage users to upgrade to the latest supported version to ensure they have access to the latest security fixes and enhancements.
 
