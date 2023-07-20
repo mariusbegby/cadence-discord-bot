@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.3...v2.3.0) (2023-07-20)
+
+
+### Features
+
+* changed yt cookie name  in .env arguments ([e3b945b](https://github.com/mariusbegby/cadence-discord-bot/commit/e3b945bcecef1c11f2b6ebeda4696bfc34572673))
+
+
+### Minor changes and bug fixes
+
+* add error handling to registering commands on startup ([e251299](https://github.com/mariusbegby/cadence-discord-bot/commit/e251299c0c9f3f8b147a66843cb317fb3229bb4b))
+* Added try/catch around createClient and createPlayer factory functions ([4e81451](https://github.com/mariusbegby/cadence-discord-bot/commit/4e8145151fe9b7595036ffcd849836c080c198b9))
+* More input validation in deploying system commands ([85cfad8](https://github.com/mariusbegby/cadence-discord-bot/commit/85cfad8e51571eb05ee10ad06c7e94717d4fc80e))
+* Small changes to deploying system commands ([3292c88](https://github.com/mariusbegby/cadence-discord-bot/commit/3292c889ec87a30fd5b3e557c8775cae604cae32))
+* Update mediaplex and extractor to latest dev versions ([72f3690](https://github.com/mariusbegby/cadence-discord-bot/commit/72f3690bb3a354feba9d8c2f1404068b59ac62f4))
+
+
+### Miscellaneous
+
+* Update README.md with pm2 instructions ([342e861](https://github.com/mariusbegby/cadence-discord-bot/commit/342e86147a2a509ba097f358fe179716dd5fc461))
+
 ## [2.2.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.2...v2.2.3) (2023-07-19)
 
 
