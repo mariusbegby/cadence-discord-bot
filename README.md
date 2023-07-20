@@ -40,11 +40,15 @@ This bot is open-source, and if you want to host it yourself, you can do so by f
 6. Deploy slash commands via Discord API by running `npm run deploy`. This is required to make the commands accessible for Discord servers.
 7. Run `npm start` to start the bot. If everything is configured and setup correctly, the bot should be online and ready to use. You will need to invite the bot to a server, see [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) article for help.
 
-Additional information:
+### Additional information:
 
 -   You can use `npm run deploy-pretty` and `npm run start-pretty` to get formatted, colorized output to console instead of JSON format. For this to work, you need the npm package `pino-pretty` installed, `npm install pino-pretty -g` to install it globally.
 -   Logs are stored in `/logs` directory, you can configure the logging level to file and console under `loggerOptions` in `/src/config.js`.
-
+-   For production use, I recommend using something like `pm2` to manage the process and automatically restart it if it crashes. Here's a simple setup for `pm2`:
+    - Install `pm2` globally: `npm install pm2 -g`.
+    - Start the bot with `pm2 start ./src/index.js --name "Cadence"`.
+    - Save the process list with `pm2 save`.
+    - To view logs with pino-pretty, run `pm2 logs 0 --out --raw | pino-pretty`. _Note: Does not work well in Windows PowerShell, use command prompt (cmd) to view logs with `pino-pretty` using same command if you are using `pm2`_.
 ## Get help and support 🛟
 
 If you experience any issues, please open an issue on this repository or join the [Discord support server](https://discord.gg/cadence) for the Cadence bot.
