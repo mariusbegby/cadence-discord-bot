@@ -1,3 +1,4 @@
+const { ActivityType, PresenceUpdateStatus } = require('discord.js');
 // Description: Config file for Cadence Discord bot.
 
 // General options for information about the bot.
@@ -21,6 +22,19 @@ module.exports.systemOptions = {
     systemGuildIds: ['Guild id where system commands can be used'],
     systemMessageChannelId: 'Channel id where system messages will be sent',
     systemUserId: 'User id of the system administrator which will receive pings on certain system messages'
+};
+
+// Options for presence/activity status. You can change from watching to listening, playing, etc.
+// See https://discord-api-types.dev/api/discord-api-types-v10/enum/ActivityType for valid activity types.
+// See https://discord-api-types.dev/api/discord-api-types-v10/enum/PresenceUpdateStatus for valid presence status.
+module.exports.presenceStatusOptions = {
+    status: PresenceUpdateStatus.Online,
+    activities: [
+        {
+            name: '/help 🎶',
+            type: ActivityType.Listening
+        }
+    ]
 };
 
 // Options for embed messages, like colors and custom emojis.
