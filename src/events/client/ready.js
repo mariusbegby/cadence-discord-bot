@@ -1,6 +1,6 @@
 const logger = require('../../services/logger');
-const { embedOptions, systemOptions } = require('../../config');
-const { Events, ActivityType, PresenceUpdateStatus, EmbedBuilder } = require('discord.js');
+const { embedOptions, systemOptions, presenceStatusOptions } = require('../../config');
+const { Events, EmbedBuilder } = require('discord.js');
 const { postBotStats } = require('../../utils/other/postBotStats.js');
 
 module.exports = {
@@ -9,15 +9,7 @@ module.exports = {
     once: true,
     execute: async (client) => {
         logger.info(`Client logged in successfully as ${client.user.tag}!`);
-        await client.user.setPresence({
-            status: PresenceUpdateStatus.Online,
-            activities: [
-                {
-                    name: '/help',
-                    type: ActivityType.Watching
-                }
-            ]
-        });
+        await client.user.setPresence(presenceStatusOptions);
 
         // Post bot stats to bot lists in production
         process.env.NODE_ENV === 'production' ? postBotStats(client) : null;
