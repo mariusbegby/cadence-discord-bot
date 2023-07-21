@@ -6,6 +6,6 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (guild) => {
-        logger.info(`Added to guild '${guild.name}' with ${guild.memberCount} members.`);
+        logger.info(`Shard ${guild.shardId}> Added to guild '${guild.name}' with ${guild.memberCount} members.`);
     }
 };
