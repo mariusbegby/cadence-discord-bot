@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.3.0...v3.0.0) (2023-07-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Sharding implemented across the bot
+
+### Features
+
+* add sharding with discord.js ([006f2fa](https://github.com/mariusbegby/cadence-discord-bot/commit/006f2fab512399c9425add10dd62a2b8f6b70f0a))
+* Sharding implemented across the bot ([9c15c63](https://github.com/mariusbegby/cadence-discord-bot/commit/9c15c636d9fa5761f649b51693b027418c02a640))
+* update ready events to handle sharding ([184b528](https://github.com/mariusbegby/cadence-discord-bot/commit/184b528f56f36df00f0e1366a531bad42ea18779))
+* Updated /guilds and /status (partly) to use sharding for values ([8f1d253](https://github.com/mariusbegby/cadence-discord-bot/commit/8f1d253dc9ddaef70928aab06ae0b8d4d05c7d42))
+* Updated logging for guildCreate and guildDelete for sharding ([b160cbf](https://github.com/mariusbegby/cadence-discord-bot/commit/b160cbf564d5f8bf6c84e7d9a3b34b8ecd8e5874))
+
+
+### Minor changes and bug fixes
+
+* Actually updated example config with configurable status ([1e7d723](https://github.com/mariusbegby/cadence-discord-bot/commit/1e7d723aef2871fd23aa31ac05e78e94d40cb038))
+* Add configurable status/presence options into config.js ([5f456da](https://github.com/mariusbegby/cadence-discord-bot/commit/5f456daf67b2f57330922bcd0123cfd8fa5ba007))
+
 ## [2.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.2.3...v2.3.0) (2023-07-20)
 
 
