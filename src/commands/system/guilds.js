@@ -1,3 +1,4 @@
+const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
 const { notValidGuildId } = require('../../utils/validation/systemCommandValidation');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
@@ -10,10 +11,26 @@ module.exports = {
         .setDMPermission(false),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
+            logger.debug(`[Shard ${client.shard.ids[0]}] Not a valid guild id.`);
             return;
         }
 
-        let guildsList = client.guilds.cache
+        let shardGuilds = [];
+        let totalGuildCount = 0;
+
+        await client.shard
+            .broadcastEval((c) => {
+                return c.guilds.cache.map((guild) => {
+                    return guild;
+                });
+            })
+            .then((guilds) => {
+                shardGuilds = guilds.flat(1);
+            });
+
+        totalGuildCount = shardGuilds.length;
+
+        let guildListFormatted = shardGuilds
             .map((guild) => {
                 return {
                     name: guild.name,
@@ -21,16 +38,16 @@ module.exports = {
                 };
             })
             .sort((a, b) => b.memberCount - a.memberCount)
-            .slice(0, 50)
+            .slice(0, 25)
             .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
             .join('\n');
 
-        const totalMemberCount = client.guilds.cache.reduce((a, b) => a + b.memberCount, 0);
+        const totalMemberCount = shardGuilds.reduce((a, b) => a + b.memberCount, 0);
 
         let embedDescription =
             `**${embedOptions.icons.bot} ${
-                client.guilds.cache.size < 50 ? `Top ${client.guilds.cache.size} guilds` : 'Top 50 guilds'
-            } by member count (${client.guilds.cache.size} total)**\n${guildsList}` +
+                totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds'
+            } by member count (${totalGuildCount} total)**\n${guildListFormatted}` +
             `\n\n**Total members:** \`${totalMemberCount}\``;
 
         if (embedDescription.length >= 4000) {

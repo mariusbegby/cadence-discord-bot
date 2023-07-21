@@ -30,6 +30,7 @@ exports.createClient = async () => {
                 }
             }
         });
+
         return client;
     } catch (error) {
         logger.error('Failed to create Discord.js client', error);

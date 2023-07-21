@@ -31,7 +31,9 @@ module.exports = {
         const removeTrackNumber = interaction.options.getNumber('tracknumber');
 
         if (removeTrackNumber > queue.tracks.data.length) {
-            logger.debug(`User used command ${interaction.commandName} but track number was higher than total tracks.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but track number was higher than total tracks.`
+            );
 
             return await interaction.editReply({
                 embeds: [
@@ -49,7 +51,9 @@ module.exports = {
         let durationFormat =
             removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
-        logger.debug(`User used command ${interaction.commandName} and removed track.`);
+        logger.debug(
+            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and removed track.`
+        );
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

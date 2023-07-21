@@ -46,7 +46,9 @@ module.exports = {
         }
 
         if (durationArray.length === 0 || durationArray.length > 3) {
-            logger.debug(`User used command ${interaction.commandName} but entered an invalid duration.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration.`
+            );
 
             return await interaction.editReply({
                 embeds: [
@@ -74,7 +76,7 @@ module.exports = {
 
         if (!validElements) {
             logger.debug(
-                `User used command ${interaction.commandName} but entered an invalid duration after parsing duration.`
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after parsing duration.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -97,7 +99,7 @@ module.exports = {
 
         if (!isValidDuration) {
             logger.debug(
-                `User used command ${interaction.commandName} but entered an invalid duration after regex checks.`
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after regex checks.`
             );
 
             return await interaction.editReply({
@@ -118,7 +120,9 @@ module.exports = {
         const durationInMilliseconds = durationArray[0] * 3600000 + durationArray[1] * 60000 + durationArray[2] * 1000;
 
         if (durationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
-            logger.debug(`User used command ${interaction.commandName} but entered a duration longer than the track.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered a duration longer than the track.`
+            );
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -132,7 +136,9 @@ module.exports = {
 
         queue.node.seek(durationInMilliseconds);
 
-        logger.debug(`User used command ${interaction.commandName} and seeked to duration.`);
+        logger.debug(
+            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and seeked to duration.`
+        );
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

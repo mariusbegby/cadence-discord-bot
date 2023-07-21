@@ -34,7 +34,7 @@ module.exports = {
             const currentVolume = queue.node.volume;
 
             logger.debug(
-                `User used command ${interaction.commandName} but no volume was provided, providing info of current volume.`
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but no volume was provided, providing info of current volume.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -49,7 +49,7 @@ module.exports = {
             });
         } else if (volume > 100 || volume < 0) {
             logger.debug(
-                `User used command ${interaction.commandName} but volume was higher than 100% or lower than 0%.`
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but volume was higher than 100% or lower than 0%.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -64,7 +64,9 @@ module.exports = {
             queue.node.setVolume(volume);
 
             if (volume === 0) {
-                logger.debug(`User used command ${interaction.commandName} and muted volume.`);
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and muted volume.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -80,7 +82,9 @@ module.exports = {
                 });
             }
 
-            logger.debug(`User used command ${interaction.commandName} and changed volume.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and changed volume.`
+            );
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

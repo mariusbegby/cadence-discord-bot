@@ -4,7 +4,7 @@ const { stream } = require('yt-stream');
 
 exports.createPlayer = async (client) => {
     try {
-        logger.info('Creating discord-player player...');
+        logger.info(`[Shard ${client.shard.ids[0]}] Creating discord-player player...`);
 
         const player = new Player(client, {
             useLegacyFFmpeg: false,
@@ -35,11 +35,11 @@ exports.createPlayer = async (client) => {
         });
 
         await player.extractors.loadDefault();
-        logger.debug(`discord-player loaded dependencies:\n${player.scanDeps()}`);
+        logger.debug(`[Shard ${client.shard.ids[0]}] discord-player loaded dependencies:\n${player.scanDeps()}`);
 
         return player;
     } catch (error) {
-        logger.error('Failed to create discord-player player', error);
+        logger.error(`[Shard ${client.shard.ids[0]}] Failed to create discord-player player`, error);
         throw error;
     }
 };

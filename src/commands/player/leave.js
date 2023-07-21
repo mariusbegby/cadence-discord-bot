@@ -19,7 +19,9 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.debug(`User used command ${interaction.commandName} but there was no queue.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+            );
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -33,7 +35,9 @@ module.exports = {
 
         if (!queue.deleted) {
             queue.delete();
-            logger.debug(`User used command ${interaction.commandName} and deleted the queue.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and deleted the queue.`
+            );
 
             return await interaction.editReply({
                 embeds: [

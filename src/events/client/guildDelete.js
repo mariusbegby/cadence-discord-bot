@@ -6,6 +6,8 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (guild) => {
-        logger.info(`Removed from guild '${guild.name}' with ${guild.memberCount} members.`);
+        logger.info(
+            `[Shard ${guild.shardId}] Removed from guild '${guild.name}' with ${guild.memberCount} members.`
+        );
     }
 };

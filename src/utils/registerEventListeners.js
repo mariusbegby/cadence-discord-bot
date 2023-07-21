@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 exports.registerEventListeners = (client, player) => {
-    logger.debug('Registering event listeners...');
+    logger.debug(`[Shard ${client.shard.ids[0]}] Registering event listeners...`);
 
     const eventFolders = fs.readdirSync(path.resolve('./src/events'));
     for (const folder of eventFolders) {
@@ -15,7 +15,7 @@ exports.registerEventListeners = (client, player) => {
             const event = require(`../events/${folder}/${file}`);
             switch (folder) {
                 case 'client':
-                    logger.debug(`Registering client event listener ${event.name}...`);
+                    logger.debug(`[Shard ${client.shard.ids[0]}] Registering client event listener ${event.name}...`);
                     if (event.once) {
                         client.once(event.name, (...args) => event.execute(...args));
                     } else {
@@ -26,17 +26,19 @@ exports.registerEventListeners = (client, player) => {
                     break;
 
                 case 'interactions':
-                    logger.debug(`Registering interactions event listener ${event.name}...`);
+                    logger.debug(
+                        `[Shard ${client.shard.ids[0]}] Registering interactions event listener ${event.name}...`
+                    );
                     client.on(event.name, (...args) => event.execute(...args, { client }));
                     break;
 
                 case 'process':
-                    logger.debug(`Registering process event listener ${event.name}...`);
+                    logger.debug(`[Shard ${client.shard.ids[0]}] Registering process event listener ${event.name}...`);
                     process.on(event.name, (...args) => event.execute(...args));
                     break;
 
                 case 'player':
-                    logger.debug(`Registering player event listener ${event.name}...`);
+                    logger.debug(`[Shard ${client.shard.ids[0]}] Registering player event listener ${event.name}...`);
                     if (
                         !event.isDebug ||
                         process.env.NODE_ENV === 'development' ||
@@ -52,7 +54,9 @@ exports.registerEventListeners = (client, player) => {
                     break;
 
                 default:
-                    logger.error(`Unknown event folder '${folder}' while trying to register events.`);
+                    logger.error(
+                        `[Shard ${client.shard.ids[0]}] Unknown event folder '${folder}' while trying to register events.`
+                    );
             }
         }
     }

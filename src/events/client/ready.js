@@ -1,28 +1,35 @@
 const logger = require('../../services/logger');
 const { embedOptions, systemOptions, presenceStatusOptions } = require('../../config');
-const { Events, EmbedBuilder } = require('discord.js');
 const { postBotStats } = require('../../utils/other/postBotStats.js');
+const { Events, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: Events.ClientReady,
     isDebug: false,
-    once: true,
+    once: false,
     execute: async (client) => {
-        logger.info(`Client logged in successfully as ${client.user.tag}!`);
+        logger.debug(`[Shard ${client.shard.ids[0]}] Client 'ready' event emitted after 'allShardsReady'.`);
+        await client.user.setPresence(presenceStatusOptions);
         await client.user.setPresence(presenceStatusOptions);
 
-        // Post bot stats to bot lists in production
-        process.env.NODE_ENV === 'production' ? postBotStats(client) : null;
+        const channel = await client.channels.cache.get(systemOptions.systemMessageChannelId);
 
-        // send message to system message channel for event
-        if (systemOptions.systemMessageChannelId) {
-            await client.channels.cache.get(systemOptions.systemMessageChannelId).send({
+        // Check if the channel exists in curent shard and send a message
+        if (channel) {
+            logger.info(
+                `[Shard ${client.shard.ids[0]}] ALL SHARDS READY, sending system message to channel id ${channel.id}.`
+            );
+            channel.send({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(`${embedOptions.icons.success} **${client.user.tag}** is now **\`online\`**!`)
+                        .setDescription(
+                            `**${embedOptions.icons.success} All shards ready**\n**${client.user.tag}** is now **\`online\`**!`
+                        )
                         .setColor(embedOptions.colors.success)
                 ]
             });
         }
+
+        process.env.NODE_ENV === 'production' ? await postBotStats(client) : null;
     }
 };

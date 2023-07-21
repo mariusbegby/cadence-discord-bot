@@ -1,18 +1,24 @@
 require('dotenv').config();
+const { shardingOptions } = require('./config');
 const logger = require('./services/logger');
-const { registerEventListeners } = require('./utils/registerEventListeners.js');
-const { registerClientCommands } = require('./utils/registerClientCommands.js');
-const { createClient } = require('./utils/factory/createClient.js');
-const { createPlayer } = require('./utils/factory/createPlayer.js');
+const { ShardingManager, ShardEvents } = require('discord.js');
 
-(async () => {
-    const client = await createClient();
-    const player = await createPlayer(client);
-
-    registerEventListeners(client, player);
-    registerClientCommands(client);
-
-    client.login(process.env.DISCORD_BOT_TOKEN);
-})().catch((error) => {
-    logger.error(error);
+const manager = new ShardingManager('./src/bot.js', {
+    token: process.env.DISCORD_BOT_TOKEN,
+    ...shardingOptions
 });
+
+const readyShards = new Set();
+manager.on('shardCreate', (shard) => {
+    logger.debug(`[Shard ${shard.id}] Launched shard with id ${shard.id}.`);
+
+    // When all shards are ready, emit event 'allShardsReady' to all shards
+    shard.on(ShardEvents.Ready, () => {
+        readyShards.add(shard.id);
+        if (readyShards.size === manager.totalShards) {
+            manager.broadcastEval((client) => client.emit('allShardsReady'));
+        }
+    });
+});
+
+manager.spawn();

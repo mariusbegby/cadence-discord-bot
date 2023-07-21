@@ -9,6 +9,16 @@ module.exports.botOptions = {
     serverInviteUrl: 'Unknown'
 };
 
+// Sharding options for the bot.
+// See https://old.discordjs.dev/#/docs/discord.js/main/typedef/ShardingManagerOptions for valid options.
+// Do not change if you don't know what you are doing.
+module.exports.shardingOptions = {
+    totalShards: 'auto',
+    shardList: 'auto',
+    mode: 'process',
+    respawn: true
+};
+
 // Logging options for the bot, can set logging level to file and console separately.
 module.exports.loggerOptions = {
     minimumLogLevel: 'debug',

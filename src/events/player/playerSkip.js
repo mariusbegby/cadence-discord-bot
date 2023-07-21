@@ -8,7 +8,9 @@ module.exports = {
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue, track) => {
-        logger.error(`player.events.on('playerSkip'): Failed to play '${track.url}'.`);
+        logger.error(
+            `[Shard ${queue.metadata.client.shard.ids[0]}] player.events.on('playerSkip'): Failed to play '${track.url}'.`
+        );
 
         await queue.metadata.channel.send({
             embeds: [
@@ -21,16 +23,19 @@ module.exports = {
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId).send({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `${embedOptions.icons.error} **player.events.on('playerSkip')**\n${track.url}` +
-                                `\n\n<@${systemOptions.systemUserId}>`
-                        )
-                        .setColor(embedOptions.colors.error)
-                ]
-            });
+            const channel = await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId);
+            if (channel) {
+                await channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `${embedOptions.icons.error} **player.events.on('playerSkip')**\n${track.url}` +
+                                    `\n\n<@${systemOptions.systemUserId}>`
+                            )
+                            .setColor(embedOptions.colors.error)
+                    ]
+                });
+            }
         }
 
         process.env.NODE_ENV === 'development' ? logger.trace(queue, 'Queue object') : null;
