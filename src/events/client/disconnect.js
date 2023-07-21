@@ -7,20 +7,23 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client) => {
-        logger.warn(`${client.user.tag} lost connection to Discord APIs. Disconnected.`);
+        logger.warn(`[Shard ${client.shard.ids[0]}] ${client.user.tag} lost connection to Discord APIs. Disconnected.`);
 
         // send message to system message channel for event
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            await client.channels.cache.get(systemOptions.systemMessageChannelId).send({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `${embedOptions.icons.warning} **${client.user.tag}** is **\`disconnected\`**!` +
-                                `\n\n<@${systemOptions.systemUserId}>`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+            const channel = await client.channels.cache.get(systemOptions.systemMessageChannelId);
+            if (channel) {
+                await channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `${embedOptions.icons.warning} **${client.user.tag}** is **\`disconnected\`**!` +
+                                    `\n\n<@${systemOptions.systemUserId}>`
+                            )
+                            .setColor(embedOptions.colors.warning)
+                    ]
+                });
+            }
         }
     }
 };

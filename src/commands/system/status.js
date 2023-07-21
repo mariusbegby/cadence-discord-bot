@@ -65,7 +65,7 @@ module.exports = {
                 guildCount = results.reduce((acc, guildCount) => acc + guildCount, 0);
             })
             .catch((error) => {
-                logger.error(error, `Shard ${client.shard.ids[0]}> Failed to fetch client values from shards.`);
+                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
             });
 
         return await interaction.editReply({

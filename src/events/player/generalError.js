@@ -8,7 +8,10 @@ module.exports = {
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue, error) => {
-        logger.error(error, 'player.events.on(\'error\'): Player queue encountered error event');
+        logger.error(
+            error,
+            `[Shard ${queue.metadata.client.shard.ids[0]}] player.events.on('error'): Player queue encountered error event`
+        );
 
         await queue.metadata.channel.send({
             embeds: [
@@ -21,16 +24,19 @@ module.exports = {
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId).send({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `${embedOptions.icons.error} **player.events.on('error')**\n${error.message}` +
-                                `\n\n<@${systemOptions.systemUserId}>`
-                        )
-                        .setColor(embedOptions.colors.error)
-                ]
-            });
+            const channel = await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId);
+            if (channel) {
+                await channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `${embedOptions.icons.error} **player.events.on('error')**\n${error.message}` +
+                                    `\n\n<@${systemOptions.systemUserId}>`
+                            )
+                            .setColor(embedOptions.colors.error)
+                    ]
+                });
+            }
         }
 
         process.env.NODE_ENV === 'development' ? logger.trace(queue, 'Queue object') : null;

@@ -7,7 +7,7 @@ module.exports = {
     once: false,
     execute: async (guild) => {
         logger.info(
-            `Shard ${guild.shardId}> Removed from guild '${guild.name}' with ${guild.memberCount} members.`
+            `[Shard ${guild.shardId}] Removed from guild '${guild.name}' with ${guild.memberCount} members.`
         );
     }
 };

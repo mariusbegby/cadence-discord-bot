@@ -4,12 +4,12 @@ const https = require('node:https');
 exports.postBotStats = async (client) => {
     try {
         if (client.shard.ids[0] !== 0) {
-            return logger.debug(`Shard ${client.shard.ids[0]}> Shard is not the first shard, not posting stats.`);
+            return logger.debug(`[Shard ${client.shard.ids[0]}] Shard is not the first shard, not posting stats.`);
         }
 
         logger.debug(
             client.shard.ids,
-            `Shard ${client.shard.ids[0]}> Posting stats to bot lists from client with shard id 0.`
+            `[Shard ${client.shard.ids[0]}] Posting stats to bot lists from client with shard id 0.`
         );
 
         let guildCount = 0;
@@ -20,7 +20,7 @@ exports.postBotStats = async (client) => {
                 guildCount = results.reduce((acc, guildCount) => acc + guildCount, 0);
             })
             .catch((error) => {
-                logger.error(error, `Shard ${client.shard.ids[0]}> Failed to fetch client values from shards.`);
+                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
             });
 
         /* eslint-disable camelcase */
@@ -69,7 +69,7 @@ exports.postBotStats = async (client) => {
             }
         ];
 
-        logger.info(`Shard ${client.shard.ids[0]}> Posting stats to bot lists with guildCount ${guildCount}...`);
+        logger.info(`[Shard ${client.shard.ids[0]}] Posting stats to bot lists with guildCount ${guildCount}...`);
         sites.map((site) => {
             let options = {
                 protocol: 'https:',
@@ -93,6 +93,6 @@ exports.postBotStats = async (client) => {
             request.end();
         });
     } catch (error) {
-        logger.error(error, `Shard ${client.shard.ids[0]}> Failed to post stats to bot lists.`);
+        logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to post stats to bot lists.`);
     }
 };

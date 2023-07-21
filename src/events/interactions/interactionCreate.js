@@ -12,7 +12,9 @@ module.exports = {
 
         const command = client.commands.get(interaction.commandName);
         if (!command) {
-            logger.warn(`Interaction created but command '${interaction.commandName}' was not found.`);
+            logger.warn(
+                `[Shard ${interaction.guild.shardId}] Interaction created but command '${interaction.commandName}' was not found.`
+            );
             return;
         }
 
@@ -32,13 +34,13 @@ module.exports = {
                     executionTime > 55000
                 ) {
                     logger.info(
-                        `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' executed in ${executionTime} ms.`
+                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
                     );
                     return;
                 }
 
                 logger.warn(
-                    `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' took ${executionTime} ms to execute.`
+                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' took ${executionTime} ms to execute.`
                 );
 
                 return await interaction.followUp({
@@ -54,13 +56,13 @@ module.exports = {
                 });
             } else {
                 logger.info(
-                    `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' executed in ${executionTime} ms.`
+                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
                 );
             }
         } catch (error) {
             logger.error(
                 error,
-                `(${interaction.guild.memberCount}) ${interaction.guild.name}> Command '${interaction}' failed to execute.`
+                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' failed to execute.`
             );
 
             await interaction.followUp({

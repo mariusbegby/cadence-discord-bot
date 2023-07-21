@@ -32,7 +32,11 @@ module.exports = {
 
         // change paused state to opposite of current state
         queue.node.setPaused(!queue.node.isPaused());
-        logger.debug(`User used command ${interaction.commandName} and set paused state to ${queue.node.isPaused()}.`);
+        logger.debug(
+            `[Shard ${interaction.guild.shardId}] User used command ${
+                interaction.commandName
+            } and set paused state to ${queue.node.isPaused()}.`
+        );
 
         return await interaction.editReply({
             embeds: [

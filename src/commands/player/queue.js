@@ -21,7 +21,9 @@ module.exports = {
 
         if (!queue) {
             if (pageIndex >= 1) {
-                logger.debug(`User used command ${interaction.commandName} but there was no queue.`);
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -35,7 +37,9 @@ module.exports = {
                 });
             }
 
-            logger.debug(`User used command ${interaction.commandName} but there was no queue.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+            );
             queueString = 'The queue is empty, add some tracks with **`/play`**!';
             return await interaction.editReply({
                 embeds: [
@@ -57,7 +61,9 @@ module.exports = {
         const totalPages = Math.ceil(queueLength / 10) || 1;
 
         if (pageIndex > totalPages - 1) {
-            logger.debug(`User used command ${interaction.commandName} but page was higher than total pages.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but page was higher than total pages.`
+            );
 
             return await interaction.editReply({
                 embeds: [
@@ -106,7 +112,9 @@ module.exports = {
         }`;
 
         if (!currentTrack) {
-            logger.debug(`User used command ${interaction.commandName} but there was no current track.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no current track.`
+            );
 
             return await interaction.editReply({
                 embeds: [
@@ -139,7 +147,9 @@ module.exports = {
                 bar = '_No duration available._';
             }
 
-            logger.debug(`User used command ${interaction.commandName} and got queue in reply with current track.`);
+            logger.debug(
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and got queue in reply with current track.`
+            );
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

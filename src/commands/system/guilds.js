@@ -11,7 +11,7 @@ module.exports = {
         .setDMPermission(false),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
-            logger.debug(`Shard ${client.shard.ids[0]}> Not a valid guild id.`);
+            logger.debug(`[Shard ${client.shard.ids[0]}] Not a valid guild id.`);
             return;
         }
 

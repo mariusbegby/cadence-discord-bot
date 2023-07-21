@@ -4,7 +4,7 @@ const path = require('node:path');
 const { Collection } = require('discord.js');
 
 exports.registerClientCommands = (client) => {
-    logger.debug('Registering client commands...');
+    logger.debug(`[Shard ${client.shard.ids[0]}] Registering client commands...`);
     client.commands = new Collection();
 
     const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
@@ -15,11 +15,13 @@ exports.registerClientCommands = (client) => {
 
         for (const file of commandFiles) {
             try {
-                logger.debug(`Registering command ${folder}/${file}...`);
+                logger.debug(`[Shard ${client.shard.ids[0]}] Registering command ${folder}/${file}...`);
                 const command = require(`../commands/${folder}/${file}`);
                 client.commands.set(command.data.name, command);
             } catch (error) {
-                logger.error(`Error registering command ${folder}/${file}: ${error.message}`);
+                logger.error(
+                    `[Shard ${client.shard.ids[0]}] Error registering command ${folder}/${file}: ${error.message}`
+                );
                 throw error;
             }
         }

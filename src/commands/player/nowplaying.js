@@ -93,7 +93,9 @@ module.exports = {
 
         const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-        logger.debug(`User used command ${interaction.commandName}, finished intializing data.`);
+        logger.debug(
+            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, finished intializing data.`
+        );
 
         const response = await interaction.editReply({
             embeds: [
@@ -143,7 +145,9 @@ module.exports = {
             components: [nowPlayingActionRow]
         });
 
-        logger.debug(`User used command ${interaction.commandName}, finished sending response.`);
+        logger.debug(
+            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, finished sending response.`
+        );
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
@@ -155,10 +159,12 @@ module.exports = {
             confirmation.deferUpdate();
 
             if (confirmation.customId === 'nowplaying-skip') {
-                logger.debug(`User used command ${interaction.commandName}, received skip confirmation.`);
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, received skip confirmation.`
+                );
                 if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
                     logger.debug(
-                        `User used command ${interaction.commandName} and tried skipping but there was no queue.`
+                        `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and tried skipping but there was no queue.`
                     );
                     return await interaction.followUp({
                         embeds: [
@@ -174,7 +180,7 @@ module.exports = {
 
                 if (queue.currentTrack !== currentTrack) {
                     logger.debug(
-                        `User used command ${interaction.commandName} and tried skipping but the track was already removed.`
+                        `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and tried skipping but the track was already removed.`
                     );
                     return await interaction.followUp({
                         embeds: [
@@ -197,7 +203,9 @@ module.exports = {
 
                 const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-                logger.debug(`User used command ${interaction.commandName} and skipped the track.`);
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and skipped the track.`
+                );
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -225,11 +233,16 @@ module.exports = {
             }
         } catch (error) {
             if (error.code === 'InteractionCollectorError') {
-                logger.debug(`User used command ${interaction.commandName} but did not respond to the skip prompt.`);
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but did not respond to the skip prompt.`
+                );
                 return;
             }
 
-            logger.debug(error, `User used command ${interaction.commandName} but there was an unhandled error.`);
+            logger.debug(
+                error,
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was an unhandled error.`
+            );
             throw error;
         }
     }

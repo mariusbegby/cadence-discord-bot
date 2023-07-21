@@ -8,7 +8,7 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client) => {
-        logger.debug(`Shard ${client.shard.ids[0]}> Client 'ready' event emitted after 'allShardsReady'.`);
+        logger.debug(`[Shard ${client.shard.ids[0]}] Client 'ready' event emitted after 'allShardsReady'.`);
         await client.user.setPresence(presenceStatusOptions);
         await client.user.setPresence(presenceStatusOptions);
 
@@ -17,7 +17,7 @@ module.exports = {
         // Check if the channel exists in curent shard and send a message
         if (channel) {
             logger.info(
-                `Shard ${client.shard.ids[0]}> All shards ready, sending system message to channel id ${channel.id}.`
+                `[Shard ${client.shard.ids[0]}] ALL SHARDS READY, sending system message to channel id ${channel.id}.`
             );
             channel.send({
                 embeds: [
