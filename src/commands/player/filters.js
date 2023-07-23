@@ -1,7 +1,7 @@
 const logger = require('../../services/logger');
 const { embedOptions, ffmpegFilterOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
-const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidation');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidator');
 const {
     SlashCommandBuilder,
     EmbedBuilder,

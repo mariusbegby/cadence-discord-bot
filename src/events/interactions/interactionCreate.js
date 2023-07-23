@@ -1,5 +1,6 @@
 const logger = require('../../services/logger');
 const { embedOptions, botOptions } = require('../../config');
+const { cannotSendMessageInChannel } = require('../../utils/validation/permissionValidator');
 const { Events, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -7,6 +8,10 @@ module.exports = {
     isDebug: false,
     execute: async (interaction, { client }) => {
         if (!interaction.isCommand()) {
+            return;
+        }
+
+        if (await cannotSendMessageInChannel(interaction)) {
             return;
         }
 
