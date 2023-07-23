@@ -29,12 +29,16 @@ module.exports = {
         const searchResults = await player.search(query);
 
         logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
-        return interaction.respond(
-            searchResults.tracks.slice(0, 5).map((track) => ({
-                name: `${track.title} [Author: ${track.author}]`,
-                value: track.url
-            }))
-        );
+
+        let response = searchResults.tracks.slice(0, 5).map((track) => ({
+            name:
+                `${track.title} [Author: ${track.author}]`.length > 100
+                    ? `${track.title}`.slice(0, 100)
+                    : `${track.title} [Author: ${track.author}]`,
+            value: track.url
+        }));
+
+        return interaction.respond(response);
     },
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
