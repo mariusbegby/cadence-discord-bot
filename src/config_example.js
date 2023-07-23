@@ -102,11 +102,11 @@ module.exports.embedOptions = {
 // Options for the discord-player player.
 module.exports.playerOptions = {
     leaveOnEmpty: true,
-    leaveOnEmptyCooldown: 300000,
+    leaveOnEmptyCooldown: 300_000,
     leaveOnEnd: true,
-    leaveOnEndCooldown: 300000,
+    leaveOnEndCooldown: 300_000,
     leaveOnStop: true,
-    leaveOnStopCooldown: 300000,
+    leaveOnStopCooldown: 300_000,
     defaultVolume: 50,
     maxQueueSize: 1000,
     maxHistorySize: 100,
