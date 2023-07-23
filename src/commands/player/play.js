@@ -98,6 +98,9 @@ module.exports = {
             logger.debug(`[Shard ${interaction.guild.shardId}] player.play() successful. Query: ${query}.`);
         } catch (error) {
             if (error.message.includes('Sign in to confirm your age')) {
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to age confirmation warning.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -110,6 +113,9 @@ module.exports = {
             }
 
             if (error.message.includes('The following content may contain graphic or violent imagery')) {
+                logger.debug(
+                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to graphic or violent imagery warning.`
+                );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
