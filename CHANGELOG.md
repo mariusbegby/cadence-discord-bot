@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.0.0...v3.1.0) (2023-07-23)
+
+
+### Features
+
+* added /stop command ([3c52841](https://github.com/mariusbegby/cadence-discord-bot/commit/3c52841cd6f221ef549c06cdc90aac45f581633e))
+* Autocomplete queries in /play command ([025715c](https://github.com/mariusbegby/cadence-discord-bot/commit/025715c0da58ad967736e8fd33ee089068385ff2))
+* Renamed validator files and added permission validator ([b68b7da](https://github.com/mariusbegby/cadence-discord-bot/commit/b68b7dac95d564cf1fccc314f74e968e94adc3ae))
+
+
+### Minor changes and bug fixes
+
+* add logging for youtube confirmation errors ([50f4157](https://github.com/mariusbegby/cadence-discord-bot/commit/50f4157648787dde248d8bf8683b905b5e3fef23))
+* Added check on text channel permissions on intereactionCreate ([0c7a627](https://github.com/mariusbegby/cadence-discord-bot/commit/0c7a627e83a4769c6cc61b6b59ca8630ebcb4f12))
+* Added new /stop command to /help list ([e2ea990](https://github.com/mariusbegby/cadence-discord-bot/commit/e2ea9907dd69c198fb764af71a635b7adf188f84))
+* Handle youtube graphic or violent imagery warning ([cef6b7f](https://github.com/mariusbegby/cadence-discord-bot/commit/cef6b7f1411ddcf04afe48e4ee95d1d224476e63))
+
 ## [3.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v2.3.0...v3.0.0) (2023-07-21)
 
 
