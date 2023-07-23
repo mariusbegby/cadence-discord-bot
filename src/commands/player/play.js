@@ -1,7 +1,8 @@
 const logger = require('../../services/logger');
 const { embedOptions, playerOptions, botOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
-const { transformQuery } = require('../../utils/validation/searchQueryValidation');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionValidator');
+const { transformQuery } = require('../../utils/validation/searchQueryValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
 
@@ -13,6 +14,10 @@ module.exports = {
         .addStringOption((option) => option.setName('query').setDescription('Search query or URL.').setRequired(true)),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
+            return;
+        }
+
+        if (await cannotJoinVoiceOrTalk(interaction)) {
             return;
         }
 

@@ -1,7 +1,7 @@
 const logger = require('../../services/logger');
 const { embedOptions, botOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidation');
-const { queueDoesNotExist } = require('../../utils/validation/queueValidation');
+const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { queueDoesNotExist } = require('../../utils/validation/queueValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 

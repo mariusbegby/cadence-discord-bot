@@ -1,6 +1,6 @@
 const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
-const { notValidGuildId } = require('../../utils/validation/systemCommandValidation');
+const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
