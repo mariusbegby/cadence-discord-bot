@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('seek')
         .setDescription('Seek to a specified duration in the current track.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addStringOption((option) =>
             option
                 .setName('duration')

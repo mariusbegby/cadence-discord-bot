@@ -7,10 +7,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescription('Add a track or playlist to the queue by searching or url.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addStringOption((option) =>
             option
                 .setName('query')

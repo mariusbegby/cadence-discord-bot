@@ -7,7 +7,13 @@ const { version, dependencies } = require('../../../package.json');
 
 module.exports = {
     isSystemCommand: true,
-    data: new SlashCommandBuilder().setName('status').setDescription('Show bot status.').setDMPermission(false),
+    isNew: false,
+    isBeta: false,
+    data: new SlashCommandBuilder()
+        .setName('status')
+        .setDescription('Show bot status.')
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
             return;

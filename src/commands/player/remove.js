@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('remove')
         .setDescription('Remove a specific track from the queue.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addNumberOption((option) =>
             option
                 .setName('tracknumber')

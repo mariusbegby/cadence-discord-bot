@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('pause')
         .setDescription('Pause or resume the current track.')
-        .setDMPermission(false),
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;

@@ -5,12 +5,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: true,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('stop')
         .setDescription('Stop playing audio and clear the track queue.')
-        .setDMPermission(false),
-
-    // todo, allow command to be executed if bot is only member in voice channel
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;
