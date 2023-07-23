@@ -6,8 +6,8 @@ const { useQueue } = require('discord-player');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('leave')
-        .setDescription('Clear the track queue and remove the bot from voice channel.')
+        .setName('stop')
+        .setDescription('Stop playing audio and clear the track queue.')
         .setDMPermission(false),
 
     // todo, allow command to be executed if bot is only member in voice channel
@@ -34,9 +34,10 @@ module.exports = {
         }
 
         if (!queue.deleted) {
-            queue.delete();
+            queue.clear();
+            queue.node.stop();
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and deleted the queue.`
+                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and cleared the queue.`
             );
         }
 
@@ -48,7 +49,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
+                        `**${embedOptions.icons.success} Stopped playing**\nStopped playing audio and cleared the track queue.\n\nTo play more music, use the **\`/play\`** command!`
                     )
                     .setColor(embedOptions.colors.success)
             ]
