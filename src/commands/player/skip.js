@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('skip')
         .setDescription('Skip current or specified track.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addNumberOption((option) =>
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),

@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder } = r
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('nowplaying')
         .setDescription('Show information about the track currently playing.')
-        .setDMPermission(false),
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;

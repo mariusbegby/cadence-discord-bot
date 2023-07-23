@@ -5,12 +5,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('leave')
         .setDescription('Clear the track queue and remove the bot from voice channel.')
-        .setDMPermission(false),
-
-    // todo, allow command to be executed if bot is only member in voice channel
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;

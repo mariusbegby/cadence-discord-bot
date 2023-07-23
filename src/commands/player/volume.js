@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('volume')
         .setDescription('Show or set the playback volume for tracks.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addNumberOption((option) =>
             option
                 .setName('percentage')

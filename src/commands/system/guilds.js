@@ -5,10 +5,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     isSystemCommand: true,
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('guilds')
         .setDescription('Show list of guilds where bot is added.')
-        .setDMPermission(false),
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
             logger.debug(`[Shard ${client.shard.ids[0]}] Not a valid guild id.`);

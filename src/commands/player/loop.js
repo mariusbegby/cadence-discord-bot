@@ -6,10 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: true,
     data: new SlashCommandBuilder()
         .setName('loop')
         .setDescription('Toggle looping a track, the whole queue or autoplay.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addStringOption((option) =>
             option
                 .setName('mode')

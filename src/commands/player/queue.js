@@ -5,10 +5,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('queue')
         .setDescription('Show the list of tracks added to the queue.')
         .setDMPermission(false)
+        .setNSFW(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {

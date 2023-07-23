@@ -13,10 +13,13 @@ const {
 const { useQueue } = require('discord-player');
 
 module.exports = {
+    isNew: false,
+    isBeta: true,
     data: new SlashCommandBuilder()
         .setName('filters')
         .setDescription('Toggle various audio filters during playback.')
-        .setDMPermission(false),
+        .setDMPermission(false)
+        .setNSFW(false),
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;
