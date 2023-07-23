@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.1.1...v3.2.0) (2023-07-23)
+
+
+### Features
+
+* Added /status user command, updated /systemstatus command ([831ff04](https://github.com/mariusbegby/cadence-discord-bot/commit/831ff047815a8e7abf6bbb7566416d9092bc28c6))
+* added status of active voice connections, tracks in queues and listeners across shards ([88ac919](https://github.com/mariusbegby/cadence-discord-bot/commit/88ac919d67ef11258f97c599125ed7b1ba806775))
+* Updated /help command to be dynamic ([b95a652](https://github.com/mariusbegby/cadence-discord-bot/commit/b95a652f1c18f1816a4a47c3197549487f33e545))
+
+
+### Minor changes and bug fixes
+
+* create copy of status system command to be used by users ([aa82c6d](https://github.com/mariusbegby/cadence-discord-bot/commit/aa82c6d44ddc11c698af4ee775b811a1ca72b038))
+* make player accessible globally for use in sharding eval ([bcc0c92](https://github.com/mariusbegby/cadence-discord-bot/commit/bcc0c926ac1c382ca1a8e4c8b41326f6325049ea))
+
 ## [3.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.1.0...v3.1.1) (2023-07-23)
 
 
