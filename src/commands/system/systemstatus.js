@@ -10,8 +10,8 @@ module.exports = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
-        .setName('status')
-        .setDescription('Show bot status.')
+        .setName('systemstatus')
+        .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client }) => {
@@ -37,33 +37,16 @@ module.exports = {
         let guildCount = 0;
 
         await client.shard
-            .broadcastEval((c) => {
-                return c.guilds.cache.map((guild) => {
-                    return guild.id;
-                    /*
-                    const queue = useQueue(guild.id);
-                    let shardVoiceConnections = 0;
-                    if (queue) {
-                        activeVoiceConnections++;
-                    }
-                    return shardVoiceConnections;
-                    */
-                });
+            .broadcastEval(() => {
+                /* eslint-disable no-undef */
+                return player.generateStatistics().queues.length;
             })
             .then((results) => {
-                // array of arrays with guild ids for each shard
-                logger.debug(results, 'Shard guild ids');
+                activeVoiceConnections = results.reduce(
+                    (acc, activeVoiceConnections) => acc + activeVoiceConnections,
+                    0
+                );
             });
-
-        /*
-        client.guilds.cache.forEach((guild) => {
-            const queue = useQueue(guild.id);
-
-            if (queue) {
-                activeVoiceConnections++;
-            }
-        });
-        */
 
         await client.shard
             .fetchClientValues('guilds.cache.size')
