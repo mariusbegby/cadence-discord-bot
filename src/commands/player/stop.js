@@ -34,6 +34,7 @@ module.exports = {
         }
 
         if (!queue.deleted) {
+            queue.setRepeatMode(0);
             queue.clear();
             queue.node.stop();
             logger.debug(
