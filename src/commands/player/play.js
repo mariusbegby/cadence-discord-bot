@@ -109,6 +109,18 @@ module.exports = {
                 });
             }
 
+            if (error.message.includes('The following content may contain graphic or violent imagery')) {
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or violent imagery. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            )
+                            .setColor(embedOptions.colors.warning)
+                    ]
+                });
+            }
+
             if (
                 (error.type === 'TypeError' &&
                     (error.message.includes('Cannot read properties of null (reading \'createStream\')') ||
