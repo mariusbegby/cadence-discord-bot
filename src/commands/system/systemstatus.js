@@ -33,19 +33,33 @@ module.exports = {
         const discordJsVersion = dependencies['discord.js'];
         const discordPlayerVersion = dependencies['discord-player'];
         const discordApiLatency = client.ws.ping;
-        let activeVoiceConnections = 0;
         let guildCount = 0;
+        let activeVoiceConnections = 0;
+        let totalTracks = 0;
+        let totalListeners = 0;
 
         await client.shard
             .broadcastEval(() => {
                 /* eslint-disable no-undef */
-                return player.generateStatistics().queues.length;
+                return player.generateStatistics();
             })
             .then((results) => {
-                activeVoiceConnections = results.reduce(
-                    (acc, activeVoiceConnections) => acc + activeVoiceConnections,
-                    0
-                );
+                let queueCountList = [];
+                let trackCountList = [];
+                let listenerCountList = [];
+                results.map((result) => {
+                    queueCountList.push(result.queues.length);
+                    if (result.queues.length > 0) {
+                        result.queues.map((queue) => {
+                            trackCountList.push(queue.status.playing ? queue.tracksCount + 1 : queue.tracksCount);
+                            listenerCountList.push(queue.listeners);
+                        });
+                    }
+                });
+
+                activeVoiceConnections = queueCountList.reduce((acc, queueAmount) => acc + queueAmount, 0);
+                totalTracks = trackCountList.reduce((acc, trackAmount) => acc + trackAmount, 0);
+                totalListeners = listenerCountList.reduce((acc, listenerAmount) => acc + listenerAmount, 0);
             });
 
         await client.shard
@@ -75,6 +89,8 @@ module.exports = {
                             `Discord API latency: \`${discordApiLatency} ms\`\n` +
                             `Interaction latency: \`${interactionLatency} ms\`\n` +
                             `Active voice connections: \`${activeVoiceConnections}\`\n` +
+                            `Total tracks in queues: \`${totalTracks}\`\n` +
+                            `Total listeners: \`${totalListeners}\`\n` +
                             `Joined guilds: \`${guildCount}\``
                     )
                     .setColor(embedOptions.colors.info)
