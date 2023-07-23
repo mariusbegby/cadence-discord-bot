@@ -19,6 +19,10 @@ exports.createPlayer = async (client) => {
             }
         });
 
+        // make player accessible from anywhere in the application
+        // primarily to be able to use it in broadcastEval and other sharding methods
+        global.player = player;
+
         onBeforeCreateStream(async (track) => {
             if (track.source === 'youtube') {
                 return (

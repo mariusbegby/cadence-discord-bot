@@ -63,6 +63,8 @@ module.exports.embedOptions = {
         rule: '📒',
         support: '❓',
         bot: '🤖',
+        server: '🖥️',
+        discord: '🌐',
         audioPlaying: '🎶',
         audioStartedPlaying: '🎶',
         success: '✅',
