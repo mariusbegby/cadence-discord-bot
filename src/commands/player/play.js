@@ -11,7 +11,31 @@ module.exports = {
         .setName('play')
         .setDescription('Add a track or playlist to the queue by searching or url.')
         .setDMPermission(false)
-        .addStringOption((option) => option.setName('query').setDescription('Search query or URL.').setRequired(true)),
+        .addStringOption((option) =>
+            option
+                .setName('query')
+                .setDescription('Search query or URL.')
+                .setRequired(true)
+                .setMinLength(2)
+                .setMaxLength(500)
+                .setAutocomplete(true)
+        ),
+    autocomplete: async ({ interaction }) => {
+        const player = useMainPlayer();
+        const query = interaction.options.getString('query', true);
+        if (query.length < 2) {
+            return;
+        }
+        const searchResults = await player.search(query);
+
+        logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
+        return interaction.respond(
+            searchResults.tracks.slice(0, 5).map((track) => ({
+                name: `${track.title} [Author: ${track.author}]`,
+                value: track.url
+            }))
+        );
+    },
     execute: async ({ interaction }) => {
         if (await notInVoiceChannel(interaction)) {
             return;
