@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.1.0...v3.1.1) (2023-07-23)
+
+
+### Minor changes and bug fixes
+
+* fixed loop mode will continue playing tracks after /stop ([ab38f85](https://github.com/mariusbegby/cadence-discord-bot/commit/ab38f851e49caa0bf5c989b5d5a9ca842be3f96e))
+* Fixed name field in response can be over 100 characters. ([3c522df](https://github.com/mariusbegby/cadence-discord-bot/commit/3c522df54acee8ad5b501f134fa411700f21ccfc))
+
 ## [3.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.0.0...v3.1.0) (2023-07-23)
 
 
