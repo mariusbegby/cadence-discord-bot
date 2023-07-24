@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.2...v3.2.3) (2023-07-24)
+
+
+### Minor changes and bug fixes
+
+* don't run  permission validation on autocomplete interactions ([fd63691](https://github.com/mariusbegby/cadence-discord-bot/commit/fd6369169ba62eb8f72f2bec126dc0e984bee81c))
+* don't warn user about execution time ([3b842f3](https://github.com/mariusbegby/cadence-discord-bot/commit/3b842f3cd549f946bb64f55ec6f4d56cc3980702))
+* Update to 300 seconds timeout for collectorFilters ([57bc6c8](https://github.com/mariusbegby/cadence-discord-bot/commit/57bc6c8d3fb0282fcb55f46c06b73a90b166723f))
+
 ## [3.2.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.1...v3.2.2) (2023-07-24)
 
 
