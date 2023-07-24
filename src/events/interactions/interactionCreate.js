@@ -7,10 +7,6 @@ module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction, { client }) => {
-        if (await cannotSendMessageInChannel(interaction)) {
-            return;
-        }
-
         const command = client.commands.get(interaction.commandName);
         if (!command) {
             logger.warn(
@@ -34,6 +30,9 @@ module.exports = {
             }
         } else if (interaction.isChatInputCommand()) {
             try {
+                if (await cannotSendMessageInChannel(interaction)) {
+                    return;
+                }
                 const inputTime = new Date();
 
                 await interaction.deferReply();
@@ -43,32 +42,9 @@ module.exports = {
                 const executionTime = outputTime - inputTime;
 
                 if (executionTime > 20000) {
-                    // don't send warning message for commands with collector timeouts, as collector timeout happens after 60 seconds
-                    if (
-                        (interaction.commandName === 'filters' || interaction.commandName === 'nowplaying') &&
-                        executionTime > 55000
-                    ) {
-                        logger.info(
-                            `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
-                        );
-                        return;
-                    }
-
                     logger.warn(
                         `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' took ${executionTime} ms to execute.`
                     );
-
-                    return await interaction.followUp({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${embedOptions.icons.warning} Warning**\nThis command took ${
-                                        executionTime / 1000
-                                    } seconds to execute.\n\n_If you experienced problems with the command, please try again._`
-                                )
-                                .setColor(embedOptions.colors.warning)
-                        ]
-                    });
                 } else {
                     logger.info(
                         `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
