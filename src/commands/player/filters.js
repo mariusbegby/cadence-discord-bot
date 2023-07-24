@@ -132,6 +132,14 @@ module.exports = {
                 });
             }
 
+            // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
+            if (
+                (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) &&
+                !confirmation.values.includes('normalizer')
+            ) {
+                confirmation.values.push('normalizer');
+            }
+
             // Enable provided filters
             queue.filters.ffmpeg.toggle(confirmation.values);
 
@@ -152,15 +160,14 @@ module.exports = {
                             `**${
                                 embedOptions.icons.success
                             } Filters toggled**\nNow using these filters:\n${confirmation.values
-                                .map(
-                                    (enabled) =>
-                                        `\`${
-                                            ffmpegFilterOptions.availableFilters.find(
-                                                (filter) => enabled == filter.value
-                                            ).label
-                                        }\``
-                                )
-                                .join(', ')}.`
+                                .map((enabledFilter) => {
+                                    let filter = ffmpegFilterOptions.availableFilters.find(
+                                        (filter) => enabledFilter == filter.value
+                                    );
+
+                                    return `- **${filter.emoji} ${filter.label}**`;
+                                })
+                                .join('\n')}`
                         )
                         .setColor(embedOptions.colors.success)
                 ],

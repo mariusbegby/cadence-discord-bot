@@ -175,6 +175,12 @@ module.exports.ffmpegFilterOptions = {
             value: 'treble',
             description: 'Increase the high frequencies.',
             emoji: '🎼'
+        },
+        {
+            label: 'Normalizer',
+            value: 'normalizer',
+            description: 'Normalize the audio (avoid distortion).',
+            emoji: '🎶'
         }
     ]
 };
