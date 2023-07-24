@@ -132,14 +132,18 @@ module.exports = {
                 });
             }
 
-            let filtersToEnable = confirmation.values;
-            // if bassboost is enabled, also enable normalizer to avoid distrorion
-            if (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) {
-                filtersToEnable.push('normalizer');
+            let filtersEnabledByUser = [...confirmation.values];
+
+            // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
+            if (
+                (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) &&
+                !confirmation.values.includes('normalizer')
+            ) {
+                confirmation.values.push('normalizer');
             }
 
             // Enable provided filters
-            queue.filters.ffmpeg.toggle(filtersToEnable);
+            queue.filters.ffmpeg.toggle(confirmation.values);
 
             logger.debug(
                 `[Shard ${interaction.guild.shardId}] Enabled filters ${confirmation.values.join(', ')} for command ${
@@ -157,12 +161,12 @@ module.exports = {
                         .setDescription(
                             `**${
                                 embedOptions.icons.success
-                            } Filters toggled**\nNow using these filters:\n${confirmation.values
+                            } Filters toggled**\nNow using these filters:\n${filtersEnabledByUser
                                 .map(
-                                    (enabled) =>
+                                    (enabledFilter) =>
                                         `\`${
                                             ffmpegFilterOptions.availableFilters.find(
-                                                (filter) => enabled == filter.value
+                                                (filter) => enabledFilter == filter.value
                                             ).label
                                         }\``
                                 )
