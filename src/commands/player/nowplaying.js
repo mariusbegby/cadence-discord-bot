@@ -156,7 +156,7 @@ module.exports = {
         try {
             const confirmation = await response.awaitMessageComponent({
                 filter: collectorFilter,
-                time: 60000
+                time: 300_000
             });
 
             confirmation.deferUpdate();
