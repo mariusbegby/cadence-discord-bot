@@ -7,10 +7,6 @@ module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction, { client }) => {
-        if (await cannotSendMessageInChannel(interaction)) {
-            return;
-        }
-
         const command = client.commands.get(interaction.commandName);
         if (!command) {
             logger.warn(
@@ -34,6 +30,9 @@ module.exports = {
             }
         } else if (interaction.isChatInputCommand()) {
             try {
+                if (await cannotSendMessageInChannel(interaction)) {
+                    return;
+                }
                 const inputTime = new Date();
 
                 await interaction.deferReply();
