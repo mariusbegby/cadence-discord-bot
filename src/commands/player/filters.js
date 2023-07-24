@@ -132,8 +132,14 @@ module.exports = {
                 });
             }
 
+            let filtersToEnable = confirmation.values;
+            // if bassboost is enabled, also enable normalizer to avoid distrorion
+            if (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) {
+                filtersToEnable.push('normalizer');
+            }
+
             // Enable provided filters
-            queue.filters.ffmpeg.toggle(confirmation.values);
+            queue.filters.ffmpeg.toggle(filtersToEnable);
 
             logger.debug(
                 `[Shard ${interaction.guild.shardId}] Enabled filters ${confirmation.values.join(', ')} for command ${
