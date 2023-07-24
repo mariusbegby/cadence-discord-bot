@@ -117,6 +117,8 @@ module.exports = {
                     maxSize: playerOptions.maxQueueSize ?? 1000,
                     maxHistorySize: playerOptions.maxHistorySize ?? 100,
                     volume: playerOptions.defaultVolume ?? 50,
+                    bufferingTimeout: playerOptions.bufferingTimeout ?? 3000,
+                    connectionTimeout: playerOptions.connectionTimeout ?? 30000,
                     metadata: {
                         channel: interaction.channel,
                         client: interaction.client,
