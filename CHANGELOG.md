@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.1...v3.2.2) (2023-07-24)
+
+
+### Minor changes and bug fixes
+
+* Handle max queue size in /play command when adding large playlists. ([8e42f75](https://github.com/mariusbegby/cadence-discord-bot/commit/8e42f755e76f033a4f11c07b2ee1a235edc50fdc))
+
 ## [3.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.0...v3.2.1) (2023-07-24)
 
 
