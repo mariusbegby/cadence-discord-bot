@@ -23,6 +23,12 @@ module.exports = {
             try {
                 await command.autocomplete({ interaction, client });
             } catch (error) {
+                if (error.message === 'Unknown interaction') {
+                    logger.debug(
+                        `[Shard ${interaction.guild.shardId}] Autocomplete failed to be responded to, providing a response took too long.`
+                    );
+                    return;
+                }
                 logger.warn(error, `[Shard ${interaction.guild.shardId}] Autocomplete failed to execute.`);
                 return;
             }
