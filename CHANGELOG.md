@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.0...v3.2.1) (2023-07-24)
+
+
+### Minor changes and bug fixes
+
+* Added configurable options for buffering and connection timeout ([15ecca7](https://github.com/mariusbegby/cadence-discord-bot/commit/15ecca7c05da3d33563da789056a29dc1463de42))
+* Added Normalizer as filter, fixed bug with bassboost filter enabling normalizing filter not working properly ([21b15a1](https://github.com/mariusbegby/cadence-discord-bot/commit/21b15a10a03d1f8df243c09afa18c7b9fb00247b))
+* also show emoji for enabled filters, show to user that normalizer gets enabled when selecting bass boost. ([aebc726](https://github.com/mariusbegby/cadence-discord-bot/commit/aebc726e457f6c687051f7b37f548fb1ed919b4e))
+* enable normalizer filter when bassboost is chosen ([b236371](https://github.com/mariusbegby/cadence-discord-bot/commit/b236371abc30741cbc02a8f0faf80263d76a9226))
+
 ## [3.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.1.1...v3.2.0) (2023-07-23)
 
 
