@@ -110,7 +110,7 @@ module.exports.playerOptions = {
     leaveOnStop: true,
     leaveOnStopCooldown: 300_000,
     defaultVolume: 50,
-    maxQueueSize: 1_000,
+    maxQueueSize: 10_000,
     maxHistorySize: 100,
     bufferingTimeout: 3_000,
     connectionTimeout: 30_000,

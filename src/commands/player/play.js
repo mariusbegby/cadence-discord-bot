@@ -102,6 +102,23 @@ module.exports = {
             });
         }
 
+        let queue = useQueue(interaction.guild.id);
+        let queueSize = queue?.size ?? 0;
+
+        if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
+            logger.debug(`[Shard ${interaction.guild.shardId}] Playlist found but too many tracks. Query: ${query}.`);
+
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**${embedOptions.icons.warning} Playlist too large**\nThis playlist is too large to be added to the queue.\n\nThe maximum amount of tracks that can be added to the queue is **${playerOptions.maxQueueSize}**.`
+                        )
+                        .setColor(embedOptions.colors.warning)
+                ]
+            });
+        }
+
         let track;
 
         try {
@@ -202,7 +219,7 @@ module.exports = {
             );
         }
 
-        let queue = useQueue(interaction.guild.id);
+        queue = useQueue(interaction.guild.id);
 
         if (!queue) {
             logger.warn(
