@@ -66,8 +66,18 @@ module.exports = {
                                 .setColor(embedOptions.colors.error)
                         ]
                     });
-                } else {
+                } else if (interaction.deferred) {
                     await interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setDescription(
+                                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                )
+                                .setColor(embedOptions.colors.error)
+                        ]
+                    });
+                } else {
+                    await interaction.reply({
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
