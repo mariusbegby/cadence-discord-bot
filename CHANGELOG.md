@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.3...v3.2.4) (2023-07-25)
+
+
+### Minor changes and bug fixes
+
+* Additional handling of autocomplete interaction errors ([524b4d2](https://github.com/mariusbegby/cadence-discord-bot/commit/524b4d2f30d8da5b01b2488ae3d5de680545393d))
+* Possibly fix interaction not reply errors ([36c5a15](https://github.com/mariusbegby/cadence-discord-bot/commit/36c5a15f11735de38304da0a7f445e629092208f))
+
 ## [3.2.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.2...v3.2.3) (2023-07-24)
 
 
