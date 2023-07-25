@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.4...v3.3.0) (2023-07-25)
+
+
+### Features
+
+* Added options for load testing to automatically play music in specified channels ([8e04d59](https://github.com/mariusbegby/cadence-discord-bot/commit/8e04d59a6a34665ef4f3183cee9ed67f4172bd91))
+
 ## [3.2.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.3...v3.2.4) (2023-07-25)
 
 
