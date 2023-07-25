@@ -41,7 +41,7 @@ module.exports = {
             value: track.url
         }));
 
-        if (!interaction.isRepliable() || interaction.responded()) {
+        if (!interaction.isRepliable()) {
             return;
         }
 
