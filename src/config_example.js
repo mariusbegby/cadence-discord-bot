@@ -184,3 +184,10 @@ module.exports.ffmpegFilterOptions = {
         }
     ]
 };
+
+// Options for load testing the bot. If enabled, the bot will join the specified channels and play specified track source.
+module.exports.loadTestOptions = {
+    enabled: false,
+    trackUrl: 'https://www.youtube.com/watch?v=tTR4D9h3zAE',
+    channelIdsToJoin: []
+};

@@ -1,6 +1,7 @@
 const logger = require('../../services/logger');
-const { embedOptions, systemOptions, presenceStatusOptions } = require('../../config');
+const { embedOptions, systemOptions, presenceStatusOptions, loadTestOptions } = require('../../config');
 const { postBotStats } = require('../../utils/other/postBotStats.js');
+const { startLoadTest } = require('../../utils/other/startLoadTest');
 const { Events, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -11,6 +12,10 @@ module.exports = {
         logger.debug(`[Shard ${client.shard.ids[0]}] Client 'ready' event emitted after 'allShardsReady'.`);
         await client.user.setPresence(presenceStatusOptions);
         await client.user.setPresence(presenceStatusOptions);
+
+        if (loadTestOptions.enabled) {
+            await startLoadTest(client);
+        }
 
         const channel = await client.channels.cache.get(systemOptions.systemMessageChannelId);
 
