@@ -41,10 +41,6 @@ module.exports = {
             value: track.url
         }));
 
-        if (!interaction.isRepliable()) {
-            return;
-        }
-
         return interaction.respond(response);
     },
     execute: async ({ interaction }) => {
