@@ -10,7 +10,7 @@ const manager = new ShardingManager('./src/bot.js', {
 
 const readyShards = new Set();
 manager.on('shardCreate', (shard) => {
-    logger.debug(`[Shard ${shard.id}] Launched shard with id ${shard.id}.`);
+    logger.info(`[Shard ${shard.id}] Launched shard with id ${shard.id}.`);
 
     // When all shards are ready, emit event 'allShardsReady' to all shards
     shard.on(ShardEvents.Ready, () => {

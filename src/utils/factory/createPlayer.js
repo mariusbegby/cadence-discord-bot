@@ -39,7 +39,7 @@ exports.createPlayer = async (client) => {
         });
 
         await player.extractors.loadDefault();
-        logger.debug(`[Shard ${client.shard.ids[0]}] discord-player loaded dependencies:\n${player.scanDeps()}`);
+        logger.trace(`[Shard ${client.shard.ids[0]}] discord-player loaded dependencies:\n${player.scanDeps()}`);
 
         return player;
     } catch (error) {
