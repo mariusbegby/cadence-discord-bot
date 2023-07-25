@@ -56,15 +56,27 @@ module.exports = {
                     `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' failed to execute.`
                 );
 
-                await interaction.followUp({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setDescription(
-                                `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                            )
-                            .setColor(embedOptions.colors.error)
-                    ]
-                });
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setDescription(
+                                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                )
+                                .setColor(embedOptions.colors.error)
+                        ]
+                    });
+                } else {
+                    await interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setDescription(
+                                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                )
+                                .setColor(embedOptions.colors.error)
+                        ]
+                    });
+                }
             }
         }
     }
