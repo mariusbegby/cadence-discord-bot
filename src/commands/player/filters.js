@@ -14,7 +14,7 @@ const { useQueue } = require('discord-player');
 
 module.exports = {
     isNew: false,
-    isBeta: true,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('filters')
         .setDescription('Toggle various audio filters during playback.')
