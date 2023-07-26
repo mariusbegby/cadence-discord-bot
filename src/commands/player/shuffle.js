@@ -42,7 +42,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedOptions.icons.shuffled} Shuffled queue tracks**\nThe tracks in the queue has been shuffled.\n\nView the new queue order with **\`/queue\`**.`
+                        `**${embedOptions.icons.shuffled} Shuffled queue tracks**\nThe ${queue.tracks.data.length} tracks in the queue has been shuffled.\n\nView the new queue order with **\`/queue\`**.`
                     )
                     .setColor(embedOptions.colors.success)
             ]
