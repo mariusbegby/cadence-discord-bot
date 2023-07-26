@@ -10,7 +10,7 @@ module.exports = {
     isBeta: false,
     data: new SlashCommandBuilder()
         .setName('shuffle')
-        .setDescription('Shuffle the tracks in the queue randomly.')
+        .setDescription('Shuffle tracks in the queue randomly.')
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction }) => {
