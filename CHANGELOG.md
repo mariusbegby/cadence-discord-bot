@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.2...v3.4.0) (2023-07-26)
+
+
+### Features
+
+* added /shuffle command ([83d5336](https://github.com/mariusbegby/cadence-discord-bot/commit/83d5336e176c212982a72e3fe0da157fa254b690))
+
+
+### Miscellaneous
+
+* update shuffle command description ([18a88ec](https://github.com/mariusbegby/cadence-discord-bot/commit/18a88ec78296a6dd9445f19fd2c0bc69adfd3ee8))
+
 ## [3.3.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.1...v3.3.2) (2023-07-26)
 
 
