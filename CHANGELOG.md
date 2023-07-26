@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.1...v3.3.2) (2023-07-26)
+
+
+### Minor changes and bug fixes
+
+* handle "all" yt warnings requiring confirmations ([215d36e](https://github.com/mariusbegby/cadence-discord-bot/commit/215d36e9e4b3e902449fa28e088d306e2d4d1f7c))
+
 ## [3.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.0...v3.3.1) (2023-07-26)
 
 
