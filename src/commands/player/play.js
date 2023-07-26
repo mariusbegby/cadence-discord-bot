@@ -162,15 +162,15 @@ module.exports = {
                 });
             }
 
-            if (error.message.includes('The following content may contain graphic or violent imagery')) {
+            if (error.message.includes('The following content may contain')) {
                 logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to graphic or violent imagery warning.`
+                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.`
                 );
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or violent imagery. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]
