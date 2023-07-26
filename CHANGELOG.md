@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.0...v3.3.1) (2023-07-26)
+
+
+### Minor changes and bug fixes
+
+* add support for new site and auto post shard count and member count ([8713baa](https://github.com/mariusbegby/cadence-discord-bot/commit/8713baa6578c33c746d799b5613312d3ce34f340))
+
 ## [3.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.2.4...v3.3.0) (2023-07-25)
 
 
