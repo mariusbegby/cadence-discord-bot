@@ -237,7 +237,7 @@ module.exports = {
             });
         }
 
-        if (track.source === 'arbitrary') {
+        if (track.source === 'arbitrary' || !track.thumnail) {
             track.thumbnail =
                 'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
         }
