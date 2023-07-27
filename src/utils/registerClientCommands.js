@@ -15,14 +15,19 @@ exports.registerClientCommands = (client) => {
 
         for (const file of commandFiles) {
             try {
-                logger.debug(`[Shard ${client.shard.ids[0]}] Registering command ${folder}/${file}...`);
+                logger.trace(`[Shard ${client.shard.ids[0]}] Registering command ${folder}/${file}...`);
+
+                // delete command from require cache
+                delete require.cache[require.resolve(`../commands/${folder}/${file}`)];
+
+                // register command
                 const command = require(`../commands/${folder}/${file}`);
+                client.commands.delete(command.data.name);
                 client.commands.set(command.data.name, command);
             } catch (error) {
                 logger.error(
                     `[Shard ${client.shard.ids[0]}] Error registering command ${folder}/${file}: ${error.message}`
                 );
-                throw error;
             }
         }
     }
