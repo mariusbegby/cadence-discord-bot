@@ -1,6 +1,6 @@
 const logger = require('../../services/logger');
 const { embedOptions, playerOptions, botOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionValidator');
 const { transformQuery } = require('../../utils/validation/searchQueryValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
@@ -30,10 +30,11 @@ module.exports = {
             return;
         }
         const searchResults = await player.search(query);
+        let response = [];
 
         logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
 
-        let response = searchResults.tracks.slice(0, 5).map((track) => ({
+        response = searchResults.tracks.slice(0, 5).map((track) => ({
             name:
                 `${track.title} [Author: ${track.author}]`.length > 100
                     ? `${track.title}`.slice(0, 100)
@@ -41,14 +42,23 @@ module.exports = {
             value: track.url
         }));
 
+        if (!response || response.length === 0) {
+            return interaction.respond([]);
+        }
+
         return interaction.respond(response);
     },
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, client }) => {
+        if (await notInVoiceChannel(interaction, client)) {
             return;
         }
 
         if (await cannotJoinVoiceOrTalk(interaction)) {
+            return;
+        }
+
+        let queue = useQueue(interaction.guild.id);
+        if (queue && (await notInSameVoiceChannel(interaction, queue))) {
             return;
         }
 
@@ -102,7 +112,7 @@ module.exports = {
             });
         }
 
-        let queue = useQueue(interaction.guild.id);
+        queue = useQueue(interaction.guild.id);
         let queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {

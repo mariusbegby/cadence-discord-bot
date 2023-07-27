@@ -1,11 +1,11 @@
 const logger = require('../../services/logger');
 const { embedOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
-    isNew: true,
+    isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
         .setName('stop')
@@ -32,6 +32,10 @@ module.exports = {
                         .setColor(embedOptions.colors.warning)
                 ]
             });
+        }
+
+        if (await notInSameVoiceChannel(interaction, queue)) {
+            return;
         }
 
         if (!queue.deleted) {
