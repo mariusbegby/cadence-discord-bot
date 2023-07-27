@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.5.0...v3.6.0) (2023-07-27)
+
+
+### Features
+
+* Added /lyrics command ([1dcc9e0](https://github.com/mariusbegby/cadence-discord-bot/commit/1dcc9e00b87935eead3b52899d360393b5c49792))
+
+
+### Minor changes and bug fixes
+
+* Also validate is user is in same voice channel as bot for commands ([311e141](https://github.com/mariusbegby/cadence-discord-bot/commit/311e1419922c4fc7a02952bda772ce705e567736))
+* Improvement to play command autocomplete search ([f590558](https://github.com/mariusbegby/cadence-discord-bot/commit/f59055807f9a7170edab5d476e370575ba09803a))
+
+
+### Miscellaneous
+
+* remove comment and rewrite text ([0887a47](https://github.com/mariusbegby/cadence-discord-bot/commit/0887a47af94d3bc4b2e6865de8d41040c5369a24))
+* update isNew status for stop command ([0d003a8](https://github.com/mariusbegby/cadence-discord-bot/commit/0d003a868bf509209400b56714aadab8b32ca3df))
+
 ## [3.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.4.0...v3.5.0) (2023-07-27)
 
 
