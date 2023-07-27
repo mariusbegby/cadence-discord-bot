@@ -30,16 +30,21 @@ module.exports = {
             return;
         }
         const searchResults = await player.search(query);
+        let response = [];
 
         logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
 
-        let response = searchResults.tracks.slice(0, 5).map((track) => ({
+        response = searchResults.tracks.slice(0, 5).map((track) => ({
             name:
                 `${track.title} [Author: ${track.author}]`.length > 100
                     ? `${track.title}`.slice(0, 100)
                     : `${track.title} [Author: ${track.author}]`,
             value: track.url
         }));
+
+        if (!response || response.length === 0) {
+            return interaction.respond([]);
+        }
 
         return interaction.respond(response);
     },
