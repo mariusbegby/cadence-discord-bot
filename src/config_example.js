@@ -127,7 +127,7 @@ module.exports.playerOptions = {
 // Options to be used by the ffmpeg, and available ffmpeg filters shown in filter commands.
 module.exports.ffmpegFilterOptions = {
     threadAmount: '2',
-    filterList: [
+    availableFilters: [
         {
             label: 'Bass boost',
             value: 'bassboost_low',
