@@ -1,6 +1,6 @@
 const logger = require('../../services/logger');
 const { embedOptions, ffmpegFilterOptions } = require('../../config');
-const { notInVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
+const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidator');
 const {
     SlashCommandBuilder,
@@ -28,6 +28,10 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
 
         if (await queueDoesNotExist(interaction, queue)) {
+            return;
+        }
+
+        if (await notInSameVoiceChannel(interaction, queue)) {
             return;
         }
 
