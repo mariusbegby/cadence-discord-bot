@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.4.0...v3.5.0) (2023-07-27)
+
+
+### Features
+
+* Added reload command ([2c5d5ec](https://github.com/mariusbegby/cadence-discord-bot/commit/2c5d5ec3a5029062aa85c1276eb1d579962cc8d7))
+
+
+### Minor changes and bug fixes
+
+* Fixed error when no thumbnail available ([80f26af](https://github.com/mariusbegby/cadence-discord-bot/commit/80f26af2427f91dea6ef155a7139348318fd370a))
+* update filter property name to correct name ([8b0c0e3](https://github.com/mariusbegby/cadence-discord-bot/commit/8b0c0e3d547bdb0b097964e8a687861d3025427c))
+
+
+### Miscellaneous
+
+* make text for track amount bold ([76d1177](https://github.com/mariusbegby/cadence-discord-bot/commit/76d11772987f8484c5da7ed0be4e5688f7b1d935))
+
 ## [3.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.3.2...v3.4.0) (2023-07-26)
 
 
