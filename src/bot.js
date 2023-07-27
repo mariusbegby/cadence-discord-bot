@@ -10,6 +10,7 @@ const { createPlayer } = require('./utils/factory/createPlayer.js');
     const player = await createPlayer(client);
 
     client.on('allShardsReady', async () => {
+        client.registerClientCommands = registerClientCommands;
         registerEventListeners(client, player);
         registerClientCommands(client);
         client.emit('ready', client);
