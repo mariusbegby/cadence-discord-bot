@@ -41,13 +41,13 @@ module.exports = {
                     `${track.title} [Artist: ${track.author}]`.length > 100
                         ? `${track.title}`.slice(0, 100)
                         : `${track.title} [Author: ${track.author}]`,
-                value: track.title
+                value: track.title.slice(0, 100)
             }));
         } else {
             response = [
                 {
-                    name: `${lyricsResult.title} [Artist: ${lyricsResult.artist.name}]`,
-                    value: lyricsResult.title
+                    name: `${lyricsResult.title} [Artist: ${lyricsResult.artist.name}]`.slice(0, 100),
+                    value: lyricsResult.title.slice(0, 100)
                 }
             ];
         }
