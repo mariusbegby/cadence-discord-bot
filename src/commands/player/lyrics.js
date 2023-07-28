@@ -159,15 +159,14 @@ module.exports = {
             });
         }
 
-        logger.info(lyricsResult.lyrics);
-        logger.info(`Length: ${lyricsResult.lyrics.length}`);
-
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
-            logger.info(`[Shard ${interaction.guild.shardId}] Lyrics too long, splitting into multiple messages.`);
+            logger.debug(`[Shard ${interaction.guild.shardId}] Lyrics too long, splitting into multiple messages.`);
             const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
             for (let i = 0; i < messageCount; i++) {
-                logger.info(`[Shard ${interaction.guild.shardId}] Sending message ${i + 1} of ${messageCount}.`);
+                logger.debuf(
+                    `[Shard ${interaction.guild.shardId}] Lyrics, sending message ${i + 1} of ${messageCount}.`
+                );
                 const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
                     await interaction.editReply({
@@ -184,7 +183,6 @@ module.exports = {
                     });
                     continue;
                 } else {
-                    logger.info(`[Shard ${interaction.guild.shardId}] ELSE.`);
                     await interaction.channel.send({
                         embeds: [
                             new EmbedBuilder()
@@ -209,7 +207,7 @@ module.exports = {
                         `**${embedOptions.icons.queue} Showing lyrics**\n` +
                             `**Track: [${lyricsResult.title}](${lyricsResult.url})**\n` +
                             `**Artist: [${lyricsResult.artist.name}](${lyricsResult.artist.url})**` +
-                            `\n\n\`\`\`fix\n${lyricsResult.lyrics.slice(0, 3096)}\`\`\``
+                            `\n\n\`\`\`fix\n${lyricsResult.lyrics}\`\`\``
                     )
                     .setColor(embedOptions.colors.info)
             ]
