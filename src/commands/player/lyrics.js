@@ -159,6 +159,9 @@ module.exports = {
             });
         }
 
+        logger.info(lyricsResult.lyrics);
+        logger.info(`Length: ${lyricsResult.lyrics.length}`);
+
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
             logger.info(`[Shard ${interaction.guild.shardId}] Lyrics too long, splitting into multiple messages.`);
