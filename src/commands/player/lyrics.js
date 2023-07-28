@@ -161,8 +161,10 @@ module.exports = {
 
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
+            logger.info(`[Shard ${interaction.guild.shardId}] Lyrics too long, splitting into multiple messages.`);
             const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
             for (let i = 0; i < messageCount; i++) {
+                logger.info(`[Shard ${interaction.guild.shardId}] Sending message ${i + 1} of ${messageCount}.`);
                 const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
                     await interaction.editReply({
@@ -179,6 +181,7 @@ module.exports = {
                     });
                     continue;
                 } else {
+                    logger.info(`[Shard ${interaction.guild.shardId}] ELSE.`);
                     await interaction.channel.send({
                         embeds: [
                             new EmbedBuilder()
