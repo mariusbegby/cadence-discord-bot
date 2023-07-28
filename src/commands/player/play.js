@@ -34,13 +34,18 @@ module.exports = {
 
         logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
 
-        response = searchResults.tracks.slice(0, 5).map((track) => ({
-            name:
-                `${track.title} [Author: ${track.author}]`.length > 100
-                    ? `${track.title}`.slice(0, 100)
-                    : `${track.title} [Author: ${track.author}]`,
-            value: track.url
-        }));
+        response = searchResults.tracks.slice(0, 5).map((track) => {
+            if (track.url.length > 100) {
+                track.url = track.title.slice(0, 100);
+            }
+            return {
+                name:
+                    `${track.title} [Author: ${track.author}]`.length > 100
+                        ? `${track.title}`.slice(0, 100)
+                        : `${track.title} [Author: ${track.author}]`,
+                value: track.url
+            };
+        });
 
         if (!response || response.length === 0) {
             return interaction.respond([]);
