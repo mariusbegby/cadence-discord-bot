@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.0...v3.6.1) (2023-07-28)
+
+
+### Minor changes and bug fixes
+
+* enforce max character length of 100 for name and value in autocomplete ([724f407](https://github.com/mariusbegby/cadence-discord-bot/commit/724f40755a58c0c87dfc1d055f93f2809fbefa13))
+* fixed lyrics being cut off ([002f520](https://github.com/mariusbegby/cadence-discord-bot/commit/002f520e8e0b8d2468828f3dbe9486213c728d3c))
+
 ## [3.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.5.0...v3.6.0) (2023-07-27)
 
 
