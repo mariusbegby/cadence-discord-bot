@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.1...v3.6.2) (2023-07-30)
+
+
+### Minor changes and bug fixes
+
+* Updated depdendencies ([de74bb0](https://github.com/mariusbegby/cadence-discord-bot/commit/de74bb0c2d5a85c5309d0dd44c4f47b3ff588de6))
+
 ## [3.6.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.0...v3.6.1) (2023-07-28)
 
 
