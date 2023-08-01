@@ -56,3 +56,6 @@ If you experience any issues, please open an issue on this repository or join th
 ## Credits and acknowledgments 🎉
 
 This project is made possible by using [discord.js](https://github.com/discordjs/discord.js/) and [discord-player](https://github.com/Androz2091/discord-player).
+
+### Contributors
+
