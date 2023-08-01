@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.6.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.2...v3.6.3) (2023-08-01)
+
+
+### Miscellaneous
+
+* add workflow for auto adding contributors to readme ([fa7146e](https://github.com/mariusbegby/cadence-discord-bot/commit/fa7146ea98defc4615d598be96697ed9bbb1ec47))
+* **deps-dev:** bump eslint from 8.45.0 to 8.46.0 ([50587b5](https://github.com/mariusbegby/cadence-discord-bot/commit/50587b533956b0ab218d78603c62ca8f099b9fbc))
+* **deps:** bump pino from 8.14.1 to 8.14.2 ([493e374](https://github.com/mariusbegby/cadence-discord-bot/commit/493e374a9d1c5d5e3f6fcbe466cc6ea2ac6f9eea))
+
 ## [3.6.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.1...v3.6.2) (2023-07-30)
 
 
