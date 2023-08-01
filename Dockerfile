@@ -15,7 +15,7 @@ COPY .env .env
 COPY config.js src/config.js
 
 ## Install node_modules
-RUN npm install --legacy-peer-deps
+RUN npm install --production
 RUN npm run deploy
 
 ## Cadence startup command
