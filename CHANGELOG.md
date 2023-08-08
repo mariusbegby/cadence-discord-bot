@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.6.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.3...v3.6.4) (2023-08-08)
+
+
+### Minor changes and bug fixes
+
+* Updated dependencies ([7b8f86b](https://github.com/mariusbegby/cadence-discord-bot/commit/7b8f86bd1d933ab98acce719303e390a01312f91))
+
+
+### Miscellaneous
+
+* **deps:** bump discord.js from 14.11.0 to 14.12.1 ([f799c95](https://github.com/mariusbegby/cadence-discord-bot/commit/f799c955a9c8cc2d1800375e08de7110b6bab5ec))
+* **deps:** bump pino from 8.14.2 to 8.15.0 ([39a3362](https://github.com/mariusbegby/cadence-discord-bot/commit/39a336248e098a00c3323ee4319ad725fdbb8f6b))
+
 ## [3.6.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.2...v3.6.3) (2023-08-01)
 
 
