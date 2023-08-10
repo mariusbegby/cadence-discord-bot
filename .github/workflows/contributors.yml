@@ -20,4 +20,5 @@ jobs:
                   COMMIT_MESSAGE: 'docs(README): update contributors'
                   AVATAR_SHAPE: 'round'
                   IGNORED_CONTRIBUTORS: 'apps/github-actions, apps/dependabot'
+                  BRANCH: 'main'
                   PULL_REQUEST: 'main'
