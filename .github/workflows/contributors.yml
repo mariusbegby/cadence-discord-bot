@@ -12,11 +12,11 @@ jobs:
               with:
                   CONTRIBUTOR: '### Contributors'
                   COLUMN_PER_ROW: '10'
-                  ACCESS_TOKEN: ${{secrets.CUSTOM_TOKEN}}
+                  ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
                   IMG_WIDTH: '50'
                   FONT_SIZE: '14'
                   PATH: '/README.md'
                   COMMIT_MESSAGE: 'docs(README): update contributors'
                   AVATAR_SHAPE: 'round'
                   IGNORED_CONTRIBUTORS: 'dependabot[bot], github-actions[bot]'
-                  PULL_REQUEST: 'auto-add-contributors'
+                  PULL_REQUEST: 'main'
