@@ -5,10 +5,6 @@ on:
 
 jobs:
     add-contributors:
-        permissions:
-            contents: read
-            checks: write
-            pull-requests: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
