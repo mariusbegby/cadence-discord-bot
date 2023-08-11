@@ -54,6 +54,7 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, client }) => {
+        logger.info(require('@discord-player/opus').OpusStream.type);
         if (await notInVoiceChannel(interaction, client)) {
             return;
         }
