@@ -97,6 +97,7 @@ module.exports = {
             });
         }
 
+        /* seems to be supported with @distube/ytdl-core, keeping it commented out to test functionality
         if (
             searchResult.tracks[0].raw.live &&
             searchResult.tracks[0].raw.duration === 0 &&
@@ -116,6 +117,7 @@ module.exports = {
                 ]
             });
         }
+        */
 
         queue = useQueue(interaction.guild.id);
         let queueSize = queue?.size ?? 0;
