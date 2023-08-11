@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.4...v3.6.5) (2023-08-11)
+
+
+### Minor changes and bug fixes
+
+* Updated dependencies, use discord-player new dev versions ([c04b3c9](https://github.com/mariusbegby/cadence-discord-bot/commit/c04b3c944cc5aaf39e320b3ce8358bc7f9f5c6d2))
+
 ## [3.6.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.3...v3.6.4) (2023-08-08)
 
 
