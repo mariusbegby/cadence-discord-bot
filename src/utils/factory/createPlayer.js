@@ -1,5 +1,5 @@
 const logger = require('../../services/logger');
-const { Player, onBeforeCreateStream } = require('discord-player');
+const { Player } = require('discord-player');
 
 exports.createPlayer = async (client) => {
     try {
