@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.0...v3.7.1) (2023-08-12)
+
+
+### Minor changes and bug fixes
+
+* remove unused import ([3e6dc6e](https://github.com/mariusbegby/cadence-discord-bot/commit/3e6dc6e926ddfda3ce70c0b3a5725c9d0d957e80))
+
 ## [3.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.5...v3.7.0) (2023-08-12)
 
 
