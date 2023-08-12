@@ -36,9 +36,9 @@ module.exports = {
         const cpuCores = await osu.cpu.count();
         const platform = await osu.os.platform();
         const discordJsVersion = dependencies['discord.js'];
-        const opusVersion = dependencies['@discordjs/opus'];
+        const opusVersion = dependencies['@discord-player/opus'];
         const restVersion = dependencies['@discordjs/rest'];
-        const voiceVersion = dependencies['@discordjs/voice'];
+        const voiceVersion = dependencies['discord-voip'];
         const discordPlayerVersion = dependencies['discord-player'];
         const extractorVersion = dependencies['@discord-player/extractor'];
         const mediaplexVersion = dependencies['mediaplex'];
@@ -99,11 +99,11 @@ module.exports = {
 
         const dependenciesString =
             `**${discordJsVersion}** discord.js\n` +
-            `**┗ ${opusVersion}** @discordjs/opus\n` +
             `**┗ ${restVersion}** @discordjs/rest\n` +
-            `**┗ ${voiceVersion}** @discordjs/voice\n` +
             `**${discordPlayerVersion}** discord-player\n` +
+            `**┗ ${opusVersion}** @discord-player/opus\n` +
             `**┗ ${extractorVersion}** @discord-player/extractor\n` +
+            `**${voiceVersion}** discord-voip\n` +
             `**${mediaplexVersion}** mediaplex`;
 
         const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
