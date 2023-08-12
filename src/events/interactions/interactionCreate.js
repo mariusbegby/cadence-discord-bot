@@ -29,6 +29,7 @@ module.exports = {
                 return;
             }
         } else if (interaction.isChatInputCommand()) {
+            logger.info('[Shard ${interaction.guild.shardId}] Interaction created.');
             try {
                 if (await cannotSendMessageInChannel(interaction)) {
                     return;
