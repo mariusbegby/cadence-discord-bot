@@ -54,8 +54,6 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, client }) => {
-        logger.info(require('@discord-player/opus').OpusStream.type);
-        logger.info(require('mediaplex').getOpusVersion());
         if (await notInVoiceChannel(interaction, client)) {
             return;
         }
