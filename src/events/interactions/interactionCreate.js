@@ -20,13 +20,17 @@ module.exports = {
             try {
                 await command.autocomplete({ interaction, client });
             } catch (error) {
-                if (error.message === 'Unknown interaction') {
+                if (
+                    error.message === 'Unknown interaction' ||
+                    error.message === 'Interaction has already been acknowledged.'
+                ) {
                     logger.debug(
-                        `[Shard ${interaction.guild.shardId}] Autocomplete failed to be responded to, providing a response took too long.`
+                        `[Shard ${interaction.guild.shardId}] Autocomplete failed to be responded to, unknown interaction or already acknowledged.`
                     );
                     return;
+                } else {
+                    logger.warn(error, `[Shard ${interaction.guild.shardId}] Autocomplete failed to execute.`);
                 }
-                logger.warn(error, `[Shard ${interaction.guild.shardId}] Autocomplete failed to execute.`);
                 return;
             }
         } else if (interaction.isChatInputCommand()) {
@@ -53,21 +57,14 @@ module.exports = {
                     );
                 }
             } catch (error) {
-                logger.error(
+                logger.warn(
                     error,
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' failed to execute.`
+                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' throwed and error and might have failed to execute properly.`
                 );
 
                 if (interaction.replied) {
-                    await interaction.followUp({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                                )
-                                .setColor(embedOptions.colors.error)
-                        ]
-                    });
+                    // If the interaction has already been replied to, most likely command executed successfully or error is already handled.
+                    return;
                 } else if (interaction.deferred) {
                     await interaction.editReply({
                         embeds: [
