@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.5...v3.7.0) (2023-08-12)
+
+
+### Features
+
+* Change from yt-stream to @distube/ytdl-core for streaming audio ([fa15af5](https://github.com/mariusbegby/cadence-discord-bot/commit/fa15af5b1445c6c7ec5f2ea68cbefa5fe5c2b190))
+
 ## [3.6.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.4...v3.6.5) (2023-08-11)
 
 
