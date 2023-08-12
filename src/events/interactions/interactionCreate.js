@@ -16,6 +16,7 @@ module.exports = {
         }
 
         if (interaction.isAutocomplete()) {
+            logger.info(`[Shard ${interaction.guild.shardId}] Autocomplete created.`);
             try {
                 await command.autocomplete({ interaction, client });
             } catch (error) {
@@ -29,7 +30,7 @@ module.exports = {
                 return;
             }
         } else if (interaction.isChatInputCommand()) {
-            logger.info('[Shard ${interaction.guild.shardId}] Interaction created.');
+            logger.info(`[Shard ${interaction.guild.shardId}] Interaction created.`);
             try {
                 if (await cannotSendMessageInChannel(interaction)) {
                     return;
