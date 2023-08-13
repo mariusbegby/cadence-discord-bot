@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.2...v3.7.3) (2023-08-13)
+
+
+### Minor changes and bug fixes
+
+* check if interaction has timed out or can be replied to ([c0894d2](https://github.com/mariusbegby/cadence-discord-bot/commit/c0894d214a60290947e800a09e1747dda2702cce))
+
 ## [3.7.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.1...v3.7.2) (2023-08-12)
 
 
