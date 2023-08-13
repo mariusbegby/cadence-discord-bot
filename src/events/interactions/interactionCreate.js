@@ -62,6 +62,11 @@ module.exports = {
                     `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' throwed and error and might have failed to execute properly.`
                 );
 
+                if (!interaction.deferred || !interaction.replied) {
+                    logger.warn(error, 'Interaction was not deferred or replied to, and an error was thrown.');
+                    return;
+                }
+
                 if (interaction.replied) {
                     // If the interaction has already been replied to, most likely command executed successfully or error is already handled.
                     return;
