@@ -36,34 +36,32 @@ module.exports = {
         } else if (interaction.isChatInputCommand()) {
             logger.debug(`[Shard ${interaction.guild.shardId}] Interaction created.`);
             try {
+                await interaction.deferReply();
+
+                // causing issues with unknown interaction error?
                 if (await cannotSendMessageInChannel(interaction)) {
                     return;
                 }
-                const inputTime = new Date();
 
-                await interaction.deferReply();
+                const inputTime = new Date();
                 await command.execute({ interaction, client });
 
                 const outputTime = new Date();
                 const executionTime = outputTime - inputTime;
 
-                if (executionTime > 20000) {
-                    logger.warn(
-                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' took ${executionTime} ms to execute.`
-                    );
-                } else {
-                    logger.info(
-                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
-                    );
-                }
+                logger.info(
+                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' executed in ${executionTime} ms.`
+                );
             } catch (error) {
                 logger.warn(
                     error,
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' throwed and error and might have failed to execute properly.`
+                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Command '${interaction}' throwed an unhandled error and might have failed to execute properly.`
                 );
 
                 if (!interaction.deferred || !interaction.replied) {
-                    logger.warn(error, 'Interaction was not deferred or replied to, and an error was thrown.');
+                    logger.warn(
+                        `[Shard ${interaction.guild.shardId}] Interaction was not deferred or replied to, and an error was thrown.`
+                    );
                     return;
                 }
 
@@ -71,6 +69,9 @@ module.exports = {
                     // If the interaction has already been replied to, most likely command executed successfully or error is already handled.
                     return;
                 } else if (interaction.deferred) {
+                    logger.info(
+                        `[Shard ${interaction.guild.shardId}] Interaction was deferred, editing reply and sending Uh-oh message.`
+                    );
                     await interaction.editReply({
                         embeds: [
                             new EmbedBuilder()
@@ -81,6 +82,9 @@ module.exports = {
                         ]
                     });
                 } else {
+                    logger.info(
+                        `[Shard ${interaction.guild.shardId}] Interaction was not deferred or replied, sending new reply with Uh-oh message.`
+                    );
                     await interaction.reply({
                         embeds: [
                             new EmbedBuilder()
@@ -92,6 +96,11 @@ module.exports = {
                     });
                 }
             }
+        } else {
+            logger.warn(
+                interaction,
+                `[Shard ${interaction.guild.shardId}] Interaction created but was not a chat input or autocomplete interaction.`
+            );
         }
     }
 };

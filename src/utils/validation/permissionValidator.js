@@ -30,22 +30,30 @@ exports.cannotSendMessageInChannel = async (interaction) => {
 
     // only checks if channel is viewable, as bot will have permission to send interaction replies if channel is viewable
     if (!channel.viewable) {
-        // we can still send ephemeral replies in channels we can't view, so sending message to user instead
-        await interaction.deferReply({ ephemeral: true });
-        await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
-                    )
-                    .setColor(embedOptions.colors.warning)
-            ],
-            ephemeral: true
-        });
-
-        logger.debug(
+        logger.info(
             `User tried to use command ${interaction.commandName} but the bot had no permission to send reply in text channel.`
         );
+
+        try {
+            // we can still send ephemeral replies in channels we can't view, so sending message to user instead
+            await interaction.deferReply({ ephemeral: true });
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                        )
+                        .setColor(embedOptions.colors.warning)
+                ],
+                ephemeral: true
+            });
+        } catch (error) {
+            logger.error(
+                error,
+                'Failed to send ephemeral reply to user in channel that bot cannot view/send message in.'
+            );
+        }
+
         return true;
     }
 
