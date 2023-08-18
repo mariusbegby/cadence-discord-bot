@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.3...v3.7.4) (2023-08-18)
+
+
+### Minor changes and bug fixes
+
+* adjustments to error and permission handling ([6bcc489](https://github.com/mariusbegby/cadence-discord-bot/commit/6bcc489e840d9fa69fdaa1de002e2134ddf931b8))
+
 ## [3.7.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.2...v3.7.3) (2023-08-13)
 
 
