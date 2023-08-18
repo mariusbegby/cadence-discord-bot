@@ -36,7 +36,9 @@ exports.cannotSendMessageInChannel = async (interaction) => {
 
         try {
             // we can still send ephemeral replies in channels we can't view, so sending message to user instead
-            await interaction.deferReply({ ephemeral: true });
+            if (!interaction.deferred && !interaction.replied) {
+                await interaction.deferReply({ ephemeral: true });
+            }
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -48,10 +50,15 @@ exports.cannotSendMessageInChannel = async (interaction) => {
                 ephemeral: true
             });
         } catch (error) {
-            logger.error(
-                error,
-                'Failed to send ephemeral reply to user in channel that bot cannot view/send message in.'
-            );
+            if(error.message == "The reply to this interaction has already been sent or deferred.") {
+                logger.warn('Error while sending ephemereal message about insufficient permissions to send message in channel.');
+                logger.debug(error);
+            } else {
+                logger.error(
+                    error,
+                    'Failed to send ephemeral reply to user in channel that bot cannot view/send message in.'
+                );
+            }
         }
 
         return true;
