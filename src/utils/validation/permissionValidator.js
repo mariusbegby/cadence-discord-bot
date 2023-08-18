@@ -50,7 +50,7 @@ exports.cannotSendMessageInChannel = async (interaction) => {
                 ephemeral: true
             });
         } catch (error) {
-            if(error.message == "The reply to this interaction has already been sent or deferred.") {
+            if(error.message == 'The reply to this interaction has already been sent or deferred.') {
                 logger.warn('Error while sending ephemereal message about insufficient permissions to send message in channel.');
                 logger.debug(error);
             } else {
