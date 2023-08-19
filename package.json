@@ -30,6 +30,7 @@
         "@discord-player/opus": "^0.1.1",
         "@discordjs/rest": "^2.0.0",
         "@distube/ytdl-core": "^4.11.17",
+        "config": "^3.3.9",
         "discord-player": "^6.6.3-dev.0",
         "discord-voip": "^0.1.2",
         "discord.js": "^14.12.1",

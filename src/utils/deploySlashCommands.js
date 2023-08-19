@@ -3,7 +3,8 @@ const logger = require('../services/logger');
 const fs = require('node:fs');
 const path = require('node:path');
 const { REST, Routes } = require('discord.js');
-const { systemOptions } = require('../config');
+const config = require('config');
+const systemOptions = config.get('systemOptions');
 
 const slashCommands = [];
 const systemCommands = [];

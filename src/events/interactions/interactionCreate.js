@@ -1,5 +1,7 @@
 const logger = require('../../services/logger');
-const { embedOptions, botOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const botOptions = config.get('botOptions');
 const { cannotSendMessageInChannel } = require('../../utils/validation/permissionValidator');
 const { Events, EmbedBuilder } = require('discord.js');
 

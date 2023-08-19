@@ -1,5 +1,6 @@
 const pino = require('pino');
-const { loggerOptions } = require('../config');
+const config = require('config');
+const loggerOptions = config.get('loggerOptions');
 
 const targets = [
     {

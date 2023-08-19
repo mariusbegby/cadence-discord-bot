@@ -1,5 +1,6 @@
 const logger = require('../../services/logger');
-const { loadTestOptions } = require('../../config');
+const config = require('config');
+const loadTestOptions = config.get('loadTestOptions');
 
 exports.startLoadTest = async (client) => {
     if (!loadTestOptions.enabled) {

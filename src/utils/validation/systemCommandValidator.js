@@ -1,4 +1,6 @@
-const { embedOptions, systemOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const systemOptions = config.get('systemOptions');
 const { EmbedBuilder } = require('discord.js');
 
 exports.notValidGuildId = async (interaction) => {
