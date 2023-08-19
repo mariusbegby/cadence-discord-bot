@@ -1,5 +1,6 @@
 const logger = require('../../services/logger');
-const { embedOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
 const { EmbedBuilder } = require('discord.js');
 
 exports.cannotJoinVoiceOrTalk = async (interaction) => {

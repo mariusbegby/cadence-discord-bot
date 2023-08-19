@@ -1,4 +1,6 @@
-const { embedOptions, botOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const botOptions = config.get('botOptions');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -25,14 +27,21 @@ module.exports = {
 
         const commandListString = commandList.join('\n');
 
+        const supportServerString = botOptions.serverInviteUrl
+            ? `${embedOptions.icons.support} **Support server**\nJoin the support server for help or to suggest improvements: \n**${botOptions.serverInviteUrl}**\n\n`
+            : '';
+        const addBotString = botOptions.botInviteUrl
+            ? `${embedOptions.icons.bot} **Enjoying ${botOptions.name}?**\nAdd me to another server: \n**[Click me!](${botOptions.botInviteUrl})**`
+            : '';
+
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
                         `${embedOptions.icons.rule} **List of commands**\n` +
                             `${commandListString}\n\n` +
-                            `${embedOptions.icons.support} **Support server**\nJoin the support server for help or to suggest improvements: \n**${botOptions.serverInviteUrl}**\n\n` +
-                            `${embedOptions.icons.bot} **Enjoying ${botOptions.name}?**\nAdd me to another server: \n**[Click me!](${botOptions.botInviteUrl})**`
+                            supportServerString +
+                            addBotString
                     )
                     .setColor(embedOptions.colors.info)
             ]

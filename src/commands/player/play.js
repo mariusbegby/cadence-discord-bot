@@ -1,5 +1,8 @@
 const logger = require('../../services/logger');
-const { embedOptions, playerOptions, botOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const botOptions = config.get('botOptions');
+const playerOptions = config.get('playerOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionValidator');
 const { transformQuery } = require('../../utils/validation/searchQueryValidator');

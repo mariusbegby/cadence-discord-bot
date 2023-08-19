@@ -1,17 +1,15 @@
 const { ActivityType, PresenceUpdateStatus } = require('discord.js');
 // Description: Config file for Cadence Discord bot.
 
-// General options for information about the bot.
+// General metadata about the bot displayed in certain embeds.
 module.exports.botOptions = {
     name: 'Cadence',
-    websiteUrl: 'Unknown',
-    botInviteUrl: 'Unknown',
-    serverInviteUrl: 'Unknown'
+    botInviteUrl: '',
+    serverInviteUrl: ''
 };
 
-// Sharding options for the bot.
-// See https://old.discordjs.dev/#/docs/discord.js/main/typedef/ShardingManagerOptions for valid options.
-// Do not change if you don't know what you are doing.
+// Configuration for bot sharding. Refers to splitting a Discord bot into multiple processes.
+// For more information, refer to Discord.js sharding documentation: https://discordjs.guide/sharding/
 module.exports.shardingOptions = {
     totalShards: 'auto',
     shardList: 'auto',
@@ -19,24 +17,24 @@ module.exports.shardingOptions = {
     respawn: true
 };
 
-// Logging options for the bot, can set logging level to file and console separately.
+// Configuration for logging bot actions.
+// You can set logging level to file and console separately.
 module.exports.loggerOptions = {
     minimumLogLevel: 'debug',
     minimumLogLevelConsole: 'info'
 };
 
-// systemGuildIds: Array of guild ids where system commands should be available.
-// systemMessageChannelId: Channel id where system messages should be sent, such as error events.
-// systemUserId: User id of the system administrator, used for pining on certain system messages.
+// Options for identifying specific system command.
 module.exports.systemOptions = {
-    systemGuildIds: ['Guild id where system commands can be used'],
-    systemMessageChannelId: 'Channel id where system messages will be sent',
-    systemUserId: 'User id of the system administrator which will receive pings on certain system messages'
+    // List of guild IDs where system commands can be executed. e.g. ['123456789012345678', '123456789012345678']
+    systemGuildIds: [],
+    // Channel for sending system messages, such as bot errors and disconnect events. e.g. '123456789012345678'
+    systemMessageChannelId: '',
+    // Bot administrator user ID for specific notifications through mentions in system channel. e.g. '123456789012345678'
+    systemUserId: ''
 };
 
-// Options for presence/activity status. You can change from watching to listening, playing, etc.
-// See https://discord-api-types.dev/api/discord-api-types-v10/enum/ActivityType for valid activity types.
-// See https://discord-api-types.dev/api/discord-api-types-v10/enum/PresenceUpdateStatus for valid presence status.
+// Configuration for the bot's presence and activity status.
 module.exports.presenceStatusOptions = {
     status: PresenceUpdateStatus.Online,
     activities: [
@@ -47,7 +45,8 @@ module.exports.presenceStatusOptions = {
     ]
 };
 
-// Options for embed messages, like colors and custom emojis.
+// Configurations for visual embed messages.
+// Includes design elements like colors and custom emojis/symbols.
 module.exports.embedOptions = {
     colors: {
         success: '#23A55A',
@@ -101,14 +100,14 @@ module.exports.embedOptions = {
     }
 };
 
-// Options for the discord-player player.
+// Configuration for the audio player. Includes behavior upon various events and UI components.
 module.exports.playerOptions = {
     leaveOnEmpty: true,
-    leaveOnEmptyCooldown: 300_000,
+    leaveOnEmptyCooldown: 1_800_000,
     leaveOnEnd: true,
-    leaveOnEndCooldown: 300_000,
+    leaveonEndCooldown: 1_800_000,
     leaveOnStop: true,
-    leaveOnStopCooldown: 300_000,
+    leaveOnStopCooldown: 1_800_000,
     defaultVolume: 50,
     maxQueueSize: 10_000,
     maxHistorySize: 100,
@@ -124,7 +123,7 @@ module.exports.playerOptions = {
     }
 };
 
-// Options to be used by the ffmpeg, and available ffmpeg filters shown in filter commands.
+// Configuration for ffmpeg filters for audio processing.
 module.exports.ffmpegFilterOptions = {
     threadAmount: '2',
     availableFilters: [
@@ -185,7 +184,8 @@ module.exports.ffmpegFilterOptions = {
     ]
 };
 
-// Options for load testing the bot. If enabled, the bot will join the specified channels and play specified track source.
+// Configuration for load testing. Enables the bot to simulate certain behaviors for testing purposes.
+// If enabled, the bot will join the specified channels and play specified track.
 module.exports.loadTestOptions = {
     enabled: false,
     trackUrl: 'https://www.youtube.com/watch?v=tTR4D9h3zAE',

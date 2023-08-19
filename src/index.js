@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { shardingOptions } = require('./config');
+const shardingOptions = require('config').get('shardingOptions');
 const logger = require('./services/logger');
 const { ShardingManager, ShardEvents } = require('discord.js');
 
