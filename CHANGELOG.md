@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.0...v4.0.1) (2023-08-19)
+
+
+### Miscellaneous
+
+* Update README.md ([88d0019](https://github.com/mariusbegby/cadence-discord-bot/commit/88d00190365f6e09f005e26ef9076ad2370dd306))
+
 ## [4.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.4...v4.0.0) (2023-08-19)
 
 
