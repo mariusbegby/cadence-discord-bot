@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.4...v4.0.0) (2023-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Added new config system with config npm package
+
+### Features
+
+* Added new config system with config npm package ([2da7cb3](https://github.com/mariusbegby/cadence-discord-bot/commit/2da7cb360a0bdccd44888f460c0778a465e25079))
+
 ## [3.7.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.3...v3.7.4) (2023-08-18)
 
 
