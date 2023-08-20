@@ -18,8 +18,9 @@ COPY . .
 RUN --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-# Deploy Slash Commands to Discord API
-RUN npm run deploy
+# Cleanup of unneeded packages and apk cache
+RUN apk del python3 make build-base git && \
+    rm -rf /var/cache/apk/* /tmp/*
 
-# Startup command to run the bot
-CMD [ "npm", "run", "start" ]
+# Startup command to run the bot after deploying slash commands
+CMD /bin/sh -c "npm run deploy && npm run start"
