@@ -24,5 +24,6 @@ jobs:
             - name: Build and Push Docker Image
               run: |
                   docker build -t mariusbegby/cadence:${{ env.RELEASE_VERSION }} .
+                  docker tag mariusbegby/cadence:${{ env.RELEASE_VERSION }} mariusbegby/cadence:latest
                   docker push mariusbegby/cadence:${{ env.RELEASE_VERSION }}
                   docker push mariusbegby/cadence:latest
