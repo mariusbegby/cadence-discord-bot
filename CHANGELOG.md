@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.1...v4.0.2) (2023-08-20)
+
+
+### Minor changes and bug fixes
+
+* Update Dockerfile ([5ff66ce](https://github.com/mariusbegby/cadence-discord-bot/commit/5ff66ce5ba2ccab07203fe7b7a3d55003a369c22))
+
 ## [4.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.0...v4.0.1) (2023-08-19)
 
 
