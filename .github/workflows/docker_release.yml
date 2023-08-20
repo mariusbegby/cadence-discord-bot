@@ -1,9 +1,8 @@
 name: Build and Push Docker Image on Release
 
 on:
-    push:
-        tags:
-            - 'v*'
+    release:
+        types: [published]
 
 jobs:
     release:
