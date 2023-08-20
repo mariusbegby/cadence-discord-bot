@@ -1,0 +1,31 @@
+# Include any files or directories that you don't want to be copied to your
+# container here (e.g., local build artifacts, temporary files, etc.).
+#
+# For more help, visit the .dockerignore file reference guide at
+# https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+**/.dockerignore
+**/.env.example
+**/.git
+**/.gitignore
+**/.gitattributes
+**/.github
+**/.vscode
+**/Dockerfile*
+**/node_modules
+**/npm-debug.log
+**/build
+**/dist
+**/logs
+**/assets
+.editorconfig
+.eslintrc.json
+.prettierrc
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE.md
+PRIVACY-POLICY.md
+README.md
+SECURITY.md
+TERMS-OF-SERVICE.md
