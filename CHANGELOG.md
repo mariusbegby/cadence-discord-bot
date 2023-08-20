@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.4...v4.0.5) (2023-08-20)
+
+
+### Minor changes and bug fixes
+
+* change contributor workflow to run once daily ([d326be1](https://github.com/mariusbegby/cadence-discord-bot/commit/d326be1d16cf9e26b5488a1a1455d1dcbb5db952))
+
+
+### Miscellaneous
+
+* update docker release workflow ([e755e2e](https://github.com/mariusbegby/cadence-discord-bot/commit/e755e2e6937122adba9bf1a9656e585c1c49af51))
+
 ## [4.0.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.3...v4.0.4) (2023-08-20)
 
 
