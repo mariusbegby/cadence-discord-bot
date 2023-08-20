@@ -1,5 +1,6 @@
 const logger = require('../../services/logger');
-const { embedOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
 const { getUptimeFormatted } = require('../../utils/system/getUptimeFormatted');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const osu = require('node-os-utils');

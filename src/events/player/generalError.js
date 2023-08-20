@@ -1,5 +1,8 @@
 const logger = require('../../services/logger');
-const { embedOptions, systemOptions, botOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const botOptions = config.get('botOptions');
+const systemOptions = config.get('systemOptions');
 const { EmbedBuilder } = require('discord.js');
 
 // Emitted when the player queue encounters error (general error with queue)

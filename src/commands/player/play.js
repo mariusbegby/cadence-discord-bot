@@ -1,5 +1,8 @@
 const logger = require('../../services/logger');
-const { embedOptions, playerOptions, botOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const botOptions = config.get('botOptions');
+const playerOptions = config.get('playerOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionValidator');
 const { transformQuery } = require('../../utils/validation/searchQueryValidator');
@@ -97,6 +100,7 @@ module.exports = {
             });
         }
 
+        /* seems to be supported with @distube/ytdl-core, keeping it commented out to test functionality
         if (
             searchResult.tracks[0].raw.live &&
             searchResult.tracks[0].raw.duration === 0 &&
@@ -116,6 +120,7 @@ module.exports = {
                 ]
             });
         }
+        */
 
         queue = useQueue(interaction.guild.id);
         let queueSize = queue?.size ?? 0;

@@ -1,5 +1,87 @@
 # Changelog
 
+## [4.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.0...v4.0.1) (2023-08-19)
+
+
+### Miscellaneous
+
+* Update README.md ([88d0019](https://github.com/mariusbegby/cadence-discord-bot/commit/88d00190365f6e09f005e26ef9076ad2370dd306))
+
+## [4.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.4...v4.0.0) (2023-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Added new config system with config npm package
+
+### Features
+
+* Added new config system with config npm package ([2da7cb3](https://github.com/mariusbegby/cadence-discord-bot/commit/2da7cb360a0bdccd44888f460c0778a465e25079))
+
+## [3.7.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.3...v3.7.4) (2023-08-18)
+
+
+### Minor changes and bug fixes
+
+* adjustments to error and permission handling ([6bcc489](https://github.com/mariusbegby/cadence-discord-bot/commit/6bcc489e840d9fa69fdaa1de002e2134ddf931b8))
+
+## [3.7.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.2...v3.7.3) (2023-08-13)
+
+
+### Minor changes and bug fixes
+
+* check if interaction has timed out or can be replied to ([c0894d2](https://github.com/mariusbegby/cadence-discord-bot/commit/c0894d214a60290947e800a09e1747dda2702cce))
+
+## [3.7.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.1...v3.7.2) (2023-08-12)
+
+
+### Minor changes and bug fixes
+
+* update mediaplex to latest version ([6b48491](https://github.com/mariusbegby/cadence-discord-bot/commit/6b484919768b3477e91c002db5fc2f45cdf4436a))
+
+## [3.7.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.7.0...v3.7.1) (2023-08-12)
+
+
+### Minor changes and bug fixes
+
+* remove unused import ([3e6dc6e](https://github.com/mariusbegby/cadence-discord-bot/commit/3e6dc6e926ddfda3ce70c0b3a5725c9d0d957e80))
+
+## [3.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.5...v3.7.0) (2023-08-12)
+
+
+### Features
+
+* Change from yt-stream to @distube/ytdl-core for streaming audio ([fa15af5](https://github.com/mariusbegby/cadence-discord-bot/commit/fa15af5b1445c6c7ec5f2ea68cbefa5fe5c2b190))
+
+## [3.6.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.4...v3.6.5) (2023-08-11)
+
+
+### Minor changes and bug fixes
+
+* Updated dependencies, use discord-player new dev versions ([c04b3c9](https://github.com/mariusbegby/cadence-discord-bot/commit/c04b3c944cc5aaf39e320b3ce8358bc7f9f5c6d2))
+
+## [3.6.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.3...v3.6.4) (2023-08-08)
+
+
+### Minor changes and bug fixes
+
+* Updated dependencies ([7b8f86b](https://github.com/mariusbegby/cadence-discord-bot/commit/7b8f86bd1d933ab98acce719303e390a01312f91))
+
+
+### Miscellaneous
+
+* **deps:** bump discord.js from 14.11.0 to 14.12.1 ([f799c95](https://github.com/mariusbegby/cadence-discord-bot/commit/f799c955a9c8cc2d1800375e08de7110b6bab5ec))
+* **deps:** bump pino from 8.14.2 to 8.15.0 ([39a3362](https://github.com/mariusbegby/cadence-discord-bot/commit/39a336248e098a00c3323ee4319ad725fdbb8f6b))
+
+## [3.6.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.2...v3.6.3) (2023-08-01)
+
+
+### Miscellaneous
+
+* add workflow for auto adding contributors to readme ([fa7146e](https://github.com/mariusbegby/cadence-discord-bot/commit/fa7146ea98defc4615d598be96697ed9bbb1ec47))
+* **deps-dev:** bump eslint from 8.45.0 to 8.46.0 ([50587b5](https://github.com/mariusbegby/cadence-discord-bot/commit/50587b533956b0ab218d78603c62ca8f099b9fbc))
+* **deps:** bump pino from 8.14.1 to 8.14.2 ([493e374](https://github.com/mariusbegby/cadence-discord-bot/commit/493e374a9d1c5d5e3f6fcbe466cc6ea2ac6f9eea))
+
 ## [3.6.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v3.6.1...v3.6.2) (2023-07-30)
 
 

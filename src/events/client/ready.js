@@ -1,5 +1,9 @@
 const logger = require('../../services/logger');
-const { embedOptions, systemOptions, presenceStatusOptions, loadTestOptions } = require('../../config');
+const config = require('config');
+const embedOptions = config.get('embedOptions');
+const systemOptions = config.get('systemOptions');
+const presenceStatusOptions = config.get('presenceStatusOptions');
+const loadTestOptions = config.get('loadTestOptions');
 const { postBotStats } = require('../../utils/other/postBotStats.js');
 const { startLoadTest } = require('../../utils/other/startLoadTest');
 const { Events, EmbedBuilder } = require('discord.js');
