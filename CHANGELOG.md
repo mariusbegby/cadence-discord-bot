@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.3...v4.0.4) (2023-08-20)
+
+
+### Miscellaneous
+
+* **main:** release 4.0.3 ([7bcd28d](https://github.com/mariusbegby/cadence-discord-bot/commit/7bcd28df7677b2ae828bdc3467bfb9c18c94da89))
+* update docker release workflow ([1853062](https://github.com/mariusbegby/cadence-discord-bot/commit/185306253f90b55d31792e68bff8b292e427ca87))
+
 ## [4.0.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.2...v4.0.3) (2023-08-20)
 
 
