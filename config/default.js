@@ -1,4 +1,6 @@
+// Import Discord.js types for TypeScript support.
 const { ActivityType, PresenceUpdateStatus } = require('discord.js');
+
 // Description: Config file for Cadence Discord bot.
 
 // General metadata about the bot displayed in certain embeds.
@@ -35,6 +37,7 @@ module.exports.systemOptions = {
 };
 
 // Configuration for the bot's presence and activity status.
+// Incude const { ActivityType, PresenceUpdateStatus } = require('discord.js'); at the top of config file.
 module.exports.presenceStatusOptions = {
     status: PresenceUpdateStatus.Online,
     activities: [
