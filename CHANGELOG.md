@@ -9,6 +9,20 @@
 * Update Dockerfile and add .dockerignore ([054a07d](https://github.com/mariusbegby/cadence-discord-bot/commit/054a07dd77ce35ebe498837e2bc3fe8bb29dd621))
 * Update Dockerfile to deploy as part of startup ([6837ec6](https://github.com/mariusbegby/cadence-discord-bot/commit/6837ec6cc88a8f94d1d86c796c8294d73da73913))
 
+
+### Miscellaneous
+
+* update workflow for docker build and publish ([c361a41](https://github.com/mariusbegby/cadence-discord-bot/commit/c361a4148da5a2395699b07176bee67bd1353a45))
+
+## [4.0.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.2...v4.0.3) (2023-08-20)
+
+
+### Minor changes and bug fixes
+
+* Remove git from Dockerfile ([1bfa8ed](https://github.com/mariusbegby/cadence-discord-bot/commit/1bfa8ede5af29b1a179f4c11fb2c9ebbe782b540))
+* Update Dockerfile and add .dockerignore ([054a07d](https://github.com/mariusbegby/cadence-discord-bot/commit/054a07dd77ce35ebe498837e2bc3fe8bb29dd621))
+* Update Dockerfile to deploy as part of startup ([6837ec6](https://github.com/mariusbegby/cadence-discord-bot/commit/6837ec6cc88a8f94d1d86c796c8294d73da73913))
+
 ## [4.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.1...v4.0.2) (2023-08-20)
 
 
