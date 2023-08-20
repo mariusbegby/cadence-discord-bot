@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.0.6](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.5...v4.0.6) (2023-08-20)
+
+
+### Miscellaneous
+
+* add manual trigger ([d92a6c2](https://github.com/mariusbegby/cadence-discord-bot/commit/d92a6c284497e3845cf6e7d4d7a04aff52e862a8))
+* remove dispatch ([5fbd3e0](https://github.com/mariusbegby/cadence-discord-bot/commit/5fbd3e0d819e9e483e87cb28aad8eed3f89735d4))
+* update release-please to use custom token. ([142efb8](https://github.com/mariusbegby/cadence-discord-bot/commit/142efb8e961664b8312ab7483e9f298f56b3278b))
+
 ## [4.0.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.4...v4.0.5) (2023-08-20)
 
 
