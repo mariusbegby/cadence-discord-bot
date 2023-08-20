@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.7](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.6...v4.0.7) (2023-08-20)
+
+
+### Minor changes and bug fixes
+
+* add latest tag to built docker image before pushing ([ca1fd84](https://github.com/mariusbegby/cadence-discord-bot/commit/ca1fd84a3000434cc85e6bebdb4b2beb5534c3ee))
+
 ## [4.0.6](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.5...v4.0.6) (2023-08-20)
 
 
