@@ -1,4 +1,6 @@
 # syntax=docker/dockerfile:1
+# Dockerfile for https://hub.docker.com/r/mariusbegby/cadence/
+# Images automatically published: docker pull mariusbegby/cadence
 
 # Using Node 18.16 (LTS) on Alpine base
 ARG NODE_VERSION=18.16
