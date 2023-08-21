@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.0...v4.1.1) (2023-08-21)
+
+
+### Miscellaneous
+
+* **deps:** bump discord.js from 14.12.1 to 14.13.0 ([9839b98](https://github.com/mariusbegby/cadence-discord-bot/commit/9839b986bfb2a7ddf744fec65956b63f9df18128))
+
 ## [4.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.7...v4.1.0) (2023-08-21)
 
 
