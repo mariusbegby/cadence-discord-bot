@@ -46,7 +46,7 @@ Once the bot has joined your Discord server, there is no additional setup needed
 **This bot is open-source, and if you want to host it yourself, here's how you can do it:**
 
 1. Install [Node.js](https://nodejs.org/en/download/) v18.16 LTS.
-2. Install [FFmpeg](https://ffmpeg.org/download.html) latest release build.
+2. Install [FFmpeg](https://ffmpeg.org/download.html) latest release build. Make sure you can run `ffmpeg` in your terminal, for Windows, add it to your PATH.
 3. Clone this repository and install its dependencies using `npm install`. If you encounter any errors, try use `npm install --legacy-peer-deps`.
 4. Setup your `.env` file in the root directory to configure bot token `DISCORD_BOT_TOKEN` and client id `DISCORD_APPLICATION_ID`. You obtain these from the [Discord developer portal](https://discord.com/developers/applications). The `.env.example` file provides an example configuration.
 5. To make the commands accessible on Discord servers, deploy slash commands using `npm run deploy`.
