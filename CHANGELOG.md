@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.1.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.1...v4.1.2) (2023-08-21)
+
+
+### Minor changes and bug fixes
+
+* Fix bug in /shards when shard count is 1 on shown page ([623f4e2](https://github.com/mariusbegby/cadence-discord-bot/commit/623f4e200fbf33613370c974b6c483748fd96cce))
+* handle message component interactions logging ([94ef202](https://github.com/mariusbegby/cadence-discord-bot/commit/94ef202c7f8443a40bf813247950fa6867d97bb3))
+* handle no queue dispatcher error when /queue and bot not in vc ([bd249e6](https://github.com/mariusbegby/cadence-discord-bot/commit/bd249e686701f3473a2c5c24eba5a996d7c1732d))
+
 ## [4.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.0...v4.1.1) (2023-08-21)
 
 
