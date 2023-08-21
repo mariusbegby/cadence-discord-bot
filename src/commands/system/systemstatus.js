@@ -43,6 +43,7 @@ module.exports = {
         const discordPlayerVersion = dependencies['discord-player'];
         const extractorVersion = dependencies['@discord-player/extractor'];
         const mediaplexVersion = dependencies['mediaplex'];
+        const distubeYtdlVersion = dependencies['@distube/ytdl-core'];
 
         await client.shard
             .broadcastEval(() => {
@@ -105,7 +106,8 @@ module.exports = {
             `**┗ ${opusVersion}** @discord-player/opus\n` +
             `**┗ ${extractorVersion}** @discord-player/extractor\n` +
             `**${voiceVersion}** discord-voip\n` +
-            `**${mediaplexVersion}** mediaplex`;
+            `**${mediaplexVersion}** mediaplex\n` +
+            `**${distubeYtdlVersion}** @distube/ytdl-core`;
 
         const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
 
