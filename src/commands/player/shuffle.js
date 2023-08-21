@@ -7,7 +7,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
 
 module.exports = {
-    isNew: true,
+    isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
         .setName('shuffle')

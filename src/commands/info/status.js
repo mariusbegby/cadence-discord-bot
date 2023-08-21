@@ -7,7 +7,7 @@ const osu = require('node-os-utils');
 const { version } = require('../../../package.json');
 
 module.exports = {
-    isNew: true,
+    isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
         .setName('status')

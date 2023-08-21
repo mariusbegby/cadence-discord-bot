@@ -8,7 +8,7 @@ const { useMainPlayer, useQueue, QueryType } = require('discord-player');
 const { lyricsExtractor } = require('@discord-player/extractor');
 
 module.exports = {
-    isNew: true,
+    isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
         .setName('lyrics')
