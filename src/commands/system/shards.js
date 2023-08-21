@@ -81,22 +81,34 @@ module.exports = {
         const evenShardIndexesString = evenShardIndexes.map(shardInfoToString).join('\n') + 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ';
         const oddShardIndexesString = oddShardIndexes.map(shardInfoToString).join('\n');
 
+        const embedFields = [];
+
+        if (currentPageShards.length === 1) {
+            embedFields.push({
+                name: ' ',
+                value: currentPageShards.map(shardInfoToString).join('\n'),
+                inline: false
+            });
+        } else {
+            embedFields.push(
+                {
+                    name: ' ',
+                    value: evenShardIndexesString,
+                    inline: true
+                },
+                {
+                    name: ' ',
+                    value: oddShardIndexesString,
+                    inline: true
+                }
+            );
+        }
+
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(`**${embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`)
-                    .addFields(
-                        {
-                            name: ' ',
-                            value: evenShardIndexesString,
-                            inline: true
-                        },
-                        {
-                            name: ' ',
-                            value: oddShardIndexesString,
-                            inline: true
-                        }
-                    )
+                    .addFields(...embedFields)
                     .setColor(embedOptions.colors.info)
                     .setFooter({ text: `Shard id: ${client.shard.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
             ]

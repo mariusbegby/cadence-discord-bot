@@ -23,8 +23,9 @@ exports.notInVoiceChannel = async (interaction) => {
 };
 
 exports.notInSameVoiceChannel = async (interaction, queue) => {
-    if (!queue.dispatcher) {
-        return true;
+    if (!queue || !queue.dispatcher) {
+        // If there is no queue or bot is not in voice channel, then there is no need to check if user is in same voice channel.
+        return false;
     }
 
     if (interaction.member.voice.channel.id !== queue.dispatcher.channel.id) {

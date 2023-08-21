@@ -9,16 +9,27 @@ module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction, { client }) => {
+        if (interaction.isMessageComponent()) {
+            logger.info(
+                `[Shard ${interaction.guild.shardId}] Guild ${
+                    interaction.guild.id
+                }> Message component interaction created for id ${interaction.customId}${
+                    interaction.values ? ' and values ' + interaction.values : ''
+                }.`
+            );
+            return;
+        }
+
         const command = client.commands.get(interaction.commandName);
         if (!command) {
             logger.warn(
-                `[Shard ${interaction.guild.shardId}] Interaction created but command '${interaction.commandName}' was not found.`
+                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction created but command '${interaction.commandName}' was not found.`
             );
             return;
         }
 
         if (interaction.isAutocomplete()) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete created.`);
+            logger.debug(`[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete created.`);
             try {
                 await command.autocomplete({ interaction, client });
             } catch (error) {
@@ -27,7 +38,7 @@ module.exports = {
                     error.message === 'Interaction has already been acknowledged.'
                 ) {
                     logger.debug(
-                        `[Shard ${interaction.guild.shardId}] Autocomplete failed to be responded to, unknown interaction or already acknowledged.`
+                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete failed to be responded to, unknown interaction or already acknowledged.`
                     );
                     return;
                 } else {
@@ -36,11 +47,10 @@ module.exports = {
                 return;
             }
         } else if (interaction.isChatInputCommand()) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] Interaction created.`);
+            logger.debug(`[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction created.`);
             try {
                 await interaction.deferReply();
 
-                // causing issues with unknown interaction error?
                 if (await cannotSendMessageInChannel(interaction)) {
                     return;
                 }
@@ -62,7 +72,7 @@ module.exports = {
 
                 if (!interaction.deferred || !interaction.replied) {
                     logger.warn(
-                        `[Shard ${interaction.guild.shardId}] Interaction was not deferred or replied to, and an error was thrown.`
+                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction was not deferred or replied to, and an error was thrown.`
                     );
                     return;
                 }
@@ -72,7 +82,7 @@ module.exports = {
                     return;
                 } else if (interaction.deferred) {
                     logger.info(
-                        `[Shard ${interaction.guild.shardId}] Interaction was deferred, editing reply and sending Uh-oh message.`
+                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction was deferred, editing reply and sending Uh-oh message.`
                     );
                     await interaction.editReply({
                         embeds: [
@@ -85,7 +95,7 @@ module.exports = {
                     });
                 } else {
                     logger.info(
-                        `[Shard ${interaction.guild.shardId}] Interaction was not deferred or replied, sending new reply with Uh-oh message.`
+                        `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction was not deferred or replied, sending new reply with Uh-oh message.`
                     );
                     await interaction.reply({
                         embeds: [
@@ -101,7 +111,7 @@ module.exports = {
         } else {
             logger.warn(
                 interaction,
-                `[Shard ${interaction.guild.shardId}] Interaction created but was not a chat input or autocomplete interaction.`
+                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Interaction created but was not a chat input or autocomplete interaction.`
             );
         }
     }
