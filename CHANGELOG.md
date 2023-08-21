@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.7...v4.1.0) (2023-08-21)
+
+
+### Features
+
+* added /shards system command ([173b234](https://github.com/mariusbegby/cadence-discord-bot/commit/173b234b0da7571934cb9e63580ae3dc8ae61662))
+* Update shards command ([825db5e](https://github.com/mariusbegby/cadence-discord-bot/commit/825db5ea5a45015d22149b9e68330faf8b22d2bd))
+
+
+### Minor changes and bug fixes
+
+* add distube ytdl core version to system status ([7eb4d48](https://github.com/mariusbegby/cadence-discord-bot/commit/7eb4d4858ffa74223da19d5ca8e160d566150006))
+
 ## [4.0.7](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.0.6...v4.0.7) (2023-08-20)
 
 
