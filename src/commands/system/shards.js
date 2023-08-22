@@ -13,12 +13,22 @@ module.exports = {
         .setDescription('Show information about the running shards.')
         .setDMPermission(false)
         .setNSFW(false)
-        .addBooleanOption((option) =>
+        .addStringOption((option) =>
             option
                 .setName('sort')
-                .setDescription('Whether or not to sort by most active voice connections.')
+                .setDescription('If specified, what to sort the shards by.')
                 .setRequired(false)
+                .addChoices(
+                    { name: 'None (Shard ID)', value: 'none' },
+                    { name: 'Memory usage', value: 'memory' },
+                    { name: 'Voice Connections', value: 'connections' },
+                    { name: 'Tracks', value: 'tracks' },
+                    { name: 'Listeners', value: 'listeners' },
+                    { name: 'Guilds', value: 'guilds' },
+                    { name: 'Members', value: 'members' }
+                )
         )
+
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
@@ -48,12 +58,38 @@ module.exports = {
             })
             .then((results) => {
                 shardInfoList = results;
-                const sortByActiveConnections = interaction.options.getBoolean('sort', false);
-                if (sortByActiveConnections) {
-                    shardInfoList = shardInfoList.sort(
-                        (a, b) => b.playerStatistics.activeVoiceConnections - a.playerStatistics.activeVoiceConnections
-                    );
+
+                switch (interaction.options.getString('sort')) {
+                    case 'memory':
+                        shardInfoList = shardInfoList.sort((a, b) => b.memUsage - a.memUsage);
+                        break;
+                    case 'connections':
+                        shardInfoList = shardInfoList.sort(
+                            (a, b) =>
+                                b.playerStatistics.activeVoiceConnections - a.playerStatistics.activeVoiceConnections
+                        );
+                        break;
+                    case 'tracks':
+                        shardInfoList = shardInfoList.sort(
+                            (a, b) => b.playerStatistics.totalTracks - a.playerStatistics.totalTracks
+                        );
+                        break;
+                    case 'listeners':
+                        shardInfoList = shardInfoList.sort(
+                            (a, b) => b.playerStatistics.totalListeners - a.playerStatistics.totalListeners
+                        );
+                        break;
+                    case 'guilds':
+                        shardInfoList = shardInfoList.sort((a, b) => b.guildCount - a.guildCount);
+                        break;
+                    case 'members':
+                        shardInfoList = shardInfoList.sort((a, b) => b.guildMemberCount - a.guildMemberCount);
+                        break;
+                    default:
+                        shardInfoList = shardInfoList.sort((a, b) => a.shardId - b.shardId);
+                        break;
                 }
+
                 logger.debug(`[Shard ${client.shard.ids[0]}] Fetched shardInfo from each shard.`);
             })
             .catch((error) => {
