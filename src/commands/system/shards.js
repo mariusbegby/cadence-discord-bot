@@ -74,7 +74,7 @@ module.exports = {
             string += `**Shard ${shard.shardId}** - Guilds: ${shard.guildCount.toLocaleString(
                 'en-US'
             )} (${shard.guildMemberCount.toLocaleString('en-US')})\n`;
-            string += `**Memory:** ${shard.memUsage.toLocaleString('en-US')} MB\n`;
+            string += `**Node.js memory:** ${shard.memUsage.toLocaleString('en-US')} MB\n`;
             string += `**┣** Connections: ${shard.playerStatistics.activeVoiceConnections.toLocaleString('en-US')}\n`;
             string += `**┣** Tracks: ${shard.playerStatistics.totalTracks.toLocaleString('en-US')}\n`;
             string += `**┗** Listeners: ${shard.playerStatistics.totalListeners.toLocaleString('en-US')}\n`;
