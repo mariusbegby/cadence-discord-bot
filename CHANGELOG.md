@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.1.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.2...v4.1.3) (2023-08-22)
+
+
+### Minor changes and bug fixes
+
+* add more sorting options to /shards command ([3a93193](https://github.com/mariusbegby/cadence-discord-bot/commit/3a93193b845434c5ead65d3ffef0228ab37e8883))
+* add node.js process memory usage per shard ([c5a21ae](https://github.com/mariusbegby/cadence-discord-bot/commit/c5a21ae6c5cc185be8e1dbfc311cf0f871c3f433))
+
+
+### Miscellaneous
+
+* add comment to Dockerfile ([8a73e0b](https://github.com/mariusbegby/cadence-discord-bot/commit/8a73e0b256d666492bec6a28598aeb1bae9d6984))
+* change wording ([943ad0b](https://github.com/mariusbegby/cadence-discord-bot/commit/943ad0b5927c78c48e3757653b5a70a567d8cfa9))
+* removed unused asset ([adf1a48](https://github.com/mariusbegby/cadence-discord-bot/commit/adf1a48887047d5db3b8c10aa759513d970d6f60))
+* update new and beta status of commands ([6e3c465](https://github.com/mariusbegby/cadence-discord-bot/commit/6e3c46567e1b180bc3d9324bf8feb12393333582))
+
 ## [4.1.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.1...v4.1.2) (2023-08-21)
 
 
