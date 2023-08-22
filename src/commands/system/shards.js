@@ -31,8 +31,10 @@ module.exports = {
             .broadcastEval((shardClient) => {
                 /* eslint-disable no-undef */
                 let playerStats = player.generateStatistics();
+                const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
                 let shardInfo = {
                     shardId: shardClient.shard.ids[0],
+                    memUsage: nodeProcessMemUsageInMb,
                     guildCount: shardClient.guilds.cache.size,
                     guildMemberCount: shardClient.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
                     playerStatistics: {
@@ -52,7 +54,7 @@ module.exports = {
                         (a, b) => b.playerStatistics.activeVoiceConnections - a.playerStatistics.activeVoiceConnections
                     );
                 }
-                logger.debug(results, `[Shard ${client.shard.ids[0]}] Fetched shardInfo from each shard.`);
+                logger.debug(`[Shard ${client.shard.ids[0]}] Fetched shardInfo from each shard.`);
             })
             .catch((error) => {
                 logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
@@ -72,8 +74,9 @@ module.exports = {
             string += `**Shard ${shard.shardId}** - Guilds: ${shard.guildCount.toLocaleString(
                 'en-US'
             )} (${shard.guildMemberCount.toLocaleString('en-US')})\n`;
-            string += `**┗** Connections: ${shard.playerStatistics.activeVoiceConnections.toLocaleString('en-US')}\n`;
-            string += `**┗** Tracks: ${shard.playerStatistics.totalTracks.toLocaleString('en-US')}\n`;
+            string += `**Memory:** ${shard.memUsage.toLocaleString('en-US')} MB\n`;
+            string += `**┣** Connections: ${shard.playerStatistics.activeVoiceConnections.toLocaleString('en-US')}\n`;
+            string += `**┣** Tracks: ${shard.playerStatistics.totalTracks.toLocaleString('en-US')}\n`;
             string += `**┗** Listeners: ${shard.playerStatistics.totalListeners.toLocaleString('en-US')}\n`;
             return string;
         }
