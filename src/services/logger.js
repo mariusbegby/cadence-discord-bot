@@ -42,6 +42,24 @@ const targets = [
     }
 ];
 
+if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
+    targets.push({
+        target: 'pino-loki',
+        level: loggerOptions.minimumLogLevel,
+        options: {
+            sync: false,
+            batching: false,
+            interval: 5,
+
+            host: 'https://logs-prod-025.grafana.net',
+            basicAuth: {
+                username: process.env.LOKI_AUTH_USERNAME || '',
+                password: process.env.LOKI_AUTH_PASSWORD || ''
+            }
+        }
+    });
+}
+
 const transport = pino.transport({ targets });
 
 const logLevelConfig = {
