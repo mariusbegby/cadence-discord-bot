@@ -18,15 +18,17 @@ module.exports = {
         await client.user.setPresence(presenceStatusOptions);
 
         if (loadTestOptions.enabled) {
+            logger.info(`[Shard ${client.shard.ids[0]}] STARTING LOAD TEST.`);
             await startLoadTest(client);
         }
 
         const channel = await client.channels.cache.get(systemOptions.systemMessageChannelId);
+        logger.info(`[Shard ${client.shard.ids[0]}] ALL SHARDS READY`);
 
         // Check if the channel exists in curent shard and send a message
         if (channel) {
             logger.info(
-                `[Shard ${client.shard.ids[0]}] ALL SHARDS READY, sending system message to channel id ${channel.id}.`
+                `[Shard ${client.shard.ids[0]}] Sending system message for 'allShardsReady' to channel id ${channel.id}.`
             );
             channel.send({
                 embeds: [
