@@ -9,14 +9,13 @@ exports.registerClientCommands = (client) => {
 
     const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
     for (const folder of commandFolders) {
+        logger.trace(`[Shard ${client.shard.ids[0]}] Registering client commands for folder '${folder}'...`);
         const commandFiles = fs
             .readdirSync(path.resolve(`./src/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
             try {
-                logger.trace(`[Shard ${client.shard.ids[0]}] Registering command ${folder}/${file}...`);
-
                 // delete command from require cache
                 delete require.cache[require.resolve(`../commands/${folder}/${file}`)];
 
@@ -31,4 +30,6 @@ exports.registerClientCommands = (client) => {
             }
         }
     }
+
+    logger.trace(`[Shard ${client.shard.ids[0]}] Registering client commands complete.`);
 };

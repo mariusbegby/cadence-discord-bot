@@ -3,7 +3,7 @@ const { Player } = require('discord-player');
 
 exports.createPlayer = async (client) => {
     try {
-        logger.info(`[Shard ${client.shard.ids[0]}] Creating discord-player player...`);
+        logger.debug(`[Shard ${client.shard.ids[0]}] Creating discord-player player...`);
 
         const player = new Player(client, {
             useLegacyFFmpeg: false,

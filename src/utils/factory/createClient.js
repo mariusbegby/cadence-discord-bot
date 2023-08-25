@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 
 exports.createClient = async () => {
     try {
-        logger.info('Creating Discord.js client...');
+        logger.debug('Creating Discord.js client...');
 
         const client = new Discord.Client({
             intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
