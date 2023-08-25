@@ -23,7 +23,8 @@ module.exports.shardingOptions = {
 // You can set logging level to file and console separately.
 module.exports.loggerOptions = {
     minimumLogLevel: 'debug',
-    minimumLogLevelConsole: 'info'
+    minimumLogLevelConsole: 'info',
+    discordPlayerDebug: false
 };
 
 // Options for identifying specific system command.
@@ -99,7 +100,8 @@ module.exports.embedOptions = {
         sourceAppleMusic: '🎵',
         sourceYouTube: '🎵',
         sourceSoundCloud: '🎵',
-        sourceSpotify: '🎵'
+        sourceSpotify: '🎵',
+        liveTrack: '🔴',
     }
 };
 
