@@ -22,23 +22,6 @@ exports.createPlayer = async (client) => {
         // primarily to be able to use it in broadcastEval and other sharding methods
         global.player = player;
 
-        /* Seems to not be needed with @distube/ytdl-core, long duration videos work fine, keeping commented for now
-        onBeforeCreateStream(async (track) => {
-            if (track.source === 'youtube') {
-                return (
-                    await stream(track.url, {
-                        type: 'audio',
-                        quality: 'high',
-                        highWaterMark: 1 << 25,
-                        cookie: process.env.YT_COOKIE || ''
-                    })
-                ).stream;
-            }
-
-            return null;
-        });
-        */
-
         await player.extractors.loadDefault();
         logger.trace(`[Shard ${client.shard.ids[0]}] discord-player loaded dependencies:\n${player.scanDeps()}`);
 

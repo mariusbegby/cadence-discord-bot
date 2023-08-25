@@ -100,28 +100,6 @@ module.exports = {
             });
         }
 
-        /* seems to be supported with @distube/ytdl-core, keeping it commented out to test functionality
-        if (
-            searchResult.tracks[0].raw.live &&
-            searchResult.tracks[0].raw.duration === 0 &&
-            searchResult.tracks[0].source === 'youtube'
-        ) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Unsupported audio source. Query: ${query}. Track is live, 0 duration and from YouTube.`
-            );
-
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Unsupported audio source**\nYouTube live streams are currently not supported. This is due to issues with extracting audio from the livestream.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
-        }
-        */
-
         queue = useQueue(interaction.guild.id);
         let queueSize = queue?.size ?? 0;
 
