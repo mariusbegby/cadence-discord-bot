@@ -60,7 +60,7 @@ module.exports = {
                         : `\`${skippedTrack.duration}\``;
 
                 if (skippedTrack.raw.live) {
-                    durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                    durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
                 }
 
                 queue.node.skipTo(skipToTrack - 1);
@@ -106,7 +106,7 @@ module.exports = {
                     : `\`${skippedTrack.duration}\``;
 
             if (skippedTrack.raw.live) {
-                durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
             }
             queue.node.skip();
 

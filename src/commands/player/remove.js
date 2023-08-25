@@ -60,7 +60,7 @@ module.exports = {
             removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
         if (removedTrack.raw.live) {
-            durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         logger.debug(

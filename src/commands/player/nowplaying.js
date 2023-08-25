@@ -86,7 +86,7 @@ module.exports = {
         }
 
         if (currentTrack.raw.live) {
-            bar = `**\`${embedOptions.icons.liveTrack} LIVE\`** - Playing continuously from live source.`;
+            bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
         const nowPlayingActionRow = new ActionRowBuilder().addComponents(
@@ -214,7 +214,7 @@ module.exports = {
                         : `\`${skippedTrack.duration}\``;
 
                 if (skippedTrack.raw.live) {
-                    durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                    durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
                 }
                 queue.node.skip();
 

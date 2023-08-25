@@ -39,7 +39,7 @@ module.exports = {
                 : `\`${queue.currentTrack.duration}\``;
 
         if (queue.currentTrack.raw.live) {
-            durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         // change paused state to opposite of current state

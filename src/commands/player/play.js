@@ -269,7 +269,7 @@ module.exports = {
         let durationFormat = track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
         if (track.raw.live) {
-            durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         if (searchResult.playlist && searchResult.tracks.length > 1) {

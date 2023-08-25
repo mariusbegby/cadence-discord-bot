@@ -98,7 +98,7 @@ module.exports = {
                         track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
                     if (track.raw.live) {
-                        durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                        durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
                     }
 
                     return `**${pageIndex * 10 + index + 1}.** **${durationFormat} [${track.title}](${track.url})**`;
@@ -162,7 +162,7 @@ module.exports = {
             }
 
             if (currentTrack.raw.live) {
-                bar = `**\`${embedOptions.icons.liveTrack} LIVE\`** - Playing continuously from live source.`;
+                bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
             }
 
             logger.debug(
