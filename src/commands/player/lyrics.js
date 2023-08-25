@@ -7,6 +7,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue, QueryType } = require('discord-player');
 const { lyricsExtractor } = require('@discord-player/extractor');
 
+const recentQueries = new Map();
+
 module.exports = {
     isNew: false,
     isBeta: false,
@@ -26,12 +28,27 @@ module.exports = {
         ),
     autocomplete: async ({ interaction }) => {
         const query = interaction.options.getString('query', true);
-        if (query.length < 2) {
-            return;
+
+        const { lastQuery, result, timestamp } = recentQueries.get(interaction.user.id) || {};
+
+        if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
+            logger.debug(
+                { action: 'autocomplete_responded' },
+                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with results from lastQuery for query: '${query}'`
+            );
+            return interaction.respond(result);
         }
+
+        if (query.length < 3) {
+            logger.debug(
+                { action: 'autocomplete_responded' },
+                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with empty results due to < 3 length for query '${query}'`
+            );
+            return interaction.respond([]);
+        }
+
         const genius = lyricsExtractor();
         const lyricsResult = await genius.search(query).catch(() => null);
-
         let response = [];
 
         if (!lyricsResult) {
@@ -41,7 +58,7 @@ module.exports = {
                 name:
                     `${track.title} [Artist: ${track.author}]`.length > 100
                         ? `${track.title}`.slice(0, 100)
-                        : `${track.title} [Author: ${track.author}]`,
+                        : `${track.title} [Artist: ${track.author}]`,
                 value: track.title.slice(0, 100)
             }));
         } else {
@@ -57,7 +74,16 @@ module.exports = {
             return interaction.respond([]);
         }
 
-        logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
+        recentQueries.set(interaction.user.id, {
+            lastQuery: query,
+            result: response,
+            timestamp: Date.now()
+        });
+
+        logger.debug(
+            { action: 'autocomplete_responded' },
+            `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded for query: '${query}'`
+        );
         return interaction.respond(response);
     },
     execute: async ({ interaction }) => {

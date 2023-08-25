@@ -40,12 +40,12 @@ module.exports = {
 
         const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
 
-        if (lastQuery && query.startsWith(lastQuery) && Date.now() - timestamp < 500) {
+        if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
             logger.debug(
                 { action: 'autocomplete_responded' },
                 `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with results from lastQuery for query: '${query}'`
             );
-            return results;
+            return interaction.respond(results);
         }
 
         if (query.length < 3) {
@@ -56,13 +56,6 @@ module.exports = {
             return interaction.respond([]);
         }
         const searchResults = await player.search(query);
-
-        // Store the query and current timestamp for this user.
-        recentQueries.set(interaction.user.id, {
-            lastQuery: query,
-            results: searchResults.tracks.slice(0, 5),
-            timestamp: Date.now()
-        });
 
         let response = [];
 
@@ -77,6 +70,12 @@ module.exports = {
                         : `${track.title} [Author: ${track.author}]`,
                 value: track.url
             };
+        });
+
+        recentQueries.set(interaction.user.id, {
+            lastQuery: query,
+            results: response,
+            timestamp: Date.now()
         });
 
         if (!response || response.length === 0) {
