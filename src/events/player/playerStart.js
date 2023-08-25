@@ -6,7 +6,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (queue, track) => {
         logger.debug(
-            `[Shard ${queue.metadata.client.shard.ids[0]}] playerStart event: Started playing '${track.raw.source}'.`
+            `[Shard ${queue.metadata.client.shard.ids[0]}] playerStart event: Started playing '${track.raw.url}'.`
         );
         process.env.NODE_ENV === 'development' ? logger.trace(queue) : null;
     }
