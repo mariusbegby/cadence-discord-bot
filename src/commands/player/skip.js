@@ -58,6 +58,11 @@ module.exports = {
                     skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
+
+                if (skippedTrack.raw.live) {
+                    durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                }
+
                 queue.node.skipTo(skipToTrack - 1);
 
                 logger.debug(
@@ -99,6 +104,10 @@ module.exports = {
                 skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                     ? ''
                     : `\`${skippedTrack.duration}\``;
+
+            if (skippedTrack.raw.live) {
+                durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+            }
             queue.node.skip();
 
             const loopModesFormatted = new Map([

@@ -59,6 +59,10 @@ module.exports = {
         let durationFormat =
             removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
+        if (removedTrack.raw.live) {
+            durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+        }
+
         logger.debug(
             `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and removed track.`
         );

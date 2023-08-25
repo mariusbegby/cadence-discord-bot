@@ -82,7 +82,11 @@ module.exports = {
         })} **\`${timestamp.total.label}\`**`;
 
         if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
-            bar = 'No duration available.';
+            bar = '_No duration available._';
+        }
+
+        if (currentTrack.raw.live) {
+            bar = `**\`${embedOptions.icons.liveTrack} LIVE\`** - Playing continuously from live source.`;
         }
 
         const nowPlayingActionRow = new ActionRowBuilder().addComponents(
@@ -208,6 +212,10 @@ module.exports = {
                     skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
+
+                if (skippedTrack.raw.live) {
+                    durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+                }
                 queue.node.skip();
 
                 const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);

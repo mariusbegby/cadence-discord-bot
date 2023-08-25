@@ -1,4 +1,4 @@
-const logger = require('../../services/logger');
+//const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
@@ -8,6 +8,12 @@ const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionVali
 const { transformQuery } = require('../../utils/validation/searchQueryValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
+
+const logger = require('../../services/logger').child({
+    source: 'play.js',
+    module: 'command',
+    name: '/play'
+});
 
 module.exports = {
     isNew: false,
@@ -35,8 +41,6 @@ module.exports = {
         const searchResults = await player.search(query);
         let response = [];
 
-        logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
-
         response = searchResults.tracks.slice(0, 5).map((track) => {
             if (track.url.length > 100) {
                 track.url = track.title.slice(0, 100);
@@ -53,6 +57,11 @@ module.exports = {
         if (!response || response.length === 0) {
             return interaction.respond([]);
         }
+
+        logger.debug(
+            { action: 'autocomplete_responded' },
+            `[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: '${query}'`
+        );
 
         return interaction.respond(response);
     },
@@ -82,8 +91,19 @@ module.exports = {
                 requestedBy: interaction.user
             });
         } catch (error) {
-            logger.error('[Shard ${interaction.guild.shardId}] Failed to search for track with player.search()');
-            logger.error(error);
+            //logger.error('[Shard ${interaction.guild.shardId}] Failed to search for track with player.search()');
+            //logger.error(error);
+
+            logger.error(
+                {
+                    error: {
+                        message: error.message,
+                        type: error.type,
+                        stack: error.stack
+                    }
+                },
+                `[Shard ${interaction.guild.shardId}] Failed to search for track with player.search() with query: ${transformedQuery}.`
+            );
         }
 
         if (!searchResult || searchResult.tracks.length === 0) {
@@ -235,16 +255,26 @@ module.exports = {
             });
         }
 
-        if (track.source === 'arbitrary' || !track.thumnail) {
+        if (
+            track.source.length === 0 ||
+            track.source === 'arbitrary' ||
+            track.thumnail === null ||
+            track.thumbnail === undefined ||
+            track.thumbnail === ''
+        ) {
             track.thumbnail =
                 'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
         }
 
         let durationFormat = track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
+        if (track.raw.live) {
+            durationFormat = `\`${embedOptions.icons.liveTrack} LIVE\``;
+        }
+
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] Playlist found and added with player.play(). Query: ${query}.`
+                `[Shard ${interaction.guild.shardId}] Playlist found and added with player.play(). Query: '${query}'`
             );
 
             return await interaction.editReply({
