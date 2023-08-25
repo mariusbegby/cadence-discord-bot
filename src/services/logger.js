@@ -1,5 +1,7 @@
 const pino = require('pino');
 const config = require('config');
+
+// Retrieve logger options from config
 const loggerOptions = config.get('loggerOptions');
 
 const targets = [
@@ -42,6 +44,7 @@ const targets = [
     }
 ];
 
+// Check for Loki credentials and add Loki as a target if present
 if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
     targets.push({
         target: 'pino-loki',
@@ -50,8 +53,7 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
             sync: false,
             batching: false,
             interval: 5,
-
-            host: 'https://logs-prod-025.grafana.net',
+            host: process.env.LOKI_HOST || 'http://localhost:3100',
             basicAuth: {
                 username: process.env.LOKI_AUTH_USERNAME || '',
                 password: process.env.LOKI_AUTH_PASSWORD || ''
@@ -62,10 +64,17 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
 
 const transport = pino.transport({ targets });
 
+// Default properties for the logger, these will be added to every log entry
+const defaultProperties = {
+    environment: process.env.NODE_ENV || 'development'
+};
+
 const logLevelConfig = {
     level: loggerOptions.minimumLogLevel,
     timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
-    base: undefined
+    base: defaultProperties
 };
 
-module.exports = pino(logLevelConfig, transport);
+const logger = pino(logLevelConfig, transport);
+
+module.exports = logger;
