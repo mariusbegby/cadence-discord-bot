@@ -1,22 +1,23 @@
 import loggerModule from '../../services/logger';
 
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
+import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const systemOptions = config.get('systemOptions');
+const systemOptions: SystemOptions = config.get('systemOptions');
 import { EmbedBuilder } from 'discord.js';
+import { NotValidGuildIdParams } from '../../types/utilTypes';
 
-export const notValidGuildId = async ({ interaction, executionId }) => {
+export const notValidGuildId = async ({ interaction, executionId }: NotValidGuildIdParams) => {
     const logger = loggerModule.child({
         source: 'systemCommandValidator.js',
         module: 'utilValidation',
         name: 'notValidGuildId',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
-    if (!systemOptions.systemGuildIds.includes(interaction.guildId)) {
+    if (interaction.guildId && !systemOptions.systemGuildIds.includes(interaction.guildId)) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

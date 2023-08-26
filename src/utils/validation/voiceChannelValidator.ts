@@ -2,19 +2,20 @@ import { EmbedOptions } from '../../types/configTypes';
 import loggerModule from '../../services/logger';
 import config from 'config';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, GuildMember } from 'discord.js';
+import { NotInVoiceChannelParams, NotInSameVoiceChannelParams } from '../../types/utilTypes';
 
-export const notInVoiceChannel = async ({ interaction, executionId }) => {
+export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoiceChannelParams) => {
     const logger = loggerModule.child({
         source: 'voiceChannelValidator.js',
         module: 'validator',
         name: 'notInVoiceChannel',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
-    if (!interaction.member.voice.channel) {
+    if (interaction.member instanceof GuildMember && !interaction.member.voice.channel) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -32,14 +33,14 @@ export const notInVoiceChannel = async ({ interaction, executionId }) => {
     return false;
 };
 
-export const notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
+export const notInSameVoiceChannel = async ({ interaction, queue, executionId }: NotInSameVoiceChannelParams) => {
     const logger = loggerModule.child({
         source: 'voiceChannelValidator.js',
         module: 'utilValidation',
         name: 'notInSameVoiceChannel',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
     if (!queue || !queue.dispatcher) {
@@ -47,7 +48,10 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId })
         return false;
     }
 
-    if (interaction.member.voice.channel.id !== queue.dispatcher.channel.id) {
+    if (
+        interaction.member instanceof GuildMember &&
+        interaction.member.voice.channel?.id !== queue.dispatcher.channel.id
+    ) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

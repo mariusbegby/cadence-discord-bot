@@ -3,15 +3,16 @@ import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 import { EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
+import { QueueDoesNotExistParams, QueueNoCurrentTrackParams, QueueIsEmptyParams } from '../../types/utilTypes';
 
-export const queueDoesNotExist = async ({ interaction, queue, executionId }) => {
+export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
     const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueDoesNotExist',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
     if (!queue) {
@@ -32,14 +33,14 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }) => 
     return false;
 };
 
-export const queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
+export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: QueueNoCurrentTrackParams) => {
     const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
     if (!queue.currentTrack) {
@@ -60,14 +61,14 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }) =
     return false;
 };
 
-export const queueIsEmpty = async ({ interaction, queue, executionId }) => {
+export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsEmptyParams) => {
     const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueIsEmpty',
         executionId: executionId,
-        shardId: interaction.guild.shardId,
-        guildId: interaction.guild.id
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
     });
 
     if (queue.tracks.data.length === 0) {
