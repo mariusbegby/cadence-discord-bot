@@ -5,7 +5,7 @@ const { EmbedBuilder } = require('discord.js');
 exports.queueDoesNotExist = async ({ interaction, queue, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'queueValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'queueDoesNotExist',
         executionId: executionId,
         shardId: interaction.guild.shardId,
@@ -33,7 +33,7 @@ exports.queueDoesNotExist = async ({ interaction, queue, executionId }) => {
 exports.queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'queueValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'queueNoCurrentTrack',
         executionId: executionId,
         shardId: interaction.guild.shardId,
@@ -61,7 +61,7 @@ exports.queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
 exports.queueIsEmpty = async ({ interaction, queue, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'queueValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'queueIsEmpty',
         executionId: executionId,
         shardId: interaction.guild.shardId,

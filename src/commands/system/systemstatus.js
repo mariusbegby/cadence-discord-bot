@@ -22,7 +22,7 @@ module.exports = {
         }
 
         // from normal /status command
-        const uptimeString = await getUptimeFormatted();
+        const uptimeString = await getUptimeFormatted({ executionId });
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
         const releaseVersion = version;

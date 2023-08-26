@@ -5,7 +5,7 @@ const { EmbedBuilder } = require('discord.js');
 exports.cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'permissionValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
         executionId: executionId,
         shardId: interaction.guild.shardId,
@@ -37,7 +37,7 @@ exports.cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
 exports.cannotSendMessageInChannel = async ({ interaction, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'permissionValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'cannotSendMessageInChannel',
         executionId: executionId,
         shardId: interaction.guild.shardId,

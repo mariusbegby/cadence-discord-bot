@@ -33,7 +33,7 @@ exports.notInVoiceChannel = async ({ interaction, executionId }) => {
 exports.notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'voiceChannelValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'notInSameVoiceChannel',
         executionId: executionId,
         shardId: interaction.guild.shardId,

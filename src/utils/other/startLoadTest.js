@@ -5,7 +5,7 @@ exports.startLoadTest = async ({ client, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'startLoadTest.js',
         module: 'utilOther',
-        name: 'loadTest',
+        name: 'startLoadTest',
         executionId: executionId,
         shardId: client.shard.ids[0]
     });

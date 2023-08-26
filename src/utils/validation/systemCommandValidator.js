@@ -6,7 +6,7 @@ const { EmbedBuilder } = require('discord.js');
 exports.notValidGuildId = async ({ interaction, executionId }) => {
     const logger = require('../../services/logger').child({
         source: 'systemCommandValidator.js',
-        module: 'validator',
+        module: 'utilValidation',
         name: 'notValidGuildId',
         executionId: executionId,
         shardId: interaction.guild.shardId,

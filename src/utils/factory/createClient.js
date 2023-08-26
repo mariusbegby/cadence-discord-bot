@@ -2,9 +2,9 @@ const Discord = require('discord.js');
 
 exports.createClient = async ({ executionId }) => {
     const logger = require('../../services/logger').child({
-        source: 'createPlayer.js',
+        source: 'createClient.js',
         module: 'utilFactory',
-        name: 'createPlayer',
+        name: 'createClient',
         executionId: executionId,
         shardId: 'client'
     });
