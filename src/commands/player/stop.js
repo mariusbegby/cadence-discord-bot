@@ -13,8 +13,8 @@ module.exports = {
         .setDescription('Stop playing audio and clear the track queue.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -35,7 +35,7 @@ module.exports = {
             });
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

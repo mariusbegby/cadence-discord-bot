@@ -20,8 +20,8 @@ module.exports = {
                 .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
                 .setRequired(true)
         ),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -31,7 +31,7 @@ module.exports = {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

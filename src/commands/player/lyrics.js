@@ -86,13 +86,13 @@ module.exports = {
         );
         return interaction.respond(response);
     },
-    execute: async ({ interaction }) => {
+    execute: async ({ interaction, executionId }) => {
         const query = interaction.options.getString('query');
         const queue = useQueue(interaction.guild.id);
         let geniusSearchQuery = '';
 
         if (!query) {
-            if (await notInVoiceChannel(interaction)) {
+            if (await notInVoiceChannel({ interaction, executionId })) {
                 return;
             }
 
@@ -100,7 +100,7 @@ module.exports = {
                 return;
             }
 
-            if (await notInSameVoiceChannel(interaction, queue)) {
+            if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
                 return;
             }
 

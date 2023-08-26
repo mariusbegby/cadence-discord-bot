@@ -21,8 +21,8 @@ module.exports = {
                 .setMinValue(1)
                 .setRequired(true)
         ),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -32,7 +32,7 @@ module.exports = {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

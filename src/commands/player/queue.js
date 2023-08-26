@@ -15,14 +15,14 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

@@ -14,8 +14,8 @@ module.exports = {
         .setDescription('Pause or resume the current track.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -25,7 +25,7 @@ module.exports = {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

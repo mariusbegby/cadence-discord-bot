@@ -1,9 +1,17 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { EmbedBuilder } = require('discord.js');
 
-exports.notInVoiceChannel = async (interaction) => {
+exports.notInVoiceChannel = async ({ interaction, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'voiceChannelValidator.js',
+        module: 'validator',
+        name: 'notInVoiceChannel',
+        executionId: executionId,
+        shardId: interaction.guild.shardId,
+        guildId: interaction.guild.id
+    });
+
     if (!interaction.member.voice.channel) {
         await interaction.editReply({
             embeds: [
@@ -22,7 +30,16 @@ exports.notInVoiceChannel = async (interaction) => {
     return false;
 };
 
-exports.notInSameVoiceChannel = async (interaction, queue) => {
+exports.notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'voiceChannelValidator.js',
+        module: 'validator',
+        name: 'notInSameVoiceChannel',
+        executionId: executionId,
+        shardId: interaction.guild.shardId,
+        guildId: interaction.guild.id
+    });
+
     if (!queue || !queue.dispatcher) {
         // If there is no queue or bot is not in voice channel, then there is no need to check if user is in same voice channel.
         return false;

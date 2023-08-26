@@ -1,10 +1,19 @@
 require('dotenv').config();
-const logger = require('../services/logger');
 const fs = require('node:fs');
 const path = require('node:path');
 const { REST, Routes } = require('discord.js');
 const config = require('config');
+const { v4: uuidv4 } = require('uuid');
 const systemOptions = config.get('systemOptions');
+
+const executionId = uuidv4();
+
+const logger = require('../services/logger').child({
+    source: 'deploySlashCommands.js',
+    module: 'deploy',
+    name: 'deploySlashCommands',
+    executionId: executionId
+});
 
 const slashCommands = [];
 const systemCommands = [];
@@ -26,46 +35,45 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
 
 (async () => {
     if (!process.env.DISCORD_APPLICATION_ID || !process.env.DISCORD_BOT_TOKEN) {
-        logger.error('Missing required environment variables for deployment.');
-        logger.error('Provide valid DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN in .env file.');
+        logger.error(
+            'Missing required environment variables for deployment.\nPlease provide valid DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN in .env file.'
+        );
     }
 
     try {
-        logger.info('DEPLOYING BOT SLASH COMMANDS');
-        logger.info(
-            slashCommands.map((command) => command.name),
-            'Bot commands found:'
-        );
+        logger.debug(`Bot user slash commands found: ${slashCommands.map((command) => `/${command.name}`).join(', ')}`);
 
-        logger.info('Started refreshing application (/) bot commands.');
+        logger.info('Started refreshing user slash commands.');
         await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), slashCommands);
-        logger.info('Successfully refreshed application (/) bot commands.');
+        logger.info('Successfully refreshed user slash commands.');
     } catch (error) {
-        logger.error(error, 'Failed to refresh application (/) bot commands.');
+        logger.error(error, 'Failed to refresh user slash commands.');
     }
 
     try {
-        logger.info('DEPLOYING SYSTEM SLASH COMMANDS');
-        logger.info(
-            systemCommands.map((systemCommand) => systemCommand.name),
-            'System commands found:'
+        logger.debug(
+            `Bot system slash commands found: ${systemCommands
+                .map((systemCommand) => `/${systemCommand.name}`)
+                .join(', ')}`
         );
 
-        logger.info('Started refreshing application (/) system commands.');
+        logger.info('Started refreshing system slash commands.');
         const systemGuildIds = systemOptions.systemGuildIds;
         await Promise.all(
             systemGuildIds.map((systemGuildId) => {
-                logger.info(`Refreshing system commands for guild id: ${systemGuildId}.`);
+                logger.debug(`Refreshing system slash command for guild id '${systemGuildId}'.`);
                 refreshCommands(
                     Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, systemGuildId),
                     systemCommands
                 );
             })
         );
-        logger.info('Successfully refreshed application (/) system commands.');
+        logger.info('Successfully refreshed system slash commands.');
     } catch (error) {
-        logger.error(error, 'Failed to refresh application (/) system commands.');
-        logger.error('Make sure the bot is in the system guilds provided.');
+        logger.error(
+            error,
+            'Failed to refresh system slash commands. Make sure the bot is in the system guilds specified in \'systemOptions\'.'
+        );
     }
 })();
 

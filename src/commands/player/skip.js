@@ -17,8 +17,8 @@ module.exports = {
         .addNumberOption((option) =>
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -28,7 +28,7 @@ module.exports = {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 

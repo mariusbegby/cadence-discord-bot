@@ -83,7 +83,7 @@ module.exports = {
 
         return interaction.respond(response);
     },
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = require('../../services/logger').child({
             source: 'play.js',
             module: 'slashCommand',
@@ -91,7 +91,7 @@ module.exports = {
             executionId: executionId
         });
 
-        if (await notInVoiceChannel(interaction, client)) {
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
@@ -100,7 +100,7 @@ module.exports = {
         }
 
         let queue = useQueue(interaction.guild.id);
-        if (queue && (await notInSameVoiceChannel(interaction, queue))) {
+        if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
             return;
         }
 
