@@ -17,6 +17,5 @@ module.exports = {
         });
 
         logger.debug(`playerStart event: Started playing '${track.url}'.`);
-        process.env.NODE_ENV === 'development' ? logger.trace(queue) : null;
     }
 };

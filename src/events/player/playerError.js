@@ -51,7 +51,5 @@ module.exports = {
                 });
             }
         }
-
-        process.env.NODE_ENV === 'development' ? logger.trace(queue, 'Queue object') : null;
     }
 };

@@ -64,6 +64,7 @@ module.exports = {
                 }
 
                 const inputTime = new Date();
+
                 await command.execute({ interaction, client, executionId });
 
                 const outputTime = new Date();

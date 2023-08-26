@@ -17,6 +17,7 @@ exports.startLoadTest = async ({ client, executionId }) => {
 
     const channelIds = loadTestOptions.channelIdsToJoin;
     const track = loadTestOptions.trackUrl;
+
     logger.info(`Starting load test in ${channelIds.length} specified channels.`);
 
     channelIds.forEach((each) => {
@@ -41,4 +42,6 @@ exports.startLoadTest = async ({ client, executionId }) => {
             { context: { channelId: each, track: track } }
         );
     });
+
+    logger.info('Load test started across shards in specified channels.');
 };

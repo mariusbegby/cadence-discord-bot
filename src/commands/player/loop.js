@@ -128,7 +128,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from \`${currentModeUserString}\` to \`${modeUserString}\`.\n\nThe ${currentModeUserString} will no longer play on repeat!`
+                            `**${embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
                         )
                         .setColor(embedOptions.colors.success)
                 ]
@@ -147,7 +147,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from \`${currentModeUserString}\` to \`${modeUserString}\`.\n\nWhen the queue is empty, similar tracks will start playing!`
+                            `**${embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
                         )
                         .setColor(embedOptions.colors.success)
                 ]
@@ -165,7 +165,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from \`${currentModeUserString}\` to \`${modeUserString}\`.\n\nThe ${modeUserString} will now play on repeat!`
+                        `**${embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`
                     )
                     .setColor(embedOptions.colors.success)
             ]

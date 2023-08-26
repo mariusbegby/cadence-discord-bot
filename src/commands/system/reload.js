@@ -27,8 +27,7 @@ module.exports = {
         }
 
         try {
-            logger.info('Reloading commands across all shards.');
-            logger.info(`Execution ID: ${executionId}`);
+            logger.debug('Reloading commands across all shards.');
             await client.shard
                 .broadcastEval(
                     async (shardClient, { executionId }) => {
@@ -37,7 +36,7 @@ module.exports = {
                     { context: { executionId: executionId } }
                 )
                 .then(() => {
-                    logger.info('Successfully reloaded commands across all shards.');
+                    logger.debug('Successfully reloaded commands across all shards.');
                 });
         } catch (error) {
             logger.error(error, 'Failed to reload commands across shards.');

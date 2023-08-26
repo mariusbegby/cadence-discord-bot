@@ -27,8 +27,12 @@ module.exports = {
         await client.user.setPresence(presenceStatusOptions);
 
         if (loadTestOptions.enabled) {
-            logger.info('Initiating load test for bot client.');
-            await startLoadTest({ client, executionId });
+            // Only call function from shard with id 0
+            // The function uses broadcastEval() to call itself on all shards
+            if (client.shard.ids[0] === 0) {
+                logger.info('Initiating load test for bot client.');
+                await startLoadTest({ client, executionId });
+            }
         }
 
         const channel = await client.channels.cache.get(systemOptions.systemMessageChannelId);
