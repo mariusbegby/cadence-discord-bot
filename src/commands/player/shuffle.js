@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -15,6 +14,15 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'shuffle.js',
+            module: 'slashCommand',
+            name: '/shuffle',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -34,11 +42,9 @@ module.exports = {
         }
 
         queue.tracks.shuffle();
+        logger.debug('Shuffled queue tracks.');
 
-        logger.debug(
-            `User used command ${interaction.commandName} and shuffled the queue.`
-        );
-
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

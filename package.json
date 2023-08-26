@@ -20,10 +20,10 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./src/index.js",
-        "start-pretty": "node ./src/index.js | pino-pretty --ignore environment,source,module,action,name,context,err,error,executionId,shardId,guildId",
+        "start-pretty": "node ./src/index.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
         "start-pretty-no-ignore": "node ./src/index.js | pino-pretty",
         "deploy": "node ./src/utils/deploySlashCommands.js",
-        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,err,error,executionId,shardId,guildId",
+        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
         "eslint": "eslint ./"
     },
     "dependencies": {

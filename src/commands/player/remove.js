@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -22,6 +21,15 @@ module.exports = {
                 .setRequired(true)
         ),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'remove.js',
+            module: 'slashCommand',
+            name: '/remove',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -39,10 +47,9 @@ module.exports = {
         const removeTrackNumber = interaction.options.getNumber('tracknumber');
 
         if (removeTrackNumber > queue.tracks.data.length) {
-            logger.debug(
-                `User used command ${interaction.commandName} but track number was higher than total tracks.`
-            );
+            logger.debug('Specified track number is higher than total tracks.');
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -56,6 +63,7 @@ module.exports = {
 
         // Remove specified track number from queue
         const removedTrack = queue.node.remove(removeTrackNumber - 1);
+        logger.debug(`Removed track '${removedTrack.url}' from queue.`);
         let durationFormat =
             removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
 
@@ -63,9 +71,7 @@ module.exports = {
             durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
-        logger.debug(
-            `User used command ${interaction.commandName} and removed track.`
-        );
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -74,7 +80,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${removedTrack.url})**`
+                        `**${embedOptions.icons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${removedTrack.raw.url ?? removedTrack.url})**`
                     )
                     .setThumbnail(removedTrack.thumbnail)
                     .setColor(embedOptions.colors.success)

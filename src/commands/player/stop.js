@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -14,6 +13,15 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'stop.js',
+            module: 'slashCommand',
+            name: '/stop',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -21,9 +29,9 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.debug(
-                `User used command ${interaction.commandName} but there was no queue.`
-            );
+            logger.debug('There is no queue.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -43,11 +51,10 @@ module.exports = {
             queue.setRepeatMode(0);
             queue.clear();
             queue.node.stop();
-            logger.debug(
-                `User used command ${interaction.commandName} and cleared the queue.`
-            );
+            logger.debug('Cleared and stopped the queue.');
         }
 
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

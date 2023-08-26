@@ -23,8 +23,9 @@ exports.notValidGuildId = async ({ interaction, executionId }) => {
                     .setColor(embedOptions.colors.warning)
             ]
         });
+
         logger.debug(
-            `User tried to use command ${interaction.commandName} but system command cannot be executed in the specified guild.`
+            `User tried to use command '${interaction.commandName}' but system command cannot be executed in the specified guild.`
         );
         return true;
     }

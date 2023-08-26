@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -22,6 +21,15 @@ module.exports = {
                 .setMaxValue(100)
         ),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'volume.js',
+            module: 'slashCommand',
+            name: '/volume',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -41,9 +49,9 @@ module.exports = {
         if (!volume && volume !== 0) {
             const currentVolume = queue.node.volume;
 
-            logger.debug(
-                `User used command ${interaction.commandName} but no volume was provided, providing info of current volume.`
-            );
+            logger.debug('No volume input was provided, showing current volume.');
+
+            logger.debug('Responding with info embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -56,9 +64,9 @@ module.exports = {
                 ]
             });
         } else if (volume > 100 || volume < 0) {
-            logger.debug(
-                `User used command ${interaction.commandName} but volume was higher than 100% or lower than 0%.`
-            );
+            logger.debug('Volume specified was higher than 100% or lower than 0%.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -70,11 +78,10 @@ module.exports = {
             });
         } else {
             queue.node.setVolume(volume);
+            logger.debug(`Set volume to ${volume}%.`);
 
             if (volume === 0) {
-                logger.debug(
-                    `User used command ${interaction.commandName} and muted volume.`
-                );
+                logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -90,9 +97,7 @@ module.exports = {
                 });
             }
 
-            logger.debug(
-                `User used command ${interaction.commandName} and changed volume.`
-            );
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

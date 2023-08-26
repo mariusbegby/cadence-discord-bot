@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
@@ -28,6 +27,15 @@ module.exports = {
                 )
         ),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'loop.js',
+            module: 'slashCommand',
+            name: '/loop',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -55,10 +63,9 @@ module.exports = {
         const currentModeUserString = loopModesFormatted.get(currentMode);
 
         if (!mode && mode !== 0) {
-            logger.debug(
-                `User used command ${interaction.commandName} but no mode was provided.`
-            );
+            logger.debug('No mode input was provided, responding with current loop mode.');
 
+            logger.debug('Responding with info embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -73,10 +80,9 @@ module.exports = {
         }
 
         if (mode === currentMode) {
-            logger.debug(
-                `User used command ${interaction.commandName} but loop mode was already set to ${modeUserString}.`
-            );
+            logger.debug(`Loop mode is already set to ${modeUserString}.`);
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -91,10 +97,11 @@ module.exports = {
         queue.setRepeatMode(mode);
 
         if (!queue.repeatMode === mode) {
-            logger.debug(
-                `User used command ${interaction.commandName} but failed to change loop mode.`
+            logger.warn(
+                'Failed to change loop mode. After setting queue repeat mode, the value was not the same as input.'
             );
 
+            logger.debug('Responding with error embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -107,10 +114,9 @@ module.exports = {
         }
 
         if (queue.repeatMode === 0) {
-            logger.debug(
-                `User used command ${interaction.commandName} and disabled loop mode.`
-            );
+            logger.debug('Disabled loop mode.');
 
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -127,10 +133,9 @@ module.exports = {
         }
 
         if (queue.repeatMode === 3) {
-            logger.debug(
-                `User used command ${interaction.commandName} and enabled autoplay.`
-            );
+            logger.debug('Enabled autoplay mode.');
 
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -146,10 +151,9 @@ module.exports = {
             });
         }
 
-        logger.debug(
-            `User used command ${interaction.commandName} and enabled loop mode.`
-        );
+        logger.debug('Enabled loop mode.');
 
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

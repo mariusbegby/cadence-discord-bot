@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
@@ -14,14 +13,23 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'guilds.js',
+            module: 'slashCommand',
+            name: '/guilds',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notValidGuildId({ interaction, executionId })) {
-            logger.debug('Not a valid guild id.');
             return;
         }
 
         let shardGuilds = [];
         let totalGuildCount = 0;
 
+        logger.debug('Fetching guilds from all shards.');
         await client.shard
             .broadcastEval((c) => {
                 return c.guilds.cache.map((guild) => {
@@ -33,6 +41,8 @@ module.exports = {
             });
 
         totalGuildCount = shardGuilds.length;
+
+        logger.debug(`Successfully fetched ${totalGuildCount} guilds.`);
 
         let guildListFormatted = shardGuilds
             .map((guild) => {
@@ -54,10 +64,14 @@ module.exports = {
             } by member count (${totalGuildCount} total)**\n${guildListFormatted}` +
             `\n\n**Total members:** \`${totalMemberCount}\``;
 
+        logger.debug('Transformed guild into into embed description.');
+
         if (embedDescription.length >= 4000) {
+            logger.debug('Embed description is too long, truncating.');
             embedDescription = `${embedDescription.slice(0, 3996)}...`;
         }
 
+        logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedOptions.colors.info)]
         });

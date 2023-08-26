@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { getUptimeFormatted } = require('../../utils/system/getUptimeFormatted');
@@ -15,6 +14,15 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'status.js',
+            module: 'slashCommand',
+            name: '/status',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         const uptimeString = await getUptimeFormatted({ executionId });
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
@@ -47,6 +55,11 @@ module.exports = {
                 activeVoiceConnections = queueCountList.reduce((acc, queueAmount) => acc + queueAmount, 0);
                 totalTracks = trackCountList.reduce((acc, trackAmount) => acc + trackAmount, 0);
                 totalListeners = listenerCountList.reduce((acc, listenerAmount) => acc + listenerAmount, 0);
+
+                logger.debug('Successfully fetched player statistics from shards.');
+            })
+            .catch((error) => {
+                logger.error(error, 'Failed to fetch player statistics from shards.');
             });
 
         await client.shard
@@ -58,6 +71,8 @@ module.exports = {
                         memberCount += guildCache.reduce((acc, guildCache) => acc + guildCache.memberCount, 0);
                     }
                 });
+
+                logger.debug('Successfully fetched client values from shards.');
             })
             .catch((error) => {
                 logger.error(error, 'Failed to fetch client values from shards.');
@@ -78,6 +93,9 @@ module.exports = {
 
         const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
 
+        logger.debug('Transformed status into into embed description.');
+
+        logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

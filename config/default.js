@@ -52,6 +52,10 @@ module.exports.presenceStatusOptions = {
 // Configurations for visual embed messages.
 // Includes design elements like colors and custom emojis/symbols.
 module.exports.embedOptions = {
+    info: {
+        fallbackThumbnailUrl:
+            'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png'
+    },
     colors: {
         success: '#23A55A',
         warning: '#F0B232',
@@ -101,7 +105,7 @@ module.exports.embedOptions = {
         sourceYouTube: '🎵',
         sourceSoundCloud: '🎵',
         sourceSpotify: '🎵',
-        liveTrack: '🔴',
+        liveTrack: '🔴'
     }
 };
 

@@ -55,7 +55,7 @@ module.exports = {
                 return;
             }
         } else if (interaction.isChatInputCommand()) {
-            logger.debug(`Chat input command interaction created for ${interaction.commandName}.`);
+            logger.debug(`Chat input command interaction created for '${interaction.commandName}'.`);
             try {
                 await interaction.deferReply();
 

@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -26,24 +25,27 @@ module.exports = {
                 .setMaxLength(500)
                 .setAutocomplete(true)
         ),
-    autocomplete: async ({ interaction }) => {
+    autocomplete: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'lyrics.js',
+            module: 'slashCommand',
+            name: '/lyrics',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         const query = interaction.options.getString('query', true);
 
         const { lastQuery, result, timestamp } = recentQueries.get(interaction.user.id) || {};
 
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
-            logger.debug(
-                { action: 'autocomplete_responded' },
-                `Autocomplete search responded with results from lastQuery for query: '${query}'`
-            );
+            logger.debug(`Responding with results from lastQuery for query '${query}'`);
             return interaction.respond(result);
         }
 
         if (query.length < 3) {
-            logger.debug(
-                { action: 'autocomplete_responded' },
-                `Autocomplete search responded with empty results due to < 3 length for query '${query}'`
-            );
+            logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
             return interaction.respond([]);
         }
 
@@ -52,6 +54,7 @@ module.exports = {
         let response = [];
 
         if (!lyricsResult) {
+            logger.debug(`No Genius lyrics found for query '${query}', using player.search() as fallback.`);
             const player = useMainPlayer();
             const searchResults = await player.search(query);
             response = searchResults.tracks.slice(0, 1).map((track) => ({
@@ -62,6 +65,7 @@ module.exports = {
                 value: track.title.slice(0, 100)
             }));
         } else {
+            logger.debug(`Found Genius lyrics for query '${query}'.`);
             response = [
                 {
                     name: `${lyricsResult.title} [Artist: ${lyricsResult.artist.name}]`.slice(0, 100),
@@ -71,6 +75,7 @@ module.exports = {
         }
 
         if (!response || response.length === 0) {
+            logger.debug(`Responding with empty results for query '${query}'`);
             return interaction.respond([]);
         }
 
@@ -80,13 +85,19 @@ module.exports = {
             timestamp: Date.now()
         });
 
-        logger.debug(
-            { action: 'autocomplete_responded' },
-            `Autocomplete search responded for query: '${query}'`
-        );
+        logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'lyrics.js',
+            module: 'slashCommand',
+            name: '/lyrics',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         const query = interaction.options.getString('query');
         const queue = useQueue(interaction.guild.id);
         let geniusSearchQuery = '';
@@ -108,19 +119,24 @@ module.exports = {
                 return;
             }
             geniusSearchQuery = queue.currentTrack.title.slice(0, 50);
+
+            logger.debug(
+                `No input query provided, using current track. Using query for genius: '${geniusSearchQuery}'`
+            );
         }
 
         let searchResult;
         if (query) {
+            logger.debug(`Query input provided, using query '${query}' for player.search().`);
             const player = useMainPlayer();
             const searchResults = await player.search(query, {
                 searchEngine: QueryType.SPOTIFY_SEARCH
             });
 
             if (searchResults.tracks.length === 0) {
-                logger.debug(
-                    `User used command ${interaction.commandName} but there was no search results found.`
-                );
+                logger.debug('No search results using player.search() found.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -134,7 +150,7 @@ module.exports = {
 
             searchResult = searchResults.tracks[0];
             geniusSearchQuery = searchResults.tracks[0].title;
-            logger.debug(`Using query for genius: ${geniusSearchQuery}`);
+            logger.debug(`Using query for genius: '${geniusSearchQuery}'`);
         }
 
         // get lyrics
@@ -143,9 +159,15 @@ module.exports = {
 
         // try again with shorter query (some titles just have added info in the end)
         if (!lyricsResult && geniusSearchQuery.length > 20) {
+            logger.debug(
+                `No Genius lyrics found for query '${geniusSearchQuery}', trying again with shorter query (20 chars).`
+            );
             lyricsResult = await genius.search(geniusSearchQuery.slice(0, 20)).catch(() => null);
         }
         if (!lyricsResult && geniusSearchQuery.length > 10) {
+            logger.debug(
+                `No Genius lyrics found for query '${geniusSearchQuery}', trying again with shorter query (10 chars).`
+            );
             lyricsResult = await genius.search(geniusSearchQuery.slice(0, 10)).catch(() => null);
         }
 
@@ -167,14 +189,14 @@ module.exports = {
                 !searchResultAuthorSplitIncludesArtist
             ) {
                 lyricsResult = null;
-                logger.debug('Found lyrics but artist name did not match from player result.');
+                logger.debug('Found Genius lyrics but artist name did not match from player.search() result.');
             }
         }
 
         if (!lyricsResult || !lyricsResult.lyrics) {
-            logger.debug(
-                `User used command ${interaction.commandName} but there was no lyrics found.`
-            );
+            logger.debug('No matching lyrics found.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -186,16 +208,17 @@ module.exports = {
             });
         }
 
+        logger.debug(`Successfully found matching Genius lyrics for query '${geniusSearchQuery}'.`);
+
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
-            logger.debug('Lyrics too long, splitting into multiple messages.');
+            logger.debug('Lyrics text too long, splitting into multiple messages.');
             const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
             for (let i = 0; i < messageCount; i++) {
-                logger.debuf(
-                    `Lyrics, sending message ${i + 1} of ${messageCount}.`
-                );
+                logger.debuf(`Lyrics, sending message ${i + 1} of ${messageCount}.`);
                 const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
+                    logger.debug('Responding with info embed for first message with lyrics.');
                     await interaction.editReply({
                         embeds: [
                             new EmbedBuilder()
@@ -210,6 +233,7 @@ module.exports = {
                     });
                     continue;
                 } else {
+                    logger.debug('Sending consecutive message with lyrics.');
                     await interaction.channel.send({
                         embeds: [
                             new EmbedBuilder()
@@ -223,10 +247,7 @@ module.exports = {
             return;
         }
 
-        logger.debug(
-            `User used command ${interaction.commandName} and retrieved lyrics.`
-        );
-
+        logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

@@ -44,12 +44,12 @@ module.exports = {
         const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
 
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
-            logger.debug(`Autocomplete search responded with results from lastQuery for query: '${query}'`);
+            logger.debug(`Responding with results from lastQuery for query '${query}'`);
             return interaction.respond(results);
         }
 
         if (query.length < 3) {
-            logger.debug(`Autocomplete search responded with empty results due to < 3 length for query '${query}'`);
+            logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
             return interaction.respond([]);
         }
         const searchResults = await player.search(query);
@@ -76,11 +76,11 @@ module.exports = {
         });
 
         if (!response || response.length === 0) {
+            logger.debug(`Responding with empty results for query '${query}'`);
             return interaction.respond([]);
         }
 
-        logger.debug(`Autocomplete search responded for query: '${query}'`);
-
+        logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
@@ -88,7 +88,9 @@ module.exports = {
             source: 'play.js',
             module: 'slashCommand',
             name: '/play',
-            executionId: executionId
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
@@ -116,21 +118,13 @@ module.exports = {
                 requestedBy: interaction.user
             });
         } catch (error) {
-            logger.error(
-                {
-                    error: {
-                        message: error.message,
-                        type: error.type,
-                        stack: error.stack
-                    }
-                },
-                `Failed to search for track with player.search() with query: ${transformedQuery}.`
-            );
+            logger.error(error, `Failed to search for track with player.search() with query: ${transformedQuery}.`);
         }
 
         if (!searchResult || searchResult.tracks.length === 0) {
-            logger.debug(`No results found for query: ${query}`);
+            logger.debug(`No results found for query: '${query}'`);
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -146,8 +140,9 @@ module.exports = {
         let queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
-            logger.debug(`Playlist found but too many tracks. Query: ${query}.`);
+            logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -162,6 +157,7 @@ module.exports = {
         let track;
 
         try {
+            logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
             ({ track } = await player.play(interaction.member.voice.channel, searchResult, {
                 requestedBy: interaction.user,
                 nodeOptions: {
@@ -184,11 +180,11 @@ module.exports = {
                     }
                 }
             }));
-
-            logger.debug(`player.play() successful. Query: ${query}.`);
         } catch (error) {
             if (error.message.includes('Sign in to confirm your age')) {
                 logger.debug('Found track but failed to retrieve audio due to age confirmation warning.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -202,6 +198,8 @@ module.exports = {
 
             if (error.message.includes('The following content may contain')) {
                 logger.debug('Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -221,6 +219,7 @@ module.exports = {
             ) {
                 logger.debug(error, `Found track but failed to retrieve audio. Query: ${query}.`);
 
+                logger.debug('Responding with error embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -235,6 +234,7 @@ module.exports = {
             if (error.message === 'Cancelled') {
                 logger.debug(error, `Operation cancelled. Query: ${query}.`);
 
+                logger.debug('Responding with error embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -250,6 +250,7 @@ module.exports = {
                 // Can happen if /play then /leave before track starts playing
                 logger.warn(error, 'Found track but failed to play back audio. Voice connection might be unavailable.');
 
+                logger.debug('Responding with error embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -261,14 +262,17 @@ module.exports = {
                 });
             }
 
-            //logger.error(error, 'Failed to play track with player.play(), unhandled error.');
+            logger.error(error, 'Failed to play track with player.play(), unhandled error.');
         }
+
+        logger.debug(`Successfully added track with player.play(). Query: '${query}'.`);
 
         queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.warn(`After player.play(), queue is undefined. Query: ${query}.`);
+            logger.warn(`After player.play(), queue is undefined. Query: '${query}'.`);
 
+            logger.debug('Responding with error embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -287,8 +291,10 @@ module.exports = {
             track.thumbnail === undefined ||
             track.thumbnail === ''
         ) {
-            track.thumbnail =
-                'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
+            logger.debug(
+                `Track found but source is arbitrary or missing thumbnail. Using fallback thumbnail url. Query: '${query}'.`
+            );
+            track.thumbnail = embedOptions.info.fallbackThumbnailUrl;
         }
 
         let durationFormat = track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
@@ -300,6 +306,7 @@ module.exports = {
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
 
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -310,7 +317,7 @@ module.exports = {
                         .setDescription(
                             `**${embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
                                 track.title
-                            }](${track.url})**\n\nAnd **${
+                            }](${track.raw.url ?? track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
@@ -321,8 +328,9 @@ module.exports = {
         }
 
         if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            logger.debug(`Track found and added with player.play(), started playing. Query: ${query}.`);
+            logger.debug(`Track found and added with player.play(), started playing. Query: '${query}'.`);
 
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -332,7 +340,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${track.title}](${track.url})**`
+                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
+                                track.title
+                            }](${track.raw.url ?? track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedOptions.colors.success)
@@ -340,7 +350,9 @@ module.exports = {
             });
         }
 
-        logger.debug(`Track found and added with player.play(), added to queue. Query: ${query}.`);
+        logger.debug(`Track found and added with player.play(), added to queue. Query: '${query}'.`);
+
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -349,7 +361,9 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${track.url})**`
+                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
+                            track.raw.url ?? track.url
+                        })**`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(embedOptions.colors.success)

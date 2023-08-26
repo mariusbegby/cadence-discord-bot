@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -18,6 +17,15 @@ module.exports = {
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
     execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'skip.js',
+            module: 'slashCommand',
+            name: '/skip',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
@@ -40,9 +48,9 @@ module.exports = {
 
         if (skipToTrack) {
             if (skipToTrack > queue.tracks.data.length) {
-                logger.debug(
-                    `User used command ${interaction.commandName} but track number was higher than total tracks.`
-                );
+                logger.debug('Specified track number was higher than total tracks.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -64,10 +72,9 @@ module.exports = {
                 }
 
                 queue.node.skipTo(skipToTrack - 1);
+                logger.debug('Skipped to specified track number.');
 
-                logger.debug(
-                    `User used command ${interaction.commandName} and skipped to track.`
-                );
+                logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -76,7 +83,9 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**`
+                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                                    skippedTrack.title
+                                }](${skippedTrack.raw.url ?? skippedTrack.url})**`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(embedOptions.colors.success)
@@ -85,9 +94,9 @@ module.exports = {
             }
         } else {
             if (queue.tracks.data.length === 0 && !queue.currentTrack) {
-                logger.debug(
-                    `User used command ${interaction.commandName} but there was no tracks in queue or current track.`
-                );
+                logger.debug('No tracks in queue and no current track.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -109,6 +118,7 @@ module.exports = {
                 durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
             }
             queue.node.skip();
+            logger.debug('Skipped current track.');
 
             const loopModesFormatted = new Map([
                 [0, 'disabled'],
@@ -119,9 +129,7 @@ module.exports = {
 
             const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-            logger.debug(
-                `User used command ${interaction.commandName} and skipped track.`
-            );
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -130,7 +138,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
+                            `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                                skippedTrack.title
+                            }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
                                 `${
                                     queue.repeatMode === 0
                                         ? ''
