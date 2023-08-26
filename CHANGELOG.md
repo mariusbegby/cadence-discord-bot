@@ -1,5 +1,41 @@
 # Changelog
 
+## [4.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.3...v4.2.0) (2023-08-26)
+
+
+### Features
+
+* add default properties for logger, ignore these in pino-pretty output ([5531699](https://github.com/mariusbegby/cadence-discord-bot/commit/55316995e5dcd5f4f73479a35a8e395b4acee86d))
+* add pushing logs to loki ([9c1ab82](https://github.com/mariusbegby/cadence-discord-bot/commit/9c1ab820da913b958353bfdc135bc39d9377e841))
+* better autocomplete by caching and debounce ([a9a9183](https://github.com/mariusbegby/cadence-discord-bot/commit/a9a918392a12b42254353b864fb6c6d525c4727b))
+* debounce autocomplete on /play ([68a8274](https://github.com/mariusbegby/cadence-discord-bot/commit/68a8274b44917953dc1cbfcc691a435af19fae84))
+
+
+### Minor changes and bug fixes
+
+* add env variable for LOKI_HOST ([875d903](https://github.com/mariusbegby/cadence-discord-bot/commit/875d9036f11a163a7e929d62046b2b7844a052c0))
+* add execution id to footer in error embeds ([82ab8c9](https://github.com/mariusbegby/cadence-discord-bot/commit/82ab8c9387518050c5b5caf06886afae974e9833))
+* add toggle for showing discord player debug logging ([91570e7](https://github.com/mariusbegby/cadence-discord-bot/commit/91570e7c2e880b1e32ff5bd24fb5726f69d07f6c))
+* Improvements to spotify country-based url filter and playlist support ([4d9353d](https://github.com/mariusbegby/cadence-discord-bot/commit/4d9353d43afc26993e3c5429abe8ecc781ef7317))
+* indicate live track for duration ([0111d3a](https://github.com/mariusbegby/cadence-discord-bot/commit/0111d3af37fab8d5dfb89c58ec239d652527b623))
+* Logging changes, lower level logging ([dfea740](https://github.com/mariusbegby/cadence-discord-bot/commit/dfea74080e99b5ad301104a32f4684d789e7e6bf))
+* more changes to logging ([9d9087d](https://github.com/mariusbegby/cadence-discord-bot/commit/9d9087d4c3733d60cdf641851fff1e3191a26541))
+* show track url instead of source on player start event ([7ef666f](https://github.com/mariusbegby/cadence-discord-bot/commit/7ef666f03d2fa174b0cf649fe9906044f0f92b7c))
+* Support custom emojis in config for liveTrack  icon ([97ffa12](https://github.com/mariusbegby/cadence-discord-bot/commit/97ffa127032a98dd66dd55348b6d3e5761f07c5f))
+* update logger for all util ([7cb25c5](https://github.com/mariusbegby/cadence-discord-bot/commit/7cb25c56486cd846874a11f3ef4d35de54c78906))
+* update logging for events ([5c8f335](https://github.com/mariusbegby/cadence-discord-bot/commit/5c8f3353f9821efb46b4e174383ee515826bab31))
+* update to mediaplex 0.0.6 ([3a7212a](https://github.com/mariusbegby/cadence-discord-bot/commit/3a7212a7a25740c43351e8c3f37de3d22d9841ea))
+* update voice channel validator logging ([2210982](https://github.com/mariusbegby/cadence-discord-bot/commit/22109823e1fceafe4c6877197c8f64761765e579))
+* updated logging for commands ([a04d0ae](https://github.com/mariusbegby/cadence-discord-bot/commit/a04d0aeb5bc2ca86c1f6911c4de14c501454dd84))
+* updated logging for validators ([57fc1e3](https://github.com/mariusbegby/cadence-discord-bot/commit/57fc1e3ee82ac3f3a730be3ddd48ffacbb5cb7f0))
+
+
+### Miscellaneous
+
+* remove comments ([45b0039](https://github.com/mariusbegby/cadence-discord-bot/commit/45b00395a7aa53e5e704e84600a80f81ed770b10))
+* update logging for client ready ([bdaf998](https://github.com/mariusbegby/cadence-discord-bot/commit/bdaf998e31f4b06554d2f54f755875841d473ceb))
+* update package.json with new ignore flags for pino-pretty ([3971f51](https://github.com/mariusbegby/cadence-discord-bot/commit/3971f517ab42595963071e2e71d76222c21771ef))
+
 ## [4.1.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.1.2...v4.1.3) (2023-08-22)
 
 
