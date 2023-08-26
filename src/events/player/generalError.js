@@ -16,7 +16,7 @@ module.exports = {
         const logger = require('../../services/logger').child({
             source: 'generalError.js',
             module: 'event',
-            name: 'generalError',
+            name: 'playerGeneralError',
             executionId: executionId,
             shardId: queue.metadata.client.shard.ids[0],
             guildId: queue.metadata.channel.guild.id

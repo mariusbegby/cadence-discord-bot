@@ -1,4 +1,4 @@
-const logger = require('../../services/logger');
+const { v4: uuidv4 } = require('uuid');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const systemOptions = config.get('systemOptions');
@@ -9,7 +9,17 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client) => {
-        logger.warn(`${client.user.tag} is reconnecting to Discord APIs.`);
+        const executionId = uuidv4();
+
+        const logger = require('../../services/logger').child({
+            source: 'reconnecting.js',
+            module: 'event',
+            name: 'clientReconnecting',
+            executionId: executionId,
+            shardId: client.shard.ids[0]
+        });
+
+        logger.warn('Client is reconnecting to Discord APIs.');
 
         // send message to system message channel for event
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
