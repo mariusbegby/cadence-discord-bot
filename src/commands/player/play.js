@@ -11,6 +11,12 @@ const { useMainPlayer, useQueue } = require('discord-player');
 
 const recentQueries = new Map();
 
+const loggerTempplate = require('../../services/logger').child({
+    source: 'play.js',
+    module: 'slashCommand',
+    name: '/play'
+});
+
 module.exports = {
     isNew: false,
     isBeta: false,
@@ -29,10 +35,7 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     autocomplete: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
-            source: 'play.js',
-            module: 'slashCommand',
-            name: '/play',
+        const logger = loggerTempplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -84,10 +87,7 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
-            source: 'play.js',
-            module: 'slashCommand',
-            name: '/play',
+        const logger = loggerTempplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -158,6 +158,7 @@ module.exports = {
 
         try {
             logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
+
             ({ track } = await player.play(interaction.member.voice.channel, searchResult, {
                 requestedBy: interaction.user,
                 nodeOptions: {
@@ -227,6 +228,7 @@ module.exports = {
                                 `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }
@@ -242,6 +244,7 @@ module.exports = {
                                 `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }
@@ -258,6 +261,7 @@ module.exports = {
                                 `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and it was not possible to start playing the track. This could happen if the voice connection is lost or queue is destroyed while adding the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }
@@ -280,6 +284,7 @@ module.exports = {
                             `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
                         .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }

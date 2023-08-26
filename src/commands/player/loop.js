@@ -96,7 +96,9 @@ module.exports = {
 
         queue.setRepeatMode(mode);
 
-        if (!queue.repeatMode === mode) {
+        // switch(queue.repeatMode) instead of multiple if statements
+
+        if (queue.repeatMode !== mode) {
             logger.warn(
                 'Failed to change loop mode. After setting queue repeat mode, the value was not the same as input.'
             );
@@ -109,6 +111,7 @@ module.exports = {
                             `**${embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to \`${modeUserString}\`, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
                         .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }

@@ -31,6 +31,7 @@ module.exports = {
                         `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue related to the queue or current track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                     )
                     .setColor(embedOptions.colors.error)
+                    .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
 
@@ -45,6 +46,7 @@ module.exports = {
                                     `\n\n<@${systemOptions.systemUserId}>`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }

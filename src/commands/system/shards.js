@@ -115,6 +115,7 @@ module.exports = {
                             `**${embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to fetch player statistics and client values from shards.`
                         )
                         .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }

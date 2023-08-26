@@ -51,6 +51,7 @@ module.exports = {
                             `**${embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to reload commands across shards.`
                         )
                         .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }

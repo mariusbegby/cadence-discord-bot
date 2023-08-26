@@ -8,6 +8,12 @@ const { lyricsExtractor } = require('@discord-player/extractor');
 
 const recentQueries = new Map();
 
+const loggerTempplate = require('../../services/logger').child({
+    source: 'lyrics.js',
+    module: 'slashCommand',
+    name: '/lyrics'
+});
+
 module.exports = {
     isNew: false,
     isBeta: false,
@@ -26,10 +32,7 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     autocomplete: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
-            source: 'lyrics.js',
-            module: 'slashCommand',
-            name: '/lyrics',
+        const logger = loggerTempplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -89,10 +92,7 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
-            source: 'lyrics.js',
-            module: 'slashCommand',
-            name: '/lyrics',
+        const logger = loggerTempplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
