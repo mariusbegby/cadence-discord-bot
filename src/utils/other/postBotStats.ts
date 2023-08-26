@@ -1,17 +1,19 @@
 import https from 'node:https';
 import loggerModule from '../../services/logger';
+import { PostBotStatsParams, PostBotStatsSite } from '../../types/utilTypes';
+import { Collection, Guild } from 'discord.js';
 
-export const postBotStats = async ({ client, executionId }) => {
+export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
     const logger = loggerModule.child({
         source: 'postBotStats.js',
         module: 'utilOther',
         name: 'postBotStats',
         executionId: executionId,
-        shardId: client.shard.ids[0]
+        shardId: client.shard?.ids[0]
     });
 
     try {
-        if (client.shard.ids[0] !== 0) {
+        if (client.shard?.ids[0] !== 0) {
             return;
         }
 
@@ -24,10 +26,11 @@ export const postBotStats = async ({ client, executionId }) => {
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
-                results.map((guildCache) => {
+                const guildCaches = results as Collection<string, Guild>[];
+                guildCaches.map((guildCache) => {
                     if (guildCache) {
-                        guildCount += guildCache.length;
-                        memberCount += guildCache.reduce((acc, guildCache) => acc + guildCache.memberCount, 0);
+                        guildCount += guildCache.size;
+                        memberCount += guildCache.reduce((acc, guild) => acc + guild.memberCount, 0);
                     }
                 });
 
@@ -38,7 +41,7 @@ export const postBotStats = async ({ client, executionId }) => {
             });
 
         /* eslint-disable camelcase */
-        const sites = [
+        const sites: PostBotStatsSite[] = [
             {
                 enabled: false,
                 hostname: 'top.gg',
@@ -49,7 +52,7 @@ export const postBotStats = async ({ client, executionId }) => {
                     shard_count: shardCount,
                     server_count: guildCount
                 },
-                token: process.env.BOTLIST_TOP_GG_API_TOKEN
+                token: process.env.BOTLIST_TOP_GG_API_TOKEN ?? ''
             },
             {
                 enabled: false,
@@ -61,7 +64,7 @@ export const postBotStats = async ({ client, executionId }) => {
                     users: memberCount,
                     guilds: guildCount
                 },
-                token: process.env.BOTLIST_DISCORD_BOT_LIST_COM_API_TOKEN
+                token: process.env.BOTLIST_DISCORD_BOT_LIST_COM_API_TOKEN ?? ''
             },
             {
                 enabled: false,
@@ -71,7 +74,7 @@ export const postBotStats = async ({ client, executionId }) => {
                 body: {
                     server_count: guildCount
                 },
-                token: process.env.BOTLIST_DISCORDS_COM_API_TOKEN
+                token: process.env.BOTLIST_DISCORDS_COM_API_TOKEN ?? ''
             },
             {
                 enabled: false,
@@ -83,7 +86,7 @@ export const postBotStats = async ({ client, executionId }) => {
                     shardCount: shardCount,
                     guildCount: guildCount
                 },
-                token: process.env.BOTLIST_DISCORD_BOTS_GG_API_TOKEN
+                token: process.env.BOTLIST_DISCORD_BOTS_GG_API_TOKEN ?? ''
             },
             {
                 enabled: false,
@@ -94,7 +97,7 @@ export const postBotStats = async ({ client, executionId }) => {
                     shard_count: shardCount,
                     server_count: guildCount
                 },
-                token: process.env.BOTLIST_BOTLIST_ME_API_TOKEN
+                token: process.env.BOTLIST_BOTLIST_ME_API_TOKEN ?? ''
             },
             {
                 enabled: false,
@@ -120,10 +123,10 @@ export const postBotStats = async ({ client, executionId }) => {
 
         logger.info(`Starting to post bot stats with guild count ${guildCount} and member count ${memberCount}...`);
 
-        const statusCodes = [];
+        const statusCodes: number[] = [];
 
         sites.map((site) => {
-            if (site.disabled) {
+            if (!site.enabled) {
                 return;
             }
 
@@ -140,11 +143,17 @@ export const postBotStats = async ({ client, executionId }) => {
             };
 
             const request = https.request(options, (res) => {
-                res.statusCode === 200
-                    ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
-                    : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
+                if (typeof res.statusCode === 'number') {
+                    res.statusCode === 200
+                        ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
+                        : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
 
-                statusCodes.push(res.statusCode);
+                    statusCodes.push(res.statusCode);
+                } else {
+                    logger.error(
+                        `Request to ${site.hostname}: statusCode is undefined or not a number (${res.statusCode}).`
+                    );
+                }
             });
 
             request.write(JSON.stringify(site.body));

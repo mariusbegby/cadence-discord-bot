@@ -5,7 +5,7 @@ const cookies = require(path.resolve('./cookies.json'));
 
 try {
     const cookieString = cookies
-        .map(({ name, value }) => {
+        .map(({ name, value }: { name: string; value: string }) => {
             return `${name}=${value}`;
         })
         .join('; ');

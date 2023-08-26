@@ -1,6 +1,7 @@
 import loggerModule from '../../services/logger';
+import { GetUptimeFormattedParams } from '../../types/utilTypes';
 
-export const getUptimeFormatted = async ({ executionId }) => {
+export const getUptimeFormatted = async ({ executionId }: GetUptimeFormattedParams) => {
     const logger = loggerModule.child({
         source: 'getUptimeFormatted.js',
         module: 'utilSystem',
@@ -11,9 +12,9 @@ export const getUptimeFormatted = async ({ executionId }) => {
     try {
         let uptimeFormattedString = '';
 
-        const uptimeInSeconds = process.uptime();
+        const uptimeInSeconds = parseFloat(process.uptime().toFixed(0));
         const uptimeDate = new Date(0);
-        uptimeDate.setSeconds(uptimeInSeconds.toFixed(0));
+        uptimeDate.setSeconds(uptimeInSeconds);
         uptimeFormattedString = `${
             uptimeDate.getUTCDate() - 1
         }d ${uptimeDate.getUTCHours()}h ${uptimeDate.getUTCMinutes()}m ${uptimeDate.getUTCSeconds()}s`;

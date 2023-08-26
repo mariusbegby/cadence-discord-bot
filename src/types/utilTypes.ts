@@ -62,3 +62,26 @@ export interface CannotSendMessageInChannelParams {
     interaction: ChatInputCommandInteraction;
     executionId: string;
 }
+
+export interface GetUptimeFormattedParams {
+    executionId: string;
+}
+
+export interface StartLoadTestParams {
+    client: ExtendedClient;
+    executionId: string;
+}
+
+export interface PostBotStatsParams {
+    client: ExtendedClient;
+    executionId: string;
+}
+
+export interface PostBotStatsSite {
+    enabled: boolean;
+    hostname: string;
+    path: string;
+    method: string;
+    body: object;
+    token: string;
+}
