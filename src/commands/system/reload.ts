@@ -56,11 +56,11 @@ module.exports = {
         }
 
         const commands = client.commands.map((command) => {
-            let params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+            const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });
 
-        let embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands.join('\n');
+        const embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands.join('\n');
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({

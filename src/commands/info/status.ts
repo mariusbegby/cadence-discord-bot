@@ -39,9 +39,9 @@ module.exports = {
                 return player.generateStatistics();
             })
             .then((results) => {
-                let queueCountList = [];
-                let trackCountList = [];
-                let listenerCountList = [];
+                const queueCountList = [];
+                const trackCountList = [];
+                const listenerCountList = [];
                 results.map((result) => {
                     queueCountList.push(result.queues.length);
                     if (result.queues.length > 0) {

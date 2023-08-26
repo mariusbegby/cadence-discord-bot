@@ -1,12 +1,17 @@
 {
+    "ignorePatterns": ["config/**/*.js"],
     "env": {
         "node": true,
         "es2021": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "./tsconfig.json"
     },
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "max-len": [
@@ -21,14 +26,9 @@
             }
         ],
         "linebreak-style": ["error", "windows"],
-        "quotes": ["error", "single"],
+        "quotes": ["error", "single", { "avoidEscape": true }],
         "semi": ["error", "always"],
-        "camelcase": [
-            "error",
-            {
-                "properties": "always"
-            }
-        ],
+        "camelcase": "error",
         "array-bracket-spacing": ["error", "never"],
         "object-curly-spacing": ["error", "always"],
         "jsx-quotes": ["error", "prefer-single"],
@@ -47,6 +47,8 @@
             }
         ],
         "curly": ["error", "all"],
-        "no-console": ["error"]
+        "no-console": ["error"],
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/explicit-module-boundary-types": "off"
     }
 }

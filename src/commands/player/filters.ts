@@ -49,7 +49,7 @@ module.exports = {
             return;
         }
 
-        let filterOptions = [];
+        const filterOptions = [];
 
         ffmpegFilterOptions.availableFilters.forEach((filter) => {
             let isEnabled = false;
@@ -169,7 +169,7 @@ module.exports = {
                                 embedOptions.icons.success
                             } Filters toggled**\nNow using these filters:\n${confirmation.values
                                 .map((enabledFilter) => {
-                                    let filter = ffmpegFilterOptions.availableFilters.find(
+                                    const filter = ffmpegFilterOptions.availableFilters.find(
                                         (filter) => enabledFilter == filter.value
                                     );
 

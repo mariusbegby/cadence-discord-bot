@@ -50,9 +50,9 @@ module.exports = {
             await client.shard
                 .broadcastEval((shardClient) => {
                     /* eslint-disable no-undef */
-                    let playerStats = player.generateStatistics();
+                    const playerStats = player.generateStatistics();
                     const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-                    let shardInfo = {
+                    const shardInfo = {
                         shardId: shardClient.shard.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
                         guildCount: shardClient.guilds.cache.size,

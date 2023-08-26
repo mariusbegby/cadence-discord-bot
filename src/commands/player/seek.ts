@@ -85,7 +85,7 @@ module.exports = {
 
         const durationString = durationArray.join(':');
 
-        let validElements = durationArray.every((value) => {
+        const validElements = durationArray.every((value) => {
             return value.length === 2;
         });
 

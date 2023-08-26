@@ -116,7 +116,7 @@ module.exports = {
                 .join('\n');
         }
 
-        let currentTrack = queue.currentTrack;
+        const currentTrack = queue.currentTrack;
 
         const loopModesFormatted = new Map([
             [0, 'disabled'],
@@ -127,7 +127,7 @@ module.exports = {
 
         const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-        let repeatModeString = `${
+        const repeatModeString = `${
             queue.repeatMode === 0
                 ? ''
                 : `**${

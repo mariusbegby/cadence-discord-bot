@@ -28,9 +28,9 @@ module.exports = {
                 return true;
             })
             .map((command) => {
-                let params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
-                let beta = command.isBeta ? `${embedOptions.icons.beta} ` : '';
-                let newCommand = command.isNew ? `${embedOptions.icons.new} ` : '';
+                const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+                const beta = command.isBeta ? `${embedOptions.icons.beta} ` : '';
+                const newCommand = command.isNew ? `${embedOptions.icons.new} ` : '';
                 return `- **\`/${command.data.name}\`** ${params}- ${beta}${newCommand}${command.data.description}`;
             });
 

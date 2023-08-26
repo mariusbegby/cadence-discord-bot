@@ -16,8 +16,8 @@ exports.postBotStats = async ({ client, executionId }) => {
 
         let guildCount = 0;
         let memberCount = 0;
-        let shardCount = client.shard.count;
-        let shardId = client.shard.ids[0];
+        const shardCount = client.shard.count;
+        const shardId = client.shard.ids[0];
 
         logger.debug('Gathering data about guild and member count from shards...');
         await client.shard
@@ -119,14 +119,14 @@ exports.postBotStats = async ({ client, executionId }) => {
 
         logger.info(`Starting to post bot stats with guild count ${guildCount} and member count ${memberCount}...`);
 
-        let statusCodes = [];
+        const statusCodes = [];
 
         sites.map((site) => {
             if (site.disabled) {
                 return;
             }
 
-            let options = {
+            const options = {
                 protocol: 'https:',
                 hostname: site.hostname,
                 port: 443,
@@ -138,7 +138,7 @@ exports.postBotStats = async ({ client, executionId }) => {
                 }
             };
 
-            let request = https.request(options, (res) => {
+            const request = https.request(options, (res) => {
                 res.statusCode === 200
                     ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
                     : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);

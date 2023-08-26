@@ -44,7 +44,7 @@ module.exports = {
 
         logger.debug(`Successfully fetched ${totalGuildCount} guilds.`);
 
-        let guildListFormatted = shardGuilds
+        const guildListFormatted = shardGuilds
             .map((guild) => {
                 return {
                     name: guild.name,

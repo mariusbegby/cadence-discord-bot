@@ -136,7 +136,7 @@ module.exports = {
         }
 
         queue = useQueue(interaction.guild.id);
-        let queueSize = queue?.size ?? 0;
+        const queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
             logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
