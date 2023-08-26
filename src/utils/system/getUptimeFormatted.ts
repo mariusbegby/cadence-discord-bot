@@ -1,5 +1,7 @@
-exports.getUptimeFormatted = async ({ executionId }) => {
-    const logger = require('../../services/logger').child({
+import loggerModule from '../../services/logger';
+
+export const getUptimeFormatted = async ({ executionId }) => {
+    const logger = loggerModule.child({
         source: 'getUptimeFormatted.js',
         module: 'utilSystem',
         name: 'getUptimeFormatted',

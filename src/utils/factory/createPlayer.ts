@@ -1,12 +1,14 @@
-const { Player } = require('discord-player');
+import { Player } from 'discord-player';
+import loggerModule from '../../services/logger';
+import { CreatePlayerParams } from '../../types/playerTypes';
 
-exports.createPlayer = async ({ client, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const createPlayer = async ({ client, executionId }: CreatePlayerParams) => {
+    const logger = loggerModule.child({
         source: 'createPlayer.js',
         module: 'utilFactory',
         name: 'createPlayer',
         executionId: executionId,
-        shardId: client.shard.ids[0]
+        shardId: client.shard?.ids[0]
     });
 
     try {
@@ -27,6 +29,7 @@ exports.createPlayer = async ({ client, executionId }) => {
 
         // make player accessible from anywhere in the application
         // primarily to be able to use it in broadcastEval and other sharding methods
+        // @ts-ignore
         global.player = player;
 
         await player.extractors.loadDefault();

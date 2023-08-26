@@ -1,8 +1,9 @@
 import config from 'config';
+import loggerModule from '../../services/logger';
 const loadTestOptions = config.get('loadTestOptions');
 
-exports.startLoadTest = async ({ client, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const startLoadTest = async ({ client, executionId }) => {
+    const logger = loggerModule.child({
         source: 'startLoadTest.js',
         module: 'utilOther',
         name: 'startLoadTest',

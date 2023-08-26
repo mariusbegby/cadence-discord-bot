@@ -1,8 +1,10 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useQueue } = require('discord-player');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useQueue } from 'discord-player';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     isNew: false,
@@ -13,7 +15,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'leave.js',
             module: 'slashCommand',
             name: '/leave',

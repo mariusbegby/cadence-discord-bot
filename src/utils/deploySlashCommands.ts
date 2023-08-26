@@ -1,14 +1,15 @@
-require('dotenv').config();
+import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
-const { REST, Routes } = require('discord.js');
+import { REST, Routes } from 'discord.js';
 import config from 'config';
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from '../services/logger';
 const systemOptions = config.get('systemOptions');
 
 const executionId = uuidv4();
 
-const logger = require('../services/logger').child({
+const logger = loggerModule.child({
     source: 'deploySlashCommands.js',
     module: 'deploy',
     name: 'deploySlashCommands',
@@ -24,6 +25,7 @@ for (const folder of commandFolders) {
         .filter((file) => file.endsWith('.js'));
 
     for (const file of commandFiles) {
+        /* eslint-disable @typescript-eslint/no-var-requires */
         const command = require(`../commands/${folder}/${file}`);
         command.isSystemCommand
             ? systemCommands.push(command.data.toJSON())
@@ -72,7 +74,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
     } catch (error) {
         logger.error(
             error,
-            'Failed to refresh system slash commands. Make sure the bot is in the system guilds specified in \'systemOptions\'.'
+            "Failed to refresh system slash commands. Make sure the bot is in the system guilds specified in 'systemOptions'."
         );
     }
 })();

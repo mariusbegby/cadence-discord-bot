@@ -1,17 +1,19 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions = config.get('ffmpegFilterOptions');
-const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
-const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidator');
-const {
+import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import {
     SlashCommandBuilder,
     EmbedBuilder,
     ActionRowBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
     ButtonBuilder
-} = require('discord.js');
-const { useQueue } = require('discord-player');
+} from 'discord.js';
+import { useQueue } from 'discord-player';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     isNew: false,
@@ -22,7 +24,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'filters.js',
             module: 'slashCommand',
             name: '/filters',

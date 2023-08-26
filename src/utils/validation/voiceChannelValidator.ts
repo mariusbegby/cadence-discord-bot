@@ -1,9 +1,11 @@
+import { EmbedOptions } from '../../types/configTypes';
+import loggerModule from '../../services/logger';
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { EmbedBuilder } = require('discord.js');
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { EmbedBuilder } from 'discord.js';
 
-exports.notInVoiceChannel = async ({ interaction, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const notInVoiceChannel = async ({ interaction, executionId }) => {
+    const logger = loggerModule.child({
         source: 'voiceChannelValidator.js',
         module: 'validator',
         name: 'notInVoiceChannel',
@@ -30,8 +32,8 @@ exports.notInVoiceChannel = async ({ interaction, executionId }) => {
     return false;
 };
 
-exports.notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
+    const logger = loggerModule.child({
         source: 'voiceChannelValidator.js',
         module: 'utilValidation',
         name: 'notInSameVoiceChannel',

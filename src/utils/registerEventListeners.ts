@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import config from 'config';
-
+import loggerModule from '../services/logger';
 const loggerOptions = config.get('loggerOptions');
 
-exports.registerEventListeners = ({ client, player, executionId }) => {
-    const logger = require('../services/logger').child({
+export const registerEventListeners = ({ client, player, executionId }) => {
+    const logger = loggerModule.child({
         source: 'registerEventListeners.js',
         module: 'register',
         name: 'registerEventListeners',
@@ -24,6 +24,7 @@ exports.registerEventListeners = ({ client, player, executionId }) => {
             .filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {
+            /* eslint-disable @typescript-eslint/no-var-requires */
             const event = require(`../events/${folder}/${file}`);
             switch (folder) {
                 case 'client':

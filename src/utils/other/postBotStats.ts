@@ -1,7 +1,8 @@
 import https from 'node:https';
+import loggerModule from '../../services/logger';
 
-exports.postBotStats = async ({ client, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const postBotStats = async ({ client, executionId }) => {
+    const logger = loggerModule.child({
         source: 'postBotStats.js',
         module: 'utilOther',
         name: 'postBotStats',

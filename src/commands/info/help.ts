@@ -1,7 +1,9 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,7 +12,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'help.js',
             module: 'slashCommand',
             name: '/help',

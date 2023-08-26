@@ -1,13 +1,15 @@
-require('dotenv').config();
-const { registerEventListeners } = require('./utils/registerEventListeners.js');
-const { registerClientCommands } = require('./utils/registerClientCommands.js');
-const { createClient } = require('./utils/factory/createClient.js');
-const { createPlayer } = require('./utils/factory/createPlayer.js');
-const { v4: uuidv4 } = require('uuid');
+import 'dotenv/config';
+import { registerEventListeners } from './utils/registerEventListeners';
+import { registerClientCommands } from './utils/registerClientCommands';
+import { createClient } from './utils/factory/createClient';
+import { createPlayer } from './utils/factory/createPlayer';
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from './services/logger';
+import { ExtendedClient } from './types/clientTypes';
+import { Client } from 'discord.js';
 
 const executionId = uuidv4();
-
-const logger = require('./services/logger').child({
+const logger = loggerModule.child({
     source: 'bot.js',
     module: 'shardingClient',
     name: 'shardingClient',
@@ -16,14 +18,14 @@ const logger = require('./services/logger').child({
 });
 
 (async () => {
-    const client = await createClient({ executionId });
+    const client: ExtendedClient = await createClient({ executionId });
     const player = await createPlayer({ client, executionId });
 
     client.on('allShardsReady', async () => {
         client.registerClientCommands = registerClientCommands;
         registerEventListeners({ client, player, executionId });
         registerClientCommands({ client, executionId });
-        client.emit('ready', client);
+        client.emit('ready', client as Client);
     });
 
     client.login(process.env.DISCORD_BOT_TOKEN);

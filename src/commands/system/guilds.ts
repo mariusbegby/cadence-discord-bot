@@ -1,7 +1,9 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     isSystemCommand: true,
@@ -13,7 +15,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'guilds.js',
             module: 'slashCommand',
             name: '/guilds',

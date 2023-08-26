@@ -1,9 +1,11 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { EmbedBuilder } = require('discord.js');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { EmbedBuilder } from 'discord.js';
+import loggerModule from '../../services/logger';
 
-exports.queueDoesNotExist = async ({ interaction, queue, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const queueDoesNotExist = async ({ interaction, queue, executionId }) => {
+    const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueDoesNotExist',
@@ -30,8 +32,8 @@ exports.queueDoesNotExist = async ({ interaction, queue, executionId }) => {
     return false;
 };
 
-exports.queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
+    const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
@@ -58,8 +60,8 @@ exports.queueNoCurrentTrack = async ({ interaction, queue, executionId }) => {
     return false;
 };
 
-exports.queueIsEmpty = async ({ interaction, queue, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const queueIsEmpty = async ({ interaction, queue, executionId }) => {
+    const logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueIsEmpty',

@@ -1,4 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     name: 'playerStart',
@@ -6,8 +7,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (queue, track) => {
         const executionId = uuidv4();
-
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'playerStart.js',
             module: 'event',
             name: 'playerStart',

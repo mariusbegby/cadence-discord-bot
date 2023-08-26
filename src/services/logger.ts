@@ -76,5 +76,5 @@ const logLevelConfig = {
 };
 
 const logger = pino(logLevelConfig, transport);
-
+export default logger;
 module.exports = logger;

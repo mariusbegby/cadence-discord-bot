@@ -1,16 +1,18 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
 const playerOptions = config.get('playerOptions');
-const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
-const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionValidator');
-const { transformQuery } = require('../../utils/validation/searchQueryValidator');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMainPlayer, useQueue } = require('discord-player');
+import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { cannotJoinVoiceOrTalk } from '../../utils/validation/permissionValidator';
+import { transformQuery } from '../../utils/validation/searchQueryValidator';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useMainPlayer, useQueue } from 'discord-player';
+import loggerModule from '../../services/logger';
+import { EmbedOptions } from '../../types/configTypes';
 
 const recentQueries = new Map();
 
-const loggerTempplate = require('../../services/logger').child({
+const loggerTemplate = loggerModule.child({
     source: 'play.js',
     module: 'slashCommand',
     name: '/play'
@@ -34,7 +36,7 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     autocomplete: async ({ interaction, executionId }) => {
-        const logger = loggerTempplate.child({
+        const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -86,7 +88,7 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerTempplate.child({
+        const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -213,7 +215,7 @@ module.exports = {
 
             if (
                 (error.type === 'TypeError' &&
-                    (error.message.includes('Cannot read properties of null (reading \'createStream\')') ||
+                    (error.message.includes("Cannot read properties of null (reading 'createStream')") ||
                         error.message.includes('Failed to fetch resources for ytdl streaming'))) ||
                 error.message.includes('Could not extract stream for this track')
             ) {
@@ -248,7 +250,7 @@ module.exports = {
                 });
             }
 
-            if (error.message === 'Cannot read properties of null (reading \'createStream\')') {
+            if (error.message === "Cannot read properties of null (reading 'createStream')") {
                 // Can happen if /play then /leave before track starts playing
                 logger.warn(error, 'Found track but failed to play back audio. Voice connection might be unavailable.');
 

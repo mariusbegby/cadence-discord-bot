@@ -1,9 +1,11 @@
-require('dotenv').config();
+import 'dotenv/config';
 import config from 'config';
-const shardingOptions = config.get('shardingOptions');
+import { Client, Shard } from 'discord.js';
+import { ShardingManager, ShardEvents } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from './services/logger';
 
-const { ShardingManager, ShardEvents } = require('discord.js');
-const { v4: uuidv4 } = require('uuid');
+const shardingOptions: object = config.get('shardingOptions');
 
 const manager = new ShardingManager('./dist/bot.js', {
     token: process.env.DISCORD_BOT_TOKEN,
@@ -12,10 +14,10 @@ const manager = new ShardingManager('./dist/bot.js', {
 
 const readyShards = new Set();
 
-manager.on('shardCreate', (shard) => {
+manager.on('shardCreate', (shard: Shard) => {
     const executionId = uuidv4();
 
-    const logger = require('./services/logger').child({
+    const logger = loggerModule.child({
         source: 'index.js',
         module: 'shardingManager',
         name: 'shardingManager',
@@ -29,7 +31,7 @@ manager.on('shardCreate', (shard) => {
     shard.on(ShardEvents.Ready, () => {
         readyShards.add(shard.id);
         if (readyShards.size === manager.totalShards) {
-            manager.broadcastEval((client) => client.emit('allShardsReady'));
+            manager.broadcastEval((client: Client) => client.emit('allShardsReady'));
             logger.info('All shards ready, bot is now online.');
         }
     });

@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-const { Collection } = require('discord.js');
+import { Collection } from 'discord.js';
+import loggerModule from '../services/logger';
 
-exports.registerClientCommands = ({ client, executionId }) => {
-    const logger = require('../services/logger').child({
+export const registerClientCommands = ({ client, executionId }) => {
+    const logger = loggerModule.child({
         source: 'registerClientCommands.js',
         module: 'register',
         name: 'registerClientCommands',
@@ -27,6 +28,7 @@ exports.registerClientCommands = ({ client, executionId }) => {
                 delete require.cache[require.resolve(`../commands/${folder}/${file}`)];
 
                 // register command
+                /* eslint-disable @typescript-eslint/no-var-requires */
                 const command = require(`../commands/${folder}/${file}`);
                 client.commands.delete(command.data.name);
                 client.commands.set(command.data.name, command);

@@ -1,18 +1,18 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
-const { cannotSendMessageInChannel } = require('../../utils/validation/permissionValidator');
-const { Events, EmbedBuilder } = require('discord.js');
-
-const { v4: uuidv4 } = require('uuid');
+import { cannotSendMessageInChannel } from '../../utils/validation/permissionValidator';
+import { Events, EmbedBuilder } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction, { client }) => {
         const executionId = uuidv4();
-
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'interactionCreate.js',
             module: 'event',
             name: 'interactionCreate',

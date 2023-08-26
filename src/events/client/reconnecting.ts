@@ -1,8 +1,10 @@
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions = config.get('systemOptions');
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     name: 'reconnecting',
@@ -10,8 +12,7 @@ module.exports = {
     once: false,
     execute: async (client) => {
         const executionId = uuidv4();
-
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'reconnecting.js',
             module: 'event',
             name: 'clientReconnecting',

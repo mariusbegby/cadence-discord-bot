@@ -1,9 +1,12 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { getUptimeFormatted } = require('../../utils/system/getUptimeFormatted');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
+import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import osu from 'node-os-utils';
-const { version } = require('../../../package.json');
+// @ts-ignore
+import { version } from '../../../package.json';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     isNew: false,
@@ -14,7 +17,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'status.js',
             module: 'slashCommand',
             name: '/status',

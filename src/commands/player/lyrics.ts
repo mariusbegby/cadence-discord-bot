@@ -1,14 +1,16 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
-const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidator');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMainPlayer, useQueue, QueryType } = require('discord-player');
-const { lyricsExtractor } = require('@discord-player/extractor');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useMainPlayer, useQueue, QueryType } from 'discord-player';
+import { lyricsExtractor } from '@discord-player/extractor';
+import loggerModule from '../../services/logger';
 
 const recentQueries = new Map();
 
-const loggerTempplate = require('../../services/logger').child({
+const loggerTemplate = loggerModule.child({
     source: 'lyrics.js',
     module: 'slashCommand',
     name: '/lyrics'
@@ -32,7 +34,7 @@ module.exports = {
                 .setAutocomplete(true)
         ),
     autocomplete: async ({ interaction, executionId }) => {
-        const logger = loggerTempplate.child({
+        const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id
@@ -92,7 +94,7 @@ module.exports = {
         return interaction.respond(response);
     },
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerTempplate.child({
+        const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
             guildId: interaction.guild.id

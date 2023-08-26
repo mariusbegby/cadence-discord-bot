@@ -1,5 +1,7 @@
-exports.transformQuery = async ({ query, executionId }) => {
-    const logger = require('../../services/logger').child({
+import loggerModule from '../../services/logger';
+
+export const transformQuery = async ({ query, executionId }) => {
+    const logger = loggerModule.child({
         source: 'searchQueryValidator.js',
         module: 'utilValidation',
         name: 'transformQuery',

@@ -1,12 +1,12 @@
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     name: 'unhandledRejection',
     isDebug: false,
     execute: async (error) => {
         const executionId = uuidv4();
-
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'unhandledRejection.js',
             module: 'event',
             name: 'unhandledRejection',

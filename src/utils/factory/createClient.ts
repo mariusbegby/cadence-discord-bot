@@ -1,7 +1,9 @@
 import Discord from 'discord.js';
+import loggerModule from '../../services/logger';
+import { Client } from 'discord.js';
 
-exports.createClient = async ({ executionId }) => {
-    const logger = require('../../services/logger').child({
+export const createClient = async ({ executionId }: { executionId: string }) => {
+    const logger = loggerModule.child({
         source: 'createClient.js',
         module: 'utilFactory',
         name: 'createClient',
@@ -12,7 +14,7 @@ exports.createClient = async ({ executionId }) => {
     try {
         logger.debug('Creating discord.js client...');
 
-        const client = new Discord.Client({
+        const client: Client = new Discord.Client({
             intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
             makeCache: Discord.Options.cacheWithLimits({
                 ...Discord.Options.DefaultMakeCacheSettings,
@@ -22,7 +24,7 @@ exports.createClient = async ({ executionId }) => {
                 ReactionManager: 0,
                 GuildMemberManager: {
                     maxSize: 50,
-                    keepOverLimit: (member) => member.id === client.user.id
+                    keepOverLimit: (member) => member.id === client.user?.id
                 }
             }),
             sweepers: {
@@ -33,7 +35,7 @@ exports.createClient = async ({ executionId }) => {
                 },
                 users: {
                     interval: 3600,
-                    filter: () => (user) => user.id !== client.user.id
+                    filter: () => (user) => user.id !== client.user?.id
                 }
             }
         });

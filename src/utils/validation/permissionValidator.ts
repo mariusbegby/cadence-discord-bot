@@ -1,9 +1,11 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
-const { EmbedBuilder } = require('discord.js');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
+import { EmbedBuilder } from 'discord.js';
+import loggerModule from '../../services/logger';
 
-exports.cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
+    const logger = loggerModule.child({
         source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
@@ -34,8 +36,8 @@ exports.cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
     return false;
 };
 
-exports.cannotSendMessageInChannel = async ({ interaction, executionId }) => {
-    const logger = require('../../services/logger').child({
+export const cannotSendMessageInChannel = async ({ interaction, executionId }) => {
+    const logger = loggerModule.child({
         source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotSendMessageInChannel',

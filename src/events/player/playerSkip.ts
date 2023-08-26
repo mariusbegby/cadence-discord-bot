@@ -1,9 +1,11 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
 const systemOptions = config.get('systemOptions');
-const { EmbedBuilder } = require('discord.js');
-const { v4: uuidv4 } = require('uuid');
+import { EmbedBuilder } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+import loggerModule from '../../services/logger';
 
 // Emitted when the audio player fails to load the stream for a track
 module.exports = {
@@ -12,8 +14,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (queue, track) => {
         const executionId = uuidv4();
-
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'playerSkip.js',
             module: 'event',
             name: 'playerSkip',

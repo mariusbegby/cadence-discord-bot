@@ -24,7 +24,7 @@
         "start-pretty-no-ignore": "node ./dist/index.js | pino-pretty",
         "deploy": "node ./dist/utils/deploySlashCommands.js",
         "deploy-pretty": "node ./dist/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
-        "eslint": "eslint ./"
+        "eslint": "eslint ./src"
     },
     "dependencies": {
         "@discord-player/extractor": "^4.4.2-dev.1",

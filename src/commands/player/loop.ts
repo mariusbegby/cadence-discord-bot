@@ -1,10 +1,12 @@
 import config from 'config';
-const embedOptions = config.get('embedOptions');
+import { EmbedOptions } from '../../types/configTypes';
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
-const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
-const { queueDoesNotExist } = require('../../utils/validation/queueValidator');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useQueue } = require('discord-player');
+import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist } from '../../utils/validation/queueValidator';
+import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useQueue } from 'discord-player';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     isNew: false,
@@ -27,7 +29,7 @@ module.exports = {
                 )
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = require('../../services/logger').child({
+        const logger = loggerModule.child({
             source: 'loop.js',
             module: 'slashCommand',
             name: '/loop',
