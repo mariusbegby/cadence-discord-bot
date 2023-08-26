@@ -1,9 +1,17 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { EmbedBuilder } = require('discord.js');
 
-exports.cannotJoinVoiceOrTalk = async (interaction) => {
+exports.cannotJoinVoiceOrTalk = async ({ interaction, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'permissionValidator.js',
+        module: 'validator',
+        name: 'cannotJoinVoiceOrTalk',
+        executionId: executionId,
+        shardId: interaction.guild.shardId,
+        guildId: interaction.guild.id
+    });
+
     const channel = interaction.member.voice.channel;
 
     if (!channel.joinable || !channel.speakable) {
@@ -18,7 +26,7 @@ exports.cannotJoinVoiceOrTalk = async (interaction) => {
         });
 
         logger.debug(
-            `User tried to use command ${interaction.commandName} but the bot had no permission to join/speak in the voice channel.`
+            `User tried to use command '${interaction.commandName}' but the bot had no permission to join/speak in the voice channel.`
         );
         return true;
     }
@@ -26,13 +34,22 @@ exports.cannotJoinVoiceOrTalk = async (interaction) => {
     return false;
 };
 
-exports.cannotSendMessageInChannel = async (interaction) => {
+exports.cannotSendMessageInChannel = async ({ interaction, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'permissionValidator.js',
+        module: 'validator',
+        name: 'cannotSendMessageInChannel',
+        executionId: executionId,
+        shardId: interaction.guild.shardId,
+        guildId: interaction.guild.id
+    });
+
     const channel = interaction.channel;
 
     // only checks if channel is viewable, as bot will have permission to send interaction replies if channel is viewable
     if (!channel.viewable) {
         logger.info(
-            `User tried to use command ${interaction.commandName} but the bot had no permission to send reply in text channel.`
+            `User tried to use command '${interaction.commandName}' but the bot had no permission to send reply in text channel.`
         );
 
         try {
@@ -51,8 +68,10 @@ exports.cannotSendMessageInChannel = async (interaction) => {
                 ephemeral: true
             });
         } catch (error) {
-            if(error.message == 'The reply to this interaction has already been sent or deferred.') {
-                logger.warn('Error while sending ephemereal message about insufficient permissions to send message in channel.');
+            if (error.message == 'The reply to this interaction has already been sent or deferred.') {
+                logger.warn(
+                    'Error while sending ephemereal message about insufficient permissions to send message in channel.'
+                );
                 logger.debug(error);
             } else {
                 logger.error(

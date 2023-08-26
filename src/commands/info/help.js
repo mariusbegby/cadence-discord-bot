@@ -9,7 +9,7 @@ module.exports = {
         .setDescription('Show a list of commands and their usage.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
+    execute: async ({ interaction, client, executionId }) => {
         const commandList = client.commands
             .filter((command) => {
                 // don't include system commands

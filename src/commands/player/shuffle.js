@@ -21,7 +21,7 @@ module.exports = {
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await queueDoesNotExist(interaction, queue)) {
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
         }
 
@@ -29,7 +29,7 @@ module.exports = {
             return;
         }
 
-        if (await queueIsEmpty(interaction, queue)) {
+        if (await queueIsEmpty({ interaction, queue, executionId })) {
             return;
         }
 

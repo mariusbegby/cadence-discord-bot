@@ -16,8 +16,8 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
+    execute: async ({ interaction, client, executionId }) => {
+        if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 

@@ -13,8 +13,8 @@ module.exports = {
         .setDescription('Show list of guilds where bot is added.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
+    execute: async ({ interaction, client, executionId }) => {
+        if (await notValidGuildId({ interaction, executionId })) {
             logger.debug('Not a valid guild id.');
             return;
         }

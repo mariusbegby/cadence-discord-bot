@@ -30,8 +30,8 @@ module.exports = {
         )
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
+    execute: async ({ interaction, client, executionId }) => {
+        if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 

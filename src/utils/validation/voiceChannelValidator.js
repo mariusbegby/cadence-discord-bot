@@ -23,7 +23,7 @@ exports.notInVoiceChannel = async ({ interaction, executionId }) => {
             ]
         });
 
-        logger.debug(`User tried to use command ${interaction.commandName} but was not in a voice channel.`);
+        logger.debug(`User tried to use command '${interaction.commandName}' but was not in a voice channel.`);
         return true;
     }
 
@@ -56,7 +56,7 @@ exports.notInSameVoiceChannel = async ({ interaction, queue, executionId }) => {
             ]
         });
 
-        logger.debug(`User tried to use command ${interaction.commandName} but was not in the same voice channel.`);
+        logger.debug(`User tried to use command '${interaction.commandName}' but was not in the same voice channel.`);
         return true;
     }
 

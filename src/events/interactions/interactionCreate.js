@@ -59,7 +59,7 @@ module.exports = {
             try {
                 await interaction.deferReply();
 
-                if (await cannotSendMessageInChannel(interaction)) {
+                if (await cannotSendMessageInChannel({ interaction, executionId })) {
                     return;
                 }
 
@@ -69,9 +69,7 @@ module.exports = {
                 const outputTime = new Date();
                 const executionTime = outputTime - inputTime;
 
-                logger.info(
-                    `Command '${interaction}' executed in ${executionTime} ms.`
-                );
+                logger.info(`Command '${interaction}' executed in ${executionTime} ms.`);
             } catch (error) {
                 logger.warn(
                     error,
@@ -86,9 +84,7 @@ module.exports = {
                     return;
                 } else {
                     if (!interaction.deferred || !interaction.replied) {
-                        logger.warn(
-                            'Interaction was not deferred or replied to, and an error was thrown.'
-                        );
+                        logger.warn('Interaction was not deferred or replied to, and an error was thrown.');
                         return;
                     }
 
@@ -96,9 +92,7 @@ module.exports = {
                         // If the interaction has already been replied to, most likely command executed successfully or error is already handled.
                         return;
                     } else if (interaction.deferred) {
-                        logger.info(
-                            'Interaction was deferred, editing reply and sending Uh-oh message.'
-                        );
+                        logger.info('Interaction was deferred, editing reply and sending Uh-oh message.');
                         await interaction.editReply({
                             embeds: [
                                 new EmbedBuilder()
@@ -109,9 +103,7 @@ module.exports = {
                             ]
                         });
                     } else {
-                        logger.info(
-                            'Interaction was not deferred or replied, sending new reply with Uh-oh message.'
-                        );
+                        logger.info('Interaction was not deferred or replied, sending new reply with Uh-oh message.');
                         await interaction.reply({
                             embeds: [
                                 new EmbedBuilder()
@@ -125,10 +117,7 @@ module.exports = {
                 }
             }
         } else {
-            logger.warn(
-                interaction,
-                'Interaction created but was not a chat input or autocomplete interaction.'
-            );
+            logger.warn(interaction, 'Interaction created but was not a chat input or autocomplete interaction.');
         }
     }
 };

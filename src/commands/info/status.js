@@ -14,7 +14,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
+    execute: async ({ interaction, client, executionId }) => {
         const uptimeString = await getUptimeFormatted();
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();

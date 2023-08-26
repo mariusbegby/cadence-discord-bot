@@ -95,7 +95,7 @@ module.exports = {
             return;
         }
 
-        if (await cannotJoinVoiceOrTalk(interaction)) {
+        if (await cannotJoinVoiceOrTalk({ interaction, executionId })) {
             return;
         }
 
@@ -107,7 +107,7 @@ module.exports = {
         const player = useMainPlayer();
         const query = interaction.options.getString('query');
 
-        const transformedQuery = await transformQuery(query);
+        const transformedQuery = await transformQuery({ query, executionId });
 
         let searchResult;
 
