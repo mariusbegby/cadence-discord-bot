@@ -19,11 +19,11 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node ./src/index.js",
-        "start-pretty": "node ./src/index.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
-        "start-pretty-no-ignore": "node ./src/index.js | pino-pretty",
-        "deploy": "node ./src/utils/deploySlashCommands.js",
-        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
+        "start": "node ./dist/index.js",
+        "start-pretty": "node ./dist/index.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
+        "start-pretty-no-ignore": "node ./dist/index.js | pino-pretty",
+        "deploy": "node ./dist/utils/deploySlashCommands.js",
+        "deploy-pretty": "node ./dist/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
         "eslint": "eslint ./"
     },
     "dependencies": {

@@ -14,11 +14,11 @@ exports.registerClientCommands = ({ client, executionId }) => {
     logger.debug('Registering client commands...');
     client.commands = new Collection();
 
-    const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
+    const commandFolders = fs.readdirSync(path.resolve('./dist/commands'));
     for (const folder of commandFolders) {
         logger.trace(`Registering client commands for folder '${folder}'...`);
         const commandFiles = fs
-            .readdirSync(path.resolve(`./src/commands/${folder}`))
+            .readdirSync(path.resolve(`./dist/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {

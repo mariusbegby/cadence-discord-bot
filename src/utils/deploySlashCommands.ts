@@ -17,10 +17,10 @@ const logger = require('../services/logger').child({
 
 const slashCommands = [];
 const systemCommands = [];
-const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
+const commandFolders = fs.readdirSync(path.resolve('./dist/commands'));
 for (const folder of commandFolders) {
     const commandFiles = fs
-        .readdirSync(path.resolve(`./src/commands/${folder}`))
+        .readdirSync(path.resolve(`./dist/commands/${folder}`))
         .filter((file) => file.endsWith('.js'));
 
     for (const file of commandFiles) {

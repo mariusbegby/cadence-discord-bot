@@ -6,3 +6,4 @@
 /logs/app-*.log
 /cookies.json
 /cookies.txt
+/dist

@@ -15,12 +15,12 @@ exports.registerEventListeners = ({ client, player, executionId }) => {
 
     logger.debug('Registering event listeners...');
 
-    const eventFolders = fs.readdirSync(path.resolve('./src/events'));
+    const eventFolders = fs.readdirSync(path.resolve('./dist/events'));
     for (const folder of eventFolders) {
         logger.trace(`Registering event listener for folder '${folder}'...`);
 
         const eventFiles = fs
-            .readdirSync(path.resolve(`./src/events/${folder}`))
+            .readdirSync(path.resolve(`./dist/events/${folder}`))
             .filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {

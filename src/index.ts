@@ -3,7 +3,7 @@ const shardingOptions = require('config').get('shardingOptions');
 const { ShardingManager, ShardEvents } = require('discord.js');
 const { v4: uuidv4 } = require('uuid');
 
-const manager = new ShardingManager('./src/bot.js', {
+const manager = new ShardingManager('./dist/bot.js', {
     token: process.env.DISCORD_BOT_TOKEN,
     ...shardingOptions
 });
