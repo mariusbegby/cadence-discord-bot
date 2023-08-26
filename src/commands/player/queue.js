@@ -32,7 +32,7 @@ module.exports = {
         if (!queue) {
             if (pageIndex >= 1) {
                 logger.debug(
-                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+                    `User used command ${interaction.commandName} but there was no queue.`
                 );
                 return await interaction.editReply({
                     embeds: [
@@ -48,7 +48,7 @@ module.exports = {
             }
 
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+                `User used command ${interaction.commandName} but there was no queue.`
             );
             queueString = 'The queue is empty, add some tracks with **`/play`**!';
             return await interaction.editReply({
@@ -72,7 +72,7 @@ module.exports = {
 
         if (pageIndex > totalPages - 1) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but page was higher than total pages.`
+                `User used command ${interaction.commandName} but page was higher than total pages.`
             );
 
             return await interaction.editReply({
@@ -127,7 +127,7 @@ module.exports = {
 
         if (!currentTrack) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no current track.`
+                `User used command ${interaction.commandName} but there was no current track.`
             );
 
             return await interaction.editReply({
@@ -166,7 +166,7 @@ module.exports = {
             }
 
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and got queue in reply with current track.`
+                `User used command ${interaction.commandName} and got queue in reply with current track.`
             );
             return await interaction.editReply({
                 embeds: [

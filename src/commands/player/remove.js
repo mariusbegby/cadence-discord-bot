@@ -40,7 +40,7 @@ module.exports = {
 
         if (removeTrackNumber > queue.tracks.data.length) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but track number was higher than total tracks.`
+                `User used command ${interaction.commandName} but track number was higher than total tracks.`
             );
 
             return await interaction.editReply({
@@ -64,7 +64,7 @@ module.exports = {
         }
 
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and removed track.`
+            `User used command ${interaction.commandName} and removed track.`
         );
         return await interaction.editReply({
             embeds: [

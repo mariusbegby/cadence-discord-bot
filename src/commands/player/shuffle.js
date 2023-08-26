@@ -36,7 +36,7 @@ module.exports = {
         queue.tracks.shuffle();
 
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and shuffled the queue.`
+            `User used command ${interaction.commandName} and shuffled the queue.`
         );
 
         return await interaction.editReply({

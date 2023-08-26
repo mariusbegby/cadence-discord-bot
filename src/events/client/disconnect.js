@@ -9,7 +9,7 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client) => {
-        logger.warn(`[Shard ${client.shard.ids[0]}] ${client.user.tag} lost connection to Discord APIs. Disconnected.`);
+        logger.warn(`${client.user.tag} lost connection to Discord APIs. Disconnected.`);
 
         // send message to system message channel for event
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {

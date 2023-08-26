@@ -88,7 +88,7 @@ module.exports = {
             components: [filterActionRow, disableFiltersActionRow]
         });
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] Sent embed for command ${interaction.commandName}, awaiting interaction response.`
+            `Sent embed for command ${interaction.commandName}, awaiting interaction response.`
         );
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
@@ -99,7 +99,7 @@ module.exports = {
             });
 
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] Received interaction response for command ${interaction.commandName}.`
+                `Received interaction response for command ${interaction.commandName}.`
             );
 
             confirmation.deferUpdate();
@@ -150,7 +150,7 @@ module.exports = {
             queue.filters.ffmpeg.toggle(confirmation.values);
 
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] Enabled filters ${confirmation.values.join(', ')} for command ${
+                `Enabled filters ${confirmation.values.join(', ')} for command ${
                     interaction.commandName
                 }.`
             );
@@ -182,14 +182,14 @@ module.exports = {
         } catch (error) {
             if (error.code === 'InteractionCollectorError') {
                 logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Interaction response timed out for command ${interaction.commandName}.`
+                    `Interaction response timed out for command ${interaction.commandName}.`
                 );
                 return;
             }
 
             logger.debug(
                 error,
-                `[Shard ${interaction.guild.shardId}] Unhandled error while awaiting interaction response for command ${interaction.commandName}, throwing error.`
+                `Unhandled error while awaiting interaction response for command ${interaction.commandName}, throwing error.`
             );
             throw error;
         }

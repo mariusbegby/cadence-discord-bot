@@ -1,9 +1,16 @@
-const logger = require('../../services/logger');
 const { Player } = require('discord-player');
 
-exports.createPlayer = async (client) => {
+exports.createPlayer = async ({ client, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'createPlayer.js',
+        module: 'utilFactory',
+        name: 'createPlayer',
+        executionId: executionId,
+        shardId: client.shard.ids[0]
+    });
+
     try {
-        logger.debug(`[Shard ${client.shard.ids[0]}] Creating discord-player player...`);
+        logger.debug('Creating discord-player player...');
 
         const player = new Player(client, {
             useLegacyFFmpeg: false,
@@ -23,11 +30,11 @@ exports.createPlayer = async (client) => {
         global.player = player;
 
         await player.extractors.loadDefault();
-        logger.trace(`[Shard ${client.shard.ids[0]}] discord-player loaded dependencies:\n${player.scanDeps()}`);
+        logger.trace(`discord-player loaded dependencies:\n${player.scanDeps()}`);
 
         return player;
     } catch (error) {
-        logger.error(`[Shard ${client.shard.ids[0]}] Failed to create discord-player player`, error);
+        logger.error(error, 'Failed to create discord-player player');
         throw error;
     }
 };

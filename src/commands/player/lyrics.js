@@ -34,7 +34,7 @@ module.exports = {
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
             logger.debug(
                 { action: 'autocomplete_responded' },
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with results from lastQuery for query: '${query}'`
+                `Autocomplete search responded with results from lastQuery for query: '${query}'`
             );
             return interaction.respond(result);
         }
@@ -42,7 +42,7 @@ module.exports = {
         if (query.length < 3) {
             logger.debug(
                 { action: 'autocomplete_responded' },
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with empty results due to < 3 length for query '${query}'`
+                `Autocomplete search responded with empty results due to < 3 length for query '${query}'`
             );
             return interaction.respond([]);
         }
@@ -82,7 +82,7 @@ module.exports = {
 
         logger.debug(
             { action: 'autocomplete_responded' },
-            `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded for query: '${query}'`
+            `Autocomplete search responded for query: '${query}'`
         );
         return interaction.respond(response);
     },
@@ -119,7 +119,7 @@ module.exports = {
 
             if (searchResults.tracks.length === 0) {
                 logger.debug(
-                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no search results found.`
+                    `User used command ${interaction.commandName} but there was no search results found.`
                 );
                 return await interaction.editReply({
                     embeds: [
@@ -173,7 +173,7 @@ module.exports = {
 
         if (!lyricsResult || !lyricsResult.lyrics) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no lyrics found.`
+                `User used command ${interaction.commandName} but there was no lyrics found.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -188,11 +188,11 @@ module.exports = {
 
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] Lyrics too long, splitting into multiple messages.`);
+            logger.debug('Lyrics too long, splitting into multiple messages.');
             const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
             for (let i = 0; i < messageCount; i++) {
                 logger.debuf(
-                    `[Shard ${interaction.guild.shardId}] Lyrics, sending message ${i + 1} of ${messageCount}.`
+                    `Lyrics, sending message ${i + 1} of ${messageCount}.`
                 );
                 const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
@@ -224,7 +224,7 @@ module.exports = {
         }
 
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and retrieved lyrics.`
+            `User used command ${interaction.commandName} and retrieved lyrics.`
         );
 
         return await interaction.editReply({

@@ -90,10 +90,10 @@ module.exports = {
                         break;
                 }
 
-                logger.debug(`[Shard ${client.shard.ids[0]}] Fetched shardInfo from each shard.`);
+                logger.debug('Fetched shardInfo from each shard.');
             })
             .catch((error) => {
-                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
+                logger.error(error, 'Failed to fetch client values from shards.');
             });
 
         const shardCount = shardInfoList.length;

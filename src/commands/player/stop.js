@@ -22,7 +22,7 @@ module.exports = {
 
         if (!queue) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
+                `User used command ${interaction.commandName} but there was no queue.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -44,7 +44,7 @@ module.exports = {
             queue.clear();
             queue.node.stop();
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and cleared the queue.`
+                `User used command ${interaction.commandName} and cleared the queue.`
             );
         }
 

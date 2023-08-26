@@ -9,12 +9,6 @@ const { transformQuery } = require('../../utils/validation/searchQueryValidator'
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
 
-const logger = require('../../services/logger').child({
-    source: 'play.js',
-    module: 'command',
-    name: '/play'
-});
-
 const recentQueries = new Map();
 
 module.exports = {
@@ -34,25 +28,28 @@ module.exports = {
                 .setMaxLength(500)
                 .setAutocomplete(true)
         ),
-    autocomplete: async ({ interaction }) => {
+    autocomplete: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'play.js',
+            module: 'slashCommand',
+            name: '/play',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         const player = useMainPlayer();
         const query = interaction.options.getString('query', true);
 
         const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
 
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
-            logger.debug(
-                { action: 'autocomplete_responded' },
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with results from lastQuery for query: '${query}'`
-            );
+            logger.debug(`Autocomplete search responded with results from lastQuery for query: '${query}'`);
             return interaction.respond(results);
         }
 
         if (query.length < 3) {
-            logger.debug(
-                { action: 'autocomplete_responded' },
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded with empty results due to < 3 length for query '${query}'`
-            );
+            logger.debug(`Autocomplete search responded with empty results due to < 3 length for query '${query}'`);
             return interaction.respond([]);
         }
         const searchResults = await player.search(query);
@@ -82,14 +79,18 @@ module.exports = {
             return interaction.respond([]);
         }
 
-        logger.debug(
-            { action: 'autocomplete_responded' },
-            `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Autocomplete search responded for query: '${query}'`
-        );
+        logger.debug(`Autocomplete search responded for query: '${query}'`);
 
         return interaction.respond(response);
     },
-    execute: async ({ interaction, client }) => {
+    execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'play.js',
+            module: 'slashCommand',
+            name: '/play',
+            executionId: executionId
+        });
+
         if (await notInVoiceChannel(interaction, client)) {
             return;
         }
@@ -123,12 +124,12 @@ module.exports = {
                         stack: error.stack
                     }
                 },
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Failed to search for track with player.search() with query: ${transformedQuery}.`
+                `Failed to search for track with player.search() with query: ${transformedQuery}.`
             );
         }
 
         if (!searchResult || searchResult.tracks.length === 0) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] No results found for query: ${query}`);
+            logger.debug(`No results found for query: ${query}`);
 
             return await interaction.editReply({
                 embeds: [
@@ -145,9 +146,7 @@ module.exports = {
         let queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Playlist found but too many tracks. Query: ${query}.`
-            );
+            logger.debug(`Playlist found but too many tracks. Query: ${query}.`);
 
             return await interaction.editReply({
                 embeds: [
@@ -186,12 +185,10 @@ module.exports = {
                 }
             }));
 
-            logger.debug(`[Shard ${interaction.guild.shardId}] player.play() successful. Query: ${query}.`);
+            logger.debug(`player.play() successful. Query: ${query}.`);
         } catch (error) {
             if (error.message.includes('Sign in to confirm your age')) {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Found track but failed to retrieve audio due to age confirmation warning.`
-                );
+                logger.debug('Found track but failed to retrieve audio due to age confirmation warning.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -204,9 +201,7 @@ module.exports = {
             }
 
             if (error.message.includes('The following content may contain')) {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.`
-                );
+                logger.debug('Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -224,10 +219,7 @@ module.exports = {
                         error.message.includes('Failed to fetch resources for ytdl streaming'))) ||
                 error.message.includes('Could not extract stream for this track')
             ) {
-                logger.debug(
-                    error,
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Found track but failed to retrieve audio. Query: ${query}.`
-                );
+                logger.debug(error, `Found track but failed to retrieve audio. Query: ${query}.`);
 
                 return await interaction.editReply({
                     embeds: [
@@ -241,10 +233,7 @@ module.exports = {
             }
 
             if (error.message === 'Cancelled') {
-                logger.debug(
-                    error,
-                    `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Operation cancelled. Query: ${query}.`
-                );
+                logger.debug(error, `Operation cancelled. Query: ${query}.`);
 
                 return await interaction.editReply({
                     embeds: [
@@ -257,18 +246,28 @@ module.exports = {
                 });
             }
 
-            logger.error(
-                error,
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Failed to play track with player.play(), unhandled error.`
-            );
+            if (error.message === 'Cannot read properties of null (reading \'createStream\')') {
+                // Can happen if /play then /leave before track starts playing
+                logger.warn(error, 'Found track but failed to play back audio. Voice connection might be unavailable.');
+
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and it was not possible to start playing the track. This could happen if the voice connection is lost or queue is destroyed while adding the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            )
+                            .setColor(embedOptions.colors.error)
+                    ]
+                });
+            }
+
+            //logger.error(error, 'Failed to play track with player.play(), unhandled error.');
         }
 
         queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.warn(
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> After player.play(), queue is undefined. Query: ${query}.`
-            );
+            logger.warn(`After player.play(), queue is undefined. Query: ${query}.`);
 
             return await interaction.editReply({
                 embeds: [
@@ -299,9 +298,7 @@ module.exports = {
         }
 
         if (searchResult.playlist && searchResult.tracks.length > 1) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Playlist found and added with player.play(). Query: '${query}'`
-            );
+            logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
 
             return await interaction.editReply({
                 embeds: [
@@ -324,9 +321,7 @@ module.exports = {
         }
 
         if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Track found and added with player.play(), started playing. Query: ${query}.`
-            );
+            logger.debug(`Track found and added with player.play(), started playing. Query: ${query}.`);
 
             return await interaction.editReply({
                 embeds: [
@@ -345,9 +340,7 @@ module.exports = {
             });
         }
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] Guild ${interaction.guild.id}> Track found and added with player.play(), added to queue. Query: ${query}.`
-        );
+        logger.debug(`Track found and added with player.play(), added to queue. Query: ${query}.`);
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

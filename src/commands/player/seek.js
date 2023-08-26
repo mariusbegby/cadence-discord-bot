@@ -55,7 +55,7 @@ module.exports = {
 
         if (durationArray.length === 0 || durationArray.length > 3) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration.`
+                `User used command ${interaction.commandName} but entered an invalid duration.`
             );
 
             return await interaction.editReply({
@@ -84,7 +84,7 @@ module.exports = {
 
         if (!validElements) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after parsing duration.`
+                `User used command ${interaction.commandName} but entered an invalid duration after parsing duration.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -107,7 +107,7 @@ module.exports = {
 
         if (!isValidDuration) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after regex checks.`
+                `User used command ${interaction.commandName} but entered an invalid duration after regex checks.`
             );
 
             return await interaction.editReply({
@@ -129,7 +129,7 @@ module.exports = {
 
         if (durationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered a duration longer than the track.`
+                `User used command ${interaction.commandName} but entered a duration longer than the track.`
             );
             return await interaction.editReply({
                 embeds: [
@@ -145,7 +145,7 @@ module.exports = {
         queue.node.seek(durationInMilliseconds);
 
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and seeked to duration.`
+            `User used command ${interaction.commandName} and seeked to duration.`
         );
         return await interaction.editReply({
             embeds: [

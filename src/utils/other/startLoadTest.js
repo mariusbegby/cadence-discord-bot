@@ -1,15 +1,23 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const loadTestOptions = config.get('loadTestOptions');
 
-exports.startLoadTest = async (client) => {
+exports.startLoadTest = async ({ client, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'startLoadTest.js',
+        module: 'utilOther',
+        name: 'loadTest',
+        executionId: executionId,
+        shardId: client.shard.ids[0]
+    });
+
     if (!loadTestOptions.enabled) {
+        logger.debug('Load test is disabled in options, cancelling.');
         return;
     }
 
     const channelIds = loadTestOptions.channelIdsToJoin;
     const track = loadTestOptions.trackUrl;
-    logger.info(`Starting load test in ${channelIds.length} channels.`);
+    logger.info(`Starting load test in ${channelIds.length} specified channels.`);
 
     channelIds.forEach((each) => {
         client.shard.broadcastEval(

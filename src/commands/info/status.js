@@ -60,7 +60,7 @@ module.exports = {
                 });
             })
             .catch((error) => {
-                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
+                logger.error(error, 'Failed to fetch client values from shards.');
             });
 
         const botStatusString =

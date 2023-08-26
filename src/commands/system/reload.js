@@ -15,7 +15,7 @@ module.exports = {
         .setNSFW(false),
     execute: async ({ interaction, client }) => {
         if (await notValidGuildId(interaction)) {
-            logger.debug(`[Shard ${client.shard.ids[0]}] Not a valid guild id.`);
+            logger.debug('Not a valid guild id.');
             return;
         }
 
@@ -25,10 +25,10 @@ module.exports = {
                     shardClient.registerClientCommands(shardClient);
                 })
                 .then(() => {
-                    logger.info(`[Shard ${client.shard.ids[0]}] Reloaded commands across all shards.`);
+                    logger.info('Reloaded commands across all shards.');
                 });
         } catch (error) {
-            logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to reload commands.`);
+            logger.error(error, 'Failed to reload commands.');
         }
 
         const commands = client.commands.map((command) => {

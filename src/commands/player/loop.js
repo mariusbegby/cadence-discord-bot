@@ -56,7 +56,7 @@ module.exports = {
 
         if (!mode && mode !== 0) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but no mode was provided.`
+                `User used command ${interaction.commandName} but no mode was provided.`
             );
 
             return await interaction.editReply({
@@ -74,7 +74,7 @@ module.exports = {
 
         if (mode === currentMode) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but loop mode was already set to ${modeUserString}.`
+                `User used command ${interaction.commandName} but loop mode was already set to ${modeUserString}.`
             );
 
             return await interaction.editReply({
@@ -92,7 +92,7 @@ module.exports = {
 
         if (!queue.repeatMode === mode) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but failed to change loop mode.`
+                `User used command ${interaction.commandName} but failed to change loop mode.`
             );
 
             return await interaction.editReply({
@@ -108,7 +108,7 @@ module.exports = {
 
         if (queue.repeatMode === 0) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and disabled loop mode.`
+                `User used command ${interaction.commandName} and disabled loop mode.`
             );
 
             return await interaction.editReply({
@@ -128,7 +128,7 @@ module.exports = {
 
         if (queue.repeatMode === 3) {
             logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and enabled autoplay.`
+                `User used command ${interaction.commandName} and enabled autoplay.`
             );
 
             return await interaction.editReply({
@@ -147,7 +147,7 @@ module.exports = {
         }
 
         logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and enabled loop mode.`
+            `User used command ${interaction.commandName} and enabled loop mode.`
         );
 
         return await interaction.editReply({

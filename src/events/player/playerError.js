@@ -1,9 +1,9 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
 const systemOptions = config.get('systemOptions');
 const { EmbedBuilder } = require('discord.js');
+const { v4: uuidv4 } = require('uuid');
 
 // Emitted when the player encounters an error while streaming audio track
 module.exports = {
@@ -11,10 +11,18 @@ module.exports = {
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue, error) => {
-        logger.error(
-            error,
-            `[Shard ${queue.metadata.client.shard.ids[0]}] player.events.on('playerError'): Player error while streaming track`
-        );
+        const executionId = uuidv4();
+
+        const logger = require('../../services/logger').child({
+            source: 'playerError.js',
+            module: 'event',
+            name: 'playerError',
+            executionId: executionId,
+            shardId: queue.metadata.client.shard.ids[0],
+            guildId: queue.metadata.channel.guild.id
+        });
+
+        logger.error(error, 'player.events.on(\'playerError\'): Player error while streaming track');
 
         await queue.metadata.channel.send({
             embeds: [
@@ -33,7 +41,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${embedOptions.icons.error} **player.events.on('playerError')**\n${error.message}` +
+                                `${embedOptions.icons.error} **player.events.on('playerError')**\nExecution id: ${executionId}\n${error.message}` +
                                     `\n\n<@${systemOptions.systemUserId}>`
                             )
                             .setColor(embedOptions.colors.error)

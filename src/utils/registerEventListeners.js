@@ -1,16 +1,23 @@
-const logger = require('../services/logger');
 const fs = require('node:fs');
 const path = require('node:path');
 const config = require('config');
 
 const loggerOptions = config.get('loggerOptions');
 
-exports.registerEventListeners = (client, player) => {
-    logger.debug(`[Shard ${client.shard.ids[0]}] Registering event listeners...`);
+exports.registerEventListeners = ({ client, player, executionId }) => {
+    const logger = require('../services/logger').child({
+        source: 'registerEventListeners.js',
+        module: 'register',
+        name: 'registerEventListeners',
+        executionId: executionId,
+        shardId: client.shard.ids[0]
+    });
+
+    logger.debug('Registering event listeners...');
 
     const eventFolders = fs.readdirSync(path.resolve('./src/events'));
     for (const folder of eventFolders) {
-        logger.trace(`[Shard ${client.shard.ids[0]}] Registering event listener for folder '${folder}'...`);
+        logger.trace(`Registering event listener for folder '${folder}'...`);
 
         const eventFiles = fs
             .readdirSync(path.resolve(`./src/events/${folder}`))
@@ -52,12 +59,10 @@ exports.registerEventListeners = (client, player) => {
                     break;
 
                 default:
-                    logger.error(
-                        `[Shard ${client.shard.ids[0]}] Unknown event folder '${folder}' while trying to register events.`
-                    );
+                    logger.error(`Unknown event folder '${folder}' while trying to register events.`);
             }
         }
     }
 
-    logger.trace(`[Shard ${client.shard.ids[0]}] Registering event listeners complete.`);
+    logger.trace('Registering event listeners complete.');
 };

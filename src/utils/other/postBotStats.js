@@ -1,22 +1,25 @@
-const logger = require('../../services/logger');
 const https = require('node:https');
 
-exports.postBotStats = async (client) => {
+exports.postBotStats = async ({ client, executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'postBotStats.js',
+        module: 'utilOther',
+        name: 'postBotStats',
+        executionId: executionId,
+        shardId: client.shard.ids[0]
+    });
+
     try {
         if (client.shard.ids[0] !== 0) {
-            return logger.debug(`[Shard ${client.shard.ids[0]}] Shard is not the first shard, not posting stats.`);
+            return;
         }
-
-        logger.debug(
-            client.shard.ids,
-            `[Shard ${client.shard.ids[0]}] Posting stats to bot lists from client with shard id 0.`
-        );
 
         let guildCount = 0;
         let memberCount = 0;
         let shardCount = client.shard.count;
         let shardId = client.shard.ids[0];
 
+        logger.debug('Gathering data about guild and member count from shards...');
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
@@ -26,9 +29,11 @@ exports.postBotStats = async (client) => {
                         memberCount += guildCache.reduce((acc, guildCache) => acc + guildCache.memberCount, 0);
                     }
                 });
+
+                logger.debug('Successfully fetched client values from shards');
             })
             .catch((error) => {
-                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
+                logger.error(error, 'Failed to fetch client values from shards.');
             });
 
         /* eslint-disable camelcase */
@@ -112,7 +117,10 @@ exports.postBotStats = async (client) => {
             }
         ];
 
-        logger.info(`[Shard ${client.shard.ids[0]}] Posting stats to bot lists with guildCount ${guildCount}...`);
+        logger.info(`Starting to post bot stats with guild count ${guildCount} and member count ${memberCount}...`);
+
+        let statusCodes = [];
+
         sites.map((site) => {
             if (site.disabled) {
                 return;
@@ -132,14 +140,18 @@ exports.postBotStats = async (client) => {
 
             let request = https.request(options, (res) => {
                 res.statusCode === 200
-                    ? logger.info(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
+                    ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
                     : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
+
+                statusCodes.push(res.statusCode);
             });
 
             request.write(JSON.stringify(site.body));
             request.end();
         });
+
+        logger.info(`Successfully posted bot stats with status codes ${statusCodes.join(', ')}.`);
     } catch (error) {
-        logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to post stats to bot lists.`);
+        logger.error(error, 'Failed to post bot stats to sites.');
     }
 };

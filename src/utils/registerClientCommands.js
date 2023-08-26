@@ -1,15 +1,22 @@
-const logger = require('../services/logger');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Collection } = require('discord.js');
 
-exports.registerClientCommands = (client) => {
-    logger.debug(`[Shard ${client.shard.ids[0]}] Registering client commands...`);
+exports.registerClientCommands = ({ client, executionId }) => {
+    const logger = require('../services/logger').child({
+        source: 'registerClientCommands.js',
+        module: 'register',
+        name: 'registerClientCommands',
+        executionId: executionId,
+        shardId: client.shard.ids[0]
+    });
+
+    logger.debug('Registering client commands...');
     client.commands = new Collection();
 
     const commandFolders = fs.readdirSync(path.resolve('./src/commands'));
     for (const folder of commandFolders) {
-        logger.trace(`[Shard ${client.shard.ids[0]}] Registering client commands for folder '${folder}'...`);
+        logger.trace(`Registering client commands for folder '${folder}'...`);
         const commandFiles = fs
             .readdirSync(path.resolve(`./src/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
@@ -24,12 +31,10 @@ exports.registerClientCommands = (client) => {
                 client.commands.delete(command.data.name);
                 client.commands.set(command.data.name, command);
             } catch (error) {
-                logger.error(
-                    `[Shard ${client.shard.ids[0]}] Error registering command ${folder}/${file}: ${error.message}`
-                );
+                logger.error(`Error registering command ${folder}/${file}: ${error.message}`);
             }
         }
     }
 
-    logger.trace(`[Shard ${client.shard.ids[0]}] Registering client commands complete.`);
+    logger.trace('Registering client commands complete.');
 };
