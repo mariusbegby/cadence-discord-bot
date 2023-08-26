@@ -1,6 +1,6 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const config = require('config');
+import fs from 'node:fs';
+import path from 'node:path';
+import config from 'config';
 
 const loggerOptions = config.get('loggerOptions');
 

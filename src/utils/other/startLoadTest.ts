@@ -1,4 +1,4 @@
-const config = require('config');
+import config from 'config';
 const loadTestOptions = config.get('loadTestOptions');
 
 exports.startLoadTest = async ({ client, executionId }) => {

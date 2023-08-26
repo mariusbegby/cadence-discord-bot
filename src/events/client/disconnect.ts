@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const config = require('config');
+import config from 'config';
 const embedOptions = config.get('embedOptions');
 const systemOptions = config.get('systemOptions');
 const { EmbedBuilder } = require('discord.js');

@@ -1,5 +1,7 @@
 require('dotenv').config();
-const shardingOptions = require('config').get('shardingOptions');
+import config from 'config';
+const shardingOptions = config.get('shardingOptions');
+
 const { ShardingManager, ShardEvents } = require('discord.js');
 const { v4: uuidv4 } = require('uuid');
 

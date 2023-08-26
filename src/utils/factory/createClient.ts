@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+import Discord from 'discord.js';
 
 exports.createClient = async ({ executionId }) => {
     const logger = require('../../services/logger').child({

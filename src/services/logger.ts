@@ -1,5 +1,5 @@
-const pino = require('pino');
-const config = require('config');
+import pino from 'pino';
+import config from 'config';
 
 // Retrieve logger options from config
 const loggerOptions = config.get('loggerOptions');

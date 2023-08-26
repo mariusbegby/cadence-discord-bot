@@ -1,8 +1,8 @@
-const config = require('config');
+import config from 'config';
 const embedOptions = config.get('embedOptions');
 const { getUptimeFormatted } = require('../../utils/system/getUptimeFormatted');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const osu = require('node-os-utils');
+import osu from 'node-os-utils';
 const { version } = require('../../../package.json');
 
 module.exports = {

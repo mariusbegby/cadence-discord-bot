@@ -1,4 +1,4 @@
-const config = require('config');
+import config from 'config';
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
 const { queueDoesNotExist, queueNoCurrentTrack } = require('../../utils/validation/queueValidator');

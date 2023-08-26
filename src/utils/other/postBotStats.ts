@@ -1,4 +1,4 @@
-const https = require('node:https');
+import https from 'node:https';
 
 exports.postBotStats = async ({ client, executionId }) => {
     const logger = require('../../services/logger').child({

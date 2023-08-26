@@ -1,8 +1,8 @@
 require('dotenv').config();
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path from 'node:path';
 const { REST, Routes } = require('discord.js');
-const config = require('config');
+import config from 'config';
 const { v4: uuidv4 } = require('uuid');
 const systemOptions = config.get('systemOptions');
 

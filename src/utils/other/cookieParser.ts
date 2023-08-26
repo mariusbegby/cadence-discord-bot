@@ -1,5 +1,5 @@
-const path = require('node:path');
-const fs = require('node:fs');
+import path from 'node:path';
+import fs from 'node:fs';
 const cookies = require(path.resolve('./cookies.json'));
 
 try {
