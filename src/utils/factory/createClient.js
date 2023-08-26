@@ -1,9 +1,16 @@
-const logger = require('../../services/logger');
 const Discord = require('discord.js');
 
-exports.createClient = async () => {
+exports.createClient = async ({ executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'createClient.js',
+        module: 'utilFactory',
+        name: 'createClient',
+        executionId: executionId,
+        shardId: 'client'
+    });
+
     try {
-        logger.info('Creating Discord.js client...');
+        logger.debug('Creating discord.js client...');
 
         const client = new Discord.Client({
             intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
@@ -33,7 +40,7 @@ exports.createClient = async () => {
 
         return client;
     } catch (error) {
-        logger.error('Failed to create Discord.js client', error);
+        logger.error(error, 'Failed to create discord.js client');
         throw error;
     }
 };

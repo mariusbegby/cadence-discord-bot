@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -14,31 +13,38 @@ module.exports = {
         .setDescription('Shuffle tracks in the queue randomly.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'shuffle.js',
+            module: 'slashCommand',
+            name: '/shuffle',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await queueDoesNotExist(interaction, queue)) {
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await queueIsEmpty(interaction, queue)) {
+        if (await queueIsEmpty({ interaction, queue, executionId })) {
             return;
         }
 
         queue.tracks.shuffle();
+        logger.debug('Shuffled queue tracks.');
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and shuffled the queue.`
-        );
-
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

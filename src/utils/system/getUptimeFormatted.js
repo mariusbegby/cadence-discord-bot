@@ -1,6 +1,11 @@
-const logger = require('../../services/logger');
+exports.getUptimeFormatted = async ({ executionId }) => {
+    const logger = require('../../services/logger').child({
+        source: 'getUptimeFormatted.js',
+        module: 'utilSystem',
+        name: 'getUptimeFormatted',
+        executionId: executionId
+    });
 
-exports.getUptimeFormatted = async () => {
     try {
         let uptimeFormattedString = '';
 

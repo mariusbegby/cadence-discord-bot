@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const playerOptions = config.get('playerOptions');
@@ -15,22 +14,31 @@ module.exports = {
         .setDescription('Show information about the track currently playing.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'nowplaying.js',
+            module: 'slashCommand',
+            name: '/nowplaying',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await queueDoesNotExist(interaction, queue)) {
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await queueNoCurrentTrack(interaction, queue)) {
+        if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
             return;
         }
 
@@ -82,7 +90,11 @@ module.exports = {
         })} **\`${timestamp.total.label}\`**`;
 
         if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
-            bar = 'No duration available.';
+            bar = '_No duration available._';
+        }
+
+        if (currentTrack.raw.live) {
+            bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
         const nowPlayingActionRow = new ActionRowBuilder().addComponents(
@@ -102,10 +114,9 @@ module.exports = {
 
         const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, finished intializing data.`
-        );
+        logger.debug('Successfully retrieved information about the current track.');
 
+        logger.debug('Sending info embed with action row components.');
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -117,7 +128,7 @@ module.exports = {
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
                             : `**${embedOptions.icons.audioPlaying} Now Playing**\n`) +
-                            `**[${currentTrack.title}](${currentTrack.url})**` +
+                            `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy.id}>` +
                             `\n ${bar}\n\n` +
                             `${
@@ -141,7 +152,9 @@ module.exports = {
                         },
                         {
                             name: '**Track source**',
-                            value: `**${sourceIcons.get(currentTrack.raw.source)} [${source}](${currentTrack.url})**`,
+                            value: `**${sourceIcons.get(currentTrack.raw.source)} [${source}](${
+                                currentTrack.raw.url ?? currentTrack.url
+                            })**`,
                             inline: true
                         }
                     )
@@ -154,9 +167,7 @@ module.exports = {
             components: [nowPlayingActionRow]
         });
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, finished sending response.`
-        );
+        logger.debug(`User used command '${interaction.commandName}', finished sending response.`);
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
@@ -167,14 +178,14 @@ module.exports = {
 
             confirmation.deferUpdate();
 
+            logger.debug('Received component interaction response.');
+
             if (confirmation.customId === 'nowplaying-skip') {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName}, received skip confirmation.`
-                );
+                logger.debug('Received skip confirmation.');
                 if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-                    logger.debug(
-                        `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and tried skipping but there was no queue.`
-                    );
+                    logger.debug('Tried skipping track but there was no queue.');
+
+                    logger.debug('Responding with warning embed.');
                     return await interaction.followUp({
                         embeds: [
                             new EmbedBuilder()
@@ -189,8 +200,10 @@ module.exports = {
 
                 if (queue.currentTrack !== currentTrack) {
                     logger.debug(
-                        `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and tried skipping but the track was already removed.`
+                        'Tried skipping track but it is not the current track and therefore already skipped/removed.'
                     );
+
+                    logger.debug('Responding with warning embed.');
                     return await interaction.followUp({
                         embeds: [
                             new EmbedBuilder()
@@ -208,13 +221,16 @@ module.exports = {
                     skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
+
+                if (skippedTrack.raw.live) {
+                    durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+                }
                 queue.node.skip();
+                logger.debug('Skipped the track.');
 
                 const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
 
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and skipped the track.`
-                );
+                logger.debug('Responding with success embed.');
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
@@ -223,7 +239,9 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL()
                             })
                             .setDescription(
-                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${skippedTrack.url})**` +
+                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                                    skippedTrack.title
+                                }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
                                     `${
                                         queue.repeatMode === 0
                                             ? ''
@@ -242,17 +260,12 @@ module.exports = {
             }
         } catch (error) {
             if (error.code === 'InteractionCollectorError') {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but did not respond to the skip prompt.`
-                );
+                logger.debug('Interaction response timed out.');
                 return;
             }
 
-            logger.debug(
-                error,
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was an unhandled error.`
-            );
-            throw error;
+            logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
+            return;
         }
     }
 };

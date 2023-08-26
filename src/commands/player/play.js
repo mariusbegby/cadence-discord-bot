@@ -1,4 +1,4 @@
-const logger = require('../../services/logger');
+//const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const botOptions = config.get('botOptions');
@@ -8,6 +8,14 @@ const { cannotJoinVoiceOrTalk } = require('../../utils/validation/permissionVali
 const { transformQuery } = require('../../utils/validation/searchQueryValidator');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMainPlayer, useQueue } = require('discord-player');
+
+const recentQueries = new Map();
+
+const loggerTempplate = require('../../services/logger').child({
+    source: 'play.js',
+    module: 'slashCommand',
+    name: '/play'
+});
 
 module.exports = {
     isNew: false,
@@ -26,16 +34,30 @@ module.exports = {
                 .setMaxLength(500)
                 .setAutocomplete(true)
         ),
-    autocomplete: async ({ interaction }) => {
+    autocomplete: async ({ interaction, executionId }) => {
+        const logger = loggerTempplate.child({
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
         const player = useMainPlayer();
         const query = interaction.options.getString('query', true);
-        if (query.length < 2) {
-            return;
+
+        const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
+
+        if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
+            logger.debug(`Responding with results from lastQuery for query '${query}'`);
+            return interaction.respond(results);
+        }
+
+        if (query.length < 3) {
+            logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
+            return interaction.respond([]);
         }
         const searchResults = await player.search(query);
-        let response = [];
 
-        logger.debug(`[Shard ${interaction.guild.shardId}] Autocomplete search responded for query: ${query}`);
+        let response = [];
 
         response = searchResults.tracks.slice(0, 5).map((track) => {
             if (track.url.length > 100) {
@@ -50,30 +72,44 @@ module.exports = {
             };
         });
 
+        recentQueries.set(interaction.user.id, {
+            lastQuery: query,
+            results: response,
+            timestamp: Date.now()
+        });
+
         if (!response || response.length === 0) {
+            logger.debug(`Responding with empty results for query '${query}'`);
             return interaction.respond([]);
         }
 
+        logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     },
-    execute: async ({ interaction, client }) => {
-        if (await notInVoiceChannel(interaction, client)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = loggerTempplate.child({
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        if (await cannotJoinVoiceOrTalk(interaction)) {
+        if (await cannotJoinVoiceOrTalk({ interaction, executionId })) {
             return;
         }
 
         let queue = useQueue(interaction.guild.id);
-        if (queue && (await notInSameVoiceChannel(interaction, queue))) {
+        if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
             return;
         }
 
         const player = useMainPlayer();
         const query = interaction.options.getString('query');
 
-        const transformedQuery = await transformQuery(query);
+        const transformedQuery = await transformQuery({ query, executionId });
 
         let searchResult;
 
@@ -82,13 +118,13 @@ module.exports = {
                 requestedBy: interaction.user
             });
         } catch (error) {
-            logger.error('[Shard ${interaction.guild.shardId}] Failed to search for track with player.search()');
-            logger.error(error);
+            logger.error(error, `Failed to search for track with player.search() with query: ${transformedQuery}.`);
         }
 
         if (!searchResult || searchResult.tracks.length === 0) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] No results found for query: ${query}`);
+            logger.debug(`No results found for query: '${query}'`);
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -100,34 +136,13 @@ module.exports = {
             });
         }
 
-        /* seems to be supported with @distube/ytdl-core, keeping it commented out to test functionality
-        if (
-            searchResult.tracks[0].raw.live &&
-            searchResult.tracks[0].raw.duration === 0 &&
-            searchResult.tracks[0].source === 'youtube'
-        ) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Unsupported audio source. Query: ${query}. Track is live, 0 duration and from YouTube.`
-            );
-
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Unsupported audio source**\nYouTube live streams are currently not supported. This is due to issues with extracting audio from the livestream.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
-        }
-        */
-
         queue = useQueue(interaction.guild.id);
         let queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
-            logger.debug(`[Shard ${interaction.guild.shardId}] Playlist found but too many tracks. Query: ${query}.`);
+            logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -142,6 +157,8 @@ module.exports = {
         let track;
 
         try {
+            logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
+
             ({ track } = await player.play(interaction.member.voice.channel, searchResult, {
                 requestedBy: interaction.user,
                 nodeOptions: {
@@ -164,13 +181,11 @@ module.exports = {
                     }
                 }
             }));
-
-            logger.debug(`[Shard ${interaction.guild.shardId}] player.play() successful. Query: ${query}.`);
         } catch (error) {
             if (error.message.includes('Sign in to confirm your age')) {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to age confirmation warning.`
-                );
+                logger.debug('Found track but failed to retrieve audio due to age confirmation warning.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -183,9 +198,9 @@ module.exports = {
             }
 
             if (error.message.includes('The following content may contain')) {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.`
-                );
+                logger.debug('Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.');
+
+                logger.debug('Responding with warning embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -203,11 +218,9 @@ module.exports = {
                         error.message.includes('Failed to fetch resources for ytdl streaming'))) ||
                 error.message.includes('Could not extract stream for this track')
             ) {
-                logger.debug(
-                    error,
-                    `[Shard ${interaction.guild.shardId}] Found track but failed to retrieve audio. Query: ${query}.`
-                );
+                logger.debug(error, `Found track but failed to retrieve audio. Query: ${query}.`);
 
+                logger.debug('Responding with error embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -215,13 +228,15 @@ module.exports = {
                                 `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }
 
             if (error.message === 'Cancelled') {
-                logger.debug(error, `[Shard ${interaction.guild.shardId}] Operation cancelled. Query: ${query}.`);
+                logger.debug(error, `Operation cancelled. Query: ${query}.`);
 
+                logger.debug('Responding with error embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -229,23 +244,39 @@ module.exports = {
                                 `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                             )
                             .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
             }
 
-            logger.error(
-                error,
-                '[Shard ${interaction.guild.shardId}] Failed to play track with player.play(), unhandled error.'
-            );
+            if (error.message === 'Cannot read properties of null (reading \'createStream\')') {
+                // Can happen if /play then /leave before track starts playing
+                logger.warn(error, 'Found track but failed to play back audio. Voice connection might be unavailable.');
+
+                logger.debug('Responding with error embed.');
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and it was not possible to start playing the track. This could happen if the voice connection is lost or queue is destroyed while adding the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            )
+                            .setColor(embedOptions.colors.error)
+                            .setFooter({ text: `Execution ID: ${executionId}` })
+                    ]
+                });
+            }
+
+            logger.error(error, 'Failed to play track with player.play(), unhandled error.');
         }
+
+        logger.debug(`Successfully added track with player.play(). Query: '${query}'.`);
 
         queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.warn(
-                `[Shard ${interaction.guild.shardId}] After player.play(), queue is undefined. Query: ${query}.`
-            );
+            logger.warn(`After player.play(), queue is undefined. Query: '${query}'.`);
 
+            logger.debug('Responding with error embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -253,22 +284,34 @@ module.exports = {
                             `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
                         .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }
 
-        if (track.source === 'arbitrary' || !track.thumnail) {
-            track.thumbnail =
-                'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png';
+        if (
+            track.source.length === 0 ||
+            track.source === 'arbitrary' ||
+            track.thumnail === null ||
+            track.thumbnail === undefined ||
+            track.thumbnail === ''
+        ) {
+            logger.debug(
+                `Track found but source is arbitrary or missing thumbnail. Using fallback thumbnail url. Query: '${query}'.`
+            );
+            track.thumbnail = embedOptions.info.fallbackThumbnailUrl;
         }
 
         let durationFormat = track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
-        if (searchResult.playlist && searchResult.tracks.length > 1) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Playlist found and added with player.play(). Query: ${query}.`
-            );
+        if (track.raw.live) {
+            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+        }
 
+        if (searchResult.playlist && searchResult.tracks.length > 1) {
+            logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
+
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -279,7 +322,7 @@ module.exports = {
                         .setDescription(
                             `**${embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
                                 track.title
-                            }](${track.url})**\n\nAnd **${
+                            }](${track.raw.url ?? track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
@@ -290,10 +333,9 @@ module.exports = {
         }
 
         if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Track found and added with player.play(), started playing. Query: ${query}.`
-            );
+            logger.debug(`Track found and added with player.play(), started playing. Query: '${query}'.`);
 
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -303,7 +345,9 @@ module.exports = {
                             iconURL: interaction.user.avatarURL()
                         })
                         .setDescription(
-                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${track.title}](${track.url})**`
+                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
+                                track.title
+                            }](${track.raw.url ?? track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(embedOptions.colors.success)
@@ -311,9 +355,9 @@ module.exports = {
             });
         }
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] Track found and added with player.play(), added to queue. Query: ${query}.`
-        );
+        logger.debug(`Track found and added with player.play(), added to queue. Query: '${query}'.`);
+
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -322,7 +366,9 @@ module.exports = {
                         iconURL: interaction.user.avatarURL()
                     })
                     .setDescription(
-                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${track.url})**`
+                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
+                            track.raw.url ?? track.url
+                        })**`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(embedOptions.colors.success)

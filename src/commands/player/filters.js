@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const ffmpegFilterOptions = config.get('ffmpegFilterOptions');
@@ -22,22 +21,31 @@ module.exports = {
         .setDescription('Toggle various audio filters during playback.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'filters.js',
+            module: 'slashCommand',
+            name: '/filters',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await queueDoesNotExist(interaction, queue)) {
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await queueNoCurrentTrack(interaction, queue)) {
+        if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
             return;
         }
 
@@ -77,6 +85,7 @@ module.exports = {
                 .setEmoji(embedOptions.icons.disable)
         );
 
+        logger.debug('Sending info embed with action row components.');
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -87,9 +96,6 @@ module.exports = {
             ],
             components: [filterActionRow, disableFiltersActionRow]
         });
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] Sent embed for command ${interaction.commandName}, awaiting interaction response.`
-        );
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
@@ -98,11 +104,9 @@ module.exports = {
                 time: 300_000
             });
 
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Received interaction response for command ${interaction.commandName}.`
-            );
-
             confirmation.deferUpdate();
+
+            logger.debug('Received component interaction response.');
 
             queue.filters.ffmpeg.setInputArgs([
                 '-threads',
@@ -119,9 +123,11 @@ module.exports = {
             // Reset filters before enabling provided filters
             if (queue.filters.ffmpeg.filters.length > 0) {
                 queue.filters.ffmpeg.setFilters(false);
+                logger.debug('Reset queue filters.');
             }
 
             if (confirmation.customId === 'disable-filters' || confirmation.values.length === 0) {
+                logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
@@ -148,13 +154,9 @@ module.exports = {
 
             // Enable provided filters
             queue.filters.ffmpeg.toggle(confirmation.values);
+            logger.debug(`Enabled filters ${confirmation.values.join(', ')}.`);
 
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] Enabled filters ${confirmation.values.join(', ')} for command ${
-                    interaction.commandName
-                }.`
-            );
-
+            logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -181,17 +183,12 @@ module.exports = {
             });
         } catch (error) {
             if (error.code === 'InteractionCollectorError') {
-                logger.debug(
-                    `[Shard ${interaction.guild.shardId}] Interaction response timed out for command ${interaction.commandName}.`
-                );
+                logger.debug('Interaction response timed out.');
                 return;
             }
 
-            logger.debug(
-                error,
-                `[Shard ${interaction.guild.shardId}] Unhandled error while awaiting interaction response for command ${interaction.commandName}, throwing error.`
-            );
-            throw error;
+            logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
+            return;
         }
     }
 };

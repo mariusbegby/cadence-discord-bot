@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
@@ -13,22 +12,48 @@ module.exports = {
         .setDescription('Reload the bot commands.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
-            logger.debug(`[Shard ${client.shard.ids[0]}] Not a valid guild id.`);
+    execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'reload.js',
+            module: 'slashCommand',
+            name: '/reload',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 
         try {
+            logger.info('Reloading commands across all shards.');
+            logger.info(`Execution ID: ${executionId}`);
             await client.shard
-                .broadcastEval((shardClient) => {
-                    shardClient.registerClientCommands(shardClient);
-                })
+                .broadcastEval(
+                    async (shardClient, { executionId }) => {
+                        shardClient.registerClientCommands({ client: shardClient, executionId });
+                    },
+                    { context: { executionId: executionId } }
+                )
                 .then(() => {
-                    logger.info(`[Shard ${client.shard.ids[0]}] Reloaded commands across all shards.`);
+                    logger.info('Successfully reloaded commands across all shards.');
                 });
         } catch (error) {
-            logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to reload commands.`);
+            logger.error(error, 'Failed to reload commands across shards.');
+
+            logger.debug('Responding with error embed.');
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+
+                        .setDescription(
+                            `**${embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to reload commands across shards.`
+                        )
+                        .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
+                ]
+            });
         }
 
         const commands = client.commands.map((command) => {
@@ -38,6 +63,7 @@ module.exports = {
 
         let embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands.join('\n');
 
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedOptions.colors.success)]
         });

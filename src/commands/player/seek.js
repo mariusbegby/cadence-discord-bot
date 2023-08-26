@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -20,22 +19,31 @@ module.exports = {
                 .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
                 .setRequired(true)
         ),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'seek.js',
+            module: 'slashCommand',
+            name: '/seek',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
-        if (await queueDoesNotExist(interaction, queue)) {
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
-        if (await queueNoCurrentTrack(interaction, queue)) {
+        if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
             return;
         }
 
@@ -54,10 +62,9 @@ module.exports = {
         }
 
         if (durationArray.length === 0 || durationArray.length > 3) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration.`
-            );
+            logger.debug('Invalid duration format input.');
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -83,9 +90,9 @@ module.exports = {
         });
 
         if (!validElements) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after parsing duration.`
-            );
+            logger.debug('Invalid duration after parsing duration input.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -106,10 +113,9 @@ module.exports = {
         const isValidDuration = regex.test(durationString);
 
         if (!isValidDuration) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered an invalid duration after regex checks.`
-            );
+            logger.debug('Invalid duration after regex checks.');
 
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -128,9 +134,9 @@ module.exports = {
         const durationInMilliseconds = durationArray[0] * 3600000 + durationArray[1] * 60000 + durationArray[2] * 1000;
 
         if (durationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but entered a duration longer than the track.`
-            );
+            logger.debug('Duration specified is longer than the track duration.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -143,10 +149,9 @@ module.exports = {
         }
 
         queue.node.seek(durationInMilliseconds);
+        logger.debug(`Seeked to '${durationString}' in current track.`);
 
-        logger.debug(
-            `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and seeked to duration.`
-        );
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

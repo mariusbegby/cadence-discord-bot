@@ -1,13 +1,22 @@
-const logger = require('../../services/logger');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     name: 'playerStart',
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue, track) => {
-        logger.debug(
-            `[Shard ${queue.metadata.client.shard.ids[0]}] playerStart event: Started playing '${track.raw.source}'.`
-        );
+        const executionId = uuidv4();
+
+        const logger = require('../../services/logger').child({
+            source: 'playerStart.js',
+            module: 'event',
+            name: 'playerStart',
+            executionId: executionId,
+            shardId: queue.metadata.client.shard.ids[0],
+            guildId: queue.metadata.channel.guild.id
+        });
+
+        logger.debug(`playerStart event: Started playing '${track.url}'.`);
         process.env.NODE_ENV === 'development' ? logger.trace(queue) : null;
     }
 };

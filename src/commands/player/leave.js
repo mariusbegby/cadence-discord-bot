@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notInVoiceChannel, notInSameVoiceChannel } = require('../../utils/validation/voiceChannelValidator');
@@ -13,17 +12,26 @@ module.exports = {
         .setDescription('Clear the track queue and remove the bot from voice channel.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction }) => {
-        if (await notInVoiceChannel(interaction)) {
+    execute: async ({ interaction, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'leave.js',
+            module: 'slashCommand',
+            name: '/leave',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} but there was no queue.`
-            );
+            logger.debug('There is already no queue.');
+
+            logger.debug('Responding with warning embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -35,17 +43,16 @@ module.exports = {
             });
         }
 
-        if (await notInSameVoiceChannel(interaction, queue)) {
+        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
         if (!queue.deleted) {
             queue.delete();
-            logger.debug(
-                `[Shard ${interaction.guild.shardId}] User used command ${interaction.commandName} and deleted the queue.`
-            );
+            logger.debug('Deleted the queue.');
         }
 
+        logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

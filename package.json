@@ -20,9 +20,10 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./src/index.js",
-        "start-pretty": "node ./src/index.js | pino-pretty",
+        "start-pretty": "node ./src/index.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
+        "start-pretty-no-ignore": "node ./src/index.js | pino-pretty",
         "deploy": "node ./src/utils/deploySlashCommands.js",
-        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty",
+        "deploy-pretty": "node ./src/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,shardId,guildId",
         "eslint": "eslint ./"
     },
     "dependencies": {
@@ -35,9 +36,11 @@
         "discord-voip": "^0.1.2",
         "discord.js": "^14.13.0",
         "dotenv": "^16.3.1",
-        "mediaplex": "^0.0.4",
+        "mediaplex": "^0.0.6",
         "node-os-utils": "^1.3.7",
-        "pino": "^8.15.0"
+        "pino": "^8.15.0",
+        "pino-loki": "^2.1.3",
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "eslint": "^8.47.0",

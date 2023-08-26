@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
@@ -30,71 +29,96 @@ module.exports = {
         )
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
+    execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'shards.js',
+            module: 'slashCommand',
+            name: '/shards',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 
         let shardInfoList = [];
 
-        await client.shard
-            .broadcastEval((shardClient) => {
-                /* eslint-disable no-undef */
-                let playerStats = player.generateStatistics();
-                const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-                let shardInfo = {
-                    shardId: shardClient.shard.ids[0],
-                    memUsage: nodeProcessMemUsageInMb,
-                    guildCount: shardClient.guilds.cache.size,
-                    guildMemberCount: shardClient.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
-                    playerStatistics: {
-                        activeVoiceConnections: playerStats.queues.length,
-                        totalTracks: playerStats.queues.reduce((acc, queue) => acc + queue.tracksCount, 0),
-                        totalListeners: playerStats.queues.reduce((acc, queue) => acc + queue.listeners, 0)
+        logger.debug('Fetching player statistics and client values from each shard.');
+        try {
+            await client.shard
+                .broadcastEval((shardClient) => {
+                    /* eslint-disable no-undef */
+                    let playerStats = player.generateStatistics();
+                    const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+                    let shardInfo = {
+                        shardId: shardClient.shard.ids[0],
+                        memUsage: nodeProcessMemUsageInMb,
+                        guildCount: shardClient.guilds.cache.size,
+                        guildMemberCount: shardClient.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
+                        playerStatistics: {
+                            activeVoiceConnections: playerStats.queues.length,
+                            totalTracks: playerStats.queues.reduce((acc, queue) => acc + queue.tracksCount, 0),
+                            totalListeners: playerStats.queues.reduce((acc, queue) => acc + queue.listeners, 0)
+                        }
+                    };
+
+                    return shardInfo;
+                })
+                .then((results) => {
+                    shardInfoList = results;
+
+                    switch (interaction.options.getString('sort')) {
+                        case 'memory':
+                            shardInfoList = shardInfoList.sort((a, b) => b.memUsage - a.memUsage);
+                            break;
+                        case 'connections':
+                            shardInfoList = shardInfoList.sort(
+                                (a, b) =>
+                                    b.playerStatistics.activeVoiceConnections -
+                                    a.playerStatistics.activeVoiceConnections
+                            );
+                            break;
+                        case 'tracks':
+                            shardInfoList = shardInfoList.sort(
+                                (a, b) => b.playerStatistics.totalTracks - a.playerStatistics.totalTracks
+                            );
+                            break;
+                        case 'listeners':
+                            shardInfoList = shardInfoList.sort(
+                                (a, b) => b.playerStatistics.totalListeners - a.playerStatistics.totalListeners
+                            );
+                            break;
+                        case 'guilds':
+                            shardInfoList = shardInfoList.sort((a, b) => b.guildCount - a.guildCount);
+                            break;
+                        case 'members':
+                            shardInfoList = shardInfoList.sort((a, b) => b.guildMemberCount - a.guildMemberCount);
+                            break;
+                        default:
+                            shardInfoList = shardInfoList.sort((a, b) => a.shardId - b.shardId);
+                            break;
                     }
-                };
 
-                return shardInfo;
-            })
-            .then((results) => {
-                shardInfoList = results;
+                    logger.debug('Successfully fetched player statistics and client values from shards.');
+                });
+        } catch (error) {
+            logger.error(error, 'Failed to fetch player statistics and client values from shards.');
 
-                switch (interaction.options.getString('sort')) {
-                    case 'memory':
-                        shardInfoList = shardInfoList.sort((a, b) => b.memUsage - a.memUsage);
-                        break;
-                    case 'connections':
-                        shardInfoList = shardInfoList.sort(
-                            (a, b) =>
-                                b.playerStatistics.activeVoiceConnections - a.playerStatistics.activeVoiceConnections
-                        );
-                        break;
-                    case 'tracks':
-                        shardInfoList = shardInfoList.sort(
-                            (a, b) => b.playerStatistics.totalTracks - a.playerStatistics.totalTracks
-                        );
-                        break;
-                    case 'listeners':
-                        shardInfoList = shardInfoList.sort(
-                            (a, b) => b.playerStatistics.totalListeners - a.playerStatistics.totalListeners
-                        );
-                        break;
-                    case 'guilds':
-                        shardInfoList = shardInfoList.sort((a, b) => b.guildCount - a.guildCount);
-                        break;
-                    case 'members':
-                        shardInfoList = shardInfoList.sort((a, b) => b.guildMemberCount - a.guildMemberCount);
-                        break;
-                    default:
-                        shardInfoList = shardInfoList.sort((a, b) => a.shardId - b.shardId);
-                        break;
-                }
+            logger.debug('Responding with error embed.');
+            return await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
 
-                logger.debug(`[Shard ${client.shard.ids[0]}] Fetched shardInfo from each shard.`);
-            })
-            .catch((error) => {
-                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
+                        .setDescription(
+                            `**${embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to fetch player statistics and client values from shards.`
+                        )
+                        .setColor(embedOptions.colors.error)
+                        .setFooter({ text: `Execution ID: ${executionId}` })
+                ]
             });
+        }
 
         const shardCount = shardInfoList.length;
         const totalPages = Math.ceil(shardCount / 10) || 1;
@@ -143,6 +167,9 @@ module.exports = {
             );
         }
 
+        logger.debug('Successfully gathered and transformed shard information into embed fields.');
+
+        logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

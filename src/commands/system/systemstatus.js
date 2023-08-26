@@ -1,4 +1,3 @@
-const logger = require('../../services/logger');
 const config = require('config');
 const embedOptions = config.get('embedOptions');
 const { notValidGuildId } = require('../../utils/validation/systemCommandValidator');
@@ -16,13 +15,22 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client }) => {
-        if (await notValidGuildId(interaction)) {
+    execute: async ({ interaction, client, executionId }) => {
+        const logger = require('../../services/logger').child({
+            source: 'systemstatus.js',
+            module: 'slashCommand',
+            name: '/systemstatus',
+            executionId: executionId,
+            shardId: interaction.guild.shardId,
+            guildId: interaction.guild.id
+        });
+
+        if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 
         // from normal /status command
-        const uptimeString = await getUptimeFormatted();
+        const uptimeString = await getUptimeFormatted({ executionId });
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
         const releaseVersion = version;
@@ -45,6 +53,7 @@ module.exports = {
         const mediaplexVersion = dependencies['mediaplex'];
         const distubeYtdlVersion = dependencies['@distube/ytdl-core'];
 
+        logger.debug('Fetching player statistics from all shards.');
         await client.shard
             .broadcastEval(() => {
                 /* eslint-disable no-undef */
@@ -67,8 +76,11 @@ module.exports = {
                 activeVoiceConnections = queueCountList.reduce((acc, queueAmount) => acc + queueAmount, 0);
                 totalTracks = trackCountList.reduce((acc, trackAmount) => acc + trackAmount, 0);
                 totalListeners = listenerCountList.reduce((acc, listenerAmount) => acc + listenerAmount, 0);
+
+                logger.debug('Successfully fetched player statistics from shards.');
             });
 
+        logger.debug('Fetching client values from all shards.');
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
@@ -78,9 +90,10 @@ module.exports = {
                         memberCount += guildCache.reduce((acc, guildCache) => acc + guildCache.memberCount, 0);
                     }
                 });
+                logger.debug('Successfully fetched client values from shards.');
             })
             .catch((error) => {
-                logger.error(error, `[Shard ${client.shard.ids[0]}] Failed to fetch client values from shards.`);
+                logger.error(error, 'Failed to fetch client values from shards.');
             });
 
         const botStatusString =
@@ -111,6 +124,9 @@ module.exports = {
 
         const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
 
+        logger.debug('Transformed system status into embed description.');
+
+        logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
