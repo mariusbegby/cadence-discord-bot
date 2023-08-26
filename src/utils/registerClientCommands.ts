@@ -2,14 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Collection } from 'discord.js';
 import loggerModule from '../services/logger';
+import { RegisterClientCommandsParams } from '../types/utilTypes';
 
-export const registerClientCommands = ({ client, executionId }) => {
+export const registerClientCommands = ({ client, executionId }: RegisterClientCommandsParams) => {
     const logger = loggerModule.child({
         source: 'registerClientCommands.js',
         module: 'register',
         name: 'registerClientCommands',
         executionId: executionId,
-        shardId: client.shard.ids[0]
+        shardId: client.shard?.ids[0]
     });
 
     logger.debug('Registering client commands...');
@@ -33,7 +34,11 @@ export const registerClientCommands = ({ client, executionId }) => {
                 client.commands.delete(command.data.name);
                 client.commands.set(command.data.name, command);
             } catch (error) {
-                logger.error(`Error registering command ${folder}/${file}: ${error.message}`);
+                if (error instanceof Error) {
+                    logger.error(`Error registering command ${folder}/${file}: ${error.message}`);
+                } else {
+                    throw error;
+                }
             }
         }
     }

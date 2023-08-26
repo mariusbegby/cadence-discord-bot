@@ -2,15 +2,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import config from 'config';
 import loggerModule from '../services/logger';
-const loggerOptions = config.get('loggerOptions');
+import { LoggerOptions } from '../types/configTypes';
+import { RegisterEventListenersParams } from '../types/utilTypes';
+import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
+const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
-export const registerEventListeners = ({ client, player, executionId }) => {
+export const registerEventListeners = ({ client, player, executionId }: RegisterEventListenersParams) => {
     const logger = loggerModule.child({
         source: 'registerEventListeners.js',
         module: 'register',
         name: 'registerEventListeners',
         executionId: executionId,
-        shardId: client.shard.ids[0]
+        shardId: client.shard?.ids[0]
     });
 
     logger.debug('Registering event listeners...');
@@ -29,20 +32,20 @@ export const registerEventListeners = ({ client, player, executionId }) => {
             switch (folder) {
                 case 'client':
                     if (event.once) {
-                        client.once(event.name, (...args) => event.execute(...args));
+                        client.once(event.name, (...args: ClientEventArguments) => event.execute(...args));
                     } else {
                         if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
-                            client.on(event.name, (...args) => event.execute(...args));
+                            client.on(event.name, (...args: ClientEventArguments) => event.execute(...args));
                         }
                     }
                     break;
 
                 case 'interactions':
-                    client.on(event.name, (...args) => event.execute(...args, { client }));
+                    client.on(event.name, (...args: ClientEventArguments) => event.execute(...args, { client }));
                     break;
 
                 case 'process':
-                    process.on(event.name, (...args) => event.execute(...args));
+                    process.on(event.name, (...args: ProcessEventArguments) => event.execute(...args));
                     break;
 
                 case 'player':
@@ -51,10 +54,10 @@ export const registerEventListeners = ({ client, player, executionId }) => {
                         (loggerOptions.minimumLogLevel === 'debug' && loggerOptions.discordPlayerDebug)
                     ) {
                         if (event.isPlayerEvent) {
-                            player.events.on(event.name, (...args) => event.execute(...args));
+                            player.events.on(event.name, (...args: PlayerEventArguments) => event.execute(...args));
                             break;
                         } else {
-                            player.on(event.name, (...args) => event.execute(...args));
+                            player.on(event.name, (...args: PlayerEventArguments) => event.execute(...args));
                         }
                     }
                     break;
