@@ -1,5 +1,7 @@
 import { Player } from 'discord-player';
 import { ExtendedClient } from './clientTypes';
+import { ChatInputCommandInteraction } from 'discord.js';
+import { GuildQueue } from 'discord-player';
 
 export interface RegisterEventListenersParams {
     client: ExtendedClient;
@@ -9,5 +11,54 @@ export interface RegisterEventListenersParams {
 
 export interface RegisterClientCommandsParams {
     client: ExtendedClient;
+    executionId: string;
+}
+
+export interface NotInVoiceChannelParams {
+    interaction: ChatInputCommandInteraction;
+    executionId: string;
+}
+
+export interface NotInSameVoiceChannelParams {
+    interaction: ChatInputCommandInteraction;
+    queue: GuildQueue;
+    executionId: string;
+}
+
+export interface NotValidGuildIdParams {
+    interaction: ChatInputCommandInteraction;
+    executionId: string;
+}
+
+export interface TransformQueryParams {
+    query: string;
+    executionId: string;
+}
+
+export interface QueueDoesNotExistParams {
+    interaction: ChatInputCommandInteraction;
+    queue: GuildQueue;
+    executionId: string;
+}
+
+export interface QueueNoCurrentTrackParams {
+    interaction: ChatInputCommandInteraction;
+    queue: GuildQueue;
+    executionId: string;
+}
+
+export interface QueueIsEmptyParams {
+    interaction: ChatInputCommandInteraction;
+    queue: GuildQueue;
+    executionId: string;
+}
+
+export interface CannotJoinVoiceOrTalkParams {
+    interaction: ChatInputCommandInteraction;
+    executionId: string;
+}
+
+export interface CannotSendMessageInChannelParams {
+    interaction: ChatInputCommandInteraction;
     executionId: string;
 }
