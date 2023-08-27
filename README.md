@@ -48,9 +48,10 @@ Once the bot has joined your Discord server, there is no additional setup needed
 1. Install [Node.js](https://nodejs.org/en/download/) v18.16 LTS.
 2. Install [FFmpeg](https://ffmpeg.org/download.html) latest release build. Make sure you can run `ffmpeg` in your terminal, for Windows, add it to your PATH.
 3. Clone this repository and install its dependencies using `npm install`. If you encounter any errors, try use `npm install --legacy-peer-deps`.
-4. Setup your `.env` file in the root directory to configure bot token `DISCORD_BOT_TOKEN` and client id `DISCORD_APPLICATION_ID`. You obtain these from the [Discord developer portal](https://discord.com/developers/applications). The `.env.example` file provides an example configuration.
-5. To make the commands accessible on Discord servers, deploy slash commands using `npm run deploy`.
-6. Start the bot using `npm start`. If set up correctly, the bot should now be online and operational. You will need to invite it to a server, see [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) article for help.
+4. Use `npm run build` to build the project and convert typescript to javascript.
+5. Setup your `.env` file in the root directory to configure bot token `DISCORD_BOT_TOKEN` and client id `DISCORD_APPLICATION_ID`. You obtain these from the [Discord developer portal](https://discord.com/developers/applications). The `.env.example` file provides an example configuration.
+6. To make the commands accessible on Discord servers, deploy slash commands using `npm run deploy`.
+7. Start the bot using `npm start`. If set up correctly, the bot should now be online and operational. You will need to invite it to a server, see [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) article for help.
 
 ### Additional information:
 
@@ -59,7 +60,7 @@ Once the bot has joined your Discord server, there is no additional setup needed
 -   Logs are stored in `/logs` directory, you can configure the logging level to file and console in the configuration file.
 -   For production use, we recommend using a process manager like `pm2` or similar to automatically restart it the process crashes. Here is a simple setup for `pm2`:
     -   Install `pm2` globally: `npm install pm2 -g`.
-    -   In repository root directory, start the bot with `pm2 start ./src/index.js --name "Cadence"`.
+    -   In repository root directory, start the bot with `pm2 start ./dist/index.js --name "Cadence"`.
     -   Save the process list with `pm2 save`.
     -   To view logs with `pino-pretty`, run `pm2 logs 0 --out --raw | pino-pretty`. _Note: Does not work well in Windows PowerShell, use command prompt (cmd) to view logs with `pino-pretty` using same command if you are using `pm2`_.
 
