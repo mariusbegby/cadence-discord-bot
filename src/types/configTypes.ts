@@ -91,7 +91,7 @@ export interface PlayerOptions {
     leaveOnEmpty: boolean;
     leaveOnEmptyCooldown: number;
     leaveOnEnd: boolean;
-    leaveonEndCooldown: number;
+    leaveOnEndCooldown: number;
     leaveOnStop: boolean;
     leaveOnStopCooldown: number;
     defaultVolume: number;

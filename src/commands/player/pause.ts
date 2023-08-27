@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -23,15 +23,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/pause',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -45,12 +45,14 @@ module.exports = {
             return;
         }
 
-        let durationFormat =
-            queue.currentTrack.raw.duration === 0 || queue.currentTrack.duration === '0:00'
-                ? ''
-                : `\`${queue.currentTrack.duration}\``;
+        const currentTrack = queue.currentTrack!;
 
-        if (queue.currentTrack.raw.live) {
+        let durationFormat =
+            Number(currentTrack.raw.duration) === 0 || currentTrack.duration === '0:00'
+                ? ''
+                : `\`${currentTrack.duration}\``;
+
+        if (currentTrack.raw.live) {
             durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
@@ -58,22 +60,28 @@ module.exports = {
         queue.node.setPaused(!queue.node.isPaused());
         logger.debug(`Set paused state to ${queue.node.isPaused()}.`);
 
+        let authorName: string;
+
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
+        }
+
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
-                        iconURL: interaction.user.avatarURL()
+                        name: authorName,
+                        iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${embedOptions.icons.pauseResumed} ${
                             queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                        }**\n**${durationFormat} [${queue.currentTrack.title}](${
-                            queue.currentTrack.raw.url ?? queue.currentTrack.url
-                        })**`
+                        }**\n**${durationFormat} [${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**`
                     )
-                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setThumbnail(currentTrack.thumbnail)
                     .setColor(embedOptions.colors.success)
             ]
         });

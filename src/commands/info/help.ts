@@ -8,6 +8,8 @@ import { BotOptions, EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 module.exports = {
+    isNew: false,
+    isBeta: false,
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Show a list of commands and their usage.')
@@ -19,9 +21,14 @@ module.exports = {
             module: 'slashCommand',
             name: '/help',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
+
+        if (!client || !client.commands) {
+            logger.error('Client is undefined or does not have commands property.');
+            return;
+        }
 
         const commandList = client.commands
             .filter((command) => {

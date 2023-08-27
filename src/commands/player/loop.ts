@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -36,15 +36,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/loop',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -61,7 +61,7 @@ module.exports = {
             [3, 'autoplay']
         ]);
 
-        const mode = parseInt(interaction.options.getString('mode'));
+        const mode = parseInt(interaction.options.getString('mode')!);
         const modeUserString = loopModesFormatted.get(mode);
         const currentMode = queue.repeatMode;
         const currentModeUserString = loopModesFormatted.get(currentMode);
@@ -76,7 +76,7 @@ module.exports = {
                         .setDescription(
                             `**${
                                 currentMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
-                            } Current loop mode**\nThe looping mode is currently set to \`${currentModeUserString}\`.`
+                            } Current loop mode**\nThe looping mode is currently set to **\`${currentModeUserString}\`**.`
                         )
                         .setColor(embedOptions.colors.info)
                 ]
@@ -91,7 +91,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nLoop mode is already \`${modeUserString}\`.`
+                            `**${embedOptions.icons.warning} Oops!**\nLoop mode is already **\`${modeUserString}\`**.`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -112,12 +112,20 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to \`${modeUserString}\`, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            `**${embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to **\`${modeUserString}\`**, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                         )
                         .setColor(embedOptions.colors.error)
                         .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
+        }
+
+        let authorName: string;
+
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
         }
 
         if (queue.repeatMode === 0) {
@@ -128,8 +136,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
+                            name: authorName,
+                            iconURL: interaction.user.avatarURL() || ''
                         })
                         .setDescription(
                             `**${embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
@@ -147,8 +155,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
+                            name: authorName,
+                            iconURL: interaction.user.avatarURL() || ''
                         })
                         .setDescription(
                             `**${embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
@@ -165,8 +173,8 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
-                        iconURL: interaction.user.avatarURL()
+                        name: authorName,
+                        iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`

@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -29,15 +29,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/seek',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -52,7 +52,8 @@ module.exports = {
         }
 
         const durationInput = interaction.options.getString('duration');
-        let durationArray = durationInput.split(':');
+
+        let durationArray = durationInput!.split(':');
 
         switch (durationArray.length) {
             case 1:
@@ -65,6 +66,12 @@ module.exports = {
                 break;
         }
 
+        durationArray = durationArray.map((value) => {
+            return value.padStart(2, '0');
+        });
+
+        const durationString = durationArray.join(':');
+
         if (durationArray.length === 0 || durationArray.length > 3) {
             logger.debug('Invalid duration format input.');
 
@@ -73,21 +80,15 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
-                                '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
-                                '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
-                                '- `/seek` **`42`** - Seek to 42 seconds.'
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                                '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
+                                '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
+                                '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
             });
         }
-
-        durationArray = durationArray.map((value) => {
-            return value.padStart(2, '0');
-        });
-
-        const durationString = durationArray.join(':');
 
         const validElements = durationArray.every((value) => {
             return value.length === 2;
@@ -101,10 +102,10 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
-                                '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
-                                '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
-                                '- `/seek` **`42`** - Seek to 42 seconds.'
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                                '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
+                                '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
+                                '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -124,18 +125,19 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, \`${durationString}\`.\n\nPlease use the format \`HH:mm:ss\`, \`mm:ss\` or \`ss\`, where \`HH\` is hours, \`mm\` is minutes and \`ss\` is seconds.\n\n**Examples:**\n` +
-                                '- `/seek` **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
-                                '- `/seek` **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
-                                '- `/seek` **`42`** - Seek to 42 seconds.'
+                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                                '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
+                                '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
+                                '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
             });
         }
 
-        const currentTrackMaxDurationInMs = queue.currentTrack.durationMS;
-        const durationInMilliseconds = durationArray[0] * 3600000 + durationArray[1] * 60000 + durationArray[2] * 1000;
+        const currentTrackMaxDurationInMs = queue.currentTrack!.durationMS;
+        const durationInMilliseconds: number =
+            Number(durationArray[0]) * 3600000 + Number(durationArray[1]) * 60000 + Number(durationArray[2]) * 1000;
 
         if (durationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
             logger.debug('Duration specified is longer than the track duration.');
@@ -145,7 +147,11 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered **\`${durationString}\`**, which is a duration that is longer than the duration for the current track.\n\nPlease try a duration that is less than the duration of the track (**\`${queue.currentTrack.duration}\`**).`
+                            `**${
+                                embedOptions.icons.warning
+                            } Oops!**\nYou entered **\`${durationString}\`**, which is a duration that is longer than the duration for the current track.\n\nPlease try a duration that is less than the duration of the track (**\`${
+                                queue.currentTrack!.duration
+                            }\`**).`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -155,18 +161,26 @@ module.exports = {
         queue.node.seek(durationInMilliseconds);
         logger.debug(`Seeked to '${durationString}' in current track.`);
 
+        let authorName: string;
+
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
+        }
+
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
-                        iconURL: interaction.user.avatarURL()
+                        name: authorName,
+                        iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${embedOptions.icons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
                     )
-                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setThumbnail(queue.currentTrack!.thumbnail)
                     .setColor(embedOptions.colors.success)
             ]
         });

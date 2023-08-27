@@ -1,9 +1,19 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, Track, useQueue } from 'discord-player';
+import {
+    APIActionRowComponent,
+    APIMessageActionRowComponent,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
+    EmbedBuilder,
+    GuildMember,
+    Interaction,
+    SlashCommandBuilder
+} from 'discord.js';
 
 import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
+import { CommandParams, TrackMetadata, CustomError } from '../../types/commandTypes';
 import { EmbedOptions, PlayerOptions } from '../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
@@ -24,15 +34,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/nowplaying',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -62,28 +72,27 @@ module.exports = {
             ['arbitrary', embedOptions.icons.sourceArbitrary]
         ]);
 
-        const currentTrack = queue.currentTrack;
+        const currentTrack: Track = queue.currentTrack!;
 
         let author = currentTrack.author ? currentTrack.author : 'Unavailable';
         if (author === 'cdn.discordapp.com') {
             author = 'Unavailable';
         }
-        let plays = currentTrack.views !== 0 ? currentTrack.views : 0;
+        const plays = currentTrack.views !== 0 ? currentTrack.views : 0;
 
-        if (
-            plays === 0 &&
-            currentTrack.metadata.bridge &&
-            currentTrack.metadata.bridge.views !== 0 &&
-            currentTrack.metadata.bridge.views !== undefined
-        ) {
-            plays = currentTrack.metadata.bridge.views;
+        let displayPlays: string = plays.toLocaleString('en-US');
+
+        const metadata = currentTrack.metadata as TrackMetadata;
+
+        if (plays === 0 && metadata.bridge && metadata.bridge.views !== 0 && metadata.bridge.views !== undefined) {
+            displayPlays = metadata.bridge.views.toLocaleString('en-US');
         } else if (plays === 0) {
-            plays = 'Unavailable';
+            displayPlays = 'Unavailable';
         }
 
-        const source = sourceStringsFormatted.get(currentTrack.raw.source) ?? 'Unavailable';
+        const source = sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Unavailable';
         const queueLength = queue.tracks.data.length;
-        const timestamp = queue.node.getTimestamp();
+        const timestamp = queue.node.getTimestamp()!;
         let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
             length: playerOptions.progressBar.length ?? 12,
@@ -93,7 +102,7 @@ module.exports = {
             rightChar: playerOptions.progressBar.rightChar ?? '▬'
         })} **\`${timestamp.total.label}\`**`;
 
-        if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
+        if (Number(currentTrack.raw.duration) === 0 || currentTrack.duration === '0:00') {
             bar = '_No duration available._';
         }
 
@@ -101,13 +110,17 @@ module.exports = {
             bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
-        const nowPlayingActionRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId('nowplaying-skip')
-                .setLabel('Skip track')
-                .setStyle('Secondary')
-                .setEmoji(embedOptions.icons.nextTrack)
-        );
+        const nowPlayingButton = new ButtonBuilder()
+            .setCustomId('nowplaying-skip')
+            .setLabel('Skip track')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(embedOptions.icons.nextTrack)
+            .toJSON(); // Convert the builder to a raw object
+
+        const nowPlayingActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow, // This might vary based on your discord.js version
+            components: [nowPlayingButton]
+        };
 
         const loopModesFormatted = new Map([
             [0, 'disabled'],
@@ -125,15 +138,15 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
-                        iconURL: interaction.guild.iconURL()
+                        name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+                        iconURL: interaction.guild!.iconURL() || ''
                     })
                     .setDescription(
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
                             : `**${embedOptions.icons.audioPlaying} Now Playing**\n`) +
                             `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**` +
-                            `\nRequested by: <@${currentTrack.requestedBy.id}>` +
+                            `\nRequested by: <@${currentTrack.requestedBy?.id}>` +
                             `\n ${bar}\n\n` +
                             `${
                                 queue.repeatMode === 0
@@ -151,12 +164,12 @@ module.exports = {
                         },
                         {
                             name: '**Plays**',
-                            value: plays.toLocaleString('en-US'),
+                            value: displayPlays,
                             inline: true
                         },
                         {
                             name: '**Track source**',
-                            value: `**${sourceIcons.get(currentTrack.raw.source)} [${source}](${
+                            value: `**${sourceIcons.get(currentTrack.raw.source!)} [${source}](${
                                 currentTrack.raw.url ?? currentTrack.url
                             })**`,
                             inline: true
@@ -165,15 +178,15 @@ module.exports = {
                     .setFooter({
                         text: queueLength ? `${queueLength} other tracks in the queue...` : ' '
                     })
-                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setThumbnail(queue.currentTrack!.thumbnail)
                     .setColor(embedOptions.colors.info)
             ],
-            components: [nowPlayingActionRow]
+            components: [nowPlayingActionRow as APIActionRowComponent<APIMessageActionRowComponent>]
         });
 
         logger.debug('Finished sending response.');
 
-        const collectorFilter = (i) => i.user.id === interaction.user.id;
+        const collectorFilter = (i: Interaction) => i.user.id === interaction.user.id;
         try {
             const confirmation = await response.awaitMessageComponent({
                 filter: collectorFilter,
@@ -222,7 +235,7 @@ module.exports = {
 
                 const skippedTrack = queue.currentTrack;
                 let durationFormat =
-                    skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
+                    Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
 
@@ -234,13 +247,21 @@ module.exports = {
 
                 const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
 
+                let authorName: string;
+
+                if (interaction.member instanceof GuildMember) {
+                    authorName = interaction.member.nickname || interaction.user.username;
+                } else {
+                    authorName = interaction.user.username;
+                }
+
                 logger.debug('Responding with success embed.');
                 return await interaction.followUp({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
-                                iconURL: interaction.user.avatarURL()
+                                name: authorName,
+                                iconURL: interaction.user.avatarURL() || ''
                             })
                             .setDescription(
                                 `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
@@ -263,13 +284,29 @@ module.exports = {
                 });
             }
         } catch (error) {
-            if (error.code === 'InteractionCollectorError') {
-                logger.debug('Interaction response timed out.');
-                return;
-            }
+            if (error instanceof CustomError) {
+                if (error.code === 'InteractionCollectorError') {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
 
-            logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
-            return;
+                if (error.message === 'Collector received no interactions before ending with reason: time') {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
+
+                logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
+                return;
+            } else {
+                if (
+                    error instanceof Error &&
+                    error.message === 'Collector received no interactions before ending with reason: time'
+                ) {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
+                throw error;
+            }
         }
     }
 };

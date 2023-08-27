@@ -1,5 +1,5 @@
 import config from 'config';
-import { QueryType, useMainPlayer, useQueue } from 'discord-player';
+import { NodeResolvable, QueryType, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import { lyricsExtractor } from '@discord-player/extractor';
@@ -39,8 +39,8 @@ module.exports = {
     autocomplete: async ({ interaction, executionId }: CommandAutocompleteParams) => {
         const logger = loggerTemplate.child({
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         const query = interaction.options.getString('query', true);
@@ -63,7 +63,7 @@ module.exports = {
 
         if (!lyricsResult) {
             logger.debug(`No Genius lyrics found for query '${query}', using player.search() as fallback.`);
-            const player = useMainPlayer();
+            const player = useMainPlayer()!;
             const searchResults = await player.search(query);
             response = searchResults.tracks.slice(0, 1).map((track) => ({
                 name:
@@ -99,12 +99,12 @@ module.exports = {
     execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerTemplate.child({
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         const query = interaction.options.getString('query');
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
         let geniusSearchQuery = '';
 
         if (!query) {
@@ -123,7 +123,7 @@ module.exports = {
             if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
                 return;
             }
-            geniusSearchQuery = queue.currentTrack.title.slice(0, 50);
+            geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 
             logger.debug(
                 `No input query provided, using current track. Using query for genius: '${geniusSearchQuery}'`
@@ -133,7 +133,7 @@ module.exports = {
         let searchResult;
         if (query) {
             logger.debug(`Query input provided, using query '${query}' for player.search().`);
-            const player = useMainPlayer();
+            const player = useMainPlayer()!;
             const searchResults = await player.search(query, {
                 searchEngine: QueryType.SPOTIFY_SEARCH
             });
@@ -220,7 +220,7 @@ module.exports = {
             logger.debug('Lyrics text too long, splitting into multiple messages.');
             const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
             for (let i = 0; i < messageCount; i++) {
-                logger.debuf(`Lyrics, sending message ${i + 1} of ${messageCount}.`);
+                logger.debug(`Lyrics, sending message ${i + 1} of ${messageCount}.`);
                 const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
                     logger.debug('Responding with info embed for first message with lyrics.');
@@ -239,7 +239,7 @@ module.exports = {
                     continue;
                 } else {
                     logger.debug('Sending consecutive message with lyrics.');
-                    await interaction.channel.send({
+                    await interaction.channel!.send({
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(`\`\`\`fix\n${message}\`\`\``)

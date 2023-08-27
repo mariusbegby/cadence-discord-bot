@@ -71,7 +71,7 @@ module.exports = {
             `**${embedOptions.icons.bot} ${
                 totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds'
             } by member count (${totalGuildCount} total)**\n${guildListFormatted}` +
-            `\n\n**Total members:** \`${totalMemberCount}\``;
+            `\n\n**Total members:** **\`${totalMemberCount}\`**`;
 
         logger.debug('Transformed guild into into embed description.');
 

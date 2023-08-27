@@ -1,5 +1,5 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
+import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
@@ -24,15 +24,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/queue',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
@@ -50,9 +50,9 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nPage \`${
+                                `**${embedOptions.icons.warning} Oops!**\nPage **\`${
                                     pageIndex + 1
-                                }\` is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
+                                }\`** is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]
@@ -67,8 +67,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.guild.name,
-                            iconURL: interaction.guild.iconURL()
+                            name: interaction.guild!.name,
+                            iconURL: interaction.guild!.iconURL() || ''
                         })
                         .setDescription(`**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`)
                         .setColor(embedOptions.colors.info)
@@ -90,9 +90,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nPage \`${
+                            `**${embedOptions.icons.warning} Oops!**\nPage **\`${
                                 pageIndex + 1
-                            }\` is not a valid page number.\n\nThere are only a total of \`${totalPages}\` pages in the queue.`
+                            }\`** is not a valid page number.\n\nThere are only a total of **\`${totalPages}\`** pages in the queue.`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -107,7 +107,7 @@ module.exports = {
                 .slice(pageIndex * 10, pageIndex * 10 + 10)
                 .map((track, index) => {
                     let durationFormat =
-                        track.raw.duration === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
+                        Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
                     if (track.raw.live) {
                         durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
@@ -147,8 +147,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild.iconURL()
+                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+                            iconURL: interaction.guild!.iconURL() || ''
                         })
                         .setDescription(
                             `${repeatModeString}` + `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
@@ -161,7 +161,7 @@ module.exports = {
             });
         } else {
             logger.debug('Queue exists with current track, gathering information.');
-            const timestamp = queue.node.getTimestamp();
+            const timestamp = queue.node.getTimestamp()!;
             let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
                 queue: false,
                 length: playerOptions.progressBar.length ?? 12,
@@ -171,7 +171,7 @@ module.exports = {
                 rightChar: playerOptions.progressBar.rightChar ?? '▬'
             })} **\`${timestamp.total.label}\`**`;
 
-            if (currentTrack.raw.duration === 0 || currentTrack.duration === '0:00') {
+            if (Number(currentTrack.raw.duration) === 0 || currentTrack.duration === '0:00') {
                 bar = '_No duration available._';
             }
 
@@ -184,15 +184,15 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: `Channel: ${queue.channel.name} (${queue.channel.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild.iconURL()
+                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+                            iconURL: interaction.guild!.iconURL() || ''
                         })
                         .setDescription(
                             `**${embedOptions.icons.audioPlaying} Now playing**\n` +
                                 (currentTrack
                                     ? `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**`
                                     : 'None') +
-                                `\nRequested by: <@${currentTrack.requestedBy.id}>` +
+                                `\nRequested by: <@${currentTrack.requestedBy?.id}>` +
                                 `\n ${bar}\n\n` +
                                 `${repeatModeString}` +
                                 `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`

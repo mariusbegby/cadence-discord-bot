@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -22,15 +22,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/leave',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (!queue) {
             logger.debug('There is already no queue.');
@@ -56,13 +56,21 @@ module.exports = {
             logger.debug('Deleted the queue.');
         }
 
+        let authorName: string;
+
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
+        }
+
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
-                        iconURL: interaction.user.avatarURL()
+                        name: authorName,
+                        iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`

@@ -1,17 +1,22 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
+import { NodeResolvable, QueueFilters, useQueue } from 'discord-player';
 import {
-    ActionRowBuilder,
+    APIActionRowComponent,
+    APIMessageActionRowComponent,
     ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
     EmbedBuilder,
+    GuildMember,
+    Interaction,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
 } from 'discord.js';
 
 import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
+import { CommandParams, CustomError } from '../../types/commandTypes';
+import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
@@ -31,15 +36,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/filters',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -53,12 +58,12 @@ module.exports = {
             return;
         }
 
-        const filterOptions = [];
+        const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
-        ffmpegFilterOptions.availableFilters.forEach((filter) => {
+        ffmpegFilterOptions.availableFilters.forEach((filter: FFmpegFilterOption) => {
             let isEnabled = false;
 
-            if (queue.filters.ffmpeg.filters.includes(filter.value)) {
+            if (queue.filters.ffmpeg.filters.includes(filter.value as keyof QueueFilters)) {
                 isEnabled = true;
             }
 
@@ -77,31 +82,37 @@ module.exports = {
             .setPlaceholder('Select multiple options.')
             .setMinValues(0)
             .setMaxValues(filterOptions.length)
-            .addOptions(filterOptions);
+            .addOptions(filterOptions)
+            .toJSON();
 
-        const filterActionRow = new ActionRowBuilder().addComponents(filterSelect);
+        const filterActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components: [filterSelect]
+        };
 
-        const disableFiltersActionRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId('disable-filters')
-                .setLabel('Disable all filters')
-                .setStyle('Secondary')
-                .setEmoji(embedOptions.icons.disable)
-        );
+        const disableButton = new ButtonBuilder()
+            .setCustomId('disable-filters')
+            .setLabel('Disable all filters')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(embedOptions.icons.disable)
+            .toJSON();
+
+        const disableFiltersActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components: [disableButton]
+        };
 
         logger.debug('Sending info embed with action row components.');
         const response = await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(
-                        `**Toggle filters** ${embedOptions.icons.beta}\nEnable or disable audio filters for playback from the menu.`
-                    )
+                    .setDescription('**Toggle filters**\nEnable or disable audio filters for playback from the menu.')
                     .setColor(embedOptions.colors.info)
             ],
             components: [filterActionRow, disableFiltersActionRow]
         });
 
-        const collectorFilter = (i) => i.user.id === interaction.user.id;
+        const collectorFilter = (i: Interaction) => i.user.id === interaction.user.id;
         try {
             const confirmation = await response.awaitMessageComponent({
                 filter: collectorFilter,
@@ -130,14 +141,64 @@ module.exports = {
                 logger.debug('Reset queue filters.');
             }
 
-            if (confirmation.customId === 'disable-filters' || confirmation.values.length === 0) {
+            let authorName: string;
+
+            if (interaction.member instanceof GuildMember) {
+                authorName = interaction.member.nickname || interaction.user.username;
+            } else {
+                authorName = interaction.user.username;
+            }
+
+            if ('values' in confirmation) {
+                // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
+                if (
+                    (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) &&
+                    !confirmation.values.includes('normalizer')
+                ) {
+                    confirmation.values.push('normalizer');
+                }
+
+                // Enable provided filters
+                queue.filters.ffmpeg.toggle(confirmation.values as (keyof QueueFilters)[]);
+                logger.debug(`Enabled filters ${confirmation.values.join(', ')}.`);
+
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
-                                iconURL: interaction.user.avatarURL()
+                                name: authorName,
+                                iconURL: interaction.user.avatarURL() || ''
+                            })
+                            .setDescription(
+                                `**${
+                                    embedOptions.icons.success
+                                } Filters toggled**\nNow using these filters:\n${confirmation.values
+                                    .map((enabledFilter: string) => {
+                                        const filter = ffmpegFilterOptions.availableFilters.find(
+                                            (filter) => enabledFilter == filter.value
+                                        );
+
+                                        if (!filter) {
+                                            return enabledFilter;
+                                        }
+
+                                        return `- **${filter.emoji} ${filter.label}**`;
+                                    })
+                                    .join('\n')}`
+                            )
+                            .setColor(embedOptions.colors.success)
+                    ],
+                    components: []
+                });
+            } else if (confirmation.customId === 'disable-filters') {
+                logger.debug('Responding with success embed.');
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setAuthor({
+                                name: authorName,
+                                iconURL: interaction.user.avatarURL() || ''
                             })
                             .setDescription(
                                 `**${embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
@@ -146,53 +207,33 @@ module.exports = {
                     ],
                     components: []
                 });
+            } else {
+                logger.warn('Unhandled component interaction response.');
             }
-
-            // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
-            if (
-                (confirmation.values.includes('bassboost_low') || confirmation.values.includes('bassboost')) &&
-                !confirmation.values.includes('normalizer')
-            ) {
-                confirmation.values.push('normalizer');
-            }
-
-            // Enable provided filters
-            queue.filters.ffmpeg.toggle(confirmation.values);
-            logger.debug(`Enabled filters ${confirmation.values.join(', ')}.`);
-
-            logger.debug('Responding with success embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
-                        })
-                        .setDescription(
-                            `**${
-                                embedOptions.icons.success
-                            } Filters toggled**\nNow using these filters:\n${confirmation.values
-                                .map((enabledFilter) => {
-                                    const filter = ffmpegFilterOptions.availableFilters.find(
-                                        (filter) => enabledFilter == filter.value
-                                    );
-
-                                    return `- **${filter.emoji} ${filter.label}**`;
-                                })
-                                .join('\n')}`
-                        )
-                        .setColor(embedOptions.colors.success)
-                ],
-                components: []
-            });
         } catch (error) {
-            if (error.code === 'InteractionCollectorError') {
-                logger.debug('Interaction response timed out.');
-                return;
-            }
+            if (error instanceof CustomError) {
+                if (error.code === 'InteractionCollectorError') {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
 
-            logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
-            return;
+                if (error.message === 'Collector received no interactions before ending with reason: time') {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
+
+                logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
+                return;
+            } else {
+                if (
+                    error instanceof Error &&
+                    error.message === 'Collector received no interactions before ending with reason: time'
+                ) {
+                    logger.debug('Interaction response timed out.');
+                    return;
+                }
+                throw error;
+            }
         }
     }
 };

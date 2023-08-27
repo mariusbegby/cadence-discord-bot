@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -30,15 +30,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/remove',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -48,7 +48,7 @@ module.exports = {
             return;
         }
 
-        const removeTrackNumber = interaction.options.getNumber('tracknumber');
+        const removeTrackNumber = interaction.options.getNumber('tracknumber')!;
 
         if (removeTrackNumber > queue.tracks.data.length) {
             logger.debug('Specified track number is higher than total tracks.');
@@ -58,7 +58,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nTrack \`${removeTrackNumber}\` is not a valid track number. There are a total of\`${queue.tracks.data.length}\` tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
+                            `**${embedOptions.icons.warning} Oops!**\nTrack **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -66,13 +66,23 @@ module.exports = {
         }
 
         // Remove specified track number from queue
-        const removedTrack = queue.node.remove(removeTrackNumber - 1);
+        const removedTrack = queue.node.remove(removeTrackNumber - 1)!;
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
         let durationFormat =
-            removedTrack.raw.duration === 0 || removedTrack.duration === '0:00' ? '' : `\`${removedTrack.duration}\``;
+            Number(removedTrack.raw.duration) === 0 || removedTrack.duration === '0:00'
+                ? ''
+                : `\`${removedTrack.duration}\``;
 
         if (removedTrack.raw.live) {
             durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+        }
+
+        let authorName: string;
+
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
         }
 
         logger.debug('Responding with success embed.');
@@ -80,8 +90,8 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.member.nickname || interaction.user.username,
-                        iconURL: interaction.user.avatarURL()
+                        name: authorName,
+                        iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${embedOptions.icons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${

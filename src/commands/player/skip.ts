@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -26,15 +26,15 @@ module.exports = {
             module: 'slashCommand',
             name: '/skip',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -59,15 +59,17 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nThere are only \`${queue.tracks.data.length}\` tracks in the queue. You cannot skip to track \`${skipToTrack}\`.\n\nView tracks added to the queue with **\`/queue\`**.`
+                                `**${embedOptions.icons.warning} Oops!**\nThere are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${skipToTrack}\`**.\n\nView tracks added to the queue with **\`/queue\`**.`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]
                 });
             } else {
-                const skippedTrack = queue.currentTrack;
+                const skippedTrack = queue.currentTrack!;
+                logger.debug('Responding with warning embed.');
+
                 let durationFormat =
-                    skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
+                    Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
                         ? ''
                         : `\`${skippedTrack.duration}\``;
 
@@ -78,13 +80,21 @@ module.exports = {
                 queue.node.skipTo(skipToTrack - 1);
                 logger.debug('Skipped to specified track number.');
 
+                let authorName: string;
+
+                if (interaction.member instanceof GuildMember) {
+                    authorName = interaction.member.nickname || interaction.user.username;
+                } else {
+                    authorName = interaction.user.username;
+                }
+
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
-                                iconURL: interaction.user.avatarURL()
+                                name: authorName,
+                                iconURL: interaction.user.avatarURL() || ''
                             })
                             .setDescription(
                                 `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
@@ -112,9 +122,10 @@ module.exports = {
                 });
             }
 
-            const skippedTrack = queue.currentTrack;
+            const skippedTrack = queue.currentTrack!;
+
             let durationFormat =
-                skippedTrack.raw.duration === 0 || skippedTrack.duration === '0:00'
+                Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
                     ? ''
                     : `\`${skippedTrack.duration}\``;
 
@@ -133,13 +144,21 @@ module.exports = {
 
             const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
 
+            let authorName: string;
+
+            if (interaction.member instanceof GuildMember) {
+                authorName = interaction.member.nickname || interaction.user.username;
+            } else {
+                authorName = interaction.user.username;
+            }
+
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
+                            name: authorName,
+                            iconURL: interaction.user.avatarURL() || ''
                         })
                         .setDescription(
                             `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${

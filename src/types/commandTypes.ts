@@ -25,3 +25,14 @@ export interface ShardInfo {
         totalListeners: number;
     };
 }
+
+export interface TrackMetadata {
+    bridge: {
+        views: number;
+    };
+}
+
+export class CustomError extends Error {
+    type?: string;
+    code?: string;
+}

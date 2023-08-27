@@ -38,11 +38,7 @@ module.exports = {
             return;
         }
 
-        if (!interaction.guild) {
-            return;
-        }
-
-        const queue: NodeResolvable = useQueue(interaction.guild.id)!;
+        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -66,7 +62,7 @@ module.exports = {
                         .setDescription(
                             `**${
                                 currentVolume === 0 ? embedOptions.icons.volumeIsMuted : embedOptions.icons.volume
-                            } Playback volume**\nThe playback volume is currently set to \`${currentVolume}%\`.`
+                            } Playback volume**\nThe playback volume is currently set to **\`${currentVolume}%\`**.`
                         )
                         .setColor(embedOptions.colors.info)
                 ]
@@ -79,7 +75,7 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou cannot set the volume to \`${volume}\`, please pick a value betwen \`1\`% and \`100\`%.`
+                            `**${embedOptions.icons.warning} Oops!**\nYou cannot set the volume to **\`${volume}%\`**, please pick a value betwen **\`1%\`** and **\`100%\`**.`
                         )
                         .setColor(embedOptions.colors.warning)
                 ]
@@ -106,7 +102,7 @@ module.exports = {
                                 iconURL: interaction.user.avatarURL() || ''
                             })
                             .setDescription(
-                                `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
+                                `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
                             )
                             .setColor(embedOptions.colors.success)
                     ]
@@ -122,7 +118,7 @@ module.exports = {
                             iconURL: interaction.user.avatarURL() || ''
                         })
                         .setDescription(
-                            `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to \`${volume}%\`.`
+                            `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
                         )
                         .setColor(embedOptions.colors.success)
                 ]
