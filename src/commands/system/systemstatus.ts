@@ -96,11 +96,11 @@ module.exports = {
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches = results as Collection<string, Guild>[];
-                guildCaches.map((guildCache) => {
+                const guildCaches = results as Guild[][];
+                guildCaches.map((guildCache: Guild[]) => {
                     if (guildCache) {
-                        guildCount += guildCache.size;
-                        memberCount += guildCache.reduce((acc, guild) => acc + guild.memberCount, 0);
+                        guildCount += guildCache.length;
+                        memberCount += guildCache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0);
                     }
                 });
                 logger.debug('Successfully fetched client values from shards.');

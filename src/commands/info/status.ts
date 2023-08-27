@@ -32,11 +32,11 @@ module.exports = {
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
         const releaseVersion = version;
-        let guildCount = 0;
-        let memberCount = 0;
-        let activeVoiceConnections = 0;
-        let totalTracks = 0;
-        let totalListeners = 0;
+        let guildCount: number = 0;
+        let memberCount: number = 0;
+        let activeVoiceConnections: number = 0;
+        let totalTracks: number = 0;
+        let totalListeners: number = 0;
 
         if (!client || !client.shard) {
             logger.error('Client is undefined or does not have shard property.');
@@ -75,11 +75,11 @@ module.exports = {
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches = results as Collection<string, Guild>[];
-                guildCaches.map((guildCache) => {
+                const guildCaches = results as Guild[][];
+                guildCaches.map((guildCache: Guild[]) => {
                     if (guildCache) {
-                        guildCount += guildCache.size;
-                        memberCount += guildCache.reduce((acc, guild) => acc + guild.memberCount, 0);
+                        guildCount += guildCache.length;
+                        memberCount += guildCache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0);
                     }
                 });
 
