@@ -13,16 +13,24 @@ RUN apk add --no-cache python3 make build-base ffmpeg
 WORKDIR /cadence-discord-bot
 
 # Copy the rest of the source files into the image.
-COPY . .
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY src/ ./src/
+COPY config/ ./config/
 
 # Install dependencies from package-lock.json and omit dev dependencies
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+# Transpile TypeScript to JavaScript, remove dev dependencies, and install production dependencies
+RUN npm run build && \
+    rm -rf node_modules && \
     npm ci --omit=dev
 
-# Cleanup of unneeded packages and apk cache
+# Cleanup of unneeded packages, apk cache, and TypeScript source files
 RUN apk del python3 make build-base && \
-    rm -rf /var/cache/apk/* /tmp/*
+    rm -rf /var/cache/apk/* /tmp/* ./src/
 
 # Startup command to run the bot after deploying slash commands
 CMD /bin/sh -c "npm run deploy && npm run start"

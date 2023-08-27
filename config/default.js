@@ -114,7 +114,7 @@ module.exports.playerOptions = {
     leaveOnEmpty: true,
     leaveOnEmptyCooldown: 1_800_000,
     leaveOnEnd: true,
-    leaveonEndCooldown: 1_800_000,
+    leaveOnEndCooldown: 1_800_000,
     leaveOnStop: true,
     leaveOnStopCooldown: 1_800_000,
     defaultVolume: 50,
