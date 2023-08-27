@@ -1,7 +1,7 @@
 import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const playerOptions = config.get('playerOptions');
+const playerOptions: PlayerOptions = config.get('playerOptions');
 import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';

@@ -2,7 +2,7 @@ import pino from 'pino';
 import config from 'config';
 
 // Retrieve logger options from config
-const loggerOptions = config.get('loggerOptions');
+const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
 const targets = [
     {

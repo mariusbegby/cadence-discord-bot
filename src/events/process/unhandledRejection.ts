@@ -4,7 +4,7 @@ import loggerModule from '../../services/logger';
 module.exports = {
     name: 'unhandledRejection',
     isDebug: false,
-    execute: async (error) => {
+    execute: async (error: Error) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'unhandledRejection.js',

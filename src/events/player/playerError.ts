@@ -1,31 +1,32 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
+import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions = config.get('botOptions');
-const systemOptions = config.get('systemOptions');
-import { EmbedBuilder } from 'discord.js';
+const botOptions: BotOptions = config.get('botOptions');
+const systemOptions: SystemOptions = config.get('systemOptions');
+import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 import loggerModule from '../../services/logger';
+import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
 // Emitted when the player encounters an error while streaming audio track
 module.exports = {
     name: 'error',
     isDebug: false,
     isPlayerEvent: true,
-    execute: async (queue, error) => {
+    execute: async (queue: ExtendedGuildQueuePlayerNode, error: Error) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'playerError.js',
             module: 'event',
             name: 'playerError',
             executionId: executionId,
-            shardId: queue.metadata.client.shard.ids[0],
-            guildId: queue.metadata.channel.guild.id
+            shardId: queue.metadata?.client.shard?.ids[0],
+            guildId: queue.metadata?.channel.guild.id
         });
 
-        logger.error(error, 'player.events.on(\'playerError\'): Player error while streaming track');
+        logger.error(error, "player.events.on('playerError'): Player error while streaming track");
 
-        await queue.metadata.channel.send({
+        await queue.metadata?.channel.send({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -37,7 +38,9 @@ module.exports = {
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            const channel = await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId);
+            const channel = (await queue.metadata?.client.channels.cache.get(
+                systemOptions.systemMessageChannelId
+            )) as BaseGuildTextChannel;
             if (channel) {
                 await channel.send({
                     embeds: [

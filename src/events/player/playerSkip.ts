@@ -1,31 +1,33 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
+import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions = config.get('botOptions');
-const systemOptions = config.get('systemOptions');
-import { EmbedBuilder } from 'discord.js';
+const botOptions: BotOptions = config.get('botOptions');
+const systemOptions: SystemOptions = config.get('systemOptions');
+import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 import loggerModule from '../../services/logger';
+import { Track } from 'discord-player';
+import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
 // Emitted when the audio player fails to load the stream for a track
 module.exports = {
     name: 'playerSkip',
     isDebug: false,
     isPlayerEvent: true,
-    execute: async (queue, track) => {
+    execute: async (queue: ExtendedGuildQueuePlayerNode, track: Track) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'playerSkip.js',
             module: 'event',
             name: 'playerSkip',
             executionId: executionId,
-            shardId: queue.metadata.client.shard.ids[0],
-            guildId: queue.metadata.channel.guild.id
+            shardId: queue.metadata?.client.shard?.ids[0],
+            guildId: queue.metadata?.channel.guild.id
         });
 
         logger.error(`player.events.on('playerSkip'): Failed to play '${track.url}'.`);
 
-        await queue.metadata.channel.send({
+        await queue.metadata?.channel.send({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -37,7 +39,9 @@ module.exports = {
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            const channel = await queue.metadata.client.channels.cache.get(systemOptions.systemMessageChannelId);
+            const channel = (await queue.metadata?.client.channels.cache.get(
+                systemOptions.systemMessageChannelId
+            )) as BaseGuildTextChannel;
             if (channel) {
                 await channel.send({
                     embeds: [

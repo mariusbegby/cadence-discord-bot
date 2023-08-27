@@ -1,7 +1,7 @@
 import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const ffmpegFilterOptions = config.get('ffmpegFilterOptions');
+const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
 import {

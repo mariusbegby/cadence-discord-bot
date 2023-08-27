@@ -6,7 +6,7 @@ module.exports = {
     name: Events.Warn,
     isDebug: false,
     once: false,
-    execute: async (warning) => {
+    execute: async (warning: string) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'warn.js',

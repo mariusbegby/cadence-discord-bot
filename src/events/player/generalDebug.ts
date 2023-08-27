@@ -5,7 +5,7 @@ module.exports = {
     name: 'debug',
     isDebug: true,
     isPlayerEvent: false,
-    execute: async (message) => {
+    execute: async (message: string) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'generalDebug.js',

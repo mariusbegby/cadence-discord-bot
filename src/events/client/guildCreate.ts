@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events, Guild } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 import loggerModule from '../../services/logger';
 
@@ -6,7 +6,7 @@ module.exports = {
     name: Events.GuildCreate,
     isDebug: false,
     once: false,
-    execute: async (guild) => {
+    execute: async (guild: Guild) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'guildCreate.js',

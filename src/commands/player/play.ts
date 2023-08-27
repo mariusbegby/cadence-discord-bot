@@ -1,7 +1,7 @@
 import config from 'config';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions = config.get('botOptions');
-const playerOptions = config.get('playerOptions');
+const botOptions: BotOptions = config.get('botOptions');
+const playerOptions: PlayerOptions = config.get('playerOptions');
 import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { cannotJoinVoiceOrTalk } from '../../utils/validation/permissionValidator';
 import { transformQuery } from '../../utils/validation/searchQueryValidator';

@@ -1,7 +1,7 @@
 import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions = config.get('botOptions');
+const botOptions: BotOptions = config.get('botOptions');
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
 

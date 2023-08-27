@@ -6,7 +6,7 @@ module.exports = {
     name: Events.Error,
     isDebug: false,
     once: false,
-    execute: async (error) => {
+    execute: async (error: Error) => {
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'error.js',
