@@ -137,7 +137,7 @@ module.exports = {
                     }
                 }
             }
-
+        } else {
             logger.warn(interaction, 'Interaction created but was not a chat input or autocomplete interaction.');
         }
     }
