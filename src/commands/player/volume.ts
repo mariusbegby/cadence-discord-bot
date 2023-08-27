@@ -1,6 +1,6 @@
 import config from 'config';
-import { useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { NodeResolvable, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
@@ -30,15 +30,19 @@ module.exports = {
             module: 'slashCommand',
             name: '/volume',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
             return;
         }
 
-        const queue = useQueue(interaction.guild.id);
+        if (!interaction.guild) {
+            return;
+        }
+
+        const queue: NodeResolvable = useQueue(interaction.guild.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
             return;
@@ -84,14 +88,22 @@ module.exports = {
             queue.node.setVolume(volume);
             logger.debug(`Set volume to ${volume}%.`);
 
+            let authorName: string;
+
+            if (interaction.member instanceof GuildMember) {
+                authorName = interaction.member.nickname || interaction.user.username;
+            } else {
+                authorName = interaction.user.username;
+            }
+
             if (volume === 0) {
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
-                                name: interaction.member.nickname || interaction.user.username,
-                                iconURL: interaction.user.avatarURL()
+                                name: authorName,
+                                iconURL: interaction.user.avatarURL() || ''
                             })
                             .setDescription(
                                 `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to \`${volume}%\`.`
@@ -106,8 +118,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setAuthor({
-                            name: interaction.member.nickname || interaction.user.username,
-                            iconURL: interaction.user.avatarURL()
+                            name: authorName,
+                            iconURL: interaction.user.avatarURL() || ''
                         })
                         .setDescription(
                             `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to \`${volume}%\`.`
