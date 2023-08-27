@@ -14,6 +14,7 @@ import {
 } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -23,7 +24,7 @@ module.exports = {
         .setDescription('Toggle various audio filters during playback.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'filters.js',
             module: 'slashCommand',

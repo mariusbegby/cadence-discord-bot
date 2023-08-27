@@ -6,6 +6,7 @@ import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/q
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -21,7 +22,7 @@ module.exports = {
                 .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
                 .setRequired(true)
         ),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'seek.js',
             module: 'slashCommand',

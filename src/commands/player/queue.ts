@@ -6,6 +6,7 @@ import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -16,7 +17,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'queue.js',
             module: 'slashCommand',

@@ -5,6 +5,7 @@ import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -14,7 +15,7 @@ module.exports = {
         .setDescription('Clear the track queue and remove the bot from voice channel.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'leave.js',
             module: 'slashCommand',

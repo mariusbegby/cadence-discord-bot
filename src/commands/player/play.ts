@@ -9,6 +9,7 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useMainPlayer, useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
+import { CommandAutocompleteParams, CommandParams } from '../../types/commandTypes';
 
 const recentQueries = new Map();
 
@@ -35,7 +36,7 @@ module.exports = {
                 .setMaxLength(500)
                 .setAutocomplete(true)
         ),
-    autocomplete: async ({ interaction, executionId }) => {
+    autocomplete: async ({ interaction, executionId }: CommandAutocompleteParams) => {
         const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,
@@ -87,7 +88,7 @@ module.exports = {
         logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     },
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild.shardId,

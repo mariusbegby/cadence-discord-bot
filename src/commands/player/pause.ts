@@ -6,6 +6,7 @@ import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/q
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -15,7 +16,7 @@ module.exports = {
         .setDescription('Pause or resume the current track.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'pause.js',
             module: 'slashCommand',

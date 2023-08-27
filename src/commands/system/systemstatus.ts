@@ -8,6 +8,7 @@ import { version, dependencies } from '../../../package.json';
 import loggerModule from '../../services/logger';
 
 import { EmbedOptions } from '../../types/configTypes';
+import { CommandParams } from '../../types/commandTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'systemstatus.js',
             module: 'slashCommand',

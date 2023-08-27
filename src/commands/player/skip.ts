@@ -6,6 +6,7 @@ import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/q
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -18,7 +19,7 @@ module.exports = {
         .addNumberOption((option) =>
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'skip.js',
             module: 'slashCommand',

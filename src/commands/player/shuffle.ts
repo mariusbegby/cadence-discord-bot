@@ -6,6 +6,7 @@ import { queueDoesNotExist, queueIsEmpty } from '../../utils/validation/queueVal
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -15,7 +16,7 @@ module.exports = {
         .setDescription('Shuffle tracks in the queue randomly.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'shuffle.js',
             module: 'slashCommand',

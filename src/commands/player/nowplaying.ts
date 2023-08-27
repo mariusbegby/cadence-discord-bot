@@ -7,6 +7,7 @@ import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/q
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -16,7 +17,7 @@ module.exports = {
         .setDescription('Show information about the track currently playing.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'nowplaying.js',
             module: 'slashCommand',

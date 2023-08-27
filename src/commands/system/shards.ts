@@ -4,6 +4,7 @@ const embedOptions: EmbedOptions = config.get('embedOptions');
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isSystemCommand: true,
@@ -31,7 +32,7 @@ module.exports = {
         )
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'shards.js',
             module: 'slashCommand',

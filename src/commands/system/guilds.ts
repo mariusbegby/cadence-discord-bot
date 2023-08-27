@@ -4,6 +4,7 @@ const embedOptions: EmbedOptions = config.get('embedOptions');
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isSystemCommand: true,
@@ -14,7 +15,7 @@ module.exports = {
         .setDescription('Show list of guilds where bot is added.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'guilds.js',
             module: 'slashCommand',

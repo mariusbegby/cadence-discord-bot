@@ -6,6 +6,7 @@ import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -22,7 +23,7 @@ module.exports = {
                 .setMinValue(1)
                 .setRequired(true)
         ),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'remove.js',
             module: 'slashCommand',

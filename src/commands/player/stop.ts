@@ -5,6 +5,7 @@ import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation
 import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 
 module.exports = {
     isNew: false,
@@ -14,7 +15,7 @@ module.exports = {
         .setDescription('Stop playing audio and clear the track queue.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
+    execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'stop.js',
             module: 'slashCommand',
