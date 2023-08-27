@@ -1,10 +1,13 @@
 import pino from 'pino';
 import config from 'config';
+import { LoggerOptions } from '../types/configTypes';
+import { TargetOptions } from '../types/serviceTypes';
+import type { LokiOptions } from 'pino-loki';
 
 // Retrieve logger options from config
 const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
-const targets = [
+const targets: TargetOptions[] = [
     {
         target: 'pino/file',
         level: loggerOptions.minimumLogLevel,
@@ -17,7 +20,7 @@ const targets = [
     },
     {
         target: 'pino/file',
-        level: pino.levels.values.info,
+        level: pino.levels.values.info.toString(),
         options: {
             destination: './logs/app-info.log',
             mkdir: true,
@@ -27,7 +30,7 @@ const targets = [
     },
     {
         target: 'pino/file',
-        level: pino.levels.values.error,
+        level: pino.levels.values.error.toString(),
         options: {
             destination: './logs/app-error.log',
             mkdir: true,
@@ -46,11 +49,9 @@ const targets = [
 
 // Check for Loki credentials and add Loki as a target if present
 if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
-    targets.push({
+    const transport = pino.transport<LokiOptions>({
         target: 'pino-loki',
-        level: loggerOptions.minimumLogLevel,
         options: {
-            sync: false,
             batching: false,
             interval: 5,
             host: process.env.LOKI_HOST || 'http://localhost:3100',
@@ -60,6 +61,8 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
             }
         }
     });
+
+    targets.push(transport);
 }
 
 const transport = pino.transport({ targets });
@@ -77,4 +80,3 @@ const logLevelConfig = {
 
 const logger = pino(logLevelConfig, transport);
 export default logger;
-module.exports = logger;
