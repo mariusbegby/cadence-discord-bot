@@ -1,5 +1,41 @@
 # Changelog
 
+## [4.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.2.1...v4.3.0) (2023-08-27)
+
+
+### Features
+
+* rename .js files to .ts ([92b1992](https://github.com/mariusbegby/cadence-discord-bot/commit/92b1992b1ac6d4ce3cf15d14b6b78914536f7610))
+* update paths to typescript /dist ([c3891f9](https://github.com/mariusbegby/cadence-discord-bot/commit/c3891f9c2dfb6469e1f72d6f95093d9269166d05))
+
+
+### Minor changes and bug fixes
+
+* add annotations to command parameters ([179f7dd](https://github.com/mariusbegby/cadence-discord-bot/commit/179f7ddbfd9d77cb32d8c5f362eecb34432a1bbd))
+* annotate volume command ([e9ed2eb](https://github.com/mariusbegby/cadence-discord-bot/commit/e9ed2eb0b8a10ed0467d6ed9ecd28140a234a9b1))
+* annotated system commands ([0bdc550](https://github.com/mariusbegby/cadence-discord-bot/commit/0bdc5501bee6874ab9f77812a0235e414f30e0b3))
+* annotated the rest of commands ([45d6ffa](https://github.com/mariusbegby/cadence-discord-bot/commit/45d6ffa1798bcbe532d4319f46a9839e607311c6))
+* annotated util validation ([d38ed18](https://github.com/mariusbegby/cadence-discord-bot/commit/d38ed188429ab7e532c8bdd261ebb3dc0ddbf8d9))
+* annotated util validation functions ([1ae9503](https://github.com/mariusbegby/cadence-discord-bot/commit/1ae950347713378408d1429b54680a116155f071))
+* annotations for events ([b118ebd](https://github.com/mariusbegby/cadence-discord-bot/commit/b118ebdfb0de07b6f2d0895fb022458eb6984034))
+* created initial tsconfig.json ([40bf9d9](https://github.com/mariusbegby/cadence-discord-bot/commit/40bf9d926b2dc3ba8944669a848093766d854a6d))
+* fix annotation issue for guild cache list ([7185fe4](https://github.com/mariusbegby/cadence-discord-bot/commit/7185fe4071990b822d9b4cd2eb983302dce50345))
+* Fixed annotations ([89f8e2d](https://github.com/mariusbegby/cadence-discord-bot/commit/89f8e2d0d168297891e662261bbd40a8ce5d6773))
+* Fixed most imports and some typescript changes ([0d9f4bd](https://github.com/mariusbegby/cadence-discord-bot/commit/0d9f4bd404413db34cf06a1464453fe069464ff2))
+* installed typescript ([ef76e9c](https://github.com/mariusbegby/cadence-discord-bot/commit/ef76e9c3ad4cbf72f02e8be621d378f7166270ef))
+* more annotation for util functions ([39e8182](https://github.com/mariusbegby/cadence-discord-bot/commit/39e818283d517e8b8caf9803fc997ca955ab626d))
+* types for logger service ([f4f4182](https://github.com/mariusbegby/cadence-discord-bot/commit/f4f418292a4e7fa002df3e79d6da647a3c36f901))
+* update Dockerfile and CI/CD workflows ([f21bfba](https://github.com/mariusbegby/cadence-discord-bot/commit/f21bfbae6f900d800b3d8edd0808918630f00b18))
+* update eslint to respect typescript and run eslint fix ([1a7f800](https://github.com/mariusbegby/cadence-discord-bot/commit/1a7f800ba2d354b717bc1dc9e58a66dc18bc18ae))
+* update module import statements from require to import ([9125e4a](https://github.com/mariusbegby/cadence-discord-bot/commit/9125e4a5dada8f9073cdcbd64944aad37a8e41a3))
+
+
+### Miscellaneous
+
+* formatting and sorting ([72e2b2a](https://github.com/mariusbegby/cadence-discord-bot/commit/72e2b2aa138bf87b6a2e6614eca28b1044d4903d))
+* initiate RELEASE_VERSION env var ([98f8d43](https://github.com/mariusbegby/cadence-discord-bot/commit/98f8d4338f4e73ff164f39c6f7ad12dccb16deea))
+* removed unused import ([1b00222](https://github.com/mariusbegby/cadence-discord-bot/commit/1b00222ecf376a193302fb9d3323b9a1e7a9ea44))
+
 ## [4.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.2.0...v4.2.1) (2023-08-26)
 
 
