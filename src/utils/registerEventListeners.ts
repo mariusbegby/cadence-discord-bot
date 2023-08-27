@@ -2,16 +2,46 @@ import config from 'config';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { GuildQueueEvents, Player, PlayerEvents } from 'discord-player';
+import { Client } from 'discord.js';
 import loggerModule from '../services/logger';
 import { LoggerOptions } from '../types/configTypes';
-import {
-    ClientEventArguments, PlayerEventArguments, ProcessEventArguments
-} from '../types/eventTypes';
-import { RegisterEventListenersParams } from '../types/utilTypes';
+import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
+import { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';
 
 const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
-export const registerEventListeners = ({ client, player, executionId }: RegisterEventListenersParams) => {
+const registerClientEventListeners = (client: Client, event: CustomEvent) => {
+    if (event.once) {
+        client.once(event.name, (...args: ClientEventArguments) => event.execute(...args));
+    } else {
+        if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
+            client.on(event.name, (...args: ClientEventArguments) => event.execute(...args));
+        }
+    }
+};
+
+const registerInteractionEventListeners = (client: Client, event: CustomEvent) => {
+    client.on(event.name, (...args: ClientEventArguments) => event.execute(...args, { client }));
+};
+
+const registerProcessEventListeners = (event: CustomEvent) => {
+    process.on(event.name, (...args: ProcessEventArguments) => event.execute(...args));
+};
+
+const registerPlayerEventListeners = (player: Player, event: CustomEvent, loggerOptions: LoggerOptions) => {
+    if (!event.isDebug || (loggerOptions.minimumLogLevel === 'debug' && loggerOptions.discordPlayerDebug)) {
+        if (event.isPlayerEvent) {
+            player.events.on(event.name as keyof GuildQueueEvents, (...args: PlayerEventArguments) =>
+                event.execute(...args)
+            );
+        } else {
+            player.on(event.name as keyof PlayerEvents, (...args: PlayerEventArguments) => event.execute(...args));
+        }
+    }
+};
+
+export const registerEventListeners = async ({ client, player, executionId }: RegisterEventListenersParams) => {
     const logger = loggerModule.child({
         source: 'registerEventListeners.js',
         module: 'register',
@@ -31,39 +61,22 @@ export const registerEventListeners = ({ client, player, executionId }: Register
             .filter((file) => file.endsWith('.js'));
 
         for (const file of eventFiles) {
-            /* eslint-disable @typescript-eslint/no-var-requires */
-            const event = require(`../events/${folder}/${file}`);
+            const event = await import(`../events/${folder}/${file}`);
             switch (folder) {
                 case 'client':
-                    if (event.once) {
-                        client.once(event.name, (...args: ClientEventArguments) => event.execute(...args));
-                    } else {
-                        if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
-                            client.on(event.name, (...args: ClientEventArguments) => event.execute(...args));
-                        }
-                    }
+                    registerClientEventListeners(client, event);
                     break;
 
                 case 'interactions':
-                    client.on(event.name, (...args: ClientEventArguments) => event.execute(...args, { client }));
+                    registerInteractionEventListeners(client, event);
                     break;
 
                 case 'process':
-                    process.on(event.name, (...args: ProcessEventArguments) => event.execute(...args));
+                    registerProcessEventListeners(event);
                     break;
 
                 case 'player':
-                    if (
-                        !event.isDebug ||
-                        (loggerOptions.minimumLogLevel === 'debug' && loggerOptions.discordPlayerDebug)
-                    ) {
-                        if (event.isPlayerEvent) {
-                            player.events.on(event.name, (...args: PlayerEventArguments) => event.execute(...args));
-                            break;
-                        } else {
-                            player.on(event.name, (...args: PlayerEventArguments) => event.execute(...args));
-                        }
-                    }
+                    registerPlayerEventListeners(player, event, loggerOptions);
                     break;
 
                 default:

@@ -25,8 +25,8 @@ const logger = loggerModule.child({
 
     client.on('allShardsReady', async () => {
         client.registerClientCommands = registerClientCommands;
-        registerEventListeners({ client, player, executionId });
-        registerClientCommands({ client, executionId });
+        await registerEventListeners({ client, player, executionId });
+        await registerClientCommands({ client, executionId });
         client.emit('ready', client as Client);
     });
 
