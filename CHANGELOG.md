@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.3.0...v4.3.1) (2023-08-27)
+
+
+### Minor changes and bug fixes
+
+* fix loki error ([2fe7591](https://github.com/mariusbegby/cadence-discord-bot/commit/2fe7591380aa4f8cfaf67095a4ad08ffa38034e3))
+* update deps ([3d904f5](https://github.com/mariusbegby/cadence-discord-bot/commit/3d904f51af05f2ef0659733e73889168bddc5168))
+
 ## [4.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.2.1...v4.3.0) (2023-08-27)
 
 
