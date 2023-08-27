@@ -2,6 +2,7 @@ import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 import { BotOptions, EmbedOptions } from '../../types/configTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -12,7 +13,7 @@ module.exports = {
         .setDescription('Show a list of commands and their usage.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'help.js',
             module: 'slashCommand',

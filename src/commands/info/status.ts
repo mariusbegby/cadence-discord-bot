@@ -5,6 +5,7 @@ import osu from 'node-os-utils';
 // @ts-ignore
 import { version } from '../../../package.json';
 import loggerModule from '../../services/logger';
+import { CommandParams } from '../../types/commandTypes';
 import { EmbedOptions } from '../../types/configTypes';
 import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
 
@@ -17,7 +18,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
+    execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
             source: 'status.js',
             module: 'slashCommand',
