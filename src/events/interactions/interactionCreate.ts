@@ -1,5 +1,11 @@
 import config from 'config';
-import { EmbedBuilder, Events, Interaction } from 'discord.js';
+import {
+    EmbedBuilder,
+    Events,
+    Interaction,
+    InteractionType,
+    MessageComponentInteraction
+} from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import loggerModule from '../../services/logger';
@@ -23,14 +29,38 @@ module.exports = {
             guildId: interaction.guild?.id
         });
 
-        if (interaction.isMessageComponent()) {
+        let interactionString: string = '';
+        const interactionType: InteractionType = interaction.type;
+
+        const handleComponent = async (interaction: MessageComponentInteraction) => {
             await interaction.deferReply();
             const componentId = interaction.customId.split('_')[0];
             const trackId = interaction.customId.split('_')[1];
-            const componentModule = await import(`../../interactions/component/${componentId}.js`);
-            return componentModule.execute({ interaction, trackId, executionId });
+            const componentModule = await import(`../../interactions/components/${componentId}.js`);
+            componentModule.execute({ interaction, trackId, executionId });
+        };
+
+        switch (interactionType) {
+            case InteractionType.ApplicationCommand:
+                interactionString = 'ApplicationCommand';
+                break;
+            case InteractionType.MessageComponent:
+                interactionString = 'MessageComponent';
+                handleComponent(interaction as MessageComponentInteraction);
+
+                break;
+            case InteractionType.ApplicationCommandAutocomplete:
+                interactionString = 'ApplicationCommandAutocomplete';
+                break;
+            default:
+                interactionString = 'Unknown';
+                break;
         }
 
+        logger.debug(`Interaction of type '${interactionString}' created.`);
+
+        // TODO: separate slash commands and autocomplete into separate files
+        // /src/interactions/commands and /src/interactions/autocomplete
         if (interaction.isChatInputCommand() || interaction.isAutocomplete()) {
             const command = client.commands?.get(interaction.commandName) as Command;
 
@@ -135,7 +165,8 @@ module.exports = {
                 }
             }
         } else {
-            logger.warn(interaction, 'Interaction created but was not a chat input or autocomplete interaction.');
+            logger.warn('Interaction created but was not a chat input or autocomplete interaction.');
+            logger.trace(interaction);
         }
     }
 };
