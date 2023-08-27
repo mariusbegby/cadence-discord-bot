@@ -2,9 +2,10 @@ import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
+import { CommandParams, ShardInfo } from '../../types/commandTypes';
+import { ExtendedClient } from '../../types/clientTypes';
 
 module.exports = {
     isSystemCommand: true,
@@ -38,23 +39,35 @@ module.exports = {
             module: 'slashCommand',
             name: '/shards',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 
-        let shardInfoList = [];
+        let shardInfoList: ShardInfo[] = [];
+
+        if (!client || !client.shard) {
+            logger.error('Client is undefined or does not have shard property.');
+            return;
+        }
 
         logger.debug('Fetching player statistics and client values from each shard.');
         try {
             await client.shard
-                .broadcastEval((shardClient) => {
+                .broadcastEval((shardClient: ExtendedClient) => {
+                    if (!shardClient.shard) {
+                        return;
+                    }
+
                     /* eslint-disable no-undef */
                     const playerStats = player.generateStatistics();
-                    const nodeProcessMemUsageInMb = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+                    const nodeProcessMemUsageInMb = parseFloat(
+                        (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+                    );
+
                     const shardInfo = {
                         shardId: shardClient.shard.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
@@ -70,7 +83,7 @@ module.exports = {
                     return shardInfo;
                 })
                 .then((results) => {
-                    shardInfoList = results;
+                    shardInfoList = results.filter(Boolean) as ShardInfo[];
 
                     switch (interaction.options.getString('sort')) {
                         case 'memory':
@@ -132,7 +145,7 @@ module.exports = {
         const evenShardIndexes = currentPageShards.filter((shard, index) => index % 2 === 0);
         const oddShardIndexes = currentPageShards.filter((shard, index) => index % 2 !== 0);
 
-        function shardInfoToString(shard) {
+        function shardInfoToString(shard: ShardInfo) {
             let string = '';
             string += `**Shard ${shard.shardId}** - Guilds: ${shard.guildCount.toLocaleString(
                 'en-US'

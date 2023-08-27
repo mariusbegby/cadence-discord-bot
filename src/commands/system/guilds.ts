@@ -2,7 +2,7 @@ import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Guild } from 'discord.js';
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
 
@@ -21,16 +21,21 @@ module.exports = {
             module: 'slashCommand',
             name: '/guilds',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;
         }
 
-        let shardGuilds = [];
+        let shardGuilds: Guild[] = [];
         let totalGuildCount = 0;
+
+        if (!client || !client.shard) {
+            logger.error('Client is undefined or does not have shard property.');
+            return;
+        }
 
         logger.debug('Fetching guilds from all shards.');
         await client.shard
@@ -40,7 +45,7 @@ module.exports = {
                 });
             })
             .then((guilds) => {
-                shardGuilds = guilds.flat(1);
+                shardGuilds = guilds.flat(1) as Guild[];
             });
 
         totalGuildCount = shardGuilds.length;

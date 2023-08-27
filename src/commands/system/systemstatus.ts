@@ -1,7 +1,7 @@
 import config from 'config';
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
 import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Guild, Collection } from 'discord.js';
 import osu from 'node-os-utils';
 // @ts-ignore
 import { version, dependencies } from '../../../package.json';
@@ -26,8 +26,8 @@ module.exports = {
             module: 'slashCommand',
             name: '/systemstatus',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
@@ -59,15 +59,21 @@ module.exports = {
         const distubeYtdlVersion = dependencies['@distube/ytdl-core'];
 
         logger.debug('Fetching player statistics from all shards.');
+
+        if (!client || !client.shard) {
+            logger.error('Client is undefined or does not have shard property.');
+            return;
+        }
+
         await client.shard
             .broadcastEval(() => {
                 /* eslint-disable no-undef */
                 return player.generateStatistics();
             })
             .then((results) => {
-                const queueCountList = [];
-                const trackCountList = [];
-                const listenerCountList = [];
+                const queueCountList: number[] = [];
+                const trackCountList: number[] = [];
+                const listenerCountList: number[] = [];
                 results.map((result) => {
                     queueCountList.push(result.queues.length);
                     if (result.queues.length > 0) {
@@ -89,10 +95,11 @@ module.exports = {
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
-                results.map((guildCache) => {
+                const guildCaches = results as Collection<string, Guild>[];
+                guildCaches.map((guildCache) => {
                     if (guildCache) {
-                        guildCount += guildCache.length;
-                        memberCount += guildCache.reduce((acc, guildCache) => acc + guildCache.memberCount, 0);
+                        guildCount += guildCache.size;
+                        memberCount += guildCache.reduce((acc, guild) => acc + guild.memberCount, 0);
                     }
                 });
                 logger.debug('Successfully fetched client values from shards.');

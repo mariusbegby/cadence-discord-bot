@@ -138,8 +138,8 @@ module.exports = {
                                 queue.repeatMode === 0
                                     ? ''
                                     : `**${
-                                        queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
-                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
+                                          queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
+                                      } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
                     .addFields(
@@ -170,7 +170,7 @@ module.exports = {
             components: [nowPlayingActionRow]
         });
 
-        logger.debug(`User used command '${interaction.commandName}', finished sending response.`);
+        logger.debug('Finished sending response.');
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
         try {
@@ -249,10 +249,10 @@ module.exports = {
                                         queue.repeatMode === 0
                                             ? ''
                                             : `\n\n**${
-                                                queue.repeatMode === 3
-                                                    ? embedOptions.icons.autoplaying
-                                                    : embedOptions.icons.looping
-                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
+                                                  queue.repeatMode === 3
+                                                      ? embedOptions.icons.autoplaying
+                                                      : embedOptions.icons.looping
+                                              } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                                     }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)

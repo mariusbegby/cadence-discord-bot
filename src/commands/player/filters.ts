@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
+import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';

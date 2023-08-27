@@ -2,9 +2,10 @@ import config from 'config';
 import { EmbedOptions } from '../../types/configTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { ExtendedClient } from '../../types/clientTypes';
 
 module.exports = {
     isSystemCommand: true,
@@ -21,11 +22,16 @@ module.exports = {
             module: 'slashCommand',
             name: '/reload',
             executionId: executionId,
-            shardId: interaction.guild.shardId,
-            guildId: interaction.guild.id
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
+            return;
+        }
+
+        if (!client || !client.shard) {
+            logger.error('Client is undefined or does not have shard property.');
             return;
         }
 
@@ -33,7 +39,11 @@ module.exports = {
             logger.debug('Reloading commands across all shards.');
             await client.shard
                 .broadcastEval(
-                    async (shardClient, { executionId }) => {
+                    async (shardClient: ExtendedClient, { executionId }) => {
+                        if (!shardClient.registerClientCommands) {
+                            return;
+                        }
+
                         shardClient.registerClientCommands({ client: shardClient, executionId });
                     },
                     { context: { executionId: executionId } }
@@ -58,12 +68,12 @@ module.exports = {
             });
         }
 
-        const commands = client.commands.map((command) => {
+        const commands = client.commands?.map((command) => {
             const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });
 
-        const embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands.join('\n');
+        const embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
