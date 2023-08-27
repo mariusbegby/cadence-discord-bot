@@ -1,5 +1,8 @@
 name: Build and Push Docker Image on Release
 
+env:
+    RELEASE_VERSION:
+
 on:
     release:
         types: [published]
