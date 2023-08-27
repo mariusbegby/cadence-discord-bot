@@ -14,11 +14,11 @@ import {
     StringSelectMenuOptionBuilder
 } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams, CustomError } from '../../types/commandTypes';
-import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CommandParams, CustomError } from '../../../types/commandTypes';
+import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');

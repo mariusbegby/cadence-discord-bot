@@ -7,19 +7,18 @@ import {
     ButtonStyle,
     ComponentType,
     EmbedBuilder,
-    GuildMember,
-    Interaction,
     SlashCommandBuilder
 } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams, TrackMetadata, CustomError } from '../../types/commandTypes';
-import { EmbedOptions, PlayerOptions } from '../../types/configTypes';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CommandParams, TrackMetadata } from '../../../types/commandTypes';
+import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
+
 module.exports = {
     isNew: false,
     isBeta: false,
@@ -110,15 +109,18 @@ module.exports = {
             bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
+        const customId = `nowplaying-skip-button_${currentTrack.id}`;
+        logger.debug(`Generated custom id for skip button: ${customId}`);
+
         const nowPlayingButton = new ButtonBuilder()
-            .setCustomId('nowplaying-skip')
+            .setCustomId(customId)
             .setLabel('Skip track')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(embedOptions.icons.nextTrack)
-            .toJSON(); // Convert the builder to a raw object
+            .toJSON();
 
         const nowPlayingActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
-            type: ComponentType.ActionRow, // This might vary based on your discord.js version
+            type: ComponentType.ActionRow,
             components: [nowPlayingButton]
         };
 
@@ -134,7 +136,7 @@ module.exports = {
         logger.debug('Successfully retrieved information about the current track.');
 
         logger.debug('Sending info embed with action row components.');
-        const response = await interaction.editReply({
+        await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
@@ -185,128 +187,5 @@ module.exports = {
         });
 
         logger.debug('Finished sending response.');
-
-        const collectorFilter = (i: Interaction) => i.user.id === interaction.user.id;
-        try {
-            const confirmation = await response.awaitMessageComponent({
-                filter: collectorFilter,
-                time: 300_000
-            });
-
-            confirmation.deferUpdate();
-
-            logger.debug('Received component interaction response.');
-
-            if (confirmation.customId === 'nowplaying-skip') {
-                logger.debug('Received skip confirmation.');
-                if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-                    logger.debug('Tried skipping track but there was no queue.');
-
-                    logger.debug('Responding with warning embed.');
-                    return await interaction.followUp({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
-                                )
-                                .setColor(embedOptions.colors.warning)
-                        ],
-                        components: []
-                    });
-                }
-
-                if (queue.currentTrack !== currentTrack) {
-                    logger.debug(
-                        'Tried skipping track but it is not the current track and therefore already skipped/removed.'
-                    );
-
-                    logger.debug('Responding with warning embed.');
-                    return await interaction.followUp({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
-                                )
-                                .setColor(embedOptions.colors.warning)
-                        ],
-                        components: []
-                    });
-                }
-
-                const skippedTrack = queue.currentTrack;
-                let durationFormat =
-                    Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
-                        ? ''
-                        : `\`${skippedTrack.duration}\``;
-
-                if (skippedTrack.raw.live) {
-                    durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
-                }
-                queue.node.skip();
-                logger.debug('Skipped the track.');
-
-                const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
-
-                let authorName: string;
-
-                if (interaction.member instanceof GuildMember) {
-                    authorName = interaction.member.nickname || interaction.user.username;
-                } else {
-                    authorName = interaction.user.username;
-                }
-
-                logger.debug('Responding with success embed.');
-                return await interaction.followUp({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setAuthor({
-                                name: authorName,
-                                iconURL: interaction.user.avatarURL() || ''
-                            })
-                            .setDescription(
-                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
-                                    skippedTrack.title
-                                }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
-                                    `${
-                                        queue.repeatMode === 0
-                                            ? ''
-                                            : `\n\n**${
-                                                queue.repeatMode === 3
-                                                    ? embedOptions.icons.autoplaying
-                                                    : embedOptions.icons.looping
-                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
-                                    }`
-                            )
-                            .setThumbnail(skippedTrack.thumbnail)
-                            .setColor(embedOptions.colors.success)
-                    ],
-                    components: []
-                });
-            }
-        } catch (error) {
-            if (error instanceof CustomError) {
-                if (error.code === 'InteractionCollectorError') {
-                    logger.debug('Interaction response timed out.');
-                    return;
-                }
-
-                if (error.message === 'Collector received no interactions before ending with reason: time') {
-                    logger.debug('Interaction response timed out.');
-                    return;
-                }
-
-                logger.error(error, 'Unhandled error while awaiting or handling component interaction.');
-                return;
-            } else {
-                if (
-                    error instanceof Error &&
-                    error.message === 'Collector received no interactions before ending with reason: time'
-                ) {
-                    logger.debug('Interaction response timed out.');
-                    return;
-                }
-                throw error;
-            }
-        }
     }
 };

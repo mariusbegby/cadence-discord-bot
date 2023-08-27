@@ -1,10 +1,10 @@
 import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import loggerModule from '../../../services/logger';
+import { CommandParams } from '../../../types/commandTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {

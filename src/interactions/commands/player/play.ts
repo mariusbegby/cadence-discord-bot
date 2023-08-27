@@ -2,12 +2,12 @@ import config from 'config';
 import { useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandAutocompleteParams, CommandParams } from '../../types/commandTypes';
-import { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
-import { cannotJoinVoiceOrTalk } from '../../utils/validation/permissionValidator';
-import { transformQuery } from '../../utils/validation/searchQueryValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CommandAutocompleteParams, CommandParams } from '../../../types/commandTypes';
+import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTypes';
+import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
+import { transformQuery } from '../../../utils/validation/searchQueryValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

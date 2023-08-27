@@ -17,21 +17,21 @@ export const registerClientCommands = ({ client, executionId }: RegisterClientCo
     logger.debug('Registering client commands...');
     client.commands = new Collection();
 
-    const commandFolders = fs.readdirSync(path.resolve('./dist/commands'));
+    const commandFolders = fs.readdirSync(path.resolve('./dist/interactions/commands'));
     for (const folder of commandFolders) {
         logger.trace(`Registering client commands for folder '${folder}'...`);
         const commandFiles = fs
-            .readdirSync(path.resolve(`./dist/commands/${folder}`))
+            .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
             try {
                 // delete command from require cache
-                delete require.cache[require.resolve(`../commands/${folder}/${file}`)];
+                delete require.cache[require.resolve(`../interactions/commands/${folder}/${file}`)];
 
                 // register command
                 /* eslint-disable @typescript-eslint/no-var-requires */
-                const command = require(`../commands/${folder}/${file}`);
+                const command = require(`../interactions/commands/${folder}/${file}`);
                 client.commands.delete(command.data.name);
                 client.commands.set(command.data.name, command);
             } catch (error) {

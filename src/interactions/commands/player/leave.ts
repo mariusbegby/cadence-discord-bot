@@ -2,25 +2,25 @@ import config from 'config';
 import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CommandParams } from '../../../types/commandTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
-        .setName('stop')
-        .setDescription('Stop playing audio and clear the track queue.')
+        .setName('leave')
+        .setDescription('Clear the track queue and remove the bot from voice channel.')
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
-            source: 'stop.js',
+            source: 'leave.js',
             module: 'slashCommand',
-            name: '/stop',
+            name: '/leave',
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
@@ -33,7 +33,7 @@ module.exports = {
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (!queue) {
-            logger.debug('There is no queue.');
+            logger.debug('There is already no queue.');
 
             logger.debug('Responding with warning embed.');
             return await interaction.editReply({
@@ -52,10 +52,8 @@ module.exports = {
         }
 
         if (!queue.deleted) {
-            queue.setRepeatMode(0);
-            queue.clear();
-            queue.node.stop();
-            logger.debug('Cleared and stopped the queue.');
+            queue.delete();
+            logger.debug('Deleted the queue.');
         }
 
         let authorName: string;
@@ -75,7 +73,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Stopped playing**\nStopped playing audio and cleared the track queue.\n\nTo play more music, use the **\`/play\`** command!`
+                        `**${embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
                     )
                     .setColor(embedOptions.colors.success)
             ]

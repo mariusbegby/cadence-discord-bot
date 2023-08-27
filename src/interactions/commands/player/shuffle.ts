@@ -2,25 +2,26 @@ import config from 'config';
 import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CommandParams } from '../../../types/commandTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { queueDoesNotExist, queueIsEmpty } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
-        .setName('leave')
-        .setDescription('Clear the track queue and remove the bot from voice channel.')
+        .setName('shuffle')
+        .setDescription('Shuffle tracks in the queue randomly.')
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }: CommandParams) => {
         const logger = loggerModule.child({
-            source: 'leave.js',
+            source: 'shuffle.js',
             module: 'slashCommand',
-            name: '/leave',
+            name: '/shuffle',
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
@@ -32,29 +33,20 @@ module.exports = {
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
-        if (!queue) {
-            logger.debug('There is already no queue.');
-
-            logger.debug('Responding with warning embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\n_Hmm.._ It seems I am not in a voice channel!`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
+        if (await queueDoesNotExist({ interaction, queue, executionId })) {
+            return;
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
             return;
         }
 
-        if (!queue.deleted) {
-            queue.delete();
-            logger.debug('Deleted the queue.');
+        if (await queueIsEmpty({ interaction, queue, executionId })) {
+            return;
         }
+
+        queue.tracks.shuffle();
+        logger.debug('Shuffled queue tracks.');
 
         let authorName: string;
 
@@ -73,7 +65,7 @@ module.exports = {
                         iconURL: interaction.user.avatarURL() || ''
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
+                        `**${embedOptions.icons.shuffled} Shuffled queue tracks**\nThe **${queue.tracks.data.length}** tracks in the queue has been shuffled.\n\nView the new queue order with **\`/queue\`**.`
                     )
                     .setColor(embedOptions.colors.success)
             ]

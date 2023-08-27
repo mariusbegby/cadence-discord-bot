@@ -3,63 +3,40 @@ import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 
 // @ts-ignore
-import { dependencies, version } from '../../../package.json';
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import { version } from '../../../../package.json';
+import loggerModule from '../../../services/logger';
+import { CommandParams } from '../../../types/commandTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-
 module.exports = {
-    isSystemCommand: true,
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
-        .setName('systemstatus')
+        .setName('status')
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }: CommandParams) => {
         const logger = loggerModule.child({
-            source: 'systemstatus.js',
+            source: 'status.js',
             module: 'slashCommand',
-            name: '/systemstatus',
+            name: '/status',
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
 
-        if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
-
-        // from normal /status command
         const uptimeString = await getUptimeFormatted({ executionId });
         const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage = await osu.cpu.usage();
         const releaseVersion = version;
-        let guildCount = 0;
-        let memberCount = 0;
-        let activeVoiceConnections = 0;
-        let totalTracks = 0;
-        let totalListeners = 0;
-
-        // specific to /systemstatus command
-        const totalMemoryInMb = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
-        const cpuCores = await osu.cpu.count();
-        const platform = await osu.os.platform();
-        const discordJsVersion = dependencies['discord.js'];
-        const opusVersion = dependencies['@discord-player/opus'];
-        const restVersion = dependencies['@discordjs/rest'];
-        const voiceVersion = dependencies['discord-voip'];
-        const discordPlayerVersion = dependencies['discord-player'];
-        const extractorVersion = dependencies['@discord-player/extractor'];
-        const mediaplexVersion = dependencies['mediaplex'];
-        const distubeYtdlVersion = dependencies['@distube/ytdl-core'];
-
-        logger.debug('Fetching player statistics from all shards.');
+        let guildCount: number = 0;
+        let memberCount: number = 0;
+        let activeVoiceConnections: number = 0;
+        let totalTracks: number = 0;
+        let totalListeners: number = 0;
 
         if (!client || !client.shard) {
             logger.error('Client is undefined or does not have shard property.');
@@ -90,9 +67,11 @@ module.exports = {
                 totalListeners = listenerCountList.reduce((acc, listenerAmount) => acc + listenerAmount, 0);
 
                 logger.debug('Successfully fetched player statistics from shards.');
+            })
+            .catch((error) => {
+                logger.error(error, 'Failed to fetch player statistics from shards.');
             });
 
-        logger.debug('Fetching client values from all shards.');
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
@@ -103,6 +82,7 @@ module.exports = {
                         memberCount += guildCache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0);
                     }
                 });
+
                 logger.debug('Successfully fetched client values from shards.');
             })
             .catch((error) => {
@@ -120,24 +100,11 @@ module.exports = {
             `**${totalListeners.toLocaleString('en-US')}** Users listening`;
 
         const systemStatusString =
-            `**${platform}** Platform\n` +
-            `**${uptimeString}** Uptime\n` +
-            `**${cpuUsage}% @ ${cpuCores} cores** CPU usage\n` +
-            `**${usedMemoryInMB} / ${totalMemoryInMb} MB** Memory usage`;
-
-        const dependenciesString =
-            `**${discordJsVersion}** discord.js\n` +
-            `**┗ ${restVersion}** @discordjs/rest\n` +
-            `**${discordPlayerVersion}** discord-player\n` +
-            `**┗ ${opusVersion}** @discord-player/opus\n` +
-            `**┗ ${extractorVersion}** @discord-player/extractor\n` +
-            `**${voiceVersion}** discord-voip\n` +
-            `**${mediaplexVersion}** mediaplex\n` +
-            `**${distubeYtdlVersion}** @distube/ytdl-core`;
+            `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`;
 
         const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
 
-        logger.debug('Transformed system status into embed description.');
+        logger.debug('Transformed status into into embed description.');
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -158,11 +125,6 @@ module.exports = {
                         {
                             name: `**${embedOptions.icons.discord} Discord status**`,
                             value: discordStatusString,
-                            inline: false
-                        },
-                        {
-                            name: `**${embedOptions.icons.bot} Dependencies**`,
-                            value: dependenciesString,
                             inline: false
                         }
                     )

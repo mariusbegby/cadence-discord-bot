@@ -1,11 +1,11 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-import { CommandParams, ShardInfo } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import loggerModule from '../../../services/logger';
+import { ExtendedClient } from '../../../types/clientTypes';
+import { CommandParams, ShardInfo } from '../../../types/commandTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {

@@ -1,9 +1,9 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { BotOptions, EmbedOptions } from '../../types/configTypes';
+import loggerModule from '../../../services/logger';
+import { CommandParams } from '../../../types/commandTypes';
+import { BotOptions, EmbedOptions } from '../../../types/configTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

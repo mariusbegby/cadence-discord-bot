@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedBuilder, Events, Interaction, StringSelectMenuInteraction } from 'discord.js';
+import { EmbedBuilder, Events, Interaction } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import loggerModule from '../../services/logger';
@@ -24,15 +24,11 @@ module.exports = {
         });
 
         if (interaction.isMessageComponent()) {
-            if (interaction instanceof StringSelectMenuInteraction) {
-                logger.debug(
-                    `Message component interaction created for id ${interaction.customId}${
-                        interaction.values ? ' and values ' + interaction.values : ''
-                    }.`
-                );
-            }
-
-            return;
+            await interaction.deferReply();
+            const componentId = interaction.customId.split('_')[0];
+            const trackId = interaction.customId.split('_')[1];
+            const componentModule = await import(`../../interactions/component/${componentId}.js`);
+            return componentModule.execute({ interaction, trackId, executionId });
         }
 
         if (interaction.isChatInputCommand() || interaction.isAutocomplete()) {
