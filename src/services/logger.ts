@@ -1,7 +1,9 @@
-import pino from 'pino';
 import config from 'config';
+import pino from 'pino';
+
 import { LoggerOptions } from '../types/configTypes';
 import { TargetOptions } from '../types/serviceTypes';
+
 import type { LokiOptions } from 'pino-loki';
 
 // Retrieve logger options from config

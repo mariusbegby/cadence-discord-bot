@@ -1,7 +1,8 @@
+import { Collection, Guild } from 'discord.js';
 import https from 'node:https';
+
 import loggerModule from '../../services/logger';
 import { PostBotStatsParams, PostBotStatsSite } from '../../types/utilTypes';
-import { Collection, Guild } from 'discord.js';
 
 export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
     const logger = loggerModule.child({

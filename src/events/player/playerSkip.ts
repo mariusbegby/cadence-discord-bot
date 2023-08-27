@@ -1,14 +1,15 @@
 import config from 'config';
+import { Track } from 'discord-player';
+import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
-import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from '../../services/logger';
-import { Track } from 'discord-player';
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-
 // Emitted when the audio player fails to load the stream for a track
 module.exports = {
     name: 'playerSkip',

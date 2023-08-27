@@ -1,12 +1,13 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { EmbedOptions } from '../../types/configTypes';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {
     isNew: false,
     isBeta: false,

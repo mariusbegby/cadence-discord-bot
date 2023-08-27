@@ -1,10 +1,11 @@
-import { EmbedOptions } from '../../types/configTypes';
-import loggerModule from '../../services/logger';
 import config from 'config';
-const embedOptions: EmbedOptions = config.get('embedOptions');
 import { EmbedBuilder, GuildMember } from 'discord.js';
-import { NotInVoiceChannelParams, NotInSameVoiceChannelParams } from '../../types/utilTypes';
 
+import loggerModule from '../../services/logger';
+import { EmbedOptions } from '../../types/configTypes';
+import { NotInSameVoiceChannelParams, NotInVoiceChannelParams } from '../../types/utilTypes';
+
+const embedOptions: EmbedOptions = config.get('embedOptions');
 export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoiceChannelParams) => {
     const logger = loggerModule.child({
         source: 'voiceChannelValidator.js',

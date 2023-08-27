@@ -1,21 +1,22 @@
 import config from 'config';
-import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import {
-    SlashCommandBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-    StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder,
-    ButtonBuilder
-} from 'discord.js';
 import { useQueue } from 'discord-player';
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    EmbedBuilder,
+    SlashCommandBuilder,
+    StringSelectMenuBuilder,
+    StringSelectMenuOptionBuilder
+} from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
+const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 module.exports = {
     isNew: false,
     isBeta: false,

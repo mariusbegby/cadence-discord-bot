@@ -1,13 +1,14 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
+
 // @ts-ignore
 import { version } from '../../../package.json';
 import loggerModule from '../../services/logger';
+import { EmbedOptions } from '../../types/configTypes';
+import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {
     isNew: false,
     isBeta: false,

@@ -1,14 +1,15 @@
 import config from 'config';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
-import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
-import { SlashCommandBuilder, EmbedBuilder, Guild, Collection } from 'discord.js';
+import { Collection, EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
-// @ts-ignore
-import { version, dependencies } from '../../../package.json';
-import loggerModule from '../../services/logger';
 
-import { EmbedOptions } from '../../types/configTypes';
+// @ts-ignore
+import { dependencies, version } from '../../../package.json';
+import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { EmbedOptions } from '../../types/configTypes';
+import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
+import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 module.exports = {

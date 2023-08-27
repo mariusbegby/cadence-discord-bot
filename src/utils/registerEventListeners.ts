@@ -1,10 +1,14 @@
+import config from 'config';
 import fs from 'node:fs';
 import path from 'node:path';
-import config from 'config';
+
 import loggerModule from '../services/logger';
 import { LoggerOptions } from '../types/configTypes';
+import {
+    ClientEventArguments, PlayerEventArguments, ProcessEventArguments
+} from '../types/eventTypes';
 import { RegisterEventListenersParams } from '../types/utilTypes';
-import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
+
 const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
 export const registerEventListeners = ({ client, player, executionId }: RegisterEventListenersParams) => {

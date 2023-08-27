@@ -1,10 +1,13 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
 import { EmbedBuilder } from 'discord.js';
-import loggerModule from '../../services/logger';
-import { QueueDoesNotExistParams, QueueNoCurrentTrackParams, QueueIsEmptyParams } from '../../types/utilTypes';
 
+import loggerModule from '../../services/logger';
+import { EmbedOptions } from '../../types/configTypes';
+import {
+    QueueDoesNotExistParams, QueueIsEmptyParams, QueueNoCurrentTrackParams
+} from '../../types/utilTypes';
+
+const embedOptions: EmbedOptions = config.get('embedOptions');
 export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
     const logger = loggerModule.child({
         source: 'queueValidator.js',

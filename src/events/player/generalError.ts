@@ -1,13 +1,14 @@
 import config from 'config';
+import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
-import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from '../../services/logger';
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-
 // Emitted when the player queue encounters error (general error with queue)
 module.exports = {
     name: 'error',

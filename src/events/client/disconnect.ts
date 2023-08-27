@@ -1,12 +1,13 @@
-import { v4 as uuidv4 } from 'uuid';
 import config from 'config';
-import { EmbedOptions, SystemOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const systemOptions: SystemOptions = config.get('systemOptions');
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
+import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
+const systemOptions: SystemOptions = config.get('systemOptions');
 module.exports = {
     name: 'disconnect',
     isDebug: false,

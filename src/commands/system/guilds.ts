@@ -1,11 +1,12 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
-import { SlashCommandBuilder, EmbedBuilder, Guild } from 'discord.js';
+import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { EmbedOptions } from '../../types/configTypes';
+import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
 module.exports = {
     isSystemCommand: true,
     isNew: false,

@@ -1,14 +1,15 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const playerOptions: PlayerOptions = config.get('playerOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { EmbedOptions, PlayerOptions } from '../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
+const playerOptions: PlayerOptions = config.get('playerOptions');
 module.exports = {
     isNew: false,
     isBeta: false,
@@ -138,8 +139,8 @@ module.exports = {
                                 queue.repeatMode === 0
                                     ? ''
                                     : `**${
-                                          queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
-                                      } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
+                                        queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
+                                    } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
                     .addFields(
@@ -249,10 +250,10 @@ module.exports = {
                                         queue.repeatMode === 0
                                             ? ''
                                             : `\n\n**${
-                                                  queue.repeatMode === 3
-                                                      ? embedOptions.icons.autoplaying
-                                                      : embedOptions.icons.looping
-                                              } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
+                                                queue.repeatMode === 3
+                                                    ? embedOptions.icons.autoplaying
+                                                    : embedOptions.icons.looping
+                                            } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                                     }`
                             )
                             .setThumbnail(skippedTrack.thumbnail)

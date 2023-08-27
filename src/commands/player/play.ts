@@ -1,16 +1,17 @@
 import config from 'config';
+import { useMainPlayer, useQueue } from 'discord-player';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
+import loggerModule from '../../services/logger';
+import { CommandAutocompleteParams, CommandParams } from '../../types/commandTypes';
+import { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
+import { cannotJoinVoiceOrTalk } from '../../utils/validation/permissionValidator';
+import { transformQuery } from '../../utils/validation/searchQueryValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { cannotJoinVoiceOrTalk } from '../../utils/validation/permissionValidator';
-import { transformQuery } from '../../utils/validation/searchQueryValidator';
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { useMainPlayer, useQueue } from 'discord-player';
-import loggerModule from '../../services/logger';
-import { EmbedOptions } from '../../types/configTypes';
-import { CommandAutocompleteParams, CommandParams } from '../../types/commandTypes';
-
 const recentQueries = new Map();
 
 const loggerTemplate = loggerModule.child({

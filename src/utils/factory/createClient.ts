@@ -1,6 +1,6 @@
-import Discord from 'discord.js';
+import Discord, { Client } from 'discord.js';
+
 import loggerModule from '../../services/logger';
-import { Client } from 'discord.js';
 
 export const createClient = async ({ executionId }: { executionId: string }) => {
     const logger = loggerModule.child({

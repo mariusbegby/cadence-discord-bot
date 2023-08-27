@@ -1,14 +1,15 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { queueDoesNotExist } from '../../utils/validation/queueValidator';
-import{ SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { useQueue } from 'discord-player';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { CommandParams } from '../../types/commandTypes';
+import { BotOptions, EmbedOptions } from '../../types/configTypes';
+import { queueDoesNotExist } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
+const botOptions: BotOptions = config.get('botOptions');
 module.exports = {
     isNew: false,
     isBeta: false,

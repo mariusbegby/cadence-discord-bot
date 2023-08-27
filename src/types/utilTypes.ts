@@ -1,7 +1,7 @@
-import { Player } from 'discord-player';
-import { ExtendedClient } from './clientTypes';
+import { GuildQueue, Player } from 'discord-player';
 import { ChatInputCommandInteraction } from 'discord.js';
-import { GuildQueue } from 'discord-player';
+
+import { ExtendedClient } from './clientTypes';
 
 export interface RegisterEventListenersParams {
     client: ExtendedClient;

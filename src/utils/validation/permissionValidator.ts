@@ -1,10 +1,13 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-import { EmbedBuilder, GuildMember, VoiceChannel, TextChannel } from 'discord.js';
-import loggerModule from '../../services/logger';
-import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '../../types/utilTypes';
+import { EmbedBuilder, GuildMember, TextChannel, VoiceChannel } from 'discord.js';
 
+import loggerModule from '../../services/logger';
+import { EmbedOptions } from '../../types/configTypes';
+import {
+    CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams
+} from '../../types/utilTypes';
+
+const embedOptions: EmbedOptions = config.get('embedOptions');
 export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
     const logger = loggerModule.child({
         source: 'permissionValidator.js',

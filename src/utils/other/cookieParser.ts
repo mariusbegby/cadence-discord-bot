@@ -1,5 +1,6 @@
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const cookies = require(path.resolve('./cookies.json'));
 

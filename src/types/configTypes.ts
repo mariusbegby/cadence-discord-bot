@@ -1,16 +1,14 @@
-import { ActivityType, PresenceUpdateStatus, ColorResolvable } from 'discord.js';
+import {
+    ActivityType, ColorResolvable, PresenceUpdateStatus, ShardingManagerOptions
+} from 'discord.js';
+
 export interface BotOptions {
     name: string;
     botInviteUrl: string;
     serverInviteUrl: string;
 }
 
-export interface ShardingOptions {
-    totalShards: string;
-    shardList: string;
-    mode: string;
-    respawn: boolean;
-}
+export interface ShardingOptions extends ShardingManagerOptions {}
 
 export interface LoggerOptions {
     minimumLogLevel: string;

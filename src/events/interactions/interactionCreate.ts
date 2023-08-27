@@ -1,13 +1,14 @@
 import config from 'config';
+import { EmbedBuilder, Events, Interaction, StringSelectMenuInteraction } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from '../../services/logger';
+import { Command, ExtendedClient } from '../../types/clientTypes';
 import { BotOptions, EmbedOptions } from '../../types/configTypes';
+import { cannotSendMessageInChannel } from '../../utils/validation/permissionValidator';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
-import { cannotSendMessageInChannel } from '../../utils/validation/permissionValidator';
-import { Events, EmbedBuilder, Interaction, StringSelectMenuInteraction } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from '../../services/logger';
-import { ExtendedClient, Command } from '../../types/clientTypes';
-
 module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,

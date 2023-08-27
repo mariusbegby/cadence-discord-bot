@@ -1,12 +1,12 @@
-import loggerModule from '../../services/logger';
-
 import config from 'config';
-import { EmbedOptions, SystemOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const systemOptions: SystemOptions = config.get('systemOptions');
 import { EmbedBuilder } from 'discord.js';
+
+import loggerModule from '../../services/logger';
+import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { NotValidGuildIdParams } from '../../types/utilTypes';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
+const systemOptions: SystemOptions = config.get('systemOptions');
 export const notValidGuildId = async ({ interaction, executionId }: NotValidGuildIdParams) => {
     const logger = loggerModule.child({
         source: 'systemCommandValidator.js',

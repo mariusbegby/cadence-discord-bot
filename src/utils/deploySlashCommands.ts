@@ -1,11 +1,14 @@
 import 'dotenv/config';
+
+import config from 'config';
+import { REST, RouteLike, Routes, SlashCommandBuilder } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { REST, RouteLike, Routes, SlashCommandBuilder } from 'discord.js';
-import config from 'config';
 import { v4 as uuidv4 } from 'uuid';
+
 import loggerModule from '../services/logger';
 import { SystemOptions } from '../types/configTypes';
+
 const systemOptions: SystemOptions = config.get('systemOptions');
 
 const executionId = uuidv4();

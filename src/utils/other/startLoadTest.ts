@@ -1,8 +1,10 @@
 import config from 'config';
+import { Client } from 'discord.js';
+
 import loggerModule from '../../services/logger';
 import { LoadTestOptions } from '../../types/configTypes';
-import { Client } from 'discord.js';
 import { StartLoadTestParams } from '../../types/utilTypes';
+
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
 export const startLoadTest = async ({ client, executionId }: StartLoadTestParams) => {

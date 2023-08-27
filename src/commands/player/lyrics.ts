@@ -1,14 +1,16 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
-const embedOptions: EmbedOptions = config.get('embedOptions');
-import { notInVoiceChannel, notInSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { useMainPlayer, useQueue, QueryType } from 'discord-player';
+import { QueryType, useMainPlayer, useQueue } from 'discord-player';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
 import { lyricsExtractor } from '@discord-player/extractor';
+
 import loggerModule from '../../services/logger';
 import { CommandAutocompleteParams, CommandParams } from '../../types/commandTypes';
+import { EmbedOptions } from '../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
+const embedOptions: EmbedOptions = config.get('embedOptions');
 const recentQueries = new Map();
 
 const loggerTemplate = loggerModule.child({

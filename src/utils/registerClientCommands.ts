@@ -1,6 +1,7 @@
+import { Collection } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Collection } from 'discord.js';
+
 import loggerModule from '../services/logger';
 import { RegisterClientCommandsParams } from '../types/utilTypes';
 

@@ -1,16 +1,17 @@
 import config from 'config';
+import { BaseGuildTextChannel, EmbedBuilder, Events, PresenceData } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from '../../services/logger';
+import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
+import { postBotStats } from '../../utils/other/postBotStats';
+import { startLoadTest } from '../../utils/other/startLoadTest';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
 const presenceStatusOptions: PresenceData = config.get('presenceStatusOptions');
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
-import { postBotStats } from '../../utils/other/postBotStats';
-import { startLoadTest } from '../../utils/other/startLoadTest';
-import { Events, EmbedBuilder, PresenceData, BaseGuildTextChannel } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from '../../services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-
 module.exports = {
     name: Events.ClientReady,
     isDebug: false,

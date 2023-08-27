@@ -1,12 +1,14 @@
 import 'dotenv/config';
-import { registerEventListeners } from './utils/registerEventListeners';
-import { registerClientCommands } from './utils/registerClientCommands';
-import { createClient } from './utils/factory/createClient';
-import { createPlayer } from './utils/factory/createPlayer';
+
+import { Client } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
+
 import loggerModule from './services/logger';
 import { ExtendedClient } from './types/clientTypes';
-import { Client } from 'discord.js';
+import { createClient } from './utils/factory/createClient';
+import { createPlayer } from './utils/factory/createPlayer';
+import { registerClientCommands } from './utils/registerClientCommands';
+import { registerEventListeners } from './utils/registerEventListeners';
 
 const executionId = uuidv4();
 const logger = loggerModule.child({

@@ -1,4 +1,5 @@
-import { ChatInputCommandInteraction, AutocompleteInteraction } from 'discord.js';
+import { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
+
 import { ExtendedClient } from './clientTypes';
 
 export interface CommandParams {

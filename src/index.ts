@@ -1,11 +1,13 @@
 import 'dotenv/config';
-import config from 'config';
-import { Client, Shard } from 'discord.js';
-import { ShardingManager, ShardEvents } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from './services/logger';
 
-const shardingOptions: object = config.get('shardingOptions');
+import config from 'config';
+import { Client, Shard, ShardEvents, ShardingManager } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from './services/logger';
+import { ShardingOptions } from './types/configTypes';
+
+const shardingOptions: ShardingOptions = config.get('shardingOptions');
 
 const manager = new ShardingManager('./dist/bot.js', {
     token: process.env.DISCORD_BOT_TOKEN,

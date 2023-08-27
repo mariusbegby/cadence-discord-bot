@@ -1,4 +1,5 @@
 import { Player } from 'discord-player';
+
 import loggerModule from '../../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
 

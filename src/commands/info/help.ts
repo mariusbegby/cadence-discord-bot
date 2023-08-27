@@ -1,10 +1,11 @@
 import config from 'config';
-import { EmbedOptions } from '../../types/configTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
+import loggerModule from '../../services/logger';
+import { BotOptions, EmbedOptions } from '../../types/configTypes';
+
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import loggerModule from '../../services/logger';
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')

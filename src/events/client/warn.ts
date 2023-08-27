@@ -1,5 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Events } from 'discord.js';
+import { v4 as uuidv4 } from 'uuid';
+
 import loggerModule from '../../services/logger';
 
 module.exports = {

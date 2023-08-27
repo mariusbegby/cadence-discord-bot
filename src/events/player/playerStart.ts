@@ -1,6 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-import loggerModule from '../../services/logger';
 import { Track } from 'discord-player';
+import { v4 as uuidv4 } from 'uuid';
+
+import loggerModule from '../../services/logger';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
 module.exports = {
