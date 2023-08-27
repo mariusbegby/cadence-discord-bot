@@ -1,5 +1,5 @@
 import config from 'config';
-import { Collection, EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 
 // @ts-ignore
