@@ -4,8 +4,6 @@ import pino from 'pino';
 import { LoggerOptions } from '../types/configTypes';
 import { TargetOptions } from '../types/serviceTypes';
 
-import type { LokiOptions } from 'pino-loki';
-
 // Retrieve logger options from config
 const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
@@ -51,11 +49,14 @@ const targets: TargetOptions[] = [
 
 // Check for Loki credentials and add Loki as a target if present
 if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
-    const transport = pino.transport<LokiOptions>({
+    targets.push({
         target: 'pino-loki',
+        level: loggerOptions.minimumLogLevel,
         options: {
+            sync: false,
             batching: false,
             interval: 5,
+
             host: process.env.LOKI_HOST || 'http://localhost:3100',
             basicAuth: {
                 username: process.env.LOKI_AUTH_USERNAME || '',
@@ -63,8 +64,6 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
             }
         }
     });
-
-    targets.push(transport);
 }
 
 const transport = pino.transport({ targets });
