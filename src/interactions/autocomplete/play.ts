@@ -4,7 +4,7 @@ import { CustomAutocompleteInteraction } from '../../types/interactionTypes';
 
 const loggerTemplate = loggerModule.child({
     source: 'play.js',
-    module: 'slashCommand',
+    module: 'autocompleteInteraction',
     name: '/play'
 });
 

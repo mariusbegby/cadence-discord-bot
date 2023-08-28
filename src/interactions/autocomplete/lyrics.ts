@@ -5,7 +5,7 @@ import { lyricsExtractor } from '@discord-player/extractor';
 
 const loggerTemplate = loggerModule.child({
     source: 'lyrics.js',
-    module: 'slashCommand',
+    module: 'autocompleteInteraction',
     name: '/lyrics'
 });
 
