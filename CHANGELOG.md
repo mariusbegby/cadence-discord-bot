@@ -1,5 +1,36 @@
 # Changelog
 
+## [5.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.3.1...v5.0.0) (2023-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* fixed logging service not logging to file, removed app-info log file.
+* Extracted handling of interactions into separate files
+* better handling and error handling for interaction events
+* Extract logic for autocomplete and  component interactions
+* Change interaction structure and handling of component responses
+
+### Features
+
+* better handling and error handling for interaction events ([f231c53](https://github.com/mariusbegby/cadence-discord-bot/commit/f231c53fe87de5e912135a90a50bf8bac9b714dd))
+* Change interaction structure and handling of component responses ([9b02b21](https://github.com/mariusbegby/cadence-discord-bot/commit/9b02b21283e3b66a2aa0197b39b31a8a48ff4abf))
+* Extract logic for autocomplete and  component interactions ([1ec1281](https://github.com/mariusbegby/cadence-discord-bot/commit/1ec1281e985d2e34a0822f01d4d6f841f86a00e3))
+* Extracted handling of interactions into separate files ([780e20d](https://github.com/mariusbegby/cadence-discord-bot/commit/780e20d4195a1dbd011931ee49d762a6301e797d))
+
+
+### Minor changes and bug fixes
+
+* add executionTime property to logging for interactions ([a248452](https://github.com/mariusbegby/cadence-discord-bot/commit/a248452f2ce725f602807a34eda81243975a66f6))
+* Ensure promise is returned where applicable ([14cb6b4](https://github.com/mariusbegby/cadence-discord-bot/commit/14cb6b4936f5e005081d713104398e187e3fccd8))
+* fixed logging service not logging to file, removed app-info log file. ([92a535d](https://github.com/mariusbegby/cadence-discord-bot/commit/92a535d83719113b7b4aeb8f7294ea9908405e89))
+* listen for more shard events ([1e11700](https://github.com/mariusbegby/cadence-discord-bot/commit/1e1170099e823335a428d29284cbdaee77bf2053))
+* log interaction identifier (name) instead of type ([35047ca](https://github.com/mariusbegby/cadence-discord-bot/commit/35047ca8be088ff40fd531d8e8f64801e1fa5d02))
+* refactored registering of event listeners ([9757252](https://github.com/mariusbegby/cadence-discord-bot/commit/975725276a6e1c804f0664746b4827e2dc6202f5))
+* set module correctly for autocomplete interactions ([cd3947c](https://github.com/mariusbegby/cadence-discord-bot/commit/cd3947c22bcbe08512a1cd1999a26bc297b5379f))
+* Small adjustments ([931c6eb](https://github.com/mariusbegby/cadence-discord-bot/commit/931c6eb1403febf98acfbc2de38ac26c571cd0ef))
+* some logging changes to permission validator ([8e9cb30](https://github.com/mariusbegby/cadence-discord-bot/commit/8e9cb308e97f98174e414e258ad384a1659a88de))
+
 ## [4.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.3.0...v4.3.1) (2023-08-27)
 
 
