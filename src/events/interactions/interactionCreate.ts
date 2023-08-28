@@ -35,7 +35,16 @@ module.exports = {
 
         logger.debug('Interaction received.');
 
-        let interactionString: string = '';
+        let interactionIdentifier = 'Unknown';
+
+        if (
+            interaction.type === InteractionType.ApplicationCommand ||
+            interaction.type === InteractionType.ApplicationCommandAutocomplete
+        ) {
+            interactionIdentifier = (interaction as ChatInputCommandInteraction).commandName;
+        } else if (interaction.type === InteractionType.MessageComponent) {
+            interactionIdentifier = (interaction as MessageComponentInteraction).customId;
+        }
 
         // Todo: Extract to own file
         const handleComponent = async (interaction: MessageComponentInteraction) => {
@@ -96,7 +105,7 @@ module.exports = {
 
         // TODO: extract handlError to own file (create errorHandler and export handleInteractionError?)
         const handleError = async (interaction: Interaction, error: CustomError) => {
-            logger.error(error, `Error handling interaction of type '${interactionString}'`);
+            logger.error(error, `Error handling interaction '${interactionIdentifier}'`);
 
             if (interaction instanceof ChatInputCommandInteraction && interaction.deferred) {
                 switch (interaction.replied) {
@@ -153,22 +162,22 @@ module.exports = {
             logger.debug('Started handling interaction.');
             switch (interaction.type as InteractionType) {
                 case InteractionType.ApplicationCommand:
-                    interactionString = 'ApplicationCommand';
                     await handleCommand(interaction as ChatInputCommandInteraction);
                     break;
 
                 case InteractionType.ApplicationCommandAutocomplete:
-                    interactionString = 'ApplicationCommandAutocomplete';
                     await handleAutocomplete(interaction as AutocompleteInteraction);
                     break;
 
                 case InteractionType.MessageComponent:
-                    interactionString = 'MessageComponent';
                     await handleComponent(interaction as MessageComponentInteraction);
                     break;
 
                 default:
-                    interactionString = 'Unknown';
+                    logger.error(
+                        interaction,
+                        `Interaction of type '${interaction.type}' was not handled, interaction attached as object.`
+                    );
                     break;
             }
         } catch (error) {
@@ -179,7 +188,12 @@ module.exports = {
         const outputTime: number = new Date().getTime();
         const executionTime: number = outputTime - inputTime;
 
-        logger.info(`Interaction of type '${interactionString}' handled in ${executionTime} ms.`);
+        logger.info(`Interaction '${interactionIdentifier}' handled in ${executionTime} ms.`);
+
+        if (executionTime > 10000) {
+            logger.warn(`Interaction '${interactionIdentifier}' took ${executionTime} ms to execute.`);
+        }
+
         return;
     }
 };
