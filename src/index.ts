@@ -37,6 +37,22 @@ manager.on('shardCreate', (shard: Shard) => {
             logger.info('All shards ready, bot is now online.');
         }
     });
+
+    shard.on(ShardEvents.Death, (event) => {
+        logger.fatal(event, 'SHARD CLOSED UNEXPECTEDLY.');
+    });
+
+    shard.on(ShardEvents.Error, (error) => {
+        logger.error(error, 'Shard experienced an error, most likely related to websocket connection error.');
+    });
+
+    shard.on(ShardEvents.Disconnect, () => {
+        logger.warn('Shard disconnected.');
+    });
+
+    shard.on(ShardEvents.Reconnecting, () => {
+        logger.warn('Shard reconnecting.');
+    });
 });
 
 manager.spawn();
