@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.1...v5.0.2) (2023-08-28)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.5.6 to 20.5.7 ([11de25c](https://github.com/mariusbegby/cadence-discord-bot/commit/11de25c0b483ea91e214d6a0673feb799e5bab17))
+* remove comment ([fe855f0](https://github.com/mariusbegby/cadence-discord-bot/commit/fe855f0870a40ca606a396b233b9f46a15c4586c))
+
 ## [5.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.0...v5.0.1) (2023-08-28)
 
 
