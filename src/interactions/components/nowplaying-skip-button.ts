@@ -8,7 +8,7 @@ import { CustomComponentInteraction } from '../../types/interactionTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 const component: CustomComponentInteraction = {
-    execute: async ({ interaction, trackId, executionId }) => {
+    execute: async ({ interaction, referenceId, executionId }) => {
         const logger = loggerModule.child({
             source: 'nowplaying-skip.js',
             module: 'componentInteraction',
@@ -20,7 +20,7 @@ const component: CustomComponentInteraction = {
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
-        logger.debug(`Received skip confirmation for track id ${trackId}.`);
+        logger.debug(`Received skip confirmation for track id ${referenceId}.`);
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');
 
@@ -37,7 +37,7 @@ const component: CustomComponentInteraction = {
             });
         }
 
-        if (queue.currentTrack!.id !== trackId) {
+        if (queue.currentTrack!.id !== referenceId) {
             logger.debug('Tried skipping track but it is not the current track and therefore already skipped/removed.');
 
             logger.debug('Responding with warning embed.');

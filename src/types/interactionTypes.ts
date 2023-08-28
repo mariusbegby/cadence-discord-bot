@@ -1,4 +1,11 @@
-import { AutocompleteInteraction, ChatInputCommandInteraction, Message, MessageComponentInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+    ApplicationCommandOptionChoiceData,
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    Message,
+    MessageComponentInteraction,
+    SlashCommandBuilder
+} from 'discord.js';
 import { ExtendedClient } from './clientTypes';
 
 // Local types
@@ -15,7 +22,7 @@ interface AutocompleteParams {
 
 interface ComponentParams {
     interaction: MessageComponentInteraction;
-    trackId?: string;
+    referenceId?: string;
     executionId: string;
 }
 
@@ -25,15 +32,15 @@ export interface CustomSlashCommandInteraction {
     isBeta: boolean;
     isSystemCommand?: boolean;
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
-    execute(params: CommandParams): Promise<Message<boolean> | undefined>;
+    execute(params: CommandParams): Promise<Message<boolean> | void>;
 }
 
 export interface CustomAutocompleteInteraction {
-    execute(params: AutocompleteParams): Promise<void>;
+    execute(params: AutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
 }
 
 export interface CustomComponentInteraction {
-    execute(params: ComponentParams): Promise<Message<boolean> | undefined>;
+    execute(params: ComponentParams): Promise<Message<boolean> | void>;
 }
 
 // Command specific types
