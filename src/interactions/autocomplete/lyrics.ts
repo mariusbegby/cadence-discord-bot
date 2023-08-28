@@ -13,7 +13,6 @@ const recentQueries = new Map();
 
 const autocomplete: CustomAutocompleteInteraction = {
     execute: async ({ interaction, executionId }) => {
-        // TODO: Extract autocomplete logic
         const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild?.shardId,
