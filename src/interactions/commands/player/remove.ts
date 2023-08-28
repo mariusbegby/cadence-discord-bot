@@ -2,14 +2,15 @@ import config from 'config';
 import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { queueDoesNotExist } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -24,7 +25,7 @@ module.exports = {
                 .setMinValue(1)
                 .setRequired(true)
         ),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'remove.js',
             module: 'slashCommand',
@@ -35,17 +36,17 @@ module.exports = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const removeTrackNumber = interaction.options.getNumber('tracknumber')!;
@@ -104,3 +105,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

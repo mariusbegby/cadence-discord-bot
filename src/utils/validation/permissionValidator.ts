@@ -3,9 +3,7 @@ import { EmbedBuilder, GuildMember, TextChannel, VoiceChannel } from 'discord.js
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import {
-    CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams
-} from '../../types/utilTypes';
+import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
@@ -61,17 +59,24 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
         try {
             // we can still send ephemeral replies in channels we can't view, so sending message to user instead
             if (!interaction.deferred && !interaction.replied) {
+                logger.debug('Interaction was not deferred or replied to yet. Deferring reply as ephemeral.');
                 await interaction.deferReply({ ephemeral: true });
+
+                logger.debug(
+                    'Sending ephemeral message in channel about insufficient permissions to send message in channel.'
+                );
+                return await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                            )
+                            .setColor(embedOptions.colors.warning)
+                    ]
+                });
+            } else {
+                return Promise.resolve();
             }
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message == 'The reply to this interaction has already been sent or deferred.') {
@@ -86,6 +91,7 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                     );
                 }
             } else {
+                logger.debug('Throwing error');
                 throw error;
             }
         }

@@ -1,13 +1,14 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { BotOptions, EmbedOptions } from '../../types/configTypes';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BotOptions, EmbedOptions } from '../../../types/configTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ module.exports = {
         .setDescription('Show a list of commands and their usage.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'help.js',
             module: 'slashCommand',
@@ -25,12 +26,7 @@ module.exports = {
             guildId: interaction.guild?.id
         });
 
-        if (!client || !client.commands) {
-            logger.error('Client is undefined or does not have commands property.');
-            return;
-        }
-
-        const commandList = client.commands
+        const commandList = client!.commands!
             .filter((command) => {
                 // don't include system commands
                 if (command.isSystemCommand) {
@@ -69,3 +65,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

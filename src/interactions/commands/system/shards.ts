@@ -1,14 +1,15 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-import { CommandParams, ShardInfo } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import loggerModule from '../../../services/logger';
+import { ExtendedClient } from '../../../types/clientTypes';
+import { ShardInfo, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -34,7 +35,7 @@ module.exports = {
         )
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'shards.js',
             module: 'slashCommand',
@@ -45,24 +46,15 @@ module.exports = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         let shardInfoList: ShardInfo[] = [];
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
         logger.debug('Fetching player statistics and client values from each shard.');
         try {
-            await client.shard
-                .broadcastEval((shardClient: ExtendedClient) => {
-                    if (!shardClient.shard) {
-                        return;
-                    }
-
+            await client!
+                .shard!.broadcastEval((shardClient: ExtendedClient) => {
                     /* eslint-disable no-undef */
                     const playerStats = player.generateStatistics();
                     const nodeProcessMemUsageInMb = parseFloat(
@@ -70,7 +62,7 @@ module.exports = {
                     );
 
                     const shardInfo = {
-                        shardId: shardClient.shard.ids[0],
+                        shardId: shardClient.shard!.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
                         guildCount: shardClient.guilds.cache.size,
                         guildMemberCount: shardClient.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
@@ -193,8 +185,10 @@ module.exports = {
                     .setDescription(`**${embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`)
                     .addFields(...embedFields)
                     .setColor(embedOptions.colors.info)
-                    .setFooter({ text: `Shard id: ${client.shard.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
+                    .setFooter({ text: `Shard id: ${client!.shard!.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
             ]
         });
     }
 };
+
+export default command;

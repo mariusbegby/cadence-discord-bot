@@ -15,7 +15,7 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
 
     try {
         if (client.shard?.ids[0] !== 0) {
-            return;
+            return Promise.resolve();
         }
 
         let guildCount = 0;
@@ -128,7 +128,8 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
 
         sites.map((site) => {
             if (!site.enabled) {
-                return;
+                // return if site is disabled
+                return Promise.resolve();
             }
 
             const options = {

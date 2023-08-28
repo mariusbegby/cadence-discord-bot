@@ -1,18 +1,26 @@
-import config from 'config';
-import { EmbedBuilder, Events, Interaction, StringSelectMenuInteraction } from 'discord.js';
+import {
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    Events,
+    Interaction,
+    InteractionType,
+    MessageComponentInteraction
+} from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
+import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
+import { handleCommand } from '../../handlers/interactionCommandHandler';
+import { handleComponent } from '../../handlers/interactionComponentHandler';
+import { handleError } from '../../handlers/interactionErrorHandler';
 import loggerModule from '../../services/logger';
-import { Command, ExtendedClient } from '../../types/clientTypes';
-import { BotOptions, EmbedOptions } from '../../types/configTypes';
-import { cannotSendMessageInChannel } from '../../utils/validation/permissionValidator';
+import { ExtendedClient } from '../../types/clientTypes';
+import { CustomError } from '../../types/interactionTypes';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
 module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction: Interaction, { client }: { client: ExtendedClient }) => {
+        const inputTime: number = new Date().getTime();
         const executionId = uuidv4();
         const logger = loggerModule.child({
             source: 'interactionCreate.js',
@@ -23,123 +31,64 @@ module.exports = {
             guildId: interaction.guild?.id
         });
 
-        if (interaction.isMessageComponent()) {
-            if (interaction instanceof StringSelectMenuInteraction) {
-                logger.debug(
-                    `Message component interaction created for id ${interaction.customId}${
-                        interaction.values ? ' and values ' + interaction.values : ''
-                    }.`
-                );
-            }
+        logger.debug('Interaction received.');
 
-            return;
+        let interactionIdentifier = 'Unknown';
+        if (
+            interaction.type === InteractionType.ApplicationCommand ||
+            interaction.type === InteractionType.ApplicationCommandAutocomplete
+        ) {
+            interactionIdentifier = (interaction as ChatInputCommandInteraction).commandName;
+        } else if (interaction.type === InteractionType.MessageComponent) {
+            interactionIdentifier = (interaction as MessageComponentInteraction).customId;
         }
 
-        if (interaction.isChatInputCommand() || interaction.isAutocomplete()) {
-            const command = client.commands?.get(interaction.commandName) as Command;
+        try {
+            logger.debug('Started handling interaction.');
+            switch (interaction.type) {
+                case InteractionType.ApplicationCommand:
+                    await handleCommand(interaction as ChatInputCommandInteraction, client, executionId);
+                    break;
 
-            if (interaction.isChatInputCommand()) {
-                if (!command) {
-                    logger.warn(`Interaction created but command '${interaction.commandName}' was not found.`);
-                    return;
-                }
-                logger.debug(`Chat input command interaction created for '${interaction.commandName}'.`);
-                try {
-                    await interaction.deferReply();
+                case InteractionType.ApplicationCommandAutocomplete:
+                    await handleAutocomplete(interaction as AutocompleteInteraction, executionId);
+                    break;
 
-                    if (await cannotSendMessageInChannel({ interaction, executionId })) {
-                        return;
-                    }
+                case InteractionType.MessageComponent:
+                    await handleComponent(interaction as MessageComponentInteraction, executionId);
+                    break;
 
-                    const inputTime: number = new Date().getTime();
-
-                    await command.execute({ interaction, client, executionId });
-
-                    const outputTime: number = new Date().getTime();
-                    const executionTime: number = outputTime - inputTime;
-
-                    logger.info(`Command '${interaction}' executed in ${executionTime} ms.`);
-                } catch (error) {
-                    if (error instanceof Error) {
-                        logger.warn(
-                            error,
-                            `Command '${interaction}' throwed an unhandled error and might have failed to execute properly.`
-                        );
-
-                        if (
-                            error.message === 'Unknown interaction' ||
-                            error.message === 'Interaction has already been acknowledged.'
-                        ) {
-                            logger.debug(
-                                'Command failed to be responded to, unknown interaction or already acknowledged.'
-                            );
-                            return;
-                        } else {
-                            if (!interaction.deferred || !interaction.replied) {
-                                logger.warn('Interaction was not deferred or replied to, and an error was thrown.');
-                                return;
-                            }
-
-                            if (interaction.replied) {
-                                // If the interaction has already been replied to, most likely command executed successfully or error is already handled.
-                                return;
-                            } else if (interaction.deferred) {
-                                logger.info('Interaction was deferred, editing reply and sending Uh-oh message.');
-                                await interaction.editReply({
-                                    embeds: [
-                                        new EmbedBuilder()
-                                            .setDescription(
-                                                `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                                            )
-                                            .setColor(embedOptions.colors.error)
-                                            .setFooter({ text: `Execution ID: ${executionId}` })
-                                    ]
-                                });
-                            } else {
-                                logger.info(
-                                    'Interaction was not deferred or replied, sending new reply with Uh-oh message.'
-                                );
-                                await interaction.reply({
-                                    embeds: [
-                                        new EmbedBuilder()
-                                            .setDescription(
-                                                `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to execute this command.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                                            )
-                                            .setColor(embedOptions.colors.error)
-                                            .setFooter({ text: `Execution ID: ${executionId}` })
-                                    ]
-                                });
-                            }
-                        }
-                    } else {
-                        throw error;
-                    }
-                }
-            } else if (interaction.isAutocomplete()) {
-                logger.debug('Autocomplete interaction created.');
-                try {
-                    command?.autocomplete && (await command?.autocomplete({ interaction, executionId }));
-                } catch (error) {
-                    if (error instanceof Error) {
-                        if (
-                            error.message === 'Unknown interaction' ||
-                            error.message === 'Interaction has already been acknowledged.'
-                        ) {
-                            logger.debug(
-                                'Autocomplete failed to be responded to, unknown interaction or already acknowledged.'
-                            );
-                            return;
-                        } else {
-                            logger.warn(error, 'Autocomplete failed to execute.');
-                        }
-                        return;
-                    } else {
-                        throw error;
-                    }
-                }
+                default:
+                    logger.error(
+                        interaction,
+                        `Interaction of type '${interaction.type}' was not handled, interaction attached as object.`
+                    );
+                    break;
             }
-        } else {
-            logger.warn(interaction, 'Interaction created but was not a chat input or autocomplete interaction.');
+        } catch (error) {
+            logger.debug('Error while handling received interaction.');
+            await handleError(interaction, error as CustomError, interactionIdentifier, executionId);
         }
+
+        const outputTime: number = new Date().getTime();
+        const executionTime: number = outputTime - inputTime;
+
+        const interactionType = InteractionType[interaction.type];
+
+        logger.info(
+            {
+                executionTime: executionTime,
+                interactionType: interactionType
+            },
+            `${interactionType} interaction '${interactionIdentifier}' successfully handled in ${executionTime} ms.`
+        );
+
+        if (executionTime > 10000) {
+            logger.warn(
+                `${interactionType} interaction '${interactionIdentifier}' took ${executionTime} ms to execute.`
+            );
+        }
+
+        return;
     }
 };

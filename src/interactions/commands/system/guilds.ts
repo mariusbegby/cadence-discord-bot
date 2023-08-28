@@ -1,13 +1,14 @@
 import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -16,7 +17,7 @@ module.exports = {
         .setDescription('Show list of guilds where bot is added.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'guilds.js',
             module: 'slashCommand',
@@ -27,19 +28,14 @@ module.exports = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         let shardGuilds: Guild[] = [];
         let totalGuildCount = 0;
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
         logger.debug('Fetching guilds from all shards.');
-        await client.shard
+        await client!.shard!
             .broadcastEval((c) => {
                 return c.guilds.cache.map((guild) => {
                     return guild;
@@ -86,3 +82,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

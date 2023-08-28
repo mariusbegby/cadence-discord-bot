@@ -1,14 +1,15 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import loggerModule from '../../../services/logger';
+import { ExtendedClient } from '../../../types/clientTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -17,7 +18,7 @@ module.exports = {
         .setDescription('Reload the bot commands.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'reload.js',
             module: 'slashCommand',
@@ -28,24 +29,15 @@ module.exports = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
-
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
+            return Promise.resolve();
         }
 
         try {
             logger.debug('Reloading commands across all shards.');
-            await client.shard
-                .broadcastEval(
+            await client!
+                .shard!.broadcastEval(
                     async (shardClient: ExtendedClient, { executionId }) => {
-                        if (!shardClient.registerClientCommands) {
-                            return;
-                        }
-
-                        shardClient.registerClientCommands({ client: shardClient, executionId });
+                        shardClient.registerClientCommands!({ client: shardClient, executionId });
                     },
                     { context: { executionId: executionId } }
                 )
@@ -69,7 +61,7 @@ module.exports = {
             });
         }
 
-        const commands = client.commands?.map((command) => {
+        const commands = client!.commands?.map((command) => {
             const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });
@@ -82,3 +74,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

@@ -1,16 +1,17 @@
 import config from 'config';
 import { NodeResolvable, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { BotOptions, EmbedOptions } from '../../types/configTypes';
-import { queueDoesNotExist } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BotOptions, EmbedOptions } from '../../../types/configTypes';
+import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -18,8 +19,8 @@ module.exports = {
         .setDescription('Toggle looping a track, the whole queue or autoplay.')
         .setDMPermission(false)
         .setNSFW(false)
-        .addStringOption((option) =>
-            option
+        .addStringOption(() =>
+            new SlashCommandStringOption()
                 .setName('mode')
                 .setDescription('Mode to set for looping.')
                 .setRequired(false)
@@ -30,7 +31,7 @@ module.exports = {
                     { name: 'Disabled', value: '0' }
                 )
         ),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'loop.js',
             module: 'slashCommand',
@@ -41,17 +42,17 @@ module.exports = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const loopModesFormatted = new Map([
@@ -184,3 +185,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

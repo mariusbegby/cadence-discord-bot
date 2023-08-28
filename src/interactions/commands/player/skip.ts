@@ -2,14 +2,15 @@ import config from 'config';
 import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -20,7 +21,7 @@ module.exports = {
         .addNumberOption((option) =>
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'skip.js',
             module: 'slashCommand',
@@ -31,21 +32,21 @@ module.exports = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const skipToTrack = interaction.options.getNumber('tracknumber');
@@ -171,7 +172,7 @@ module.exports = {
                                             queue.repeatMode === 3
                                                 ? embedOptions.icons.autoplaying
                                                 : embedOptions.icons.looping
-                                        } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
+                                        } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
                                 }`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
@@ -181,3 +182,5 @@ module.exports = {
         }
     }
 };
+
+export default command;

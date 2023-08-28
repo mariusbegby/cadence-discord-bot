@@ -3,16 +3,16 @@ import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 
 // @ts-ignore
-import { dependencies, version } from '../../../package.json';
-import loggerModule from '../../services/logger';
-import { CommandParams } from '../../types/commandTypes';
-import { EmbedOptions } from '../../types/configTypes';
-import { getUptimeFormatted } from '../../utils/system/getUptimeFormatted';
-import { notValidGuildId } from '../../utils/validation/systemCommandValidator';
+import { dependencies, version } from '../../../../package.json';
+import loggerModule from '../../../services/logger';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedOptions } from '../../../types/configTypes';
+import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
+import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-module.exports = {
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -21,7 +21,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'systemstatus.js',
             module: 'slashCommand',
@@ -32,7 +32,7 @@ module.exports = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         // from normal /status command
@@ -61,13 +61,8 @@ module.exports = {
 
         logger.debug('Fetching player statistics from all shards.');
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
-        await client.shard
-            .broadcastEval(() => {
+        await client!
+            .shard!.broadcastEval(() => {
                 /* eslint-disable no-undef */
                 return player.generateStatistics();
             })
@@ -93,8 +88,8 @@ module.exports = {
             });
 
         logger.debug('Fetching client values from all shards.');
-        await client.shard
-            .fetchClientValues('guilds.cache')
+        await client!
+            .shard!.fetchClientValues('guilds.cache')
             .then((results) => {
                 const guildCaches = results as Guild[][];
                 guildCaches.map((guildCache: Guild[]) => {
@@ -135,7 +130,7 @@ module.exports = {
             `**${mediaplexVersion}** mediaplex\n` +
             `**${distubeYtdlVersion}** @distube/ytdl-core`;
 
-        const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
+        const discordStatusString = `**${client!.ws.ping} ms** Discord API latency`;
 
         logger.debug('Transformed system status into embed description.');
 
@@ -171,3 +166,5 @@ module.exports = {
         });
     }
 };
+
+export default command;
