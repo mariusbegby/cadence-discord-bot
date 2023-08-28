@@ -3,7 +3,7 @@ import { useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { CustomError, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
@@ -132,7 +132,7 @@ const command: CustomSlashCommandInteraction = {
                 }
             }));
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof CustomError) {
                 if (error.message.includes('Sign in to confirm your age')) {
                     logger.debug('Found track but failed to retrieve audio due to age confirmation warning.');
 
@@ -166,11 +166,13 @@ const command: CustomSlashCommandInteraction = {
                 }
 
                 if (
-                    error.message.includes("Cannot read properties of null (reading 'createStream')") ||
+                    error.message === "Cannot read properties of null (reading 'createStream')" ||
                     error.message.includes('Failed to fetch resources for ytdl streaming') ||
                     error.message.includes('Could not extract stream for this track')
                 ) {
                     logger.debug(error, `Found track but failed to retrieve audio. Query: ${query}.`);
+
+                    // note: reading 'createStream' error can happen if queue is destroyed before track starts playing, e.g. /leave quickly after /play
 
                     logger.debug('Responding with error embed.');
                     return await interaction.editReply({
@@ -194,26 +196,6 @@ const command: CustomSlashCommandInteraction = {
                             new EmbedBuilder()
                                 .setDescription(
                                     `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
-                                )
-                                .setColor(embedOptions.colors.error)
-                                .setFooter({ text: `Execution ID: ${executionId}` })
-                        ]
-                    });
-                }
-
-                if (error.message === "Cannot read properties of null (reading 'createStream')") {
-                    // Can happen if /play then /leave before track starts playing
-                    logger.warn(
-                        error,
-                        'Found track but failed to play back audio. Voice connection might be unavailable.'
-                    );
-
-                    logger.debug('Responding with error embed.');
-                    return await interaction.editReply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and it was not possible to start playing the track. This could happen if the voice connection is lost or queue is destroyed while adding the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                                 )
                                 .setColor(embedOptions.colors.error)
                                 .setFooter({ text: `Execution ID: ${executionId}` })
@@ -299,7 +281,7 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        if (queue.currentTrack === track && queue.tracks.data.length === 0) {
+        if (queue && queue.currentTrack === track && queue.tracks.data.length === 0) {
             logger.debug(`Track found and added with player.play(), started playing. Query: '${query}'.`);
 
             let authorName: string;
