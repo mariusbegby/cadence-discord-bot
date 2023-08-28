@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.0...v5.0.1) (2023-08-28)
+
+
+### Minor changes and bug fixes
+
+* remove buildx from  docker CI/CD, caused error on using cache ([0706d44](https://github.com/mariusbegby/cadence-discord-bot/commit/0706d446b1844792148d48941ea47a4697c61e63))
+
 ## [5.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v4.3.1...v5.0.0) (2023-08-28)
 
 
