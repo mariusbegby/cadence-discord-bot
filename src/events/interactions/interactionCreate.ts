@@ -34,7 +34,6 @@ module.exports = {
         logger.debug('Interaction received.');
 
         let interactionIdentifier = 'Unknown';
-
         if (
             interaction.type === InteractionType.ApplicationCommand ||
             interaction.type === InteractionType.ApplicationCommandAutocomplete
@@ -73,6 +72,7 @@ module.exports = {
 
         const outputTime: number = new Date().getTime();
         const executionTime: number = outputTime - inputTime;
+
         const interactionType = InteractionType[interaction.type];
 
         logger.info(

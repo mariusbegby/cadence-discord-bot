@@ -1,6 +1,8 @@
+export type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
+
 export type TargetOptions = {
     target: string;
-    level: string;
+    level: LogLevel;
     options: {
         destination?: string;
         mkdir?: boolean;

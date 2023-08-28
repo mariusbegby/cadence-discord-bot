@@ -9,28 +9,19 @@ const loggerOptions: LoggerOptions = config.get('loggerOptions');
 
 const targets: TargetOptions[] = [
     {
+        // This target is used for logging everything above specified minimumLogLevel
         target: 'pino/file',
         level: loggerOptions.minimumLogLevel,
         options: {
             destination: './logs/app-all.log',
             mkdir: true,
-            sync: false,
-            minLength: 4096
+            sync: false
         }
     },
     {
+        // This target is used for logging errors separately
         target: 'pino/file',
-        level: pino.levels.values.info.toString(),
-        options: {
-            destination: './logs/app-info.log',
-            mkdir: true,
-            sync: false,
-            minLength: 4096
-        }
-    },
-    {
-        target: 'pino/file',
-        level: pino.levels.values.error.toString(),
+        level: 'error',
         options: {
             destination: './logs/app-error.log',
             mkdir: true,
@@ -38,6 +29,7 @@ const targets: TargetOptions[] = [
         }
     },
     {
+        // This target is used for logging to the console
         target: 'pino/file',
         level: loggerOptions.minimumLogLevelConsole,
         options: {
@@ -57,6 +49,7 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
             batching: false,
             interval: 5,
 
+            // Loki host and credentials are retrieved from environment variables
             host: process.env.LOKI_HOST || 'http://localhost:3100',
             basicAuth: {
                 username: process.env.LOKI_AUTH_USERNAME || '',
