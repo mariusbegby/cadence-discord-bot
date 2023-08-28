@@ -21,7 +21,8 @@ const component: CustomComponentInteraction = {
 
         logger.info('Received select menu confirmation.');
 
-        const queue = useQueue(interaction.guild!.id)!;
+        const selectMenuInteraction = interaction as StringSelectMenuInteraction;
+        const queue = useQueue(selectMenuInteraction.guild!.id)!;
 
         queue.filters.ffmpeg.setInputArgs([
             '-threads',
@@ -41,42 +42,39 @@ const component: CustomComponentInteraction = {
             logger.debug('Reset queue filters.');
         }
 
-        if (!(interaction instanceof StringSelectMenuInteraction)) {
-            return;
-        }
 
         // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
         if (
-            (interaction.values.includes('bassboost_low') || interaction.values.includes('bassboost')) &&
-            !interaction.values.includes('normalizer')
+            (selectMenuInteraction.values.includes('bassboost_low') || selectMenuInteraction.values.includes('bassboost')) &&
+            !selectMenuInteraction.values.includes('normalizer')
         ) {
-            interaction.values.push('normalizer');
+            selectMenuInteraction.values.push('normalizer');
         }
 
         // Enable provided filters
-        queue.filters.ffmpeg.toggle(interaction.values as (keyof QueueFilters)[]);
-        logger.debug(`Enabled filters ${interaction.values.join(', ')}.`);
+        queue.filters.ffmpeg.toggle(selectMenuInteraction.values as (keyof QueueFilters)[]);
+        logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
 
         let authorName: string;
 
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
+        if (selectMenuInteraction.member instanceof GuildMember) {
+            authorName = selectMenuInteraction.member.nickname || selectMenuInteraction.user.username;
         } else {
-            authorName = interaction.user.username;
+            authorName = selectMenuInteraction.user.username;
         }
 
         logger.debug('Responding with success embed.');
-        return await interaction.editReply({
+        return await selectMenuInteraction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: selectMenuInteraction.user.avatarURL() || ''
                     })
                     .setDescription(
                         `**${
                             embedOptions.icons.success
-                        } Filters toggled**\nNow using these filters:\n${interaction.values
+                        } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
                             .map((enabledFilter: string) => {
                                 const filter = ffmpegFilterOptions.availableFilters.find(
                                     (filter) => enabledFilter == filter.value

@@ -28,7 +28,7 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
@@ -49,7 +49,7 @@ const command: CustomSlashCommandInteraction = {
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (!queue.deleted) {

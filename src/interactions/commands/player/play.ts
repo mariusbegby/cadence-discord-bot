@@ -44,16 +44,16 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         if (await cannotJoinVoiceOrTalk({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         let queue = useQueue(interaction.guild!.id);
         if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
-            return;
+            return Promise.resolve();
         }
 
         const player = useMainPlayer()!;

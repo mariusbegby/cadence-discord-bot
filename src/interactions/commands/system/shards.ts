@@ -46,24 +46,15 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         let shardInfoList: ShardInfo[] = [];
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
         logger.debug('Fetching player statistics and client values from each shard.');
         try {
-            await client.shard
-                .broadcastEval((shardClient: ExtendedClient) => {
-                    if (!shardClient.shard) {
-                        return;
-                    }
-
+            await client!
+                .shard!.broadcastEval((shardClient: ExtendedClient) => {
                     /* eslint-disable no-undef */
                     const playerStats = player.generateStatistics();
                     const nodeProcessMemUsageInMb = parseFloat(
@@ -71,7 +62,7 @@ const command: CustomSlashCommandInteraction = {
                     );
 
                     const shardInfo = {
-                        shardId: shardClient.shard.ids[0],
+                        shardId: shardClient.shard!.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
                         guildCount: shardClient.guilds.cache.size,
                         guildMemberCount: shardClient.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
@@ -194,7 +185,7 @@ const command: CustomSlashCommandInteraction = {
                     .setDescription(`**${embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`)
                     .addFields(...embedFields)
                     .setColor(embedOptions.colors.info)
-                    .setFooter({ text: `Shard id: ${client.shard.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
+                    .setFooter({ text: `Shard id: ${client!.shard!.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
             ]
         });
     }

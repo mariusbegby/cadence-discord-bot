@@ -26,12 +26,7 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (!client || !client.commands) {
-            logger.error('Client is undefined or does not have commands property.');
-            return;
-        }
-
-        const commandList = client.commands
+        const commandList = client!.commands!
             .filter((command) => {
                 // don't include system commands
                 if (command.isSystemCommand) {

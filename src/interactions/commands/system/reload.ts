@@ -29,24 +29,15 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
-
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
+            return Promise.resolve();
         }
 
         try {
             logger.debug('Reloading commands across all shards.');
-            await client.shard
-                .broadcastEval(
+            await client!
+                .shard!.broadcastEval(
                     async (shardClient: ExtendedClient, { executionId }) => {
-                        if (!shardClient.registerClientCommands) {
-                            return;
-                        }
-
-                        shardClient.registerClientCommands({ client: shardClient, executionId });
+                        shardClient.registerClientCommands!({ client: shardClient, executionId });
                     },
                     { context: { executionId: executionId } }
                 )
@@ -70,7 +61,7 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        const commands = client.commands?.map((command) => {
+        const commands = client!.commands?.map((command) => {
             const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });

@@ -39,12 +39,7 @@ const command: CustomSlashCommandInteraction = {
         let totalTracks: number = 0;
         let totalListeners: number = 0;
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
-        await client.shard
+        await client!.shard!
             .broadcastEval(() => {
                 /* eslint-disable no-undef */
                 return player.generateStatistics();
@@ -73,7 +68,7 @@ const command: CustomSlashCommandInteraction = {
                 logger.error(error, 'Failed to fetch player statistics from shards.');
             });
 
-        await client.shard
+        await client!.shard!
             .fetchClientValues('guilds.cache')
             .then((results) => {
                 const guildCaches = results as Guild[][];
@@ -103,7 +98,7 @@ const command: CustomSlashCommandInteraction = {
         const systemStatusString =
             `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`;
 
-        const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
+        const discordStatusString = `**${client!.ws.ping} ms** Discord API latency`;
 
         logger.debug('Transformed status into into embed description.');
 

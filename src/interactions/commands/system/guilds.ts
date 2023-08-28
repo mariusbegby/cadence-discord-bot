@@ -28,19 +28,14 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         let shardGuilds: Guild[] = [];
         let totalGuildCount = 0;
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
         logger.debug('Fetching guilds from all shards.');
-        await client.shard
+        await client!.shard!
             .broadcastEval((c) => {
                 return c.guilds.cache.map((guild) => {
                     return guild;

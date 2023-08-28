@@ -32,7 +32,7 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return;
+            return Promise.resolve();
         }
 
         // from normal /status command
@@ -61,13 +61,8 @@ const command: CustomSlashCommandInteraction = {
 
         logger.debug('Fetching player statistics from all shards.');
 
-        if (!client || !client.shard) {
-            logger.error('Client is undefined or does not have shard property.');
-            return;
-        }
-
-        await client.shard
-            .broadcastEval(() => {
+        await client!
+            .shard!.broadcastEval(() => {
                 /* eslint-disable no-undef */
                 return player.generateStatistics();
             })
@@ -93,8 +88,8 @@ const command: CustomSlashCommandInteraction = {
             });
 
         logger.debug('Fetching client values from all shards.');
-        await client.shard
-            .fetchClientValues('guilds.cache')
+        await client!
+            .shard!.fetchClientValues('guilds.cache')
             .then((results) => {
                 const guildCaches = results as Guild[][];
                 guildCaches.map((guildCache: Guild[]) => {
@@ -135,7 +130,7 @@ const command: CustomSlashCommandInteraction = {
             `**${mediaplexVersion}** mediaplex\n` +
             `**${distubeYtdlVersion}** @distube/ytdl-core`;
 
-        const discordStatusString = `**${client.ws.ping} ms** Discord API latency`;
+        const discordStatusString = `**${client!.ws.ping} ms** Discord API latency`;
 
         logger.debug('Transformed system status into embed description.');
 

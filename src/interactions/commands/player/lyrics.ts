@@ -48,19 +48,19 @@ const command: CustomSlashCommandInteraction = {
 
         if (!query) {
             if (await notInVoiceChannel({ interaction, executionId })) {
-                return;
+                return Promise.resolve();
             }
 
             if (await queueDoesNotExist({ interaction, queue, executionId })) {
-                return;
+                return Promise.resolve();
             }
 
             if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-                return;
+                return Promise.resolve();
             }
 
             if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-                return;
+                return Promise.resolve();
             }
             geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 
@@ -188,7 +188,7 @@ const command: CustomSlashCommandInteraction = {
                 }
             }
 
-            return;
+            return Promise.resolve();
         }
 
         logger.debug('Responding with info embed.');
