@@ -3,12 +3,13 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { CommandParams, ShardInfo } from '../../../types/commandTypes';
+import { ShardInfo, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -34,7 +35,7 @@ module.exports = {
         )
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'shards.js',
             module: 'slashCommand',
@@ -198,3 +199,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

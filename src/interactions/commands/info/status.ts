@@ -5,12 +5,13 @@ import osu from 'node-os-utils';
 // @ts-ignore
 import { version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
-import { CommandParams } from '../../../types/commandTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -18,7 +19,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'status.js',
             module: 'slashCommand',
@@ -133,3 +134,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

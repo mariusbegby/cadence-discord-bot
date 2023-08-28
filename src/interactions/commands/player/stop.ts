@@ -3,12 +3,13 @@ import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CommandParams } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -16,7 +17,7 @@ module.exports = {
         .setDescription('Stop playing audio and clear the track queue.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'stop.js',
             module: 'slashCommand',
@@ -82,3 +83,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

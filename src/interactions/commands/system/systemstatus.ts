@@ -5,14 +5,14 @@ import osu from 'node-os-utils';
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
-import { CommandParams } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-module.exports = {
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -21,7 +21,7 @@ module.exports = {
         .setDescription('Show the bot and system status.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'systemstatus.js',
             module: 'slashCommand',
@@ -171,3 +171,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

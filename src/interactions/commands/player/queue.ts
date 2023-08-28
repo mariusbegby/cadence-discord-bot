@@ -3,13 +3,14 @@ import { NodeResolvable, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CommandParams } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -18,7 +19,7 @@ module.exports = {
         .setDMPermission(false)
         .setNSFW(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'queue.js',
             module: 'slashCommand',
@@ -207,3 +208,5 @@ module.exports = {
         }
     }
 };
+
+export default command;

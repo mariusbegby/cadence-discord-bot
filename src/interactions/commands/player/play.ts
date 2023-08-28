@@ -3,7 +3,7 @@ import { useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CommandAutocompleteParams, CommandParams } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
@@ -12,7 +12,6 @@ import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validat
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
-const recentQueries = new Map();
 
 const loggerTemplate = loggerModule.child({
     source: 'play.js',
@@ -20,7 +19,7 @@ const loggerTemplate = loggerModule.child({
     name: '/play'
 });
 
-module.exports = {
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -37,59 +36,7 @@ module.exports = {
                 .setMaxLength(500)
                 .setAutocomplete(true)
         ),
-    autocomplete: async ({ interaction, executionId }: CommandAutocompleteParams) => {
-        const logger = loggerTemplate.child({
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
-
-        const player = useMainPlayer()!;
-        const query = interaction.options.getString('query', true);
-
-        const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
-
-        if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
-            logger.debug(`Responding with results from lastQuery for query '${query}'`);
-            return interaction.respond(results);
-        }
-
-        if (query.length < 3) {
-            logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
-            return interaction.respond([]);
-        }
-        const searchResults = await player.search(query);
-
-        let response = [];
-
-        response = searchResults.tracks.slice(0, 5).map((track) => {
-            if (track.url.length > 100) {
-                track.url = track.title.slice(0, 100);
-            }
-            return {
-                name:
-                    `${track.title} [Author: ${track.author}]`.length > 100
-                        ? `${track.title}`.slice(0, 100)
-                        : `${track.title} [Author: ${track.author}]`,
-                value: track.url
-            };
-        });
-
-        recentQueries.set(interaction.user.id, {
-            lastQuery: query,
-            results: response,
-            timestamp: Date.now()
-        });
-
-        if (!response || response.length === 0) {
-            logger.debug(`Responding with empty results for query '${query}'`);
-            return interaction.respond([]);
-        }
-
-        logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
-        return interaction.respond(response);
-    },
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild?.shardId,
@@ -411,3 +358,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

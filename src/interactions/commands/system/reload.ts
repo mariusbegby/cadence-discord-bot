@@ -3,12 +3,13 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { CommandParams } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,
@@ -17,7 +18,7 @@ module.exports = {
         .setDescription('Reload the bot commands.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, client, executionId }: CommandParams) => {
+    execute: async ({ interaction, client, executionId }) => {
         const logger = loggerModule.child({
             source: 'reload.js',
             module: 'slashCommand',
@@ -82,3 +83,5 @@ module.exports = {
         });
     }
 };
+
+export default command;

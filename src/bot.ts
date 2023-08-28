@@ -20,17 +20,19 @@ const logger = loggerModule.child({
 });
 
 (async () => {
-    const client: ExtendedClient = await createClient({ executionId });
-    const player = await createPlayer({ client, executionId });
-
-    client.on('allShardsReady', async () => {
-        client.registerClientCommands = registerClientCommands;
-        await registerEventListeners({ client, player, executionId });
-        await registerClientCommands({ client, executionId });
-        client.emit('ready', client as Client);
-    });
-
-    client.login(process.env.DISCORD_BOT_TOKEN);
-})().catch((error) => {
-    logger.error(error);
-});
+    try {
+        const client: ExtendedClient = await createClient({ executionId });
+        const player = await createPlayer({ client, executionId });
+    
+        client.on('allShardsReady', async () => {
+            client.registerClientCommands = registerClientCommands;
+            await registerEventListeners({ client, player, executionId });
+            await registerClientCommands({ client, executionId });
+            client.emit('ready', client as Client);
+        });
+    
+        client.login(process.env.DISCORD_BOT_TOKEN);
+    } catch (error) {
+        logger.error(error);
+    }
+})();

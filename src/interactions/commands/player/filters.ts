@@ -15,14 +15,15 @@ import {
 } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CommandParams, CustomError } from '../../../types/commandTypes';
+import { CustomError, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
-module.exports = {
+
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -30,7 +31,7 @@ module.exports = {
         .setDescription('Toggle various audio filters during playback.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'filters.js',
             module: 'slashCommand',
@@ -237,3 +238,5 @@ module.exports = {
         }
     }
 };
+
+export default command;

@@ -11,7 +11,7 @@ import {
 } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CommandParams, TrackMetadata } from '../../../types/commandTypes';
+import { CustomSlashCommandInteraction, TrackMetadata } from '../../../types/interactionTypes';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
@@ -19,7 +19,7 @@ import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validat
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-module.exports = {
+const command: CustomSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ module.exports = {
         .setDescription('Show information about the track currently playing.')
         .setDMPermission(false)
         .setNSFW(false),
-    execute: async ({ interaction, executionId }: CommandParams) => {
+    execute: async ({ interaction, executionId }) => {
         const logger = loggerModule.child({
             source: 'nowplaying.js',
             module: 'slashCommand',
@@ -136,7 +136,7 @@ module.exports = {
         logger.debug('Successfully retrieved information about the current track.');
 
         logger.debug('Sending info embed with action row components.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
@@ -185,7 +185,7 @@ module.exports = {
             ],
             components: [nowPlayingActionRow as APIActionRowComponent<APIMessageActionRowComponent>]
         });
-
-        logger.debug('Finished sending response.');
     }
 };
+
+export default command;
