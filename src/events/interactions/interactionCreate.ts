@@ -188,7 +188,12 @@ module.exports = {
         const outputTime: number = new Date().getTime();
         const executionTime: number = outputTime - inputTime;
 
-        logger.info(`Interaction '${interactionIdentifier}' handled in ${executionTime} ms.`);
+        logger.info(
+            {
+                executionTime: executionTime
+            },
+            `Interaction '${interactionIdentifier}' successfully handled in ${executionTime} ms.`
+        );
 
         if (executionTime > 10000) {
             logger.warn(`Interaction '${interactionIdentifier}' took ${executionTime} ms to execute.`);
