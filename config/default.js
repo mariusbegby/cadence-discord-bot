@@ -121,7 +121,7 @@ module.exports.playerOptions = {
     maxQueueSize: 10_000,
     maxHistorySize: 100,
     bufferingTimeout: 3_000,
-    connectionTimeout: 30_000,
+    connectionTimeout: 20_000,
     progressBar: {
         length: 14,
         timecodes: false,

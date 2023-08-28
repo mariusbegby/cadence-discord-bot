@@ -18,9 +18,10 @@ const component: CustomComponentInteraction = {
             guildId: interaction.guild?.id
         });
 
+        logger.debug(`Received skip confirmation for track id ${referenceId}.`);
+
         const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
 
-        logger.debug(`Received skip confirmation for track id ${referenceId}.`);
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');
 

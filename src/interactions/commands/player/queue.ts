@@ -137,7 +137,7 @@ const command: CustomSlashCommandInteraction = {
                 ? ''
                 : `**${
                     queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
-                } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.\n\n`
+                } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
         }`;
 
         if (!currentTrack) {

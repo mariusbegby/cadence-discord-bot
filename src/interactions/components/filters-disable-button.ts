@@ -18,7 +18,7 @@ const component: CustomComponentInteraction = {
             guildId: interaction.guild?.id
         });
 
-        logger.info('Received disable confirmation.');
+        logger.debug('Received disable confirmation.');
 
         const queue = useQueue(interaction.guild!.id)!;
 

@@ -19,7 +19,7 @@ const component: CustomComponentInteraction = {
             guildId: interaction.guild?.id
         });
 
-        logger.info('Received select menu confirmation.');
+        logger.debug('Received select menu confirmation.');
 
         const selectMenuInteraction = interaction as StringSelectMenuInteraction;
         const queue = useQueue(selectMenuInteraction.guild!.id)!;

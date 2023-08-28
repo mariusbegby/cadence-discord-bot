@@ -172,7 +172,7 @@ const command: CustomSlashCommandInteraction = {
                                             queue.repeatMode === 3
                                                 ? embedOptions.icons.autoplaying
                                                 : embedOptions.icons.looping
-                                        } Looping**\nLoop mode is set to ${loopModeUserString}. You can change it with **\`/loop\`**.`
+                                        } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
                                 }`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
