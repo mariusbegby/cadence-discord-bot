@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.3...v5.0.4) (2023-08-29)
+
+
+### Minor changes and bug fixes
+
+* Handle "unknown interaction" with log message and return ([48f2f44](https://github.com/mariusbegby/cadence-discord-bot/commit/48f2f44f21451e6c2691aff039f2d69e13ebf126))
+
 ## [5.0.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.2...v5.0.3) (2023-08-29)
 
 
