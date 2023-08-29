@@ -1,5 +1,23 @@
 # Changelog
 
+## [5.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.1...v5.0.2) (2023-08-29)
+
+
+### Minor changes and bug fixes
+
+* add validation to component interactions ([7053f01](https://github.com/mariusbegby/cadence-discord-bot/commit/7053f01bc58c9e39ca5cd40d4403aed540852d5b))
+* exit script if env vars not provided ([3754640](https://github.com/mariusbegby/cadence-discord-bot/commit/37546405e204cbc73429cedae80d144a88156a8c))
+* fixed bug with not being able to read command data ([e44e0b2](https://github.com/mariusbegby/cadence-discord-bot/commit/e44e0b23f3db26fe9cb8f62fdedc88f4f39e0102))
+* remove Promise.resolve() return and fix queue type ([67e4572](https://github.com/mariusbegby/cadence-discord-bot/commit/67e45729a3739c461d3844f506c7504d2d88e822))
+* update validation in interactions ([5bc0239](https://github.com/mariusbegby/cadence-discord-bot/commit/5bc0239cdf818507f3ecd838f1dead1081d7ac4e))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.5.6 to 20.5.7 ([11de25c](https://github.com/mariusbegby/cadence-discord-bot/commit/11de25c0b483ea91e214d6a0673feb799e5bab17))
+* **deps-dev:** bump eslint from 8.47.0 to 8.48.0 ([16deed1](https://github.com/mariusbegby/cadence-discord-bot/commit/16deed169305aca8a70732387ec2375aacaadc2d))
+* remove comment ([fe855f0](https://github.com/mariusbegby/cadence-discord-bot/commit/fe855f0870a40ca606a396b233b9f46a15c4586c))
+
 ## [5.0.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.0...v5.0.1) (2023-08-28)
 
 
