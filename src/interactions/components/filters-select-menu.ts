@@ -3,8 +3,10 @@ import config from 'config';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
 import { CustomComponentInteraction } from '../../types/interactionTypes';
-import { QueueFilters, useQueue } from 'discord-player';
+import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.js';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
@@ -22,7 +24,19 @@ const component: CustomComponentInteraction = {
         logger.debug('Received select menu confirmation.');
 
         const selectMenuInteraction = interaction as StringSelectMenuInteraction;
-        const queue = useQueue(selectMenuInteraction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
+
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
+
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
+        }
 
         queue.filters.ffmpeg.setInputArgs([
             '-threads',
@@ -42,10 +56,10 @@ const component: CustomComponentInteraction = {
             logger.debug('Reset queue filters.');
         }
 
-
         // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
         if (
-            (selectMenuInteraction.values.includes('bassboost_low') || selectMenuInteraction.values.includes('bassboost')) &&
+            (selectMenuInteraction.values.includes('bassboost_low') ||
+                selectMenuInteraction.values.includes('bassboost')) &&
             !selectMenuInteraction.values.includes('normalizer')
         ) {
             selectMenuInteraction.values.push('normalizer');

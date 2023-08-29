@@ -20,22 +20,11 @@ const logger = loggerModule.child({
     executionId: executionId
 });
 
+//TODO: Fix deploying not working with require()
+
 const slashCommands: SlashCommandBuilder[] = [];
 const systemCommands: SlashCommandBuilder[] = [];
-const commandFolders = fs.readdirSync(path.resolve('./dist/commands'));
-for (const folder of commandFolders) {
-    const commandFiles = fs
-        .readdirSync(path.resolve(`./dist/commands/${folder}`))
-        .filter((file) => file.endsWith('.js'));
-
-    for (const file of commandFiles) {
-        /* eslint-disable @typescript-eslint/no-var-requires */
-        const command = require(`../commands/${folder}/${file}`);
-        command.isSystemCommand
-            ? systemCommands.push(command.data.toJSON())
-            : slashCommands.push(command.data.toJSON());
-    }
-}
+const commandFolders = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
     throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
@@ -52,6 +41,21 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         logger.error(
             'Missing required environment variables for deployment.\nPlease provide valid DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN in .env file.'
         );
+        process.exit(1);
+    }
+
+    for (const folder of commandFolders) {
+        const commandFiles = fs
+            .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
+            .filter((file) => file.endsWith('.js'));
+
+        for (const file of commandFiles) {
+            const commandModule = await import(`../interactions/commands/${folder}/${file}`);
+            const command = commandModule.default;
+            command.isSystemCommand
+                ? systemCommands.push(command.data.toJSON())
+                : slashCommands.push(command.data.toJSON());
+        }
     }
 
     try {

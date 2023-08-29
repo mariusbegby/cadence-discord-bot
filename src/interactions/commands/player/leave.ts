@@ -1,11 +1,12 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
 import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
@@ -27,29 +28,18 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
-        }
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
 
-        if (!queue) {
-            logger.debug('There is already no queue.');
-
-            logger.debug('Responding with warning embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\n_Hmm.._ It seems I am not in a voice channel!`
-                        )
-                        .setColor(embedOptions.colors.warning)
-                ]
-            });
-        }
-
-        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return Promise.resolve();
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         if (!queue.deleted) {

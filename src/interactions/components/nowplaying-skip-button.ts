@@ -1,10 +1,12 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { CustomComponentInteraction } from '../../types/interactionTypes';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 const component: CustomComponentInteraction = {
@@ -20,7 +22,20 @@ const component: CustomComponentInteraction = {
 
         logger.debug(`Received skip confirmation for track id ${referenceId}.`);
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
+
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId }),
+            () => queueNoCurrentTrack({ interaction, queue, executionId })
+        ];
+
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
+        }
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');

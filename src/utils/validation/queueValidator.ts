@@ -1,11 +1,9 @@
 import config from 'config';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, InteractionType } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import {
-    QueueDoesNotExistParams, QueueIsEmptyParams, QueueNoCurrentTrackParams
-} from '../../types/utilTypes';
+import { QueueDoesNotExistParams, QueueIsEmptyParams, QueueNoCurrentTrackParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
@@ -18,6 +16,9 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
         guildId: interaction.guild?.id
     });
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     if (!queue) {
         await interaction.editReply({
             embeds: [
@@ -29,7 +30,7 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
             ]
         });
 
-        logger.debug(`User tried to use command '${interaction.commandName}' but there was no queue.`);
+        logger.debug(`User tried to use command '${interactionIdentifier}' but there was no queue.`);
         return true;
     }
 
@@ -46,6 +47,9 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
         guildId: interaction.guild?.id
     });
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     if (!queue.currentTrack) {
         await interaction.editReply({
             embeds: [
@@ -57,7 +61,7 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
             ]
         });
 
-        logger.debug(`User tried to use command '${interaction.commandName}' but there was no current track.`);
+        logger.debug(`User tried to use command '${interactionIdentifier}' but there was no current track.`);
         return true;
     }
 
@@ -74,6 +78,9 @@ export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsE
         guildId: interaction.guild?.id
     });
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     if (queue.tracks.data.length === 0) {
         await interaction.editReply({
             embeds: [
@@ -85,7 +92,7 @@ export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsE
             ]
         });
 
-        logger.debug(`User tried to use command '${interaction.commandName}' but there was no tracks in the queue.`);
+        logger.debug(`User tried to use command '${interactionIdentifier}' but there was no tracks in the queue.`);
         return true;
     }
 

@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, InteractionType } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
@@ -17,19 +17,22 @@ export const notValidGuildId = async ({ interaction, executionId }: NotValidGuil
         guildId: interaction.guild?.id
     });
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     if (interaction.guildId && !systemOptions.systemGuildIds.includes(interaction.guildId)) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command **\`/${interaction.commandName}\`** cannot be executed in this server.`
+                        `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
         });
 
         logger.debug(
-            `User tried to use command '${interaction.commandName}' but system command cannot be executed in the specified guild.`
+            `User tried to use command '${interactionIdentifier}' but system command cannot be executed in the specified guild.`
         );
         return true;
     }

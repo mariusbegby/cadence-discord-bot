@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedBuilder, GuildMember, TextChannel, VoiceChannel } from 'discord.js';
+import { EmbedBuilder, GuildMember, InteractionType, TextChannel, VoiceChannel } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
@@ -17,6 +17,8 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
     });
 
     const channel = interaction.member instanceof GuildMember ? interaction.member.voice.channel : null;
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (channel instanceof VoiceChannel && (!channel.joinable || !channel.speakable)) {
         await interaction.editReply({
@@ -30,7 +32,7 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
         });
 
         logger.debug(
-            `User tried to use command '${interaction.commandName}' but the bot had no permission to join/speak in the voice channel.`
+            `User tried to use command '${interactionIdentifier}' but the bot had no permission to join/speak in the voice channel.`
         );
         return true;
     }
@@ -50,10 +52,13 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
 
     const channel = interaction.channel;
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     // only checks if channel is viewable, as bot will have permission to send interaction replies if channel is viewable
     if (channel instanceof TextChannel && !channel.viewable) {
         logger.info(
-            `User tried to use command '${interaction.commandName}' but the bot had no permission to send reply in text channel.`
+            `User tried to use interaction '${interactionIdentifier}' but the bot has permission to send reply in text channel.`
         );
 
         try {
@@ -65,7 +70,7 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                 logger.debug(
                     'Sending ephemeral message in channel about insufficient permissions to send message in channel.'
                 );
-                return await interaction.editReply({
+                await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
@@ -74,8 +79,6 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                             .setColor(embedOptions.colors.warning)
                     ]
                 });
-            } else {
-                return Promise.resolve();
             }
         } catch (error) {
             if (error instanceof Error) {

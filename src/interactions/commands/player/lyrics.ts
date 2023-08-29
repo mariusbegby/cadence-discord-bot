@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, QueryType, useMainPlayer, useQueue } from 'discord-player';
+import { GuildQueue, QueryType, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import { lyricsExtractor } from '@discord-player/extractor';
@@ -43,25 +43,23 @@ const command: CustomSlashCommandInteraction = {
         });
 
         const query = interaction.options.getString('query');
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         let geniusSearchQuery = '';
 
         if (!query) {
-            if (await notInVoiceChannel({ interaction, executionId })) {
-                return Promise.resolve();
+            const validators = [
+                () => notInVoiceChannel({ interaction, executionId }),
+                () => notInSameVoiceChannel({ interaction, queue, executionId }),
+                () => queueDoesNotExist({ interaction, queue, executionId }),
+                () => queueNoCurrentTrack({ interaction, queue, executionId })
+            ];
+
+            for (const validator of validators) {
+                if (await validator()) {
+                    return;
+                }
             }
 
-            if (await queueDoesNotExist({ interaction, queue, executionId })) {
-                return Promise.resolve();
-            }
-
-            if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-                return Promise.resolve();
-            }
-
-            if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-                return Promise.resolve();
-            }
             geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 
             logger.debug(
@@ -188,7 +186,7 @@ const command: CustomSlashCommandInteraction = {
                 }
             }
 
-            return Promise.resolve();
+            return;
         }
 
         logger.debug('Responding with info embed.');

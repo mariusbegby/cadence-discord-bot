@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
@@ -41,18 +41,18 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
-        }
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
 
-        if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return Promise.resolve();
-        }
-
-        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return Promise.resolve();
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         const loopModesFormatted = new Map([
@@ -132,6 +132,7 @@ const command: CustomSlashCommandInteraction = {
         if (queue.repeatMode === 0) {
             logger.debug('Disabled loop mode.');
 
+            // TODO: Different text when disabling autoplay.
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
