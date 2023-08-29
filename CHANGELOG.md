@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.4...v5.0.5) (2023-08-29)
+
+
+### Minor changes and bug fixes
+
+* Fix logger for handlers not including executionId ([0db7bb0](https://github.com/mariusbegby/cadence-discord-bot/commit/0db7bb0cf37027e33762ba329590add9e5931da6))
+
 ## [5.0.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.3...v5.0.4) (2023-08-29)
 
 
