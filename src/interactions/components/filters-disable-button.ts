@@ -56,7 +56,7 @@ const component: CustomComponentInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         `**${embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`

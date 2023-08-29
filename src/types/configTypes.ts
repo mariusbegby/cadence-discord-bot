@@ -33,6 +33,7 @@ export interface PresenceStatusOptions {
 export interface EmbedOptions {
     info: {
         fallbackThumbnailUrl: string;
+        fallbackIconUrl: string;
     };
     colors: {
         success: ColorResolvable;

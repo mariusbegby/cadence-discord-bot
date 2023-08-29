@@ -100,7 +100,7 @@ const command: CustomSlashCommandInteraction = {
                         new EmbedBuilder()
                             .setAuthor({
                                 name: authorName,
-                                iconURL: interaction.user.avatarURL() || ''
+                                iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                             })
                             .setDescription(
                                 `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
@@ -116,7 +116,7 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || ''
+                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
                             `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`

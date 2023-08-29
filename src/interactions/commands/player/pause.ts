@@ -72,7 +72,7 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         `**${embedOptions.icons.pauseResumed} ${

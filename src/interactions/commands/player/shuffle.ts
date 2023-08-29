@@ -60,7 +60,7 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         `**${embedOptions.icons.shuffled} Shuffled queue tracks**\nThe **${queue.tracks.data.length}** tracks in the queue has been shuffled.\n\nView the new queue order with **\`/queue\`**.`

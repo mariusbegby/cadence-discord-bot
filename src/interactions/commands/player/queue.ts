@@ -116,7 +116,7 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || ''
+                            iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
                             `${repeatModeString}` + `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
@@ -153,7 +153,7 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || ''
+                            iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
                             `**${embedOptions.icons.audioPlaying} Now playing**\n` +

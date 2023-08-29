@@ -63,7 +63,7 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         `**${embedOptions.icons.success} Stopped playing**\nStopped playing audio and cleared the track queue.\n\nTo play more music, use the **\`/play\`** command!`

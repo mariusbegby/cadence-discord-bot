@@ -138,7 +138,7 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                        iconURL: interaction.guild!.iconURL() || ''
+                        iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         (queue.node.isPaused()

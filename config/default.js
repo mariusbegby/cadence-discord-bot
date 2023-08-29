@@ -54,7 +54,9 @@ module.exports.presenceStatusOptions = {
 module.exports.embedOptions = {
     info: {
         fallbackThumbnailUrl:
-            'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png'
+            'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png',
+        fallbackIconUrl:
+            'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/discord-profile-icon.png'
     },
     colors: {
         success: '#23A55A',

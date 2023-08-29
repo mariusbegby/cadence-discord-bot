@@ -269,7 +269,7 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || ''
+                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
                             `**${embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
@@ -301,7 +301,7 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || ''
+                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
                             `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
@@ -330,7 +330,7 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || ''
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
