@@ -63,6 +63,11 @@ export const handleError = async (
             return;
         }
 
+        if (error.message === 'Unknown Interaction') {
+            logger.debug('Interaction has already been responded to or does no longer exist.');
+            return;
+        }
+
         logger.fatal(error, 'Unhandled error while awaiting or handling component interaction.');
         return;
     }
