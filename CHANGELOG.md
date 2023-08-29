@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.2...v5.0.3) (2023-08-29)
+
+
+### Minor changes and bug fixes
+
+* added configurable fallback icon url for use in embeds ([69fff97](https://github.com/mariusbegby/cadence-discord-bot/commit/69fff97e3836a55569fe3c217ff7089b1fd9c73b))
+
+
+### Miscellaneous
+
+* add discord default profile icon asset ([e47256a](https://github.com/mariusbegby/cadence-discord-bot/commit/e47256a15e826f114707f06cecf8663e8a7fdee6))
+
 ## [5.0.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.1...v5.0.2) (2023-08-29)
 
 
