@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 import loggerModule from '../../services/logger';
@@ -20,7 +20,7 @@ const component: CustomComponentInteraction = {
 
         logger.debug(`Received skip confirmation for track id ${referenceId}.`);
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');

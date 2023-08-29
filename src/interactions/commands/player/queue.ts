@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
@@ -30,13 +30,13 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         const pageIndex = (interaction.options.getNumber('page') || 1) - 1;

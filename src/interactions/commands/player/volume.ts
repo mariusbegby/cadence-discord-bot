@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
@@ -36,17 +36,17 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         const volume = interaction.options.getNumber('percentage');

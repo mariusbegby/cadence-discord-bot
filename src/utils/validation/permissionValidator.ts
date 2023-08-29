@@ -65,7 +65,7 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                 logger.debug(
                     'Sending ephemeral message in channel about insufficient permissions to send message in channel.'
                 );
-                return await interaction.editReply({
+                await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
@@ -74,8 +74,6 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                             .setColor(embedOptions.colors.warning)
                     ]
                 });
-            } else {
-                return Promise.resolve();
             }
         } catch (error) {
             if (error instanceof Error) {

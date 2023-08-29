@@ -1,5 +1,5 @@
 import config from 'config';
-import { useMainPlayer, useQueue } from 'discord-player';
+import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
@@ -43,17 +43,18 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
+
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         if (await cannotJoinVoiceOrTalk({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
-        let queue = useQueue(interaction.guild!.id);
+        let queue: GuildQueue = useQueue(interaction.guild!.id)!;
         if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
-            return Promise.resolve();
+            return;
         }
 
         const player = useMainPlayer()!;
@@ -86,7 +87,7 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        queue = useQueue(interaction.guild!.id);
+        queue = useQueue(interaction.guild!.id)!;
         const queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist! && searchResult.tracks.length) > playerOptions.maxQueueSize - queueSize) {
@@ -211,7 +212,7 @@ const command: CustomSlashCommandInteraction = {
 
         logger.debug(`Successfully added track with player.play(). Query: '${query}'.`);
 
-        queue = useQueue(interaction.guild!.id);
+        queue = useQueue(interaction.guild!.id)!;
 
         if (!queue || !track) {
             logger.warn(`After player.play(), queue is undefined. Query: '${query}'.`);

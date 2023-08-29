@@ -24,7 +24,7 @@ export const handleCommand = async (
     }
 
     if (await cannotSendMessageInChannel({ interaction, executionId })) {
-        return Promise.resolve();
+        return;
     }
 
     logger.debug('Executing command interaction.');

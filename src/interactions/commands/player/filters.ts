@@ -1,5 +1,5 @@
 import config from 'config';
-import { NodeResolvable, QueueFilters, useQueue } from 'discord-player';
+import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import {
     APIActionRowComponent,
     APIMessageActionRowComponent,
@@ -40,21 +40,21 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notInVoiceChannel({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
-        const queue: NodeResolvable = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         const filterOptions: StringSelectMenuOptionBuilder[] = [];

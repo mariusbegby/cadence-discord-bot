@@ -32,7 +32,7 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         // from normal /status command
@@ -67,24 +67,18 @@ const command: CustomSlashCommandInteraction = {
                 return player.generateStatistics();
             })
             .then((results) => {
-                const queueCountList: number[] = [];
-                const trackCountList: number[] = [];
-                const listenerCountList: number[] = [];
                 results.map((result) => {
-                    queueCountList.push(result.queues.length);
-                    if (result.queues.length > 0) {
-                        result.queues.map((queue) => {
-                            trackCountList.push(queue.status.playing ? queue.tracksCount + 1 : queue.tracksCount);
-                            listenerCountList.push(queue.listeners);
-                        });
-                    }
+                    activeVoiceConnections += result.queues.length;
+                    result.queues.map((queue) => {
+                        totalTracks += queue.status.playing ? queue.tracksCount + 1 : queue.tracksCount;
+                        totalListeners += queue.listeners;
+                    });
                 });
 
-                activeVoiceConnections = queueCountList.reduce((acc, queueAmount) => acc + queueAmount, 0);
-                totalTracks = trackCountList.reduce((acc, trackAmount) => acc + trackAmount, 0);
-                totalListeners = listenerCountList.reduce((acc, listenerAmount) => acc + listenerAmount, 0);
-
                 logger.debug('Successfully fetched player statistics from shards.');
+            })
+            .catch((error) => {
+                logger.error(error, 'Failed to fetch player statistics from shards.');
             });
 
         logger.debug('Fetching client values from all shards.');

@@ -46,7 +46,7 @@ const command: CustomSlashCommandInteraction = {
         });
 
         if (await notValidGuildId({ interaction, executionId })) {
-            return Promise.resolve();
+            return;
         }
 
         let shardInfoList: ShardInfo[] = [];

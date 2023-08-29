@@ -18,7 +18,7 @@ export const startLoadTest = async ({ client, executionId }: StartLoadTestParams
 
     if (!loadTestOptions.enabled) {
         logger.debug('Load test is disabled in options, cancelling.');
-        return Promise.resolve();
+        return;
     }
 
     const channelIds = loadTestOptions.channelIdsToJoin;
