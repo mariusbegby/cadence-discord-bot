@@ -1,13 +1,5 @@
 import config from 'config';
-import {
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    GuildMember,
-    InteractionType,
-    MessageComponentInteraction,
-    TextChannel,
-    VoiceChannel
-} from 'discord.js';
+import { EmbedBuilder, GuildMember, InteractionType, TextChannel, VoiceChannel } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
@@ -25,6 +17,8 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
     });
 
     const channel = interaction.member instanceof GuildMember ? interaction.member.voice.channel : null;
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (channel instanceof VoiceChannel && (!channel.joinable || !channel.speakable)) {
         await interaction.editReply({
@@ -38,7 +32,7 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
         });
 
         logger.debug(
-            `User tried to use command '${interaction.commandName}' but the bot had no permission to join/speak in the voice channel.`
+            `User tried to use command '${interactionIdentifier}' but the bot had no permission to join/speak in the voice channel.`
         );
         return true;
     }

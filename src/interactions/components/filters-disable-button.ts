@@ -3,8 +3,10 @@ import config from 'config';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { CustomComponentInteraction } from '../../types/interactionTypes';
-import { useQueue } from 'discord-player';
+import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 const component: CustomComponentInteraction = {
@@ -20,7 +22,19 @@ const component: CustomComponentInteraction = {
 
         logger.debug('Received disable confirmation.');
 
-        const queue = useQueue(interaction.guild!.id)!;
+        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
+
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
+
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
+        }
 
         // Reset filters before enabling provided filters
         if (queue.filters.ffmpeg.filters.length > 0) {

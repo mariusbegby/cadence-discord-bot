@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedBuilder, GuildMember } from 'discord.js';
+import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
@@ -16,6 +16,9 @@ export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoice
         guildId: interaction.guild?.id
     });
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     if (interaction.member instanceof GuildMember && !interaction.member.voice.channel) {
         await interaction.editReply({
             embeds: [
@@ -27,7 +30,7 @@ export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoice
             ]
         });
 
-        logger.debug(`User tried to use command '${interaction.commandName}' but was not in a voice channel.`);
+        logger.debug(`User tried to use command '${interactionIdentifier}' but was not in a voice channel.`);
         return true;
     }
 
@@ -43,6 +46,9 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId }:
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (!queue || !queue.dispatcher) {
         // If there is no queue or bot is not in voice channel, then there is no need to check if user is in same voice channel.
@@ -63,7 +69,7 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId }:
             ]
         });
 
-        logger.debug(`User tried to use command '${interaction.commandName}' but was not in the same voice channel.`);
+        logger.debug(`User tried to use command '${interactionIdentifier}' but was not in the same voice channel.`);
         return true;
     }
 

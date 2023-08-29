@@ -24,18 +24,18 @@ export interface CustomEvent {
 }
 
 export interface NotInVoiceChannelParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
 }
 
 export interface NotInSameVoiceChannelParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
 }
 
 export interface NotValidGuildIdParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
 }
 
@@ -45,25 +45,25 @@ export interface TransformQueryParams {
 }
 
 export interface QueueDoesNotExistParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
 }
 
 export interface QueueNoCurrentTrackParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
 }
 
 export interface QueueIsEmptyParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
 }
 
 export interface CannotJoinVoiceOrTalkParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
 }
 
