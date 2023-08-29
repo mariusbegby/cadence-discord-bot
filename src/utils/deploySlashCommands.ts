@@ -41,6 +41,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         logger.error(
             'Missing required environment variables for deployment.\nPlease provide valid DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN in .env file.'
         );
+        process.exit(1);
     }
 
     for (const folder of commandFolders) {
