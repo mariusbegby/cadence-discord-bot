@@ -2,13 +2,14 @@ import { MessageComponentInteraction } from 'discord.js';
 import loggerModule from '../services/logger';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
-const logger = loggerModule.child({
-    source: 'interactionComponentHandler.js',
-    module: 'handler',
-    name: 'interactionComponentHandler'
-});
-
 export const handleComponent = async (interaction: MessageComponentInteraction, executionId: string) => {
+    const logger = loggerModule.child({
+        source: 'interactionComponentHandler.js',
+        module: 'handler',
+        name: 'interactionComponentHandler',
+        executionId: executionId
+    });
+
     await interaction.deferReply();
     logger.debug('Interaction deferred.');
 

@@ -6,19 +6,19 @@ import { CustomError } from '../types/interactionTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
-
-const logger = loggerModule.child({
-    source: 'interactionErrorHandler.ts',
-    module: 'handler',
-    name: 'interactionErrorHandler'
-});
-
 export const handleError = async (
     interaction: Interaction,
     error: CustomError,
     interactionIdentifier: string,
     executionId: string
 ) => {
+    const logger = loggerModule.child({
+        source: 'interactionErrorHandler.ts',
+        module: 'handler',
+        name: 'interactionErrorHandler',
+        executionId: executionId
+    });
+
     const errorReply = {
         embeds: [
             new EmbedBuilder()
@@ -30,7 +30,7 @@ export const handleError = async (
         ]
     };
 
-    logger.error(error, `Error handling interaction '${interactionIdentifier}'`);
+    logger.error({ error, interaction }, `Error handling interaction '${interactionIdentifier}'`);
 
     if (interaction instanceof ChatInputCommandInteraction && interaction.deferred) {
         switch (interaction.replied) {
