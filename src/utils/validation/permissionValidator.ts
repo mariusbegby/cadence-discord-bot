@@ -1,5 +1,13 @@
 import config from 'config';
-import { EmbedBuilder, GuildMember, TextChannel, VoiceChannel } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    GuildMember,
+    InteractionType,
+    MessageComponentInteraction,
+    TextChannel,
+    VoiceChannel
+} from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
@@ -50,10 +58,13 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
 
     const channel = interaction.channel;
 
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
     // only checks if channel is viewable, as bot will have permission to send interaction replies if channel is viewable
     if (channel instanceof TextChannel && !channel.viewable) {
         logger.info(
-            `User tried to use command '${interaction.commandName}' but the bot had no permission to send reply in text channel.`
+            `User tried to use interaction '${interactionIdentifier}' but the bot has permission to send reply in text channel.`
         );
 
         try {

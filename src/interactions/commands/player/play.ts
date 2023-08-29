@@ -43,18 +43,20 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
-        }
-
-        if (await cannotJoinVoiceOrTalk({ interaction, executionId })) {
-            return;
-        }
-
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
         if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
             return;
+        }
+
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => cannotJoinVoiceOrTalk({ interaction, executionId })
+        ];
+
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         const player = useMainPlayer()!;

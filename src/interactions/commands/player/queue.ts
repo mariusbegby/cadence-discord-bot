@@ -6,6 +6,7 @@ import loggerModule from '../../../services/logger';
 import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
@@ -29,56 +30,22 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
-        }
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
+
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         const pageIndex = (interaction.options.getNumber('page') || 1) - 1;
         let queueString = '';
-
-        if (!queue) {
-            if (pageIndex >= 1) {
-                logger.debug(`There is no queue and user tried to access page ${pageIndex + 1}.`);
-
-                logger.debug('Responding with warning embed.');
-                return await interaction.editReply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nPage **\`${
-                                    pageIndex + 1
-                                }\`** is not a valid page number.\n\nThe queue is currently empty, first add some tracks with **\`/play\`**!`
-                            )
-                            .setColor(embedOptions.colors.warning)
-                    ]
-                });
-            }
-
-            logger.debug('There is no queue, displaying empty queue.');
-            queueString = 'The queue is empty, add some tracks with **`/play`**!';
-
-            logger.debug('Responding with info embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor({
-                            name: interaction.guild!.name,
-                            iconURL: interaction.guild!.iconURL() || ''
-                        })
-                        .setDescription(`**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`)
-                        .setColor(embedOptions.colors.info)
-                        .setFooter({
-                            text: 'Page 1 of 1 (0 tracks)'
-                        })
-                ]
-            });
-        }
 
         const queueLength = queue.tracks.data.length;
         const totalPages = Math.ceil(queueLength / 10) || 1;

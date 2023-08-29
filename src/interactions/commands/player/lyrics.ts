@@ -47,21 +47,19 @@ const command: CustomSlashCommandInteraction = {
         let geniusSearchQuery = '';
 
         if (!query) {
-            if (await notInVoiceChannel({ interaction, executionId })) {
-                return;
+            const validators = [
+                () => notInVoiceChannel({ interaction, executionId }),
+                () => notInSameVoiceChannel({ interaction, queue, executionId }),
+                () => queueDoesNotExist({ interaction, queue, executionId }),
+                () => queueNoCurrentTrack({ interaction, queue, executionId })
+            ];
+
+            for (const validator of validators) {
+                if (await validator()) {
+                    return;
+                }
             }
 
-            if (await queueDoesNotExist({ interaction, queue, executionId })) {
-                return;
-            }
-
-            if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-                return;
-            }
-
-            if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-                return;
-            }
             geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 
             logger.debug(

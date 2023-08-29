@@ -1,5 +1,6 @@
 import { MessageComponentInteraction } from 'discord.js';
 import loggerModule from '../services/logger';
+import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
 const logger = loggerModule.child({
     source: 'interactionComponentHandler.js',
@@ -15,6 +16,10 @@ export const handleComponent = async (interaction: MessageComponentInteraction, 
     const referenceId = interaction.customId.split('_')[1];
 
     logger.debug(`Parsed componentId: ${componentId}`);
+
+    if (await cannotSendMessageInChannel({ interaction, executionId })) {
+        return;
+    }
 
     const componentModule = await import(`../interactions/components/${componentId}.js`);
     const { default: component } = componentModule;

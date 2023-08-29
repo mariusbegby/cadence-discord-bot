@@ -41,18 +41,18 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
-        }
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return;
-        }
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId })
+        ];
 
-        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         const loopModesFormatted = new Map([

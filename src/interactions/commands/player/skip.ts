@@ -31,22 +31,19 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        if (await notInVoiceChannel({ interaction, executionId })) {
-            return;
-        }
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        if (await queueDoesNotExist({ interaction, queue, executionId })) {
-            return;
-        }
+        const validators = [
+            () => notInVoiceChannel({ interaction, executionId }),
+            () => notInSameVoiceChannel({ interaction, queue, executionId }),
+            () => queueDoesNotExist({ interaction, queue, executionId }),
+            () => queueNoCurrentTrack({ interaction, queue, executionId })
+        ];
 
-        if (await notInSameVoiceChannel({ interaction, queue, executionId })) {
-            return;
-        }
-
-        if (await queueNoCurrentTrack({ interaction, queue, executionId })) {
-            return;
+        for (const validator of validators) {
+            if (await validator()) {
+                return;
+            }
         }
 
         const skipToTrack = interaction.options.getNumber('tracknumber');

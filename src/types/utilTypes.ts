@@ -1,5 +1,5 @@
 import { GuildQueue, Player } from 'discord-player';
-import { ChatInputCommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, MessageComponentInteraction } from 'discord.js';
 
 import { ExtendedClient } from './clientTypes';
 
@@ -68,7 +68,7 @@ export interface CannotJoinVoiceOrTalkParams {
 }
 
 export interface CannotSendMessageInChannelParams {
-    interaction: ChatInputCommandInteraction;
+    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
 }
 
