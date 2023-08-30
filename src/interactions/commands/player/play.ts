@@ -1,48 +1,39 @@
 import config from 'config';
 import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
-import loggerModule from '../../../services/logger';
-import { CustomError, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
-import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTypes';
+import { PlayerOptions } from '../../../types/configTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType,
+    CustomError
+} from '../../../types/interactionTypes';
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { Logger } from 'pino';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-const loggerTemplate: Logger = loggerModule.child({
-    source: 'play.js',
-    module: 'slashCommand',
-    name: '/play'
-});
+class PlayCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('play')
+            .setDescription('Add a track or playlist to the queue by search query or URL.')
+            .addStringOption((option) =>
+                option
+                    .setName('query')
+                    .setDescription('Search query by text or URL')
+                    .setRequired(true)
+                    .setMinLength(2)
+                    .setMaxLength(500)
+                    .setAutocomplete(true)
+            );
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('play')
-        .setDescription('Add a track or playlist to the queue by searching or url.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addStringOption((option) =>
-            option
-                .setName('query')
-                .setDescription('Search query or URL.')
-                .setRequired(true)
-                .setMinLength(2)
-                .setMaxLength(500)
-                .setAutocomplete(true)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger = loggerTemplate.child({
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
         if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
@@ -83,9 +74,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} No track found**\nNo results found for **\`${transformedQuery}\`**.\n\nIf you specified a URL, please make sure it is valid and public.`
+                            `**${this.embedOptions.icons.warning} No track found**\nNo results found for **\`${transformedQuery}\`**.\n\nIf you specified a URL, please make sure it is valid and public.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -101,9 +92,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Playlist too large**\nThis playlist is too large to be added to the queue.\n\nThe maximum amount of tracks that can be added to the queue is **${playerOptions.maxQueueSize}**.`
+                            `**${this.embedOptions.icons.warning} Playlist too large**\nThis playlist is too large to be added to the queue.\n\nThe maximum amount of tracks that can be added to the queue is **${playerOptions.maxQueueSize}**.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -145,9 +136,9 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                    `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                                 )
-                                .setColor(embedOptions.colors.warning)
+                                .setColor(this.embedOptions.colors.warning)
                         ]
                     });
                 }
@@ -162,9 +153,9 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                    `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                                 )
-                                .setColor(embedOptions.colors.warning)
+                                .setColor(this.embedOptions.colors.warning)
                         ]
                     });
                 }
@@ -183,9 +174,9 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                    `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                                 )
-                                .setColor(embedOptions.colors.error)
+                                .setColor(this.embedOptions.colors.error)
                                 .setFooter({ text: `Execution ID: ${executionId}` })
                         ]
                     });
@@ -199,9 +190,9 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                                    `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                                 )
-                                .setColor(embedOptions.colors.error)
+                                .setColor(this.embedOptions.colors.error)
                                 .setFooter({ text: `Execution ID: ${executionId}` })
                         ]
                     });
@@ -225,9 +216,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nThere was an issue adding this track to the queue.\n\nYou can try to perform the command again.\n\n_If this problem persists, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                         )
-                        .setColor(embedOptions.colors.error)
+                        .setColor(this.embedOptions.colors.error)
                         .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
@@ -243,14 +234,14 @@ const command: CustomSlashCommandInteraction = {
             logger.debug(
                 `Track found but source is arbitrary or missing thumbnail. Using fallback thumbnail url. Query: '${query}'.`
             );
-            track.thumbnail = embedOptions.info.fallbackThumbnailUrl;
+            track.thumbnail = this.embedOptions.info.fallbackThumbnailUrl;
         }
 
         let durationFormat =
             Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
         if (track.raw.live) {
-            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         if (searchResult.playlist && searchResult.tracks.length > 1) {
@@ -270,17 +261,17 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
+                            `**${this.embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
                                 track.title
                             }](${track.raw.url ?? track.url})**\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
                         .setThumbnail(track.thumbnail)
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
@@ -302,15 +293,15 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
+                            `**${this.embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
                                 track.title
                             }](${track.raw.url ?? track.url})**`
                         )
                         .setThumbnail(track.thumbnail)
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
@@ -331,18 +322,18 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `${embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
+                        `${this.embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
                             track.raw.url ?? track.url
                         })**`
                     )
                     .setThumbnail(track.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new PlayCommand();

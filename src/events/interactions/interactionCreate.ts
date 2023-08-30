@@ -47,15 +47,30 @@ module.exports = {
             logger.debug('Started handling interaction.');
             switch (interaction.type) {
                 case InteractionType.ApplicationCommand:
-                    await handleCommand(interaction as ChatInputCommandInteraction, client, executionId);
+                    await handleCommand(
+                        interaction as ChatInputCommandInteraction,
+                        client,
+                        executionId,
+                        interactionIdentifier
+                    );
                     break;
 
                 case InteractionType.ApplicationCommandAutocomplete:
-                    await handleAutocomplete(interaction as AutocompleteInteraction, executionId);
+                    await handleAutocomplete(
+                        interaction as AutocompleteInteraction,
+                        client,
+                        executionId,
+                        interactionIdentifier
+                    );
                     break;
 
                 case InteractionType.MessageComponent:
-                    await handleComponent(interaction as MessageComponentInteraction, executionId);
+                    await handleComponent(
+                        interaction as MessageComponentInteraction,
+                        client,
+                        executionId,
+                        interactionIdentifier
+                    );
                     break;
 
                 default:
@@ -67,7 +82,7 @@ module.exports = {
             }
         } catch (error) {
             logger.debug('Error while handling received interaction.');
-            await handleError(interaction, error as CustomError, interactionIdentifier, executionId);
+            await handleError(interaction, error as CustomError, executionId, interactionIdentifier);
         }
 
         const outputTime: number = new Date().getTime();

@@ -1,39 +1,31 @@
-import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class VolumeCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('volume')
+            .setDescription('Show or change the playback volume for tracks.')
+            .addNumberOption((option) =>
+                option
+                    .setName('percentage')
+                    .setDescription('Volume percentage: From 1% to 100%.')
+                    .setMinValue(0)
+                    .setMaxValue(100)
+            );
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('volume')
-        .setDescription('Show or set the playback volume for tracks.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addNumberOption((option) =>
-            option
-                .setName('percentage')
-                .setDescription('Set volume percentage from 1% to 100%.')
-                .setMinValue(0)
-                .setMaxValue(100)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'volume.js',
-            module: 'slashCommand',
-            name: '/volume',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -62,10 +54,12 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                currentVolume === 0 ? embedOptions.icons.volumeIsMuted : embedOptions.icons.volume
+                                currentVolume === 0
+                                    ? this.embedOptions.icons.volumeIsMuted
+                                    : this.embedOptions.icons.volume
                             } Playback volume**\nThe playback volume is currently set to **\`${currentVolume}%\`**.`
                         )
-                        .setColor(embedOptions.colors.info)
+                        .setColor(this.embedOptions.colors.info)
                 ]
             });
         } else if (volume > 100 || volume < 0) {
@@ -76,9 +70,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou cannot set the volume to **\`${volume}%\`**, please pick a value betwen **\`1%\`** and **\`100%\`**.`
+                            `**${this.embedOptions.icons.warning} Oops!**\nYou cannot set the volume to **\`${volume}%\`**, please pick a value betwen **\`1%\`** and **\`100%\`**.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         } else {
@@ -100,12 +94,12 @@ const command: CustomSlashCommandInteraction = {
                         new EmbedBuilder()
                             .setAuthor({
                                 name: authorName,
-                                iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                                iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                             })
                             .setDescription(
-                                `**${embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
+                                `**${this.embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
                             )
-                            .setColor(embedOptions.colors.success)
+                            .setColor(this.embedOptions.colors.success)
                     ]
                 });
             }
@@ -116,16 +110,16 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
+                            `**${this.embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
                         )
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
     }
-};
+}
 
-export default command;
+export default new VolumeCommand();

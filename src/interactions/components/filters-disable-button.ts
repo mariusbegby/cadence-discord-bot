@@ -1,26 +1,17 @@
-import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { EmbedOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
+import { BaseComponentInteraction, BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const component: CustomComponentInteraction = {
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'filters-disable-button.js',
-            module: 'componentInteraction',
-            name: 'filters-disable-button',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class FiltersDisableButtonComponent extends BaseComponentInteraction {
+    constructor() {
+        super('filters-disable-button');
+    }
 
-        logger.debug('Received disable confirmation.');
+    async execute(params: BaseComponentParams): BaseComponentReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -56,16 +47,16 @@ const component: CustomComponentInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
+                        `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
                     )
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });
     }
-};
+}
 
-export default component;
+export default new FiltersDisableButtonComponent();

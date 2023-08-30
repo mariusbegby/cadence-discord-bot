@@ -1,33 +1,23 @@
-import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
-import { Logger } from 'pino';
 // @ts-ignore
 import { version } from '../../../../package.json';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class StatusCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder().setName('status').setDescription('Show operational status of the bot.');
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('status')
-        .setDescription('Show the bot and system status.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'status.js',
-            module: 'slashCommand',
-            name: '/status',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction, client } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const uptimeString: string = await getUptimeFormatted({ executionId });
         const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
@@ -97,28 +87,28 @@ const command: CustomSlashCommandInteraction = {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**${embedOptions.icons.bot} Bot status**\n` + botStatusString)
+                    .setDescription(`**${this.embedOptions.icons.bot} Bot status**\n` + botStatusString)
                     .addFields(
                         {
-                            name: `**${embedOptions.icons.queue} Queue status**`,
+                            name: `**${this.embedOptions.icons.queue} Queue status**`,
                             value: queueStatusString,
                             inline: false
                         },
                         {
-                            name: `**${embedOptions.icons.server} System status**`,
+                            name: `**${this.embedOptions.icons.server} System status**`,
                             value: systemStatusString,
                             inline: false
                         },
                         {
-                            name: `**${embedOptions.icons.discord} Discord status**`,
+                            name: `**${this.embedOptions.icons.discord} Discord status**`,
                             value: discordStatusString,
                             inline: false
                         }
                     )
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new StatusCommand();

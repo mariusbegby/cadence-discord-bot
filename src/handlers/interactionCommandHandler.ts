@@ -1,13 +1,15 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { Command, ExtendedClient } from '../types/clientTypes';
+import { ExtendedClient } from '../types/clientTypes';
+import { BaseSlashCommandInteraction } from '../types/interactionTypes';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
 export const handleCommand = async (
     interaction: ChatInputCommandInteraction,
     client: ExtendedClient,
-    executionId: string
+    executionId: string,
+    interactionIdentifier: string
 ) => {
     const logger: Logger = loggerModule.child({
         source: 'interactionCommandHandler.ts',
@@ -19,17 +21,18 @@ export const handleCommand = async (
     await interaction.deferReply();
     logger.debug('Interaction deferred.');
 
-    // TODO: Update TS Type for command
-    const command: Command = client.commands?.get(interaction.commandName) as Command;
-    if (!command) {
-        logger.warn(`Interaction created but command '${interaction.commandName}' was not found.`);
-        return;
-    }
-
     if (await cannotSendMessageInChannel({ interaction, executionId })) {
         return;
     }
 
-    logger.debug('Executing command interaction.');
-    await command.execute({ interaction, client, executionId });
+    const slashCommand: BaseSlashCommandInteraction = client.slashCommandInteractions!.get(
+        interactionIdentifier
+    ) as BaseSlashCommandInteraction;
+    if (!slashCommand) {
+        logger.warn(`Interaction created but slash command '${interactionIdentifier}' was not found.`);
+        return;
+    }
+
+    logger.debug(`Executing slash command interaction '${interactionIdentifier}'.`);
+    await slashCommand.execute({ interaction, client, executionId });
 };

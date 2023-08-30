@@ -1,45 +1,36 @@
-import config from 'config';
 import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { BotOptions, EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
+class LoopCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('loop')
+            .setDescription('Toggle looping a track, the whole queue or autoplay.')
+            .addStringOption(() =>
+                new SlashCommandStringOption()
+                    .setName('mode')
+                    .setDescription('Loop mode: Track, queue, autoplay or disabled.')
+                    .setRequired(false)
+                    .addChoices(
+                        { name: 'Track', value: '1' },
+                        { name: 'Queue', value: '2' },
+                        { name: 'Autoplay', value: '3' },
+                        { name: 'Disabled', value: '0' }
+                    )
+            );
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('loop')
-        .setDescription('Toggle looping a track, the whole queue or autoplay.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addStringOption(() =>
-            new SlashCommandStringOption()
-                .setName('mode')
-                .setDescription('Mode to set for looping.')
-                .setRequired(false)
-                .addChoices(
-                    { name: 'Track', value: '1' },
-                    { name: 'Queue', value: '2' },
-                    { name: 'Autoplay', value: '3' },
-                    { name: 'Disabled', value: '0' }
-                )
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'loop.js',
-            module: 'slashCommand',
-            name: '/loop',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -77,10 +68,10 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                currentMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
+                                currentMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop
                             } Current loop mode**\nThe looping mode is currently set to **\`${currentModeUserString}\`**.`
                         )
-                        .setColor(embedOptions.colors.info)
+                        .setColor(this.embedOptions.colors.info)
                 ]
             });
         }
@@ -93,9 +84,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nLoop mode is already **\`${modeUserString}\`**.`
+                            `**${this.embedOptions.icons.warning} Oops!**\nLoop mode is already **\`${modeUserString}\`**.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -114,9 +105,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to **\`${modeUserString}\`**, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            `**${this.embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to **\`${modeUserString}\`**, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                         )
-                        .setColor(embedOptions.colors.error)
+                        .setColor(this.embedOptions.colors.error)
                         .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
@@ -140,12 +131,12 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
+                            `**${this.embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
                         )
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
@@ -159,12 +150,12 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
+                            `**${this.embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
                         )
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
@@ -177,15 +168,15 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`
+                        `**${this.embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`
                     )
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new LoopCommand();

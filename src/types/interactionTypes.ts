@@ -1,49 +1,18 @@
+import config from 'config';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+    Interaction,
     Message,
     MessageComponentInteraction,
     SlashCommandBuilder
 } from 'discord.js';
+import { Logger } from 'pino';
+import loggerModule from '../services/logger';
 import { ExtendedClient } from './clientTypes';
+import { BotOptions, EmbedOptions } from './configTypes';
 
-// Local types
-interface CommandParams {
-    client?: ExtendedClient;
-    executionId: string;
-    interaction: ChatInputCommandInteraction;
-}
-
-interface AutocompleteParams {
-    executionId: string;
-    interaction: AutocompleteInteraction;
-}
-
-interface ComponentParams {
-    interaction: MessageComponentInteraction;
-    referenceId?: string;
-    executionId: string;
-}
-
-// Interaction types
-export interface CustomSlashCommandInteraction {
-    isNew: boolean;
-    isBeta: boolean;
-    isSystemCommand?: boolean;
-    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
-    execute(params: CommandParams): Promise<Message<boolean> | void>;
-}
-
-export interface CustomAutocompleteInteraction {
-    execute(params: AutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
-}
-
-export interface CustomComponentInteraction {
-    execute(params: ComponentParams): Promise<Message<boolean> | void>;
-}
-
-// Command specific types
 export interface ShardInfo {
     shardId: number;
     memUsage: number;
@@ -65,4 +34,115 @@ export interface TrackMetadata {
 export class CustomError extends Error {
     type?: string;
     code?: string;
+}
+
+interface BaseInteractionParams {
+    executionId: string;
+}
+
+export interface BaseSlashCommandParams extends BaseInteractionParams {
+    interaction: ChatInputCommandInteraction;
+    client?: ExtendedClient;
+}
+
+export interface BaseAutocompleteParams extends BaseInteractionParams {
+    interaction: AutocompleteInteraction;
+}
+
+export interface BaseComponentParams extends BaseInteractionParams {
+    interaction: MessageComponentInteraction;
+    referenceId?: string;
+}
+
+export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
+
+export type BaseAutocompleteReturnType = Promise<ApplicationCommandOptionChoiceData | void>;
+
+export type BaseComponentReturnType = Promise<Message<boolean> | void>;
+
+abstract class BaseInteraction {
+    protected getLoggerBase(
+        module: string,
+        name: string,
+        executionId: string,
+        interaction: Interaction | MessageComponentInteraction
+    ): Logger {
+        return loggerModule.child({
+            module: module,
+            name: name,
+            executionId: executionId,
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
+        });
+    }
+
+    abstract execute(
+        params: BaseInteractionParams
+    ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;
+}
+
+export abstract class BaseSlashCommandInteraction extends BaseInteraction {
+    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+    isSystemCommand: boolean;
+    isNew: boolean;
+    isBeta: boolean;
+    embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+    name: string;
+
+    constructor(
+        data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
+        isSystemCommand: boolean = false,
+        isNew: boolean = false,
+        isBeta: boolean = false
+    ) {
+        super();
+        this.data = data.setDMPermission(false).setNSFW(false);
+        this.isSystemCommand = isSystemCommand;
+        this.isNew = isNew;
+        this.isBeta = isBeta;
+        this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+        this.name = data.name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: ChatInputCommandInteraction): Logger {
+        return super.getLoggerBase('slashCommandInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType;
+}
+
+export abstract class BaseAutocompleteInteraction extends BaseInteraction {
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.name = name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: AutocompleteInteraction): Logger {
+        return super.getLoggerBase('autocompleteInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType;
+}
+
+export abstract class BaseComponentInteraction extends BaseInteraction {
+    embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+        this.name = name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: MessageComponentInteraction): Logger {
+        return super.getLoggerBase('componentInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseComponentParams): BaseComponentReturnType;
 }

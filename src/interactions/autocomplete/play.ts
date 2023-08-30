@@ -1,25 +1,22 @@
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { CustomAutocompleteInteraction } from '../../types/interactionTypes';
-
-const loggerTemplate: Logger = loggerModule.child({
-    source: 'play.js',
-    module: 'autocompleteInteraction',
-    name: '/play'
-});
+import {
+    BaseAutocompleteInteraction,
+    BaseAutocompleteParams,
+    BaseAutocompleteReturnType
+} from '../../types/interactionTypes';
 
 // TODO: create interface for recent query object
 const recentQueries = new Map();
 
-const autocomplete: CustomAutocompleteInteraction = {
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerTemplate.child({
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class PlayAutocomplete extends BaseAutocompleteInteraction {
+    constructor() {
+        super('play');
+    }
+
+    async execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const player: Player = useMainPlayer()!;
         const query: string = interaction.options.getString('query', true);
@@ -66,6 +63,6 @@ const autocomplete: CustomAutocompleteInteraction = {
         logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     }
-};
+}
 
-export default autocomplete;
+export default new PlayAutocomplete();

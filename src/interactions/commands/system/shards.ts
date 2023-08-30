@@ -1,49 +1,43 @@
-import config from 'config';
 import { EmbedBuilder, EmbedField, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction, ShardInfo } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType,
+    ShardInfo
+} from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class ShardsCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('shards')
+            .setDescription('Show information about all connected shards.')
+            .addStringOption((option) =>
+                option
+                    .setName('sort')
+                    .setDescription('What to sort the shards by.')
+                    .setRequired(false)
+                    .addChoices(
+                        { name: 'None (Shard ID)', value: 'none' },
+                        { name: 'Memory usage', value: 'memory' },
+                        { name: 'Voice Connections', value: 'connections' },
+                        { name: 'Tracks', value: 'tracks' },
+                        { name: 'Listeners', value: 'listeners' },
+                        { name: 'Guilds', value: 'guilds' },
+                        { name: 'Members', value: 'members' }
+                    )
+            )
+            .addNumberOption((option) =>
+                option.setName('page').setDescription('Page number to display for the shards').setMinValue(1)
+            );
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isSystemCommand: true,
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('shards')
-        .setDescription('Show information about the running shards.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addStringOption((option) =>
-            option
-                .setName('sort')
-                .setDescription('If specified, what to sort the shards by.')
-                .setRequired(false)
-                .addChoices(
-                    { name: 'None (Shard ID)', value: 'none' },
-                    { name: 'Memory usage', value: 'memory' },
-                    { name: 'Voice Connections', value: 'connections' },
-                    { name: 'Tracks', value: 'tracks' },
-                    { name: 'Listeners', value: 'listeners' },
-                    { name: 'Guilds', value: 'guilds' },
-                    { name: 'Members', value: 'members' }
-                )
-        )
-
-        .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
-    execute: async ({ interaction, client, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'shards.js',
-            module: 'slashCommand',
-            name: '/shards',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction, client } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;
@@ -122,17 +116,17 @@ const command: CustomSlashCommandInteraction = {
                     new EmbedBuilder()
 
                         .setDescription(
-                            `**${embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to fetch player statistics and client values from shards.`
+                            `**${this.embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to fetch player statistics and client values from shards.`
                         )
-                        .setColor(embedOptions.colors.error)
+                        .setColor(this.embedOptions.colors.error)
                         .setFooter({ text: `Execution ID: ${executionId}` })
                 ]
             });
         }
 
         const shardCount: number = shardInfoList.length;
-        const totalPages:number = Math.ceil(shardCount / 10) || 1;
-        const pageIndex:number = (interaction.options.getNumber('page') || 1) - 1;
+        const totalPages: number = Math.ceil(shardCount / 10) || 1;
+        const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
 
         const currentPageShards: ShardInfo[] = shardInfoList.slice(pageIndex * 10, pageIndex * 10 + 10);
 
@@ -151,7 +145,8 @@ const command: CustomSlashCommandInteraction = {
             return string;
         }
 
-        const evenShardIndexesString: string = evenShardIndexes.map(shardInfoToString).join('\n') + 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ';
+        const evenShardIndexesString: string =
+            evenShardIndexes.map(shardInfoToString).join('\n') + 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ';
         const oddShardIndexesString: string = oddShardIndexes.map(shardInfoToString).join('\n');
 
         const embedFields: EmbedField[] = [];
@@ -183,13 +178,15 @@ const command: CustomSlashCommandInteraction = {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**${embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`)
+                    .setDescription(
+                        `**${this.embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`
+                    )
                     .addFields(...embedFields)
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
                     .setFooter({ text: `Shard id: ${client!.shard!.ids[0]}, page ${pageIndex + 1} of ${totalPages}` })
             ]
         });
     }
-};
+}
 
-export default command;
+export default new ShardsCommand();

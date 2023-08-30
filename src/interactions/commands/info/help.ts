@@ -1,54 +1,52 @@
-import config from 'config';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { BotOptions, EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption } from 'discord.js';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
+class HelpCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('help')
+            .setDescription('Show the list of bot commands.');
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('help')
-        .setDescription('Show a list of commands and their usage.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'help.js',
-            module: 'slashCommand',
-            name: '/help',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, client, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
-        // TODO: Create interface for command list
-        const commandList = client!.commands!
-            .filter((command) => {
+        const commandList = client!
+            .slashCommandInteractions!.filter((command: BaseSlashCommandInteraction) => {
                 // don't include system commands
                 if (command.isSystemCommand) {
                     return false;
                 }
                 return true;
             })
-            .map((command) => {
-                const params: string = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
-                const beta: string = command.isBeta ? `${embedOptions.icons.beta} ` : '';
-                const newCommand: string = command.isNew ? `${embedOptions.icons.new} ` : '';
+            .map((command: BaseSlashCommandInteraction) => {
+                let params: string = '';
+                const option = command.data.options[0];
+                if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
+                    params = `**\`${option.name}\`**` + ' ';
+                }
+                const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
+                const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
                 return `- **\`/${command.data.name}\`** ${params}- ${beta}${newCommand}${command.data.description}`;
             });
 
         const commandListString: string = commandList.join('\n');
 
-        const supportServerString: string = botOptions.serverInviteUrl
-            ? `${embedOptions.icons.support} **Support server**\nJoin the support server for help or to suggest improvements: \n**${botOptions.serverInviteUrl}**\n\n`
+        const supportServerString: string = this.botOptions.serverInviteUrl
+            ? `${this.embedOptions.icons.support} **Support server**\n` +
+              'Join the support server for help or to suggest improvements: \n' +
+              `**${this.botOptions.serverInviteUrl}**\n\n`
             : '';
-        const addBotString: string = botOptions.botInviteUrl
-            ? `${embedOptions.icons.bot} **Enjoying ${botOptions.name}?**\nAdd me to another server: \n**[Click me!](${botOptions.botInviteUrl})**`
+        const addBotString: string = this.botOptions.botInviteUrl
+            ? `${this.embedOptions.icons.bot} **Enjoying ${this.botOptions.name}?**\n` +
+              'Add me to another server: \n' +
+              `**[Click me!](${this.botOptions.botInviteUrl})**`
             : '';
 
         logger.debug('Responding with info embed.');
@@ -56,15 +54,15 @@ const command: CustomSlashCommandInteraction = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `${embedOptions.icons.rule} **List of commands**\n` +
+                        `${this.embedOptions.icons.rule} **List of commands**\n` +
                             `${commandListString}\n\n` +
                             supportServerString +
                             addBotString
                     )
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new HelpCommand();

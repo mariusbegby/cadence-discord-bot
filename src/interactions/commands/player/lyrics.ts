@@ -1,47 +1,34 @@
-import config from 'config';
+import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { GuildQueue, Player, QueryType, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-
-import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
-
-import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
-import { EmbedOptions } from '../../../types/configTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { Logger } from 'pino';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class LyricsCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('lyrics')
+            .setDescription('Search Genius lyrics for current or specified track.')
+            .addStringOption((option) =>
+                option
+                    .setName('query')
+                    .setDescription('Search query by text or URL.')
+                    .setRequired(false)
+                    .setMinLength(2)
+                    .setMaxLength(500)
+                    .setAutocomplete(true)
+            );
+        super(data);
+    }
 
-const loggerTemplate: Logger = loggerModule.child({
-    source: 'lyrics.js',
-    module: 'slashCommand',
-    name: '/lyrics'
-});
-
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('lyrics')
-        .setDescription('Get lyrics from Genius for current or specified track.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addStringOption((option) =>
-            option
-                .setName('query')
-                .setDescription('Search query or URL.')
-                .setRequired(false)
-                .setMinLength(2)
-                .setMaxLength(500)
-                .setAutocomplete(true)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerTemplate.child({
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const query: string = interaction.options.getString('query')!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
@@ -84,9 +71,9 @@ const command: CustomSlashCommandInteraction = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} No search results found**\nThere was no search results found for query **${query}**.`
+                                `**${this.embedOptions.icons.warning} No search results found**\nThere was no search results found for query **${query}**.`
                             )
-                            .setColor(embedOptions.colors.warning)
+                            .setColor(this.embedOptions.colors.warning)
                     ]
                 });
             }
@@ -144,9 +131,9 @@ const command: CustomSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} No lyrics found**\nThere was no Genius lyrics found for track **${geniusSearchQuery}**.`
+                            `**${this.embedOptions.icons.warning} No lyrics found**\nThere was no Genius lyrics found for track **${geniusSearchQuery}**.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -166,12 +153,12 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `**${embedOptions.icons.queue} Showing lyrics**\n` +
+                                    `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
                                         `**Track: [${lyricsResult.title}](${lyricsResult.url})**\n` +
                                         `**Artist: [${lyricsResult.artist.name}](${lyricsResult.artist.url})**` +
                                         `\n\n\`\`\`fix\n${message}\`\`\``
                                 )
-                                .setColor(embedOptions.colors.info)
+                                .setColor(this.embedOptions.colors.info)
                         ]
                     });
                     continue;
@@ -181,7 +168,7 @@ const command: CustomSlashCommandInteraction = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(`\`\`\`fix\n${message}\`\`\``)
-                                .setColor(embedOptions.colors.info)
+                                .setColor(this.embedOptions.colors.info)
                         ]
                     });
                 }
@@ -195,15 +182,15 @@ const command: CustomSlashCommandInteraction = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.queue} Showing lyrics**\n` +
+                        `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
                             `**Track: [${lyricsResult.title}](${lyricsResult.url})**\n` +
                             `**Artist: [${lyricsResult.artist.name}](${lyricsResult.artist.url})**` +
                             `\n\n\`\`\`fix\n${lyricsResult.lyrics}\`\`\``
                     )
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new LyricsCommand();

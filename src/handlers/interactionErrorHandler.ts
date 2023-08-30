@@ -1,5 +1,11 @@
 import config from 'config';
-import { ChatInputCommandInteraction, EmbedBuilder, Interaction, InteractionReplyOptions, MessageComponentInteraction } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    Interaction,
+    InteractionReplyOptions,
+    MessageComponentInteraction
+} from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
@@ -12,8 +18,8 @@ const botOptions: BotOptions = config.get('botOptions');
 export const handleError = async (
     interaction: Interaction,
     error: CustomError,
-    interactionIdentifier: string,
-    executionId: string
+    executionId: string,
+    interactionIdentifier: string
 ) => {
     const logger: Logger = loggerModule.child({
         source: 'interactionErrorHandler.ts',

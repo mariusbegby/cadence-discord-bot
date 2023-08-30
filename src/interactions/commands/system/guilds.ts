@@ -1,31 +1,23 @@
-import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class GuildsCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('guilds')
+            .setDescription('Show the top 25 guilds by member count.');
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isSystemCommand: true,
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('guilds')
-        .setDescription('Show list of guilds where bot is added.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'guilds.js',
-            module: 'slashCommand',
-            name: '/guilds',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction, client } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;
@@ -35,8 +27,8 @@ const command: CustomSlashCommandInteraction = {
         let totalGuildCount: number = 0;
 
         logger.debug('Fetching guilds from all shards.');
-        await client!.shard!
-            .broadcastEval((c) => {
+        await client!
+            .shard!.broadcastEval((c) => {
                 return c.guilds.cache.map((guild) => {
                     return guild;
                 });
@@ -64,7 +56,7 @@ const command: CustomSlashCommandInteraction = {
         const totalMemberCount: number = shardGuilds.reduce((a, b) => a + b.memberCount, 0);
 
         let embedDescription =
-            `**${embedOptions.icons.bot} ${
+            `**${this.embedOptions.icons.bot} ${
                 totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds'
             } by member count (${totalGuildCount} total)**\n${guildListFormatted}` +
             `\n\n**Total members:** **\`${totalMemberCount}\`**`;
@@ -78,9 +70,9 @@ const command: CustomSlashCommandInteraction = {
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
-            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(embedOptions.colors.info)]
+            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(this.embedOptions.colors.info)]
         });
     }
-};
+}
 
-export default command;
+export default new GuildsCommand();
