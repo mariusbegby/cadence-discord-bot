@@ -8,12 +8,13 @@ import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTy
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-const loggerTemplate = loggerModule.child({
+const loggerTemplate: Logger = loggerModule.child({
     source: 'play.js',
     module: 'slashCommand',
     name: '/play'

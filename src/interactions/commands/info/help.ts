@@ -1,9 +1,9 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { BotOptions, EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
@@ -17,7 +17,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'help.js',
             module: 'slashCommand',
             name: '/help',
@@ -26,6 +26,7 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
+        // TODO: Create interface for command list
         const commandList = client!.commands!
             .filter((command) => {
                 // don't include system commands
@@ -35,18 +36,18 @@ const command: CustomSlashCommandInteraction = {
                 return true;
             })
             .map((command) => {
-                const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
-                const beta = command.isBeta ? `${embedOptions.icons.beta} ` : '';
-                const newCommand = command.isNew ? `${embedOptions.icons.new} ` : '';
+                const params: string = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+                const beta: string = command.isBeta ? `${embedOptions.icons.beta} ` : '';
+                const newCommand: string = command.isNew ? `${embedOptions.icons.new} ` : '';
                 return `- **\`/${command.data.name}\`** ${params}- ${beta}${newCommand}${command.data.description}`;
             });
 
-        const commandListString = commandList.join('\n');
+        const commandListString: string = commandList.join('\n');
 
-        const supportServerString = botOptions.serverInviteUrl
+        const supportServerString: string = botOptions.serverInviteUrl
             ? `${embedOptions.icons.support} **Support server**\nJoin the support server for help or to suggest improvements: \n**${botOptions.serverInviteUrl}**\n\n`
             : '';
-        const addBotString = botOptions.botInviteUrl
+        const addBotString: string = botOptions.botInviteUrl
             ? `${embedOptions.icons.bot} **Enjoying ${botOptions.name}?**\nAdd me to another server: \n**[Click me!](${botOptions.botInviteUrl})**`
             : '';
 

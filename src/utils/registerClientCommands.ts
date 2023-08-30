@@ -4,9 +4,10 @@ import path from 'node:path';
 
 import loggerModule from '../services/logger';
 import { RegisterClientCommandsParams } from '../types/utilTypes';
+import { Logger } from 'pino';
 
 export const registerClientCommands = async ({ client, executionId }: RegisterClientCommandsParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'registerClientCommands.js',
         module: 'register',
         name: 'registerClientCommands',
@@ -17,10 +18,10 @@ export const registerClientCommands = async ({ client, executionId }: RegisterCl
     logger.debug('Registering client commands...');
     client.commands = new Collection();
 
-    const commandFolders = fs.readdirSync(path.resolve('./dist/interactions/commands'));
+    const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
     for (const folder of commandFolders) {
         logger.trace(`Registering client commands for folder '${folder}'...`);
-        const commandFiles = fs
+        const commandFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
 

@@ -6,8 +6,8 @@ import {
     InteractionType,
     MessageComponentInteraction
 } from 'discord.js';
+import { Logger } from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
 import { handleComponent } from '../../handlers/interactionComponentHandler';
@@ -21,8 +21,8 @@ module.exports = {
     isDebug: false,
     execute: async (interaction: Interaction, { client }: { client: ExtendedClient }) => {
         const inputTime: number = new Date().getTime();
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'interactionCreate.js',
             module: 'event',
             name: 'interactionCreate',
@@ -33,7 +33,7 @@ module.exports = {
 
         logger.debug('Interaction received.');
 
-        let interactionIdentifier = 'Unknown';
+        let interactionIdentifier: string = 'Unknown';
         if (
             interaction.type === InteractionType.ApplicationCommand ||
             interaction.type === InteractionType.ApplicationCommandAutocomplete
@@ -73,7 +73,7 @@ module.exports = {
         const outputTime: number = new Date().getTime();
         const executionTime: number = outputTime - inputTime;
 
-        const interactionType = InteractionType[interaction.type];
+        const interactionType: string = InteractionType[interaction.type];
 
         logger.info(
             {

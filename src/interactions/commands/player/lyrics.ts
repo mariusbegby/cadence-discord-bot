@@ -1,18 +1,19 @@
 import config from 'config';
-import { GuildQueue, QueryType, useMainPlayer, useQueue } from 'discord-player';
+import { GuildQueue, Player, QueryType, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import { lyricsExtractor } from '@discord-player/extractor';
+import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 
 import loggerModule from '../../../services/logger';
 import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const loggerTemplate = loggerModule.child({
+const loggerTemplate: Logger = loggerModule.child({
     source: 'lyrics.js',
     module: 'slashCommand',
     name: '/lyrics'
@@ -36,15 +37,15 @@ const command: CustomSlashCommandInteraction = {
                 .setAutocomplete(true)
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerTemplate.child({
+        const logger: Logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
 
-        const query = interaction.options.getString('query');
+        const query: string = interaction.options.getString('query')!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        let geniusSearchQuery = '';
+        let geniusSearchQuery: string = '';
 
         if (!query) {
             const validators = [
@@ -70,7 +71,7 @@ const command: CustomSlashCommandInteraction = {
         let searchResult;
         if (query) {
             logger.debug(`Query input provided, using query '${query}' for player.search().`);
-            const player = useMainPlayer()!;
+            const player: Player = useMainPlayer()!;
             const searchResults = await player.search(query, {
                 searchEngine: QueryType.SPOTIFY_SEARCH
             });
@@ -97,7 +98,7 @@ const command: CustomSlashCommandInteraction = {
 
         // get lyrics
         const genius = lyricsExtractor();
-        let lyricsResult = await genius.search(geniusSearchQuery).catch(() => null);
+        let lyricsResult: LyricsData | null = await genius.search(geniusSearchQuery).catch(() => null);
 
         // try again with shorter query (some titles just have added info in the end)
         if (!lyricsResult && geniusSearchQuery.length > 20) {
@@ -155,10 +156,10 @@ const command: CustomSlashCommandInteraction = {
         // If message length is too long, split into multiple messages
         if (lyricsResult.lyrics.length > 3800) {
             logger.debug('Lyrics text too long, splitting into multiple messages.');
-            const messageCount = Math.ceil(lyricsResult.lyrics.length / 3800);
-            for (let i = 0; i < messageCount; i++) {
+            const messageCount: number = Math.ceil(lyricsResult.lyrics.length / 3800);
+            for (let i: number = 0; i < messageCount; i++) {
                 logger.debug(`Lyrics, sending message ${i + 1} of ${messageCount}.`);
-                const message = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
+                const message: string = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
                 if (i === 0) {
                     logger.debug('Responding with info embed for first message with lyrics.');
                     await interaction.editReply({

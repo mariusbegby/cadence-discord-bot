@@ -2,7 +2,9 @@ import config from 'config';
 import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import {
     APIActionRowComponent,
+    APIButtonComponent,
     APIMessageActionRowComponent,
+    APIStringSelectComponent,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
@@ -11,10 +13,10 @@ import {
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
 } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -30,7 +32,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'filters.js',
             module: 'slashCommand',
             name: '/filters',
@@ -57,7 +59,7 @@ const command: CustomSlashCommandInteraction = {
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
         ffmpegFilterOptions.availableFilters.forEach((filter: FFmpegFilterOption) => {
-            let isEnabled = false;
+            let isEnabled: boolean = false;
 
             if (queue.filters.ffmpeg.filters.includes(filter.value as keyof QueueFilters)) {
                 isEnabled = true;
@@ -73,7 +75,7 @@ const command: CustomSlashCommandInteraction = {
             );
         });
 
-        const filterSelect = new StringSelectMenuBuilder()
+        const filterSelect: APIStringSelectComponent = new StringSelectMenuBuilder()
             .setCustomId('filters-select-menu')
             .setPlaceholder('Select multiple options.')
             .setMinValues(0)
@@ -86,7 +88,7 @@ const command: CustomSlashCommandInteraction = {
             components: [filterSelect]
         };
 
-        const disableButton = new ButtonBuilder()
+        const disableButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId('filters-disable-button')
             .setLabel('Disable all filters')
             .setStyle(ButtonStyle.Secondary)

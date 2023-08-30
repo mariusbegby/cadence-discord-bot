@@ -1,6 +1,7 @@
 import config from 'config';
-import { Client } from 'discord.js';
+import { Channel, Client } from 'discord.js';
 
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { LoadTestOptions } from '../../types/configTypes';
 import { StartLoadTestParams } from '../../types/utilTypes';
@@ -8,7 +9,7 @@ import { StartLoadTestParams } from '../../types/utilTypes';
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
 export const startLoadTest = async ({ client, executionId }: StartLoadTestParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'startLoadTest.js',
         module: 'utilOther',
         name: 'startLoadTest',
@@ -21,15 +22,15 @@ export const startLoadTest = async ({ client, executionId }: StartLoadTestParams
         return;
     }
 
-    const channelIds = loadTestOptions.channelIdsToJoin;
-    const track = loadTestOptions.trackUrl;
+    const channelIds: string[] = loadTestOptions.channelIdsToJoin;
+    const track: string = loadTestOptions.trackUrl;
 
     logger.info(`Starting load test in ${channelIds.length} specified channels.`);
 
     channelIds.forEach((each) => {
         client.shard?.broadcastEval(
             async (shardClient: Client, { channelId, track }: { channelId: string; track: string }) => {
-                const channel = shardClient.channels.cache.get(channelId);
+                const channel: Channel | undefined = shardClient.channels.cache.get(channelId);
                 if (channel) {
                     /* eslint-disable no-undef */
                     // @ts-ignore

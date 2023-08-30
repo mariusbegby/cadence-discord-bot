@@ -1,25 +1,29 @@
 import config from 'config';
-import { ChatInputCommandInteraction, EmbedBuilder, Interaction, MessageComponentInteraction } from 'discord.js';
-import { BotOptions, EmbedOptions } from '../types/configTypes';
+import { ChatInputCommandInteraction, EmbedBuilder, Interaction, InteractionReplyOptions, MessageComponentInteraction } from 'discord.js';
+import { Logger } from 'pino';
 import loggerModule from '../services/logger';
+import { BotOptions, EmbedOptions } from '../types/configTypes';
 import { CustomError } from '../types/interactionTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
+
+// TODO: Update TS Type for handlError
 export const handleError = async (
     interaction: Interaction,
     error: CustomError,
     interactionIdentifier: string,
     executionId: string
 ) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'interactionErrorHandler.ts',
         module: 'handler',
         name: 'interactionErrorHandler',
         executionId: executionId
     });
 
-    const errorReply = {
+    // TODO: Extract replies for embeds
+    const errorReply: InteractionReplyOptions = {
         embeds: [
             new EmbedBuilder()
                 .setDescription(

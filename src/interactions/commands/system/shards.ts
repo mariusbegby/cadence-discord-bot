@@ -1,10 +1,10 @@
 import config from 'config';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-
+import { EmbedBuilder, EmbedField, SlashCommandBuilder } from 'discord.js';
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { ShardInfo, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction, ShardInfo } from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -36,7 +36,7 @@ const command: CustomSlashCommandInteraction = {
 
         .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1)),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'shards.js',
             module: 'slashCommand',
             name: '/shards',
@@ -55,12 +55,13 @@ const command: CustomSlashCommandInteraction = {
         try {
             await client!
                 .shard!.broadcastEval((shardClient: ExtendedClient) => {
-                    /* eslint-disable no-undef */
+                    // Type for generateStatistics?
                     const playerStats = player.generateStatistics();
-                    const nodeProcessMemUsageInMb = parseFloat(
+                    const nodeProcessMemUsageInMb: number = parseFloat(
                         (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
                     );
 
+                    // TODO: Create shardInfo type
                     const shardInfo = {
                         shardId: shardClient.shard!.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
@@ -129,17 +130,17 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        const shardCount = shardInfoList.length;
-        const totalPages = Math.ceil(shardCount / 10) || 1;
-        const pageIndex = (interaction.options.getNumber('page') || 1) - 1;
+        const shardCount: number = shardInfoList.length;
+        const totalPages:number = Math.ceil(shardCount / 10) || 1;
+        const pageIndex:number = (interaction.options.getNumber('page') || 1) - 1;
 
-        const currentPageShards = shardInfoList.slice(pageIndex * 10, pageIndex * 10 + 10);
+        const currentPageShards: ShardInfo[] = shardInfoList.slice(pageIndex * 10, pageIndex * 10 + 10);
 
-        const evenShardIndexes = currentPageShards.filter((shard, index) => index % 2 === 0);
-        const oddShardIndexes = currentPageShards.filter((shard, index) => index % 2 !== 0);
+        const evenShardIndexes: ShardInfo[] = currentPageShards.filter((shard, index) => index % 2 === 0);
+        const oddShardIndexes: ShardInfo[] = currentPageShards.filter((shard, index) => index % 2 !== 0);
 
         function shardInfoToString(shard: ShardInfo) {
-            let string = '';
+            let string: string = '';
             string += `**Shard ${shard.shardId}** - Guilds: ${shard.guildCount.toLocaleString(
                 'en-US'
             )} (${shard.guildMemberCount.toLocaleString('en-US')})\n`;
@@ -150,10 +151,10 @@ const command: CustomSlashCommandInteraction = {
             return string;
         }
 
-        const evenShardIndexesString = evenShardIndexes.map(shardInfoToString).join('\n') + 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ';
-        const oddShardIndexesString = oddShardIndexes.map(shardInfoToString).join('\n');
+        const evenShardIndexesString: string = evenShardIndexes.map(shardInfoToString).join('\n') + 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ';
+        const oddShardIndexesString: string = oddShardIndexes.map(shardInfoToString).join('\n');
 
-        const embedFields = [];
+        const embedFields: EmbedField[] = [];
 
         if (currentPageShards.length === 1) {
             embedFields.push({

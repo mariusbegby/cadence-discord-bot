@@ -8,12 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 import loggerModule from '../services/logger';
 import { SystemOptions } from '../types/configTypes';
+import { Logger } from 'pino';
 
 const systemOptions: SystemOptions = config.get('systemOptions');
 
-const executionId = uuidv4();
+const executionId: string = uuidv4();
 
-const logger = loggerModule.child({
+const logger: Logger = loggerModule.child({
     source: 'deploySlashCommands.js',
     module: 'deploy',
     name: 'deploySlashCommands',
@@ -24,7 +25,7 @@ const logger = loggerModule.child({
 
 const slashCommands: SlashCommandBuilder[] = [];
 const systemCommands: SlashCommandBuilder[] = [];
-const commandFolders = fs.readdirSync(path.resolve('./dist/interactions/commands'));
+const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
     throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
@@ -34,7 +35,7 @@ if (!process.env.DISCORD_APPLICATION_ID) {
     throw new Error('DISCORD_APPLICATION_ID environment variable is not set.');
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
+const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
 
 (async () => {
     if (!process.env.DISCORD_APPLICATION_ID || !process.env.DISCORD_BOT_TOKEN) {
@@ -45,11 +46,12 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
     }
 
     for (const folder of commandFolders) {
-        const commandFiles = fs
+        const commandFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
+            // TODO: create commandModule type
             const commandModule = await import(`../interactions/commands/${folder}/${file}`);
             const command = commandModule.default;
             command.isSystemCommand
@@ -76,7 +78,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN)
         );
 
         logger.info('Started refreshing system slash commands.');
-        const systemGuildIds = systemOptions.systemGuildIds;
+        const systemGuildIds: string[] = systemOptions.systemGuildIds;
         await Promise.all(
             systemGuildIds.map((systemGuildId: string) => {
                 logger.debug(`Refreshing system slash command for guild id '${systemGuildId}'.`);

@@ -1,5 +1,5 @@
+import { Logger } from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-
 import loggerModule from '../../services/logger';
 
 module.exports = {
@@ -7,8 +7,8 @@ module.exports = {
     isDebug: true,
     isPlayerEvent: false,
     execute: async (message: string) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'generalDebug.js',
             module: 'event',
             name: 'playerGeneralDebug',

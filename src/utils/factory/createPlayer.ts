@@ -2,9 +2,10 @@ import { Player } from 'discord-player';
 
 import loggerModule from '../../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
+import { Logger } from 'pino';
 
 export const createPlayer = async ({ client, executionId }: CreatePlayerParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'createPlayer.js',
         module: 'utilFactory',
         name: 'createPlayer',
@@ -15,7 +16,7 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams) 
     try {
         logger.debug('Creating discord-player player...');
 
-        const player = new Player(client, {
+        const player: Player = new Player(client, {
             useLegacyFFmpeg: false,
             ytdlOptions: {
                 quality: 'highestaudio',

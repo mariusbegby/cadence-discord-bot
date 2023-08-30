@@ -1,13 +1,13 @@
 import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
-
+import { Logger } from 'pino';
 // @ts-ignore
 import { version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
 import { EmbedOptions } from '../../../types/configTypes';
-import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
@@ -20,7 +20,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'status.js',
             module: 'slashCommand',
             name: '/status',
@@ -29,10 +29,10 @@ const command: CustomSlashCommandInteraction = {
             guildId: interaction.guild?.id
         });
 
-        const uptimeString = await getUptimeFormatted({ executionId });
-        const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-        const cpuUsage = await osu.cpu.usage();
-        const releaseVersion = version;
+        const uptimeString: string = await getUptimeFormatted({ executionId });
+        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
+        const cpuUsage: number = await osu.cpu.usage();
+        const releaseVersion: string = version;
         let guildCount: number = 0;
         let memberCount: number = 0;
         let activeVoiceConnections: number = 0;
@@ -62,7 +62,7 @@ const command: CustomSlashCommandInteraction = {
         await client!
             .shard!.fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches = results as Guild[][];
+                const guildCaches: Guild[][] = results as Guild[][];
                 guildCaches.map((guildCache: Guild[]) => {
                     if (guildCache) {
                         guildCount += guildCache.length;
@@ -89,7 +89,7 @@ const command: CustomSlashCommandInteraction = {
         const systemStatusString =
             `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`;
 
-        const discordStatusString = `**${client!.ws.ping} ms** Discord API latency`;
+        const discordStatusString: string = `**${client!.ws.ping} ms** Discord API latency`;
 
         logger.debug('Transformed status into into embed description.');
 

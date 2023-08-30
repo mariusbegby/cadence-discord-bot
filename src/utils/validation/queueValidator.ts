@@ -4,10 +4,11 @@ import { EmbedBuilder, InteractionType } from 'discord.js';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { QueueDoesNotExistParams, QueueIsEmptyParams, QueueNoCurrentTrackParams } from '../../types/utilTypes';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueDoesNotExist',
@@ -38,7 +39,7 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
 };
 
 export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: QueueNoCurrentTrackParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
@@ -69,7 +70,7 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
 };
 
 export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsEmptyParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueIsEmpty',

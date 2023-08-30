@@ -1,7 +1,8 @@
 import config from 'config';
-import { GuildQueue, Track, useQueue } from 'discord-player';
+import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import {
     APIActionRowComponent,
+    APIButtonComponent,
     APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
@@ -15,6 +16,7 @@ import { CustomSlashCommandInteraction, TrackMetadata } from '../../../types/int
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
@@ -28,7 +30,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'nowplaying.js',
             module: 'slashCommand',
             name: '/nowplaying',
@@ -39,6 +41,7 @@ const command: CustomSlashCommandInteraction = {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
+        // TODO: define TS type/interface for validators
         const validators = [
             () => notInVoiceChannel({ interaction, executionId }),
             () => notInSameVoiceChannel({ interaction, queue, executionId }),
@@ -52,7 +55,7 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const sourceStringsFormatted = new Map([
+        const sourceStringsFormatted: Map<string, string> = new Map([
             ['youtube', 'YouTube'],
             ['soundcloud', 'SoundCloud'],
             ['spotify', 'Spotify'],
@@ -60,7 +63,7 @@ const command: CustomSlashCommandInteraction = {
             ['arbitrary', 'Direct source']
         ]);
 
-        const sourceIcons = new Map([
+        const sourceIcons: Map<string, string> = new Map([
             ['youtube', embedOptions.icons.sourceYouTube],
             ['soundcloud', embedOptions.icons.sourceSoundCloud],
             ['spotify', embedOptions.icons.sourceSpotify],
@@ -70,15 +73,15 @@ const command: CustomSlashCommandInteraction = {
 
         const currentTrack: Track = queue.currentTrack!;
 
-        let author = currentTrack.author ? currentTrack.author : 'Unavailable';
+        let author: string = currentTrack.author ? currentTrack.author : 'Unavailable';
         if (author === 'cdn.discordapp.com') {
             author = 'Unavailable';
         }
-        const plays = currentTrack.views !== 0 ? currentTrack.views : 0;
+        const plays: number = currentTrack.views !== 0 ? currentTrack.views : 0;
 
         let displayPlays: string = plays.toLocaleString('en-US');
 
-        const metadata = currentTrack.metadata as TrackMetadata;
+        const metadata: TrackMetadata = currentTrack.metadata as TrackMetadata;
 
         if (plays === 0 && metadata.bridge && metadata.bridge.views !== 0 && metadata.bridge.views !== undefined) {
             displayPlays = metadata.bridge.views.toLocaleString('en-US');
@@ -86,10 +89,10 @@ const command: CustomSlashCommandInteraction = {
             displayPlays = 'Unavailable';
         }
 
-        const source = sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Unavailable';
-        const queueLength = queue.tracks.data.length;
-        const timestamp = queue.node.getTimestamp()!;
-        let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
+        const source: string = sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Unavailable';
+        const queueLength: number = queue.tracks.data.length;
+        const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+        let bar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
             length: playerOptions.progressBar.length ?? 12,
             timecodes: playerOptions.progressBar.timecodes ?? false,
@@ -106,10 +109,10 @@ const command: CustomSlashCommandInteraction = {
             bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
-        const customId = `nowplaying-skip-button_${currentTrack.id}`;
+        const customId: string = `nowplaying-skip-button_${currentTrack.id}`;
         logger.debug(`Generated custom id for skip button: ${customId}`);
 
-        const nowPlayingButton = new ButtonBuilder()
+        const nowPlayingButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(customId)
             .setLabel('Skip track')
             .setStyle(ButtonStyle.Secondary)
@@ -121,14 +124,14 @@ const command: CustomSlashCommandInteraction = {
             components: [nowPlayingButton]
         };
 
-        const loopModesFormatted = new Map([
+        const loopModesFormatted: Map<number, string> = new Map([
             [0, 'disabled'],
             [1, 'track'],
             [2, 'queue'],
             [3, 'autoplay']
         ]);
 
-        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+        const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
         logger.debug('Successfully retrieved information about the current track.');
 

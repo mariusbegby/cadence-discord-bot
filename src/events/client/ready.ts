@@ -2,6 +2,7 @@ import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder, Events, PresenceData } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
@@ -17,8 +18,8 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client: ExtendedClient) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'ready.js',
             module: 'event',
             name: 'clientReady',
@@ -38,7 +39,9 @@ module.exports = {
             }
         }
 
-        const channel = (await client.channels.cache.get(systemOptions.systemMessageChannelId)) as BaseGuildTextChannel;
+        const channel: BaseGuildTextChannel = (await client.channels.cache.get(
+            systemOptions.systemMessageChannelId
+        )) as BaseGuildTextChannel;
 
         // Check if the channel exists in curent shard and send a message
         if (channel) {

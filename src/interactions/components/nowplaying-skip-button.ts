@@ -1,5 +1,5 @@
 import config from 'config';
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 
 import loggerModule from '../../services/logger';
@@ -7,11 +7,12 @@ import { EmbedOptions } from '../../types/configTypes';
 import { CustomComponentInteraction } from '../../types/interactionTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
+import { Logger } from 'pino';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 const component: CustomComponentInteraction = {
     execute: async ({ interaction, referenceId, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'nowplaying-skip.js',
             module: 'componentInteraction',
             name: 'nowplaying-skip',
@@ -69,7 +70,7 @@ const component: CustomComponentInteraction = {
             });
         }
 
-        const skippedTrack = queue.currentTrack!;
+        const skippedTrack: Track = queue.currentTrack!;
         let durationFormat =
             Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
                 ? ''
@@ -81,14 +82,14 @@ const component: CustomComponentInteraction = {
         queue.node.skip();
         logger.debug('Skipped the track.');
 
-        const loopModesFormatted = new Map([
+        const loopModesFormatted: Map<number, string> = new Map([
             [0, 'disabled'],
             [1, 'track'],
             [2, 'queue'],
             [3, 'autoplay']
         ]);
 
-        const repeatModeUserString = loopModesFormatted.get(queue.repeatMode);
+        const repeatModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
         let authorName: string;
 

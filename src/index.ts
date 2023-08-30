@@ -4,22 +4,23 @@ import config from 'config';
 import { Client, Shard, ShardEvents, ShardingManager } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Logger } from 'pino';
 import loggerModule from './services/logger';
 import { ShardingOptions } from './types/configTypes';
 
 const shardingOptions: ShardingOptions = config.get('shardingOptions');
 
-const manager = new ShardingManager('./dist/bot.js', {
+const manager: ShardingManager = new ShardingManager('./dist/bot.js', {
     token: process.env.DISCORD_BOT_TOKEN,
     ...shardingOptions
 });
 
-const readyShards = new Set();
+const readyShards: Set<number> = new Set();
 
 manager.on('shardCreate', (shard: Shard) => {
-    const executionId = uuidv4();
+    const executionId: string = uuidv4();
 
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'index.js',
         module: 'shardingManager',
         name: 'shardingManager',

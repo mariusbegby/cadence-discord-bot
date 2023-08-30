@@ -1,10 +1,10 @@
 import config from 'config';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -19,7 +19,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'reload.js',
             module: 'slashCommand',
             name: '/reload',
@@ -61,12 +61,12 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        const commands = client!.commands?.map((command) => {
-            const params = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+        const commands: string[] | undefined = client!.commands?.map((command) => {
+            const params: string = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });
 
-        const embedDescription = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
+        const embedDescription: string = `**${embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({

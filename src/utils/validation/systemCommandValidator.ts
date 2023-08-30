@@ -4,11 +4,12 @@ import { EmbedBuilder, InteractionType } from 'discord.js';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { NotValidGuildIdParams } from '../../types/utilTypes';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
 export const notValidGuildId = async ({ interaction, executionId }: NotValidGuildIdParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'systemCommandValidator.js',
         module: 'utilValidation',
         name: 'notValidGuildId',
