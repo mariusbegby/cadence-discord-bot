@@ -22,23 +22,16 @@ export interface BaseSlashCommandParams extends BaseInteractionParams {
     client?: ExtendedClient;
 }
 
-interface BaseAutocompleteParams {
+interface BaseAutocompleteParams extends BaseInteractionParams {
     interaction: AutocompleteInteraction;
 }
 
-interface BaseComponentParams {
+interface BaseComponentParams extends BaseInteractionParams {
     interaction: MessageComponentInteraction;
     referenceId?: string;
 }
 
 // Interaction types
-export interface BaseSlashCommandInteraction {
-    isNew: boolean;
-    isBeta: boolean;
-    isSystemCommand?: boolean;
-    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
-    execute(params: BaseSlashCommandParams): Promise<Message<boolean> | void>;
-}
 
 export interface BaseAutocompleteInteraction {
     execute(params: BaseAutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
@@ -87,7 +80,7 @@ abstract class BaseInteraction {
     ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;
 }
 
-export abstract class BaseCommandInteraction extends BaseInteraction {
+export abstract class BaseSlashCommandInteraction extends BaseInteraction {
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
     isSystemCommand: boolean;
     isNew: boolean;

@@ -1,8 +1,9 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { Command, ExtendedClient } from '../types/clientTypes';
+import { ExtendedClient } from '../types/clientTypes';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
+import { BaseSlashCommandInteraction } from '../types/interactionTypes';
 
 export const handleCommand = async (
     interaction: ChatInputCommandInteraction,
@@ -20,7 +21,9 @@ export const handleCommand = async (
     logger.debug('Interaction deferred.');
 
     // TODO: Update TS Type for command
-    const command: Command = client.commands?.get(interaction.commandName) as Command;
+    const command: BaseSlashCommandInteraction = client.commands!.get(
+        interaction.commandName
+    ) as BaseSlashCommandInteraction;
     if (!command) {
         logger.warn(`Interaction created but command '${interaction.commandName}' was not found.`);
         return;

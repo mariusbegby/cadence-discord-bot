@@ -1,5 +1,11 @@
 import config from 'config';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+    EmbedBuilder,
+    SharedSlashCommandOptions,
+    SlashCommandBuilder,
+    SlashCommandNumberOption,
+    SlashCommandStringOption
+} from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
 import { BotOptions, EmbedOptions } from '../../../types/configTypes';
@@ -27,16 +33,20 @@ const command: BaseSlashCommandInteraction = {
         });
 
         // TODO: Create interface for command list
-        const commandList = client!.commands!
-            .filter((command) => {
+        const commandList = client!
+            .commands!.filter((command: BaseSlashCommandInteraction) => {
                 // don't include system commands
                 if (command.isSystemCommand) {
                     return false;
                 }
                 return true;
             })
-            .map((command) => {
-                const params: string = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+            .map((command: BaseSlashCommandInteraction) => {
+                let params: string = '';
+                const option = command.data.options[0];
+                if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
+                    params = `**\`${option.name}\`**` + ' ';
+                }
                 const beta: string = command.isBeta ? `${embedOptions.icons.beta} ` : '';
                 const newCommand: string = command.isNew ? `${embedOptions.icons.new} ` : '';
                 return `- **\`/${command.data.name}\`** ${params}- ${beta}${newCommand}${command.data.description}`;

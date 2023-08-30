@@ -1,13 +1,7 @@
 import 'dotenv/config';
 
 import config from 'config';
-import {
-    REST,
-    RESTPostAPIChatInputApplicationCommandsJSONBody,
-    RouteLike,
-    Routes,
-    SlashCommandBuilder
-} from 'discord.js';
+import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';

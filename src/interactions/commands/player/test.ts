@@ -1,7 +1,7 @@
 import { EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
-import { BaseCommandInteraction, BaseSlashCommandParams } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction, BaseSlashCommandParams } from '../../../types/interactionTypes';
 
-export class TestCommandInteraction extends BaseCommandInteraction {
+export class TestCommandInteraction extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder().setName('test').setDescription('Test command');
         super(data);
