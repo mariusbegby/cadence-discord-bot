@@ -1,10 +1,10 @@
 import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueIsEmpty } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -19,7 +19,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'shuffle.js',
             module: 'slashCommand',
             name: '/shuffle',

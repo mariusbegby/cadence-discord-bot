@@ -1,6 +1,6 @@
 import { Track } from 'discord-player';
+import { Logger } from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-
 import loggerModule from '../../services/logger';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
@@ -9,8 +9,8 @@ module.exports = {
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue: ExtendedGuildQueuePlayerNode, track: Track) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'playerStart.js',
             module: 'event',
             name: 'playerStart',

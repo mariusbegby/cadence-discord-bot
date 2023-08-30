@@ -1,5 +1,4 @@
 import { ActivityType, ColorResolvable, PresenceUpdateStatus, ShardingManagerOptions } from 'discord.js';
-
 import { LogLevel } from './serviceTypes';
 
 export interface BotOptions {
@@ -10,7 +9,7 @@ export interface BotOptions {
 
 export interface ShardingOptions extends ShardingManagerOptions {}
 
-export interface LoggerOptions {
+export interface CustomLoggerOptions {
     minimumLogLevel: LogLevel;
     minimumLogLevelConsole: LogLevel;
     discordPlayerDebug: boolean;

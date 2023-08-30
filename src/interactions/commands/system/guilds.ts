@@ -1,9 +1,9 @@
 import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -18,7 +18,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'guilds.js',
             module: 'slashCommand',
             name: '/guilds',
@@ -32,7 +32,7 @@ const command: CustomSlashCommandInteraction = {
         }
 
         let shardGuilds: Guild[] = [];
-        let totalGuildCount = 0;
+        let totalGuildCount: number = 0;
 
         logger.debug('Fetching guilds from all shards.');
         await client!.shard!
@@ -49,7 +49,7 @@ const command: CustomSlashCommandInteraction = {
 
         logger.debug(`Successfully fetched ${totalGuildCount} guilds.`);
 
-        const guildListFormatted = shardGuilds
+        const guildListFormatted: string = shardGuilds
             .map((guild) => {
                 return {
                     name: guild.name,
@@ -61,7 +61,7 @@ const command: CustomSlashCommandInteraction = {
             .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
             .join('\n');
 
-        const totalMemberCount = shardGuilds.reduce((a, b) => a + b.memberCount, 0);
+        const totalMemberCount: number = shardGuilds.reduce((a, b) => a + b.memberCount, 0);
 
         let embedDescription =
             `**${embedOptions.icons.bot} ${

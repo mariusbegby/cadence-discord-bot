@@ -1,10 +1,10 @@
 import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -25,7 +25,7 @@ const command: CustomSlashCommandInteraction = {
                 .setRequired(true)
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'seek.js',
             module: 'slashCommand',
             name: '/seek',
@@ -49,9 +49,9 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const durationInput = interaction.options.getString('duration');
+        const durationInput: string = interaction.options.getString('duration')!;
 
-        let durationArray = durationInput!.split(':');
+        let durationArray: string[] = durationInput!.split(':');
 
         switch (durationArray.length) {
             case 1:
@@ -68,7 +68,7 @@ const command: CustomSlashCommandInteraction = {
             return value.padStart(2, '0');
         });
 
-        const durationString = durationArray.join(':');
+        const durationString: string = durationArray.join(':');
 
         if (durationArray.length === 0 || durationArray.length > 3) {
             logger.debug('Invalid duration format input.');
@@ -88,7 +88,7 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        const validElements = durationArray.every((value) => {
+        const validElements: boolean = durationArray.every((value) => {
             return value.length === 2;
         });
 
@@ -112,8 +112,8 @@ const command: CustomSlashCommandInteraction = {
 
         // Now array should only be 3 elements long, all with 2 characters, e.g. ['00', '00', '00'].
         // Regex can now validate if this is a valid duration format. E.g. check if the first element is 0-23, second element is 0-59 and third element is 0-59.
-        const regex = new RegExp('([0-1][0-9]|2[0-3]):?[0-5][0-9]:?[0-5][0-9]');
-        const isValidDuration = regex.test(durationString);
+        const regex: RegExp = new RegExp('([0-1][0-9]|2[0-3]):?[0-5][0-9]:?[0-5][0-9]');
+        const isValidDuration: boolean = regex.test(durationString);
 
         if (!isValidDuration) {
             logger.debug('Invalid duration after regex checks.');
@@ -133,7 +133,7 @@ const command: CustomSlashCommandInteraction = {
             });
         }
 
-        const currentTrackMaxDurationInMs = queue.currentTrack!.durationMS;
+        const currentTrackMaxDurationInMs: number = queue.currentTrack!.durationMS;
         const durationInMilliseconds: number =
             Number(durationArray[0]) * 3600000 + Number(durationArray[1]) * 60000 + Number(durationArray[2]) * 1000;
 

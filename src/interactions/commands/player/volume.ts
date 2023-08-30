@@ -1,10 +1,10 @@
 import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -26,7 +26,7 @@ const command: CustomSlashCommandInteraction = {
                 .setMaxValue(100)
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'volume.js',
             module: 'slashCommand',
             name: '/volume',
@@ -49,10 +49,10 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const volume = interaction.options.getNumber('percentage');
+        const volume: number = interaction.options.getNumber('percentage')!;
 
         if (!volume && volume !== 0) {
-            const currentVolume = queue.node.volume;
+            const currentVolume: number = queue.node.volume;
 
             logger.debug('No volume input was provided, showing current volume.');
 

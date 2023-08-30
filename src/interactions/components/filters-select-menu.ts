@@ -1,18 +1,18 @@
 import config from 'config';
-
-import loggerModule from '../../services/logger';
-import { EmbedOptions, FFmpegFilterOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
 import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.js';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
+import loggerModule from '../../services/logger';
+import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
+import { CustomComponentInteraction } from '../../types/interactionTypes';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
 const component: CustomComponentInteraction = {
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'filters-select-menu.js',
             module: 'componentInteraction',
             name: 'filters-select-menu',
@@ -23,7 +23,7 @@ const component: CustomComponentInteraction = {
 
         logger.debug('Received select menu confirmation.');
 
-        const selectMenuInteraction = interaction as StringSelectMenuInteraction;
+        const selectMenuInteraction: StringSelectMenuInteraction = interaction as StringSelectMenuInteraction;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         const validators = [
@@ -90,9 +90,10 @@ const component: CustomComponentInteraction = {
                             embedOptions.icons.success
                         } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
                             .map((enabledFilter: string) => {
-                                const filter = ffmpegFilterOptions.availableFilters.find(
-                                    (filter) => enabledFilter == filter.value
-                                );
+                                const filter: FFmpegFilterOption | undefined =
+                                    ffmpegFilterOptions.availableFilters.find(
+                                        (filter) => enabledFilter == filter.value
+                                    );
 
                                 if (!filter) {
                                     return enabledFilter;

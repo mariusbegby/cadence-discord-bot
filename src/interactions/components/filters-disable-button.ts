@@ -1,17 +1,17 @@
 import config from 'config';
-
+import { GuildQueue, useQueue } from 'discord-player';
+import { EmbedBuilder, GuildMember } from 'discord.js';
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { CustomComponentInteraction } from '../../types/interactionTypes';
-import { GuildQueue, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember } from 'discord.js';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
 const component: CustomComponentInteraction = {
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'filters-disable-button.js',
             module: 'componentInteraction',
             name: 'filters-disable-button',

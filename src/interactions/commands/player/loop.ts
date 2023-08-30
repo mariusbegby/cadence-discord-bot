@@ -1,10 +1,10 @@
 import config from 'config';
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { BotOptions, EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -32,7 +32,7 @@ const command: CustomSlashCommandInteraction = {
                 )
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'loop.js',
             module: 'slashCommand',
             name: '/loop',
@@ -55,17 +55,18 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const loopModesFormatted = new Map([
+        // TODO: create type for loop modes formatted
+        const loopModesFormatted: Map<number, string> = new Map([
             [0, 'disabled'],
             [1, 'track'],
             [2, 'queue'],
             [3, 'autoplay']
         ]);
 
-        const mode = parseInt(interaction.options.getString('mode')!);
-        const modeUserString = loopModesFormatted.get(mode);
-        const currentMode = queue.repeatMode;
-        const currentModeUserString = loopModesFormatted.get(currentMode);
+        const mode: number = parseInt(interaction.options.getString('mode')!);
+        const modeUserString: string = loopModesFormatted.get(mode)!;
+        const currentMode: QueueRepeatMode = queue.repeatMode;
+        const currentModeUserString: string = loopModesFormatted.get(currentMode)!;
 
         if (!mode && mode !== 0) {
             logger.debug('No mode input was provided, responding with current loop mode.');

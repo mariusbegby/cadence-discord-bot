@@ -2,14 +2,15 @@ import { Events } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import loggerModule from '../../services/logger';
+import { Logger } from 'pino';
 
 module.exports = {
     name: Events.Debug,
     isDebug: true,
     once: false,
     execute: async (message: string) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'debug.js',
             module: 'event',
             name: 'clientDebug',

@@ -9,9 +9,11 @@ import { createClient } from './utils/factory/createClient';
 import { createPlayer } from './utils/factory/createPlayer';
 import { registerClientCommands } from './utils/registerClientCommands';
 import { registerEventListeners } from './utils/registerEventListeners';
+import { Player } from 'discord-player';
+import { Logger } from 'pino';
 
-const executionId = uuidv4();
-const logger = loggerModule.child({
+const executionId: string = uuidv4();
+const logger: Logger = loggerModule.child({
     source: 'bot.js',
     module: 'shardingClient',
     name: 'shardingClient',
@@ -22,7 +24,7 @@ const logger = loggerModule.child({
 (async () => {
     try {
         const client: ExtendedClient = await createClient({ executionId });
-        const player = await createPlayer({ client, executionId });
+        const player: Player = await createPlayer({ client, executionId });
     
         client.on('allShardsReady', async () => {
             client.registerClientCommands = registerClientCommands;

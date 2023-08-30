@@ -1,10 +1,10 @@
 import config from 'config';
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -22,7 +22,7 @@ const command: CustomSlashCommandInteraction = {
             option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'skip.js',
             module: 'slashCommand',
             name: '/skip',
@@ -46,7 +46,7 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const skipToTrack = interaction.options.getNumber('tracknumber');
+        const skipToTrack: number = interaction.options.getNumber('tracknumber')!;
 
         if (skipToTrack) {
             if (skipToTrack > queue.tracks.data.length) {
@@ -63,7 +63,7 @@ const command: CustomSlashCommandInteraction = {
                     ]
                 });
             } else {
-                const skippedTrack = queue.currentTrack!;
+                const skippedTrack: Track = queue.currentTrack!;
                 logger.debug('Responding with warning embed.');
 
                 let durationFormat =
@@ -120,7 +120,7 @@ const command: CustomSlashCommandInteraction = {
                 });
             }
 
-            const skippedTrack = queue.currentTrack!;
+            const skippedTrack: Track = queue.currentTrack!;
 
             let durationFormat =
                 Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
@@ -133,14 +133,14 @@ const command: CustomSlashCommandInteraction = {
             queue.node.skip();
             logger.debug('Skipped current track.');
 
-            const loopModesFormatted = new Map([
+            const loopModesFormatted: Map<number, string> = new Map([
                 [0, 'disabled'],
                 [1, 'track'],
                 [2, 'queue'],
                 [3, 'autoplay']
             ]);
 
-            const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+            const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
             let authorName: string;
 

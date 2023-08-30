@@ -1,9 +1,10 @@
 import { MessageComponentInteraction } from 'discord.js';
+import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
 export const handleComponent = async (interaction: MessageComponentInteraction, executionId: string) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'interactionComponentHandler.js',
         module: 'handler',
         name: 'interactionComponentHandler',
@@ -13,8 +14,8 @@ export const handleComponent = async (interaction: MessageComponentInteraction, 
     await interaction.deferReply();
     logger.debug('Interaction deferred.');
 
-    const componentId = interaction.customId.split('_')[0];
-    const referenceId = interaction.customId.split('_')[1];
+    const componentId: string = interaction.customId.split('_')[0];
+    const referenceId: string = interaction.customId.split('_')[1];
 
     logger.debug(`Parsed componentId: ${componentId}`);
 
@@ -22,6 +23,7 @@ export const handleComponent = async (interaction: MessageComponentInteraction, 
         return;
     }
 
+    // TODO: Create TS Type for component
     const componentModule = await import(`../interactions/components/${componentId}.js`);
     const { default: component } = componentModule;
 

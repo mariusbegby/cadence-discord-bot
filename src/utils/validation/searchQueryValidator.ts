@@ -1,8 +1,9 @@
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { TransformQueryParams } from '../../types/utilTypes';
 
 export const transformQuery = async ({ query, executionId }: TransformQueryParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'searchQueryValidator.js',
         module: 'utilValidation',
         name: 'transformQuery',
@@ -15,15 +16,15 @@ export const transformQuery = async ({ query, executionId }: TransformQueryParam
             const regex: RegExp = new RegExp(
                 'https://open.spotify.com/((?:[a-z]{2,4}-[a-z]{2,4}/)|(?:[a-z]{2,4}/))(track|playlist)/([a-zA-Z0-9]+)'
             );
-            const isCountryBased = regex.test(query);
+            const isCountryBased: boolean = regex.test(query);
 
             // if country-based, transform to normal Spotify url
             if (isCountryBased) {
                 logger.debug(`Transforming country-based Spotify url to normal Spotify url from query '${query}'.`);
-                const matches = query.match(regex);
+                const matches: RegExpMatchArray | null = query.match(regex);
                 if (matches) {
-                    const type = matches[2];
-                    const trackId = matches[3];
+                    const type: string = matches[2];
+                    const trackId: string = matches[3];
                     query = `https://open.spotify.com/${type}/${trackId}`;
                 }
             }

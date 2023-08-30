@@ -1,10 +1,10 @@
 import config from 'config';
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -26,7 +26,7 @@ const command: CustomSlashCommandInteraction = {
                 .setRequired(true)
         ),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'remove.js',
             module: 'slashCommand',
             name: '/remove',
@@ -49,7 +49,7 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const removeTrackNumber = interaction.options.getNumber('tracknumber')!;
+        const removeTrackNumber: number = interaction.options.getNumber('tracknumber')!;
 
         if (removeTrackNumber > queue.tracks.data.length) {
             logger.debug('Specified track number is higher than total tracks.');
@@ -67,7 +67,7 @@ const command: CustomSlashCommandInteraction = {
         }
 
         // Remove specified track number from queue
-        const removedTrack = queue.node.remove(removeTrackNumber - 1)!;
+        const removedTrack: Track = queue.node.remove(removeTrackNumber - 1)!;
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
         let durationFormat =
             Number(removedTrack.raw.duration) === 0 || removedTrack.duration === '0:00'

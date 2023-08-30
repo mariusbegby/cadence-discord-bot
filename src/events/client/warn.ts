@@ -1,6 +1,6 @@
 import { Events } from 'discord.js';
+import { Logger } from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-
 import loggerModule from '../../services/logger';
 
 module.exports = {
@@ -8,8 +8,8 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (warning: string) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'warn.js',
             module: 'event',
             name: 'clientWarn',

@@ -3,9 +3,11 @@ import https from 'node:https';
 
 import loggerModule from '../../services/logger';
 import { PostBotStatsParams, PostBotStatsSite } from '../../types/utilTypes';
+import { Logger } from 'pino';
+import { ClientRequest, ClientRequestArgs } from 'node:http';
 
 export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'postBotStats.js',
         module: 'utilOther',
         name: 'postBotStats',
@@ -18,16 +20,16 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             return;
         }
 
-        let guildCount = 0;
-        let memberCount = 0;
-        const shardCount = client.shard.count;
-        const shardId = client.shard.ids[0];
+        let guildCount: number = 0;
+        let memberCount: number = 0;
+        const shardCount: number = client.shard.count;
+        const shardId: number = client.shard.ids[0];
 
         logger.debug('Gathering data about guild and member count from shards...');
         await client.shard
             .fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches = results as Collection<string, Guild>[];
+                const guildCaches: Collection<string, Guild>[] = results as Collection<string, Guild>[];
                 guildCaches.map((guildCache) => {
                     if (guildCache) {
                         guildCount += guildCache.size;
@@ -132,7 +134,7 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
                 return;
             }
 
-            const options = {
+            const options: ClientRequestArgs = {
                 protocol: 'https:',
                 hostname: site.hostname,
                 port: 443,
@@ -144,7 +146,7 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
                 }
             };
 
-            const request = https.request(options, (res) => {
+            const request: ClientRequest = https.request(options, (res) => {
                 if (typeof res.statusCode === 'number') {
                     res.statusCode === 200
                         ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)

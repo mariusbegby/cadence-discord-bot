@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
@@ -13,8 +14,8 @@ module.exports = {
     isDebug: false,
     once: false,
     execute: async (client: ExtendedClient) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'disconnect.js',
             module: 'event',
             name: 'clientDisconnect',
@@ -26,7 +27,7 @@ module.exports = {
 
         // send message to system message channel for event
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            const channel = (await client.channels.cache.get(
+            const channel: BaseGuildTextChannel = (await client.channels.cache.get(
                 systemOptions.systemMessageChannelId
             )) as BaseGuildTextChannel;
             if (channel) {

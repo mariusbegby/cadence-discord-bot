@@ -1,11 +1,11 @@
 import config from 'config';
-import pino from 'pino';
+import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
 
-import { LoggerOptions } from '../types/configTypes';
+import { CustomLoggerOptions } from '../types/configTypes';
 import { TargetOptions } from '../types/serviceTypes';
 
 // Retrieve logger options from config
-const loggerOptions: LoggerOptions = config.get('loggerOptions');
+const loggerOptions: CustomLoggerOptions = config.get('loggerOptions');
 
 const targets: TargetOptions[] = [
     {
@@ -59,18 +59,18 @@ if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
     });
 }
 
-const transport = pino.transport({ targets });
+const transport: DestinationStream = pino.transport({ targets });
 
 // Default properties for the logger, these will be added to every log entry
-const defaultProperties = {
+const defaultProperties: object = {
     environment: process.env.NODE_ENV || 'development'
 };
 
-const logLevelConfig = {
+const logLevelConfig: LoggerOptions = {
     level: loggerOptions.minimumLogLevel,
     timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
     base: defaultProperties
 };
 
-const logger = pino(logLevelConfig, transport);
+const logger: Logger = pino(logLevelConfig, transport);
 export default logger;

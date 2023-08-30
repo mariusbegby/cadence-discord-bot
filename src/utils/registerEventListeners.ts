@@ -5,11 +5,12 @@ import path from 'node:path';
 import { GuildQueueEvents, Player, PlayerEvents } from 'discord-player';
 import { Client } from 'discord.js';
 import loggerModule from '../services/logger';
-import { LoggerOptions } from '../types/configTypes';
+import { CustomLoggerOptions } from '../types/configTypes';
 import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
 import { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';
+import { Logger } from 'pino';
 
-const loggerOptions: LoggerOptions = config.get('loggerOptions');
+const loggerOptions: CustomLoggerOptions = config.get('loggerOptions');
 
 const registerClientEventListeners = (client: Client, event: CustomEvent) => {
     if (event.once) {
@@ -29,7 +30,7 @@ const registerProcessEventListeners = (event: CustomEvent) => {
     process.on(event.name, (...args: ProcessEventArguments) => event.execute(...args));
 };
 
-const registerPlayerEventListeners = (player: Player, event: CustomEvent, loggerOptions: LoggerOptions) => {
+const registerPlayerEventListeners = (player: Player, event: CustomEvent, loggerOptions: CustomLoggerOptions) => {
     if (!event.isDebug || (loggerOptions.minimumLogLevel === 'debug' && loggerOptions.discordPlayerDebug)) {
         if (event.isPlayerEvent) {
             player.events.on(event.name as keyof GuildQueueEvents, (...args: PlayerEventArguments) =>
@@ -42,7 +43,7 @@ const registerPlayerEventListeners = (player: Player, event: CustomEvent, logger
 };
 
 export const registerEventListeners = async ({ client, player, executionId }: RegisterEventListenersParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'registerEventListeners.js',
         module: 'register',
         name: 'registerEventListeners',
@@ -52,11 +53,11 @@ export const registerEventListeners = async ({ client, player, executionId }: Re
 
     logger.debug('Registering event listeners...');
 
-    const eventFolders = fs.readdirSync(path.resolve('./dist/events'));
+    const eventFolders: string[] = fs.readdirSync(path.resolve('./dist/events'));
     for (const folder of eventFolders) {
         logger.trace(`Registering event listener for folder '${folder}'...`);
 
-        const eventFiles = fs
+        const eventFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/events/${folder}`))
             .filter((file) => file.endsWith('.js'));
 

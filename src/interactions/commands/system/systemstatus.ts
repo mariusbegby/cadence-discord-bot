@@ -1,7 +1,6 @@
 import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
-
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
@@ -9,6 +8,7 @@ import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
@@ -22,7 +22,7 @@ const command: CustomSlashCommandInteraction = {
         .setDMPermission(false)
         .setNSFW(false),
     execute: async ({ interaction, client, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'systemstatus.js',
             module: 'slashCommand',
             name: '/systemstatus',
@@ -36,28 +36,28 @@ const command: CustomSlashCommandInteraction = {
         }
 
         // from normal /status command
-        const uptimeString = await getUptimeFormatted({ executionId });
-        const usedMemoryInMB = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-        const cpuUsage = await osu.cpu.usage();
-        const releaseVersion = version;
-        let guildCount = 0;
-        let memberCount = 0;
-        let activeVoiceConnections = 0;
-        let totalTracks = 0;
-        let totalListeners = 0;
+        const uptimeString: string = await getUptimeFormatted({ executionId });
+        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
+        const cpuUsage: number = await osu.cpu.usage();
+        const releaseVersion: string = version;
+        let guildCount: number = 0;
+        let memberCount: number = 0;
+        let activeVoiceConnections: number = 0;
+        let totalTracks: number = 0;
+        let totalListeners: number = 0;
 
         // specific to /systemstatus command
-        const totalMemoryInMb = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
-        const cpuCores = await osu.cpu.count();
-        const platform = await osu.os.platform();
-        const discordJsVersion = dependencies['discord.js'];
-        const opusVersion = dependencies['@discord-player/opus'];
-        const restVersion = dependencies['@discordjs/rest'];
-        const voiceVersion = dependencies['discord-voip'];
-        const discordPlayerVersion = dependencies['discord-player'];
-        const extractorVersion = dependencies['@discord-player/extractor'];
-        const mediaplexVersion = dependencies['mediaplex'];
-        const distubeYtdlVersion = dependencies['@distube/ytdl-core'];
+        const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
+        const cpuCores: number = await osu.cpu.count();
+        const platform: string = await osu.os.platform();
+        const discordJsVersion: string = dependencies['discord.js'];
+        const opusVersion: string = dependencies['@discord-player/opus'];
+        const restVersion: string = dependencies['@discordjs/rest'];
+        const voiceVersion: string = dependencies['discord-voip'];
+        const discordPlayerVersion: string = dependencies['discord-player'];
+        const extractorVersion: string = dependencies['@discord-player/extractor'];
+        const mediaplexVersion: string = dependencies['mediaplex'];
+        const distubeYtdlVersion: string = dependencies['@distube/ytdl-core'];
 
         logger.debug('Fetching player statistics from all shards.');
 
@@ -85,7 +85,7 @@ const command: CustomSlashCommandInteraction = {
         await client!
             .shard!.fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches = results as Guild[][];
+                const guildCaches: Guild[][] = results as Guild[][];
                 guildCaches.map((guildCache: Guild[]) => {
                     if (guildCache) {
                         guildCount += guildCache.length;
@@ -124,7 +124,7 @@ const command: CustomSlashCommandInteraction = {
             `**${mediaplexVersion}** mediaplex\n` +
             `**${distubeYtdlVersion}** @distube/ytdl-core`;
 
-        const discordStatusString = `**${client!.ws.ping} ms** Discord API latency`;
+        const discordStatusString: string = `**${client!.ws.ping} ms** Discord API latency`;
 
         logger.debug('Transformed system status into embed description.');
 

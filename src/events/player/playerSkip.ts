@@ -1,8 +1,8 @@
 import config from 'config';
 import { Track } from 'discord-player';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { Logger } from 'pino';
 import { v4 as uuidv4 } from 'uuid';
-
 import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
@@ -16,8 +16,8 @@ module.exports = {
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue: ExtendedGuildQueuePlayerNode, track: Track) => {
-        const executionId = uuidv4();
-        const logger = loggerModule.child({
+        const executionId: string = uuidv4();
+        const logger: Logger = loggerModule.child({
             source: 'playerSkip.js',
             module: 'event',
             name: 'playerSkip',
@@ -40,7 +40,7 @@ module.exports = {
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            const channel = (await queue.metadata?.client.channels.cache.get(
+            const channel: BaseGuildTextChannel = (await queue.metadata?.client.channels.cache.get(
                 systemOptions.systemMessageChannelId
             )) as BaseGuildTextChannel;
             if (channel) {

@@ -1,12 +1,12 @@
 import config from 'config';
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
@@ -21,7 +21,7 @@ const command: CustomSlashCommandInteraction = {
         .setNSFW(false)
         .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerModule.child({
+        const logger: Logger = loggerModule.child({
             source: 'queue.js',
             module: 'slashCommand',
             name: '/queue',
@@ -44,11 +44,11 @@ const command: CustomSlashCommandInteraction = {
             }
         }
 
-        const pageIndex = (interaction.options.getNumber('page') || 1) - 1;
-        let queueString = '';
+        const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
+        let queueString: string = '';
 
-        const queueLength = queue.tracks.data.length;
-        const totalPages = Math.ceil(queueLength / 10) || 1;
+        const queueLength: number = queue.tracks.data.length;
+        const totalPages: number = Math.ceil(queueLength / 10) || 1;
 
         if (pageIndex > totalPages - 1) {
             logger.debug('Specified page was higher than total pages.');
@@ -88,7 +88,7 @@ const command: CustomSlashCommandInteraction = {
                 .join('\n');
         }
 
-        const currentTrack = queue.currentTrack;
+        const currentTrack: Track = queue.currentTrack!;
 
         const loopModesFormatted = new Map([
             [0, 'disabled'],
@@ -97,9 +97,9 @@ const command: CustomSlashCommandInteraction = {
             [3, 'autoplay']
         ]);
 
-        const loopModeUserString = loopModesFormatted.get(queue.repeatMode);
+        const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
-        const repeatModeString = `${
+        const repeatModeString: string = `${
             queue.repeatMode === 0
                 ? ''
                 : `**${
@@ -129,8 +129,8 @@ const command: CustomSlashCommandInteraction = {
             });
         } else {
             logger.debug('Queue exists with current track, gathering information.');
-            const timestamp = queue.node.getTimestamp()!;
-            let bar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
+            const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+            let bar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
                 queue: false,
                 length: playerOptions.progressBar.length ?? 12,
                 timecodes: playerOptions.progressBar.timecodes ?? false,
@@ -165,7 +165,7 @@ const command: CustomSlashCommandInteraction = {
                                 `${repeatModeString}` +
                                 `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
-                        .setThumbnail(queue.currentTrack.thumbnail)
+                        .setThumbnail(currentTrack.thumbnail)
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })

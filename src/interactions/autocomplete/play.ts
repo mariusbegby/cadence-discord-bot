@@ -1,25 +1,28 @@
-import { useMainPlayer } from 'discord-player';
+import { Player, SearchResult, useMainPlayer } from 'discord-player';
+import { ApplicationCommandOptionChoiceData } from 'discord.js';
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { CustomAutocompleteInteraction } from '../../types/interactionTypes';
 
-const loggerTemplate = loggerModule.child({
+const loggerTemplate: Logger = loggerModule.child({
     source: 'play.js',
     module: 'autocompleteInteraction',
     name: '/play'
 });
 
+// TODO: create interface for recent query object
 const recentQueries = new Map();
 
 const autocomplete: CustomAutocompleteInteraction = {
     execute: async ({ interaction, executionId }) => {
-        const logger = loggerTemplate.child({
+        const logger: Logger = loggerTemplate.child({
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
 
-        const player = useMainPlayer()!;
-        const query = interaction.options.getString('query', true);
+        const player: Player = useMainPlayer()!;
+        const query: string = interaction.options.getString('query', true);
 
         const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
 
@@ -32,9 +35,9 @@ const autocomplete: CustomAutocompleteInteraction = {
             logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
             return interaction.respond([]);
         }
-        const searchResults = await player.search(query);
+        const searchResults: SearchResult = await player.search(query);
 
-        let response = [];
+        let response: ApplicationCommandOptionChoiceData<string>[] = [];
 
         response = searchResults.tracks.slice(0, 5).map((track) => {
             if (track.url.length > 100) {

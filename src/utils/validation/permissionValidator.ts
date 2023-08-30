@@ -1,13 +1,22 @@
 import config from 'config';
-import { EmbedBuilder, GuildMember, InteractionType, TextChannel, VoiceChannel } from 'discord.js';
+import {
+    EmbedBuilder,
+    GuildMember,
+    InteractionType,
+    TextBasedChannel,
+    TextChannel,
+    VoiceBasedChannel,
+    VoiceChannel
+} from 'discord.js';
 
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
@@ -16,7 +25,8 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
         guildId: interaction.guild?.id
     });
 
-    const channel = interaction.member instanceof GuildMember ? interaction.member.voice.channel : null;
+    const channel: VoiceBasedChannel | null =
+        interaction.member instanceof GuildMember ? interaction.member.voice.channel : null;
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
@@ -41,7 +51,7 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
 };
 
 export const cannotSendMessageInChannel = async ({ interaction, executionId }: CannotSendMessageInChannelParams) => {
-    const logger = loggerModule.child({
+    const logger: Logger = loggerModule.child({
         source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotSendMessageInChannel',
@@ -50,7 +60,7 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
         guildId: interaction.guild?.id
     });
 
-    const channel = interaction.channel;
+    const channel: TextBasedChannel | null = interaction.channel;
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
