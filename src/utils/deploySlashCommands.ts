@@ -51,7 +51,6 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
         process.exit(1);
     }
 
-    /*
     for (const folder of commandFolders) {
         const commandFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
@@ -59,18 +58,12 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
 
         for (const file of commandFiles) {
             // TODO: create commandModule type
-            const commandModule = await import(`../interactions/commands/${folder}/${file}`);
-            const command = commandModule.default;
+            const { default: command } = await import(`../interactions/commands/${folder}/${file}`);
             command.isSystemCommand
                 ? systemCommands.push(command.data.toJSON())
                 : slashCommands.push(command.data.toJSON());
         }
     }
-    */
-
-    const commandModule = await import('../interactions/commands/player/test.js');
-    const command = commandModule.default;
-    slashCommands.push(command.data.toJSON());
 
     try {
         logger.debug(`Bot user slash commands found: ${slashCommands.map((command) => `/${command.name}`).join(', ')}`);

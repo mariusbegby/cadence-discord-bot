@@ -72,17 +72,10 @@ export class CustomError extends Error {
 }
 
 abstract class BaseInteraction {
-    protected getLoggerBase(
-        module: string,
-        source: string,
-        name: string,
-        executionId: string,
-        interaction: Interaction
-    ): Logger {
+    protected getLoggerBase(module: string, source: string, executionId: string, interaction: Interaction): Logger {
         return loggerModule.child({
             source: source,
             module: module,
-            name: name,
             executionId: executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
@@ -108,15 +101,15 @@ export abstract class BaseCommandInteraction extends BaseInteraction {
         isBeta?: boolean
     ) {
         super();
-        this.data = data;
+        this.data = data.setDMPermission(false).setNSFW(false);
         this.isSystemCommand = isSystemCommand || false;
         this.isNew = isNew || false;
         this.isBeta = isBeta || false;
         this.embedOptions = config.get('embedOptions');
     }
 
-    protected getLogger(source: string, name: string, executionId: string, interaction: Interaction): Logger {
-        return super.getLoggerBase('slashCommand', source, name, executionId, interaction);
+    protected getLogger(source: string, executionId: string, interaction: Interaction): Logger {
+        return super.getLoggerBase('slashCommand', source, executionId, interaction);
     }
 
     abstract execute(params: BaseSlashCommandParams): Promise<Message<boolean> | void>;
