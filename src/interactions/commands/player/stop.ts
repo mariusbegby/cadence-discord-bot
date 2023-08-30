@@ -4,13 +4,13 @@ import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
 import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()

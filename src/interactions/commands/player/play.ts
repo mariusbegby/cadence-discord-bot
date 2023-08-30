@@ -3,7 +3,7 @@ import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CustomError, CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { CustomError, BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { BotOptions, EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
@@ -20,7 +20,7 @@ const loggerTemplate: Logger = loggerModule.child({
     name: '/play'
 });
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()

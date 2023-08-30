@@ -5,7 +5,7 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
@@ -19,7 +19,7 @@ const loggerTemplate: Logger = loggerModule.child({
     name: '/lyrics'
 });
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()

@@ -18,13 +18,15 @@ export const registerClientCommands = async ({ client, executionId }: RegisterCl
     logger.debug('Registering client commands...');
     client.commands = new Collection();
 
+    /*
     const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
     for (const folder of commandFolders) {
         logger.trace(`Registering client commands for folder '${folder}'...`);
+        
         const commandFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
             .filter((file) => file.endsWith('.js'));
-
+        
         for (const file of commandFiles) {
             try {
                 // delete command from require cache
@@ -44,7 +46,15 @@ export const registerClientCommands = async ({ client, executionId }: RegisterCl
                 }
             }
         }
+
     }
+    */
+
+    const commandModule = await import('../interactions/commands/player/test.js');
+    const command = commandModule.default;
+
+    logger.info(command.data);
+    client.commands.set('test', command);
 
     logger.trace('Registering client commands complete.');
 };

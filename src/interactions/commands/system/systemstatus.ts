@@ -4,7 +4,7 @@ import osu from 'node-os-utils';
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { EmbedOptions } from '../../../types/configTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
@@ -12,7 +12,7 @@ import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,

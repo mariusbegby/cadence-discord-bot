@@ -4,13 +4,13 @@ import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
+import { BaseComponentInteraction } from '../../types/interactionTypes';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
-const component: CustomComponentInteraction = {
+const component: BaseComponentInteraction = {
     execute: async ({ interaction, executionId }) => {
         const logger: Logger = loggerModule.child({
             source: 'filters-select-menu.js',

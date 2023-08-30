@@ -3,7 +3,7 @@ import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
-import { CustomAutocompleteInteraction } from '../../types/interactionTypes';
+import { BaseAutocompleteInteraction } from '../../types/interactionTypes';
 
 const loggerTemplate: Logger = loggerModule.child({
     source: 'lyrics.js',
@@ -14,7 +14,7 @@ const loggerTemplate: Logger = loggerModule.child({
 // TODO: create interface for recent query object
 const recentQueries = new Map();
 
-const autocomplete: CustomAutocompleteInteraction = {
+const autocomplete: BaseAutocompleteInteraction = {
     execute: async ({ interaction, executionId }) => {
         const logger: Logger = loggerTemplate.child({
             executionId: executionId,

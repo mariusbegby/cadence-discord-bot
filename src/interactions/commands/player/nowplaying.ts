@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 
 import loggerModule from '../../../services/logger';
-import { CustomSlashCommandInteraction, TrackMetadata } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction, TrackMetadata } from '../../../types/interactionTypes';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
@@ -21,7 +21,7 @@ import { Logger } from 'pino';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()

@@ -1,7 +1,13 @@
 import 'dotenv/config';
 
 import config from 'config';
-import { REST, RouteLike, Routes, SlashCommandBuilder } from 'discord.js';
+import {
+    REST,
+    RESTPostAPIChatInputApplicationCommandsJSONBody,
+    RouteLike,
+    Routes,
+    SlashCommandBuilder
+} from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,8 +29,8 @@ const logger: Logger = loggerModule.child({
 
 //TODO: Fix deploying not working with require()
 
-const slashCommands: SlashCommandBuilder[] = [];
-const systemCommands: SlashCommandBuilder[] = [];
+const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const systemCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
@@ -45,6 +51,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
         process.exit(1);
     }
 
+    /*
     for (const folder of commandFolders) {
         const commandFiles: string[] = fs
             .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
@@ -59,6 +66,11 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
                 : slashCommands.push(command.data.toJSON());
         }
     }
+    */
+
+    const commandModule = await import('../interactions/commands/player/test.js');
+    const command = commandModule.default;
+    slashCommands.push(command.data.toJSON());
 
     try {
         logger.debug(`Bot user slash commands found: ${slashCommands.map((command) => `/${command.name}`).join(', ')}`);

@@ -6,12 +6,12 @@ import { Logger } from 'pino';
 import { version } from '../../../../package.json';
 import loggerModule from '../../../services/logger';
 import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isNew: false,
     isBeta: false,
     data: new SlashCommandBuilder()

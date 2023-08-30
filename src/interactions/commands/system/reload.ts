@@ -4,12 +4,12 @@ import { Logger } from 'pino';
 import loggerModule from '../../../services/logger';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const command: CustomSlashCommandInteraction = {
+const command: BaseSlashCommandInteraction = {
     isSystemCommand: true,
     isNew: false,
     isBeta: false,

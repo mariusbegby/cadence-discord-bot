@@ -1,49 +1,53 @@
+import config from 'config';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+    Interaction,
     Message,
     MessageComponentInteraction,
     SlashCommandBuilder
 } from 'discord.js';
+import { Logger } from 'pino';
+import loggerModule from '../services/logger';
 import { ExtendedClient } from './clientTypes';
+import { EmbedOptions } from './configTypes';
 
-// Local types
-interface CommandParams {
-    client?: ExtendedClient;
+interface BaseInteractionParams {
     executionId: string;
-    interaction: ChatInputCommandInteraction;
 }
 
-interface AutocompleteParams {
-    executionId: string;
+export interface BaseSlashCommandParams extends BaseInteractionParams {
+    interaction: ChatInputCommandInteraction;
+    client?: ExtendedClient;
+}
+
+interface BaseAutocompleteParams {
     interaction: AutocompleteInteraction;
 }
 
-interface ComponentParams {
+interface BaseComponentParams {
     interaction: MessageComponentInteraction;
     referenceId?: string;
-    executionId: string;
 }
 
 // Interaction types
-export interface CustomSlashCommandInteraction {
+export interface BaseSlashCommandInteraction {
     isNew: boolean;
     isBeta: boolean;
     isSystemCommand?: boolean;
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
-    execute(params: CommandParams): Promise<Message<boolean> | void>;
+    execute(params: BaseSlashCommandParams): Promise<Message<boolean> | void>;
 }
 
-export interface CustomAutocompleteInteraction {
-    execute(params: AutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
+export interface BaseAutocompleteInteraction {
+    execute(params: BaseAutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
 }
 
-export interface CustomComponentInteraction {
-    execute(params: ComponentParams): Promise<Message<boolean> | void>;
+export interface BaseComponentInteraction {
+    execute(params: BaseComponentParams): Promise<Message<boolean> | void>;
 }
 
-// Command specific types
 export interface ShardInfo {
     shardId: number;
     memUsage: number;
@@ -65,4 +69,55 @@ export interface TrackMetadata {
 export class CustomError extends Error {
     type?: string;
     code?: string;
+}
+
+abstract class BaseInteraction {
+    protected getLoggerBase(
+        module: string,
+        source: string,
+        name: string,
+        executionId: string,
+        interaction: Interaction
+    ): Logger {
+        return loggerModule.child({
+            source: source,
+            module: module,
+            name: name,
+            executionId: executionId,
+            shardId: interaction.guild?.shardId,
+            guildId: interaction.guild?.id
+        });
+    }
+
+    abstract execute(
+        params: BaseInteractionParams
+    ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;
+}
+
+export abstract class BaseCommandInteraction extends BaseInteraction {
+    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+    isSystemCommand: boolean;
+    isNew: boolean;
+    isBeta: boolean;
+    embedOptions: EmbedOptions;
+
+    constructor(
+        data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
+        isSystemCommand?: boolean,
+        isNew?: boolean,
+        isBeta?: boolean
+    ) {
+        super();
+        this.data = data;
+        this.isSystemCommand = isSystemCommand || false;
+        this.isNew = isNew || false;
+        this.isBeta = isBeta || false;
+        this.embedOptions = config.get('embedOptions');
+    }
+
+    protected getLogger(source: string, name: string, executionId: string, interaction: Interaction): Logger {
+        return super.getLoggerBase('slashCommand', source, name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseSlashCommandParams): Promise<Message<boolean> | void>;
 }

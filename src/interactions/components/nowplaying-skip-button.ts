@@ -4,13 +4,13 @@ import { EmbedBuilder, GuildMember } from 'discord.js';
 
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
+import { BaseComponentInteraction } from '../../types/interactionTypes';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
 import { Logger } from 'pino';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 
-const component: CustomComponentInteraction = {
+const component: BaseComponentInteraction = {
     execute: async ({ interaction, referenceId, executionId }) => {
         const logger: Logger = loggerModule.child({
             source: 'nowplaying-skip.js',
