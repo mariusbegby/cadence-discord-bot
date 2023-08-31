@@ -1,21 +1,11 @@
-import { Client, Collection, SharedNameAndDescription } from 'discord.js';
+import { Client, Collection } from 'discord.js';
+import { BaseAutocompleteInteraction, BaseComponentInteraction, BaseSlashCommandInteraction } from './interactionTypes';
 
-type RegisterClientCommandsFunction = (params: { client: Client; executionId: string }) => void;
-
-export interface Command {
-    isNew?: boolean;
-    isBeta?: boolean;
-    isSystemCommand?: boolean;
-    data: {
-        name: string;
-        description: string;
-        options: SharedNameAndDescription[]
-    };
-    execute: (params: { interaction: object; client: ExtendedClient | undefined; executionId: string }) => void;
-    autocomplete?: (params: { interaction: object; executionId: string }) => void;
-}
+type RegisterClientInteractionsFunction = (params: { client: Client; executionId: string }) => void;
 
 export interface ExtendedClient extends Client {
-    registerClientCommands?: RegisterClientCommandsFunction;
-    commands?: Collection<string, Command>;
+    registerClientInteractions?: RegisterClientInteractionsFunction;
+    slashCommandInteractions?: Collection<string, BaseSlashCommandInteraction>;
+    autocompleteInteractions?: Collection<string, BaseAutocompleteInteraction>;
+    componentInteractions?: Collection<string, BaseComponentInteraction>;
 }

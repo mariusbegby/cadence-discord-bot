@@ -1,29 +1,25 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { CustomAutocompleteInteraction } from '../../types/interactionTypes';
-
-const loggerTemplate: Logger = loggerModule.child({
-    source: 'lyrics.js',
-    module: 'autocompleteInteraction',
-    name: '/lyrics'
-});
+import {
+    BaseAutocompleteInteraction,
+    BaseAutocompleteParams,
+    BaseAutocompleteReturnType
+} from '../../types/interactionTypes';
 
 // TODO: create interface for recent query object
 const recentQueries = new Map();
 
-const autocomplete: CustomAutocompleteInteraction = {
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerTemplate.child({
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class LyricsAutocomplete extends BaseAutocompleteInteraction {
+    constructor() {
+        super('lyrics');
+    }
+
+    async execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const query: string = interaction.options.getString('query', true);
-
         const { lastQuery, result, timestamp } = recentQueries.get(interaction.user.id);
 
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
@@ -76,6 +72,6 @@ const autocomplete: CustomAutocompleteInteraction = {
         logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
         return interaction.respond(response);
     }
-};
+}
 
-export default autocomplete;
+export default new LyricsAutocomplete();

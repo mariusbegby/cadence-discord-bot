@@ -1,32 +1,23 @@
-import config from 'config';
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { CustomSlashCommandInteraction } from '../../../types/interactionTypes';
+
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class PauseCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
+        super(data);
+    }
 
-const command: CustomSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('pause')
-        .setDescription('Pause or resume the current track.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'pause.js',
-            module: 'slashCommand',
-            name: '/pause',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -51,7 +42,7 @@ const command: CustomSlashCommandInteraction = {
                 : `\`${currentTrack.duration}\``;
 
         if (currentTrack.raw.live) {
-            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         // change paused state to opposite of current state
@@ -72,18 +63,18 @@ const command: CustomSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.pauseResumed} ${
+                        `**${this.embedOptions.icons.pauseResumed} ${
                             queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
                         }**\n**${durationFormat} [${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**`
                     )
                     .setThumbnail(currentTrack.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new PauseCommand();

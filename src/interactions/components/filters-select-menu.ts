@@ -1,25 +1,20 @@
 import config from 'config';
 import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
+import { FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
+import { BaseComponentInteraction, BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
-const component: CustomComponentInteraction = {
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'filters-select-menu.js',
-            module: 'componentInteraction',
-            name: 'filters-select-menu',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class FiltersSelectMenuComponent extends BaseComponentInteraction {
+    constructor() {
+        super('filters-select-menu');
+    }
+
+    async execute(params: BaseComponentParams): BaseComponentReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         logger.debug('Received select menu confirmation.');
 
@@ -87,7 +82,7 @@ const component: CustomComponentInteraction = {
                     })
                     .setDescription(
                         `**${
-                            embedOptions.icons.success
+                            this.embedOptions.icons.success
                         } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
                             .map((enabledFilter: string) => {
                                 const filter: FFmpegFilterOption | undefined =
@@ -103,11 +98,11 @@ const component: CustomComponentInteraction = {
                             })
                             .join('\n')}`
                     )
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });
     }
-};
+}
 
-export default component;
+export default new FiltersSelectMenuComponent();

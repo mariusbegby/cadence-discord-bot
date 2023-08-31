@@ -9,7 +9,7 @@ export interface RegisterEventListenersParams {
     executionId: string;
 }
 
-export interface RegisterClientCommandsParams {
+export interface RegisterClientInteractionsParams {
     client: ExtendedClient;
     executionId: string;
 }

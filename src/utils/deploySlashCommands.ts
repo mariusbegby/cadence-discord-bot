@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import config from 'config';
-import { REST, RouteLike, Routes, SlashCommandBuilder } from 'discord.js';
+import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,8 +23,8 @@ const logger: Logger = loggerModule.child({
 
 //TODO: Fix deploying not working with require()
 
-const slashCommands: SlashCommandBuilder[] = [];
-const systemCommands: SlashCommandBuilder[] = [];
+const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const systemCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
@@ -52,8 +52,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
 
         for (const file of commandFiles) {
             // TODO: create commandModule type
-            const commandModule = await import(`../interactions/commands/${folder}/${file}`);
-            const command = commandModule.default;
+            const { default: command } = await import(`../interactions/commands/${folder}/${file}`);
             command.isSystemCommand
                 ? systemCommands.push(command.data.toJSON())
                 : slashCommands.push(command.data.toJSON());

@@ -1,27 +1,17 @@
-import config from 'config';
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
-
-import loggerModule from '../../services/logger';
-import { EmbedOptions } from '../../types/configTypes';
-import { CustomComponentInteraction } from '../../types/interactionTypes';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { BaseComponentInteraction, BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { Logger } from 'pino';
-const embedOptions: EmbedOptions = config.get('embedOptions');
+import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
-const component: CustomComponentInteraction = {
-    execute: async ({ interaction, referenceId, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'nowplaying-skip.js',
-            module: 'componentInteraction',
-            name: 'nowplaying-skip',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class NowplayingSkipButton extends BaseComponentInteraction {
+    constructor() {
+        super('nowplaying-skip-button');
+    }
 
-        logger.debug(`Received skip confirmation for track id ${referenceId}.`);
+    async execute(params: BaseComponentParams): BaseComponentReturnType {
+        const { executionId, interaction, referenceId } = params;
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -46,9 +36,9 @@ const component: CustomComponentInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ],
                 components: []
             });
@@ -62,9 +52,9 @@ const component: CustomComponentInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                            `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ],
                 components: []
             });
@@ -77,7 +67,7 @@ const component: CustomComponentInteraction = {
                 : `\`${skippedTrack.duration}\``;
 
         if (skippedTrack.raw.live) {
-            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
         }
         queue.node.skip();
         logger.debug('Skipped the track.');
@@ -105,28 +95,28 @@ const component: CustomComponentInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${
-                            skippedTrack.raw.url ?? skippedTrack.url
-                        })**` +
+                        `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                            skippedTrack.title
+                        }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
                             `${
                                 queue.repeatMode === 0
                                     ? ''
                                     : `\n\n**${
                                         queue.repeatMode === 3
-                                            ? embedOptions.icons.autoplaying
-                                            : embedOptions.icons.looping
+                                            ? this.embedOptions.icons.autoplaying
+                                            : this.embedOptions.icons.looping
                                     } Looping**\nLoop mode is set to ${repeatModeUserString}. You can change it with **\`/loop\`**.`
                             }`
                     )
                     .setThumbnail(skippedTrack.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });
     }
-};
+}
 
-export default component;
+export default new NowplayingSkipButton();
