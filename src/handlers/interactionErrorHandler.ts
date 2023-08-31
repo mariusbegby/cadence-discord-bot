@@ -4,6 +4,7 @@ import {
     EmbedBuilder,
     Interaction,
     InteractionReplyOptions,
+    InteractionType,
     MessageComponentInteraction
 } from 'discord.js';
 import { Logger } from 'pino';
@@ -39,48 +40,53 @@ export const handleError = async (
         ]
     };
 
-    logger.error({ error, interaction }, `Error handling interaction '${interactionIdentifier}'`);
+    logger.debug(error, `Error handling interaction '${interactionIdentifier}' with execution ID ${executionId}`);
 
-    if (interaction instanceof ChatInputCommandInteraction && interaction.deferred) {
+    if (interaction instanceof ChatInputCommandInteraction) {
         switch (interaction.replied) {
             case true:
-                logger.warn(error, `Interaction '${interaction.id}' threw an error but has already been replied to.`);
+                logger.warn(
+                    error,
+                    `Interaction '${interactionIdentifier}' threw an error but has already been replied to.`
+                );
                 return;
             case false:
                 logger.debug('Responding with error embed');
                 return await interaction.editReply(errorReply);
         }
-    } else if (interaction instanceof MessageComponentInteraction && interaction.deferred) {
+    } else if (interaction instanceof MessageComponentInteraction) {
         switch (interaction.replied) {
             case true:
-                logger.warn(error, `Interaction '${interaction.id}' threw an error but has already been replied to.`);
+                logger.warn(
+                    error,
+                    `Interaction '${interactionIdentifier}' threw an error but has already been replied to.`
+                );
                 return;
             case false:
                 logger.debug('Responding with error embed');
                 return await interaction.editReply(errorReply);
         }
     } else {
-        logger.warn(
-            'Interaction threw an error but was not deferred or replied to, or was an autocomplete interaction. Cannot send error reply.'
+        logger.debug(
+            `${
+                InteractionType[interaction.type]
+            } interaction '${interactionIdentifier}' threw an error. Cannot send error reply.`
         );
-
-        if (
-            error.code === 'InteractionCollectorError' ||
-            error.message === 'Collector received no interactions before ending with reason: time'
-        ) {
-            logger.debug('Interaction response timed out.');
-            return;
-        }
 
         if (error.message === 'Unknown interaction') {
-            logger.debug('Interaction has already been responded to or does no longer exist.');
+            logger.debug('Interaction no longer exists, timed out or has already been responded to.');
             return;
         }
 
-        logger.fatal(
-            error,
-            `Unhandled error while awaiting or handling component interaction. Execution ID: ${executionId}`
-        );
-        return;
+        if (error.message === 'Collector received no interactions before ending with reason: time') {
+            logger.debug('Interaction collector response timed out.');
+            return;
+        }
     }
+
+    logger.fatal(
+        error,
+        `Unhandled error while handling interaction '${interactionIdentifier}'. Execution ID: ${executionId}`
+    );
+    return;
 };
