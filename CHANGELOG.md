@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.5...v5.1.0) (2023-08-31)
+
+
+### Features
+
+* removed source property from logger ([9aaba5e](https://github.com/mariusbegby/cadence-discord-bot/commit/9aaba5ea40880a5c245bd09ea28be51af91a0eb3))
+
+
+### Minor changes and bug fixes
+
+* more type annotation ([2560f0f](https://github.com/mariusbegby/cadence-discord-bot/commit/2560f0fe9a128a16f482195f06842d45414ea2fb))
+
 ## [5.0.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.4...v5.0.5) (2023-08-29)
 
 
