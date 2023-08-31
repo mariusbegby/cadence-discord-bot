@@ -11,7 +11,7 @@ import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validat
 class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
-            .setName('test')
+            .setName('skip')
             .setDescription('Skip track to next or specified position in queue.')
             .addNumberOption((option) =>
                 option.setName('tracknumber').setDescription('The position in queue to skip to.').setMinValue(1)

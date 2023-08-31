@@ -18,7 +18,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
 
         const commandList = client!
-            .commands!.filter((command: BaseSlashCommandInteraction) => {
+            .slashCommandInteractions!.filter((command: BaseSlashCommandInteraction) => {
                 // don't include system commands
                 if (command.isSystemCommand) {
                     return false;

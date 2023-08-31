@@ -29,7 +29,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             await client!
                 .shard!.broadcastEval(
                     async (shardClient: ExtendedClient, { executionId }) => {
-                        shardClient.registerClientCommands!({ client: shardClient, executionId });
+                        shardClient.registerClientInteractions!({ client: shardClient, executionId });
                     },
                     { context: { executionId: executionId } }
                 )
@@ -53,7 +53,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             });
         }
 
-        const commands: string[] | undefined = client!.commands?.map((command: BaseSlashCommandInteraction) => {
+        const commands: string[] | undefined = client!.slashCommandInteractions?.map((command: BaseSlashCommandInteraction) => {
             let params: string = '';
 
             if (command.data.options && command.data.options.length > 1) {

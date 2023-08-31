@@ -7,7 +7,7 @@ import loggerModule from './services/logger';
 import { ExtendedClient } from './types/clientTypes';
 import { createClient } from './utils/factory/createClient';
 import { createPlayer } from './utils/factory/createPlayer';
-import { registerClientCommands } from './utils/registerClientCommands';
+import { registerClientInteractions } from './utils/registerClientInteractions';
 import { registerEventListeners } from './utils/registerEventListeners';
 import { Player } from 'discord-player';
 import { Logger } from 'pino';
@@ -25,14 +25,14 @@ const logger: Logger = loggerModule.child({
     try {
         const client: ExtendedClient = await createClient({ executionId });
         const player: Player = await createPlayer({ client, executionId });
-    
+
         client.on('allShardsReady', async () => {
-            client.registerClientCommands = registerClientCommands;
+            client.registerClientInteractions = registerClientInteractions;
             await registerEventListeners({ client, player, executionId });
-            await registerClientCommands({ client, executionId });
+            await registerClientInteractions({ client, executionId });
             client.emit('ready', client as Client);
         });
-    
+
         client.login(process.env.DISCORD_BOT_TOKEN);
     } catch (error) {
         logger.error(error);
