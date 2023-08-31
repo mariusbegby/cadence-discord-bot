@@ -12,11 +12,11 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('remove')
-            .setDescription('Remove a specific track from the queue')
+            .setDescription('Remove specified track from the queue')
             .addNumberOption((option) =>
                 option
                     .setName('tracknumber')
-                    .setDescription('Track number to remove from queue.')
+                    .setDescription('The position in queue for track to remove.')
                     .setMinValue(1)
                     .setRequired(true)
             );
@@ -25,7 +25,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

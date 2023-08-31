@@ -13,36 +13,6 @@ import loggerModule from '../services/logger';
 import { ExtendedClient } from './clientTypes';
 import { BotOptions, EmbedOptions } from './configTypes';
 
-interface BaseInteractionParams {
-    executionId: string;
-}
-
-export interface BaseSlashCommandParams extends BaseInteractionParams {
-    interaction: ChatInputCommandInteraction;
-    client?: ExtendedClient;
-}
-
-export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
-
-interface BaseAutocompleteParams extends BaseInteractionParams {
-    interaction: AutocompleteInteraction;
-}
-
-interface BaseComponentParams extends BaseInteractionParams {
-    interaction: MessageComponentInteraction;
-    referenceId?: string;
-}
-
-// Interaction types
-
-export interface BaseAutocompleteInteraction {
-    execute(params: BaseAutocompleteParams): Promise<ApplicationCommandOptionChoiceData | void>;
-}
-
-export interface BaseComponentInteraction {
-    execute(params: BaseComponentParams): Promise<Message<boolean> | void>;
-}
-
 export interface ShardInfo {
     shardId: number;
     memUsage: number;
@@ -66,8 +36,37 @@ export class CustomError extends Error {
     code?: string;
 }
 
+interface BaseInteractionParams {
+    executionId: string;
+}
+
+export interface BaseSlashCommandParams extends BaseInteractionParams {
+    interaction: ChatInputCommandInteraction;
+    client?: ExtendedClient;
+}
+
+export interface BaseAutocompleteParams extends BaseInteractionParams {
+    interaction: AutocompleteInteraction;
+}
+
+export interface BaseComponentParams extends BaseInteractionParams {
+    interaction: MessageComponentInteraction;
+    referenceId?: string;
+}
+
+export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
+
+export type BaseAutocompleteReturnType = Promise<ApplicationCommandOptionChoiceData | void>;
+
+export type BaseComponentReturnType = Promise<Message<boolean> | void>;
+
 abstract class BaseInteraction {
-    protected getLoggerBase(module: string, name: string, executionId: string, interaction: Interaction): Logger {
+    protected getLoggerBase(
+        module: string,
+        name: string,
+        executionId: string,
+        interaction: Interaction | MessageComponentInteraction
+    ): Logger {
         return loggerModule.child({
             module: module,
             name: name,
@@ -89,7 +88,7 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
     isBeta: boolean;
     embedOptions: EmbedOptions;
     botOptions: BotOptions;
-    commandName: string;
+    name: string;
 
     constructor(
         data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
@@ -104,12 +103,46 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
         this.isBeta = isBeta;
         this.embedOptions = config.get('embedOptions');
         this.botOptions = config.get('botOptions');
-        this.commandName = data.name;
+        this.name = data.name;
     }
 
-    protected getLogger(name: string, executionId: string, interaction: Interaction): Logger {
-        return super.getLoggerBase('slashCommand', name, executionId, interaction);
+    protected getLogger(name: string, executionId: string, interaction: ChatInputCommandInteraction): Logger {
+        return super.getLoggerBase('slashCommandInteraction', name, executionId, interaction);
     }
 
     abstract execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType;
+}
+
+export abstract class BaseAutocompleteInteraction extends BaseInteraction {
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.name = name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: AutocompleteInteraction): Logger {
+        return super.getLoggerBase('autocompleteInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType;
+}
+
+export abstract class BaseComponentInteraction extends BaseInteraction {
+    embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+        this.name = name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: MessageComponentInteraction): Logger {
+        return super.getLoggerBase('componentInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseComponentParams): BaseComponentReturnType;
 }

@@ -9,13 +9,16 @@ import { notValidGuildId } from '../../../utils/validation/systemCommandValidato
 
 class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('reload').setDescription('Reload the bot commands.');
-        super(data);
+        const data = new SlashCommandBuilder()
+            .setName('reload')
+            .setDescription('Reload all slash commands across shards.');
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;

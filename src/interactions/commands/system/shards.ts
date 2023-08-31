@@ -12,11 +12,11 @@ class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('shards')
-            .setDescription('Show information about the running shards.')
+            .setDescription('Show information about all connected shards.')
             .addStringOption((option) =>
                 option
                     .setName('sort')
-                    .setDescription('If specified, what to sort the shards by.')
+                    .setDescription('What to sort the shards by.')
                     .setRequired(false)
                     .addChoices(
                         { name: 'None (Shard ID)', value: 'none' },
@@ -28,13 +28,16 @@ class ShardsCommand extends BaseSlashCommandInteraction {
                         { name: 'Members', value: 'members' }
                     )
             )
-            .addNumberOption((option) => option.setName('page').setDescription('Page number to show').setMinValue(1));
-        super(data);
+            .addNumberOption((option) =>
+                option.setName('page').setDescription('Page number to display for the shards').setMinValue(1)
+            );
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;

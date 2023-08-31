@@ -13,11 +13,11 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('lyrics')
-            .setDescription('Get lyrics from Genius for current or specified track.')
+            .setDescription('Search Genius lyrics for current or specified track.')
             .addStringOption((option) =>
                 option
                     .setName('query')
-                    .setDescription('Search query or URL.')
+                    .setDescription('Search query by text or URL.')
                     .setRequired(false)
                     .setMinLength(2)
                     .setMaxLength(500)
@@ -28,7 +28,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const query: string = interaction.options.getString('query')!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;

@@ -12,13 +12,13 @@ class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('leave')
-            .setDescription('Clear the track queue and remove the bot from voice channel.');
+            .setDescription('Clear the queue and remove bot from voice channel.');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

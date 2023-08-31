@@ -11,13 +11,13 @@ import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 class StatusCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('status').setDescription('Show the bot and system status.');
+        const data = new SlashCommandBuilder().setName('status').setDescription('Show operational status of the bot.');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
-        const logger = this.getLogger('status.js', executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const uptimeString: string = await getUptimeFormatted({ executionId });
         const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');

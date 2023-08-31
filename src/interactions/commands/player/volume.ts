@@ -12,11 +12,11 @@ class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('volume')
-            .setDescription('Show or set the playback volume for tracks.')
+            .setDescription('Show or change the playback volume for tracks.')
             .addNumberOption((option) =>
                 option
                     .setName('percentage')
-                    .setDescription('Set volume percentage from 1% to 100%.')
+                    .setDescription('Volume percentage: From 1% to 100%.')
                     .setMinValue(0)
                     .setMaxValue(100)
             );
@@ -25,7 +25,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

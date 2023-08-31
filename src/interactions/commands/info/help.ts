@@ -9,13 +9,13 @@ class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('help')
-            .setDescription('Show a list of commands and their usage.');
+            .setDescription('Show the list of bot commands.');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, client, interaction } = params;
-        const logger = this.getLogger('help.js', executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const commandList = client!
             .commands!.filter((command: BaseSlashCommandInteraction) => {

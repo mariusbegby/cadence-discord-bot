@@ -17,16 +17,16 @@ class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('queue')
-            .setDescription('Show the list of tracks added to the queue.')
+            .setDescription('Show tracks that have been added to the queue.')
             .addNumberOption((option) =>
-                option.setName('page').setDescription('Page number of the queue').setMinValue(1)
+                option.setName('page').setDescription('Page number to display for the queue').setMinValue(1)
             );
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

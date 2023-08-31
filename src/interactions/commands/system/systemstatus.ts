@@ -14,13 +14,14 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('systemstatus')
-            .setDescription('Show the bot and system status.');
-        super(data);
+            .setDescription('Show operational status of the bot with additional technical information.');
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;

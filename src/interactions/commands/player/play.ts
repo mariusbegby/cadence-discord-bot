@@ -18,11 +18,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('play')
-            .setDescription('Add a track or playlist to the queue by searching or url.')
+            .setDescription('Add a track or playlist to the queue by search query or URL.')
             .addStringOption((option) =>
                 option
                     .setName('query')
-                    .setDescription('Search query or URL.')
+                    .setDescription('Search query by text or URL')
                     .setRequired(true)
                     .setMinLength(2)
                     .setMaxLength(500)
@@ -33,7 +33,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
         if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {

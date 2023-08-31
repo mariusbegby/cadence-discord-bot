@@ -12,13 +12,13 @@ class StopCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('stop')
-            .setDescription('Stop playing audio and clear the track queue.');
+            .setDescription('Clear the queue and stop playing audio.');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

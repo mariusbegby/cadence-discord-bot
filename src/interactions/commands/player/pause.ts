@@ -11,13 +11,13 @@ import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validat
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('pause').setDescription('Pause or resume the current track.');
+        const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

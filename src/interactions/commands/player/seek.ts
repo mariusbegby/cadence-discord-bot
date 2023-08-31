@@ -12,11 +12,11 @@ class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('seek')
-            .setDescription('Seek to a specified duration in the current track.')
+            .setDescription('Seek to a duration in the current track.')
             .addStringOption((option) =>
                 option
                     .setName('duration')
-                    .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
+                    .setDescription('Duration in format 00:00:00 (HH:mm:ss).')
                     .setRequired(true)
             );
         super(data);
@@ -24,7 +24,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

@@ -16,7 +16,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
             .addStringOption(() =>
                 new SlashCommandStringOption()
                     .setName('mode')
-                    .setDescription('Mode to set for looping.')
+                    .setDescription('Loop mode: Track, queue, autoplay or disabled.')
                     .setRequired(false)
                     .addChoices(
                         { name: 'Track', value: '1' },
@@ -30,7 +30,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 

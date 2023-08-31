@@ -10,13 +10,14 @@ class GuildsCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('guilds')
-            .setDescription('Show list of guilds where bot is added.');
-        super(data);
+            .setDescription('Show the top 25 guilds by member count.');
+        const isSystemCommand: boolean = true;
+        super(data, isSystemCommand);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;

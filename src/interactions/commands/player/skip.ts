@@ -12,16 +12,16 @@ class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('test')
-            .setDescription('Skip current or specified track.')
+            .setDescription('Skip track to next or specified position in queue.')
             .addNumberOption((option) =>
-                option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
+                option.setName('tracknumber').setDescription('The position in queue to skip to.').setMinValue(1)
             );
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
-        const logger = this.getLogger(this.commandName, executionId, interaction);
+        const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
