@@ -18,7 +18,6 @@ module.exports = {
     execute: async (queue: ExtendedGuildQueuePlayerNode, track: Track) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'playerSkip.js',
             module: 'event',
             name: 'playerSkip',
             executionId: executionId,

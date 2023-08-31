@@ -16,7 +16,6 @@ module.exports = {
     execute: async (client: ExtendedClient) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'reconnecting.js',
             module: 'event',
             name: 'clientReconnecting',
             executionId: executionId,

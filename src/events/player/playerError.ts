@@ -17,7 +17,6 @@ module.exports = {
     execute: async (queue: ExtendedGuildQueuePlayerNode, error: Error) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'playerError.js',
             module: 'event',
             name: 'playerError',
             executionId: executionId,

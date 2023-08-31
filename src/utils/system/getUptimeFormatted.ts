@@ -4,7 +4,6 @@ import { GetUptimeFormattedParams } from '../../types/utilTypes';
 
 export const getUptimeFormatted = async ({ executionId }: GetUptimeFormattedParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'getUptimeFormatted.js',
         module: 'utilSystem',
         name: 'getUptimeFormatted',
         executionId: executionId

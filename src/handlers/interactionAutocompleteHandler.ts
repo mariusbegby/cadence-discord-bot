@@ -12,7 +12,6 @@ export const handleAutocomplete = async (
 ) => {
     // TODO: Define TS Type for handlers, and require logger constant?
     const logger: Logger = loggerModule.child({
-        source: 'interactionAutocompleteHandler.ts',
         module: 'handler',
         name: 'interactionAutocompleteHandler',
         executionId: executionId

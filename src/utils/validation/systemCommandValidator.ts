@@ -10,7 +10,6 @@ const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
 export const notValidGuildId = async ({ interaction, executionId }: NotValidGuildIdParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'systemCommandValidator.js',
         module: 'utilValidation',
         name: 'notValidGuildId',
         executionId: executionId,

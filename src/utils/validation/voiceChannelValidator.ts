@@ -9,7 +9,6 @@ import { NotInSameVoiceChannelParams, NotInVoiceChannelParams } from '../../type
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoiceChannelParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'voiceChannelValidator.js',
         module: 'validator',
         name: 'notInVoiceChannel',
         executionId: executionId,
@@ -40,7 +39,6 @@ export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoice
 
 export const notInSameVoiceChannel = async ({ interaction, queue, executionId }: NotInSameVoiceChannelParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'voiceChannelValidator.js',
         module: 'utilValidation',
         name: 'notInSameVoiceChannel',
         executionId: executionId,

@@ -9,7 +9,6 @@ import { ExtendedClient } from '../types/clientTypes';
 
 export const registerClientInteractions = async ({ client, executionId }: RegisterClientInteractionsParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'registerClientInteractions.js',
         module: 'register',
         name: 'registerClientInteractions',
         executionId: executionId,

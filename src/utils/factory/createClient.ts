@@ -5,7 +5,6 @@ import { Logger } from 'pino';
 
 export const createClient = async ({ executionId }: { executionId: string }) => {
     const logger: Logger = loggerModule.child({
-        source: 'createClient.js',
         module: 'utilFactory',
         name: 'createClient',
         executionId: executionId,

@@ -20,7 +20,6 @@ module.exports = {
     execute: async (client: ExtendedClient) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'ready.js',
             module: 'event',
             name: 'clientReady',
             executionId: executionId,

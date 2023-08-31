@@ -14,7 +14,6 @@ import { Logger } from 'pino';
 
 const executionId: string = uuidv4();
 const logger: Logger = loggerModule.child({
-    source: 'bot.js',
     module: 'shardingClient',
     name: 'shardingClient',
     executionId: executionId,

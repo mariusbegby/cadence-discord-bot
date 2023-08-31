@@ -10,7 +10,6 @@ const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
 export const startLoadTest = async ({ client, executionId }: StartLoadTestParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'startLoadTest.js',
         module: 'utilOther',
         name: 'startLoadTest',
         executionId: executionId,

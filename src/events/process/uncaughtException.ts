@@ -8,7 +8,6 @@ module.exports = {
     execute: async (error: Error) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'uncaughtException.js',
             module: 'event',
             name: 'uncaughtException',
             executionId: executionId

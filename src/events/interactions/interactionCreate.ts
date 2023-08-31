@@ -23,7 +23,6 @@ module.exports = {
         const inputTime: number = new Date().getTime();
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'interactionCreate.js',
             module: 'event',
             name: 'interactionCreate',
             executionId: executionId,

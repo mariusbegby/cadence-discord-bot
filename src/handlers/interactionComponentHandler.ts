@@ -12,7 +12,6 @@ export const handleComponent = async (
     interactionIdentifier: string
 ) => {
     const logger: Logger = loggerModule.child({
-        source: 'interactionComponentHandler.js',
         module: 'handler',
         name: 'interactionComponentHandler',
         executionId: executionId

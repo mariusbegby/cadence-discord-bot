@@ -9,7 +9,6 @@ module.exports = {
     execute: async (message: string) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'playerDebug.js',
             module: 'event',
             name: 'playerDebug',
             executionId: executionId

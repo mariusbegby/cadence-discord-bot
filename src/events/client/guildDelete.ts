@@ -11,7 +11,6 @@ module.exports = {
     execute: async (guild: Guild) => {
         const executionId: string = uuidv4();
         const logger: Logger = loggerModule.child({
-            source: 'guildDelete.js',
             module: 'event',
             name: 'guildDelete',
             executionId: executionId,

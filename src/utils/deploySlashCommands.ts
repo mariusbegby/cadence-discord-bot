@@ -15,7 +15,6 @@ const systemOptions: SystemOptions = config.get('systemOptions');
 const executionId: string = uuidv4();
 
 const logger: Logger = loggerModule.child({
-    source: 'deploySlashCommands.js',
     module: 'deploy',
     name: 'deploySlashCommands',
     executionId: executionId

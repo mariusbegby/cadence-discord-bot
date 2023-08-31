@@ -44,7 +44,6 @@ const registerPlayerEventListeners = (player: Player, event: CustomEvent, logger
 
 export const registerEventListeners = async ({ client, player, executionId }: RegisterEventListenersParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'registerEventListeners.js',
         module: 'register',
         name: 'registerEventListeners',
         executionId: executionId,

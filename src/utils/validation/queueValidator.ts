@@ -9,7 +9,6 @@ import { Logger } from 'pino';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueDoesNotExist',
         executionId: executionId,
@@ -40,7 +39,6 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
 
 export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: QueueNoCurrentTrackParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
         executionId: executionId,
@@ -71,7 +69,6 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
 
 export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsEmptyParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'queueValidator.js',
         module: 'utilValidation',
         name: 'queueIsEmpty',
         executionId: executionId,

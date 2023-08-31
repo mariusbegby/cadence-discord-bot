@@ -4,7 +4,6 @@ import { TransformQueryParams } from '../../types/utilTypes';
 
 export const transformQuery = async ({ query, executionId }: TransformQueryParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'searchQueryValidator.js',
         module: 'utilValidation',
         name: 'transformQuery',
         executionId: executionId

@@ -21,7 +21,6 @@ manager.on('shardCreate', (shard: Shard) => {
     const executionId: string = uuidv4();
 
     const logger: Logger = loggerModule.child({
-        source: 'index.js',
         module: 'shardingManager',
         name: 'shardingManager',
         executionId: executionId,

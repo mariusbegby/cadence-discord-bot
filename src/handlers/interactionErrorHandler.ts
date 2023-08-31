@@ -22,7 +22,6 @@ export const handleError = async (
     interactionIdentifier: string
 ) => {
     const logger: Logger = loggerModule.child({
-        source: 'interactionErrorHandler.ts',
         module: 'handler',
         name: 'interactionErrorHandler',
         executionId: executionId

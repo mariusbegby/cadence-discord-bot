@@ -8,7 +8,6 @@ import { ClientRequest, ClientRequestArgs } from 'node:http';
 
 export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'postBotStats.js',
         module: 'utilOther',
         name: 'postBotStats',
         executionId: executionId,

@@ -17,7 +17,6 @@ import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '.
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
         executionId: executionId,
@@ -52,7 +51,6 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
 
 export const cannotSendMessageInChannel = async ({ interaction, executionId }: CannotSendMessageInChannelParams) => {
     const logger: Logger = loggerModule.child({
-        source: 'permissionValidator.js',
         module: 'utilValidation',
         name: 'cannotSendMessageInChannel',
         executionId: executionId,

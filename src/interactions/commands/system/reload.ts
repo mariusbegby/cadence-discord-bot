@@ -11,7 +11,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('reload')
-            .setDescription('Reload all slash commands across shards.');
+            .setDescription('Reload slash command, autocomplete and component interactions across shards.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }
@@ -25,7 +25,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         }
 
         try {
-            logger.debug('Reloading commands across all shards.');
+            logger.debug('Reloading interaction module across all shards.');
             await client!
                 .shard!.broadcastEval(
                     async (shardClient: ExtendedClient, { executionId }) => {
@@ -34,10 +34,10 @@ class ReloadCommand extends BaseSlashCommandInteraction {
                     { context: { executionId: executionId } }
                 )
                 .then(() => {
-                    logger.debug('Successfully reloaded commands across all shards.');
+                    logger.debug('Successfully reloaded interaction module across all shards.');
                 });
         } catch (error) {
-            logger.error(error, 'Failed to reload commands across shards.');
+            logger.error(error, 'Failed to reload interaction module across shards.');
 
             logger.debug('Responding with error embed.');
             return await interaction.editReply({
@@ -45,7 +45,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
                     new EmbedBuilder()
 
                         .setDescription(
-                            `**${this.embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to reload commands across shards.`
+                            `**${this.embedOptions.icons.error} Oops!**\n_Hmm.._ It seems I am unable to reload interaction module across shards.`
                         )
                         .setColor(this.embedOptions.colors.error)
                         .setFooter({ text: `Execution ID: ${executionId}` })
@@ -53,19 +53,21 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             });
         }
 
-        const commands: string[] | undefined = client!.slashCommandInteractions?.map((command: BaseSlashCommandInteraction) => {
-            let params: string = '';
+        const commands: string[] | undefined = client!.slashCommandInteractions?.map(
+            (command: BaseSlashCommandInteraction) => {
+                let params: string = '';
 
-            if (command.data.options && command.data.options.length > 1) {
-                const options = command.data.options as unknown as ApplicationCommandOptionData[];
+                if (command.data.options && command.data.options.length > 1) {
+                    const options = command.data.options as unknown as ApplicationCommandOptionData[];
 
-                options.map((option: ApplicationCommandOption) => {
-                    params += `**\`${option.name}\`**` + ' ';
-                });
+                    options.map((option: ApplicationCommandOption) => {
+                        params += `**\`${option.name}\`**` + ' ';
+                    });
+                }
+
+                return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
             }
-
-            return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
-        });
+        );
 
         const embedDescription: string =
             `**${this.embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
