@@ -35,9 +35,9 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel you are in.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
+                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel you are in.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 
@@ -84,9 +84,9 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${this.embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
                             )
-                            .setColor(this.embedOptions.colors.warning)
+                            .setColor(embedOptions.colors.warning)
                     ]
                 });
             }

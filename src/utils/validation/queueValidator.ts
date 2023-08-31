@@ -25,9 +25,9 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 
@@ -56,9 +56,9 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 
@@ -87,9 +87,9 @@ export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsE
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere are no tracks added to the queue. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks added to the queue. First add some tracks with **\`/play\`**!`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 

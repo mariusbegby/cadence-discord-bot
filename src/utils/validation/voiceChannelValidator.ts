@@ -25,9 +25,9 @@ export const notInVoiceChannel = async ({ interaction, executionId }: NotInVoice
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Not in a voice channel**\nYou need to be in a voice channel to use this command.`
+                        `**${embedOptions.icons.warning} Not in a voice channel**\nYou need to be in a voice channel to use this command.`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 
@@ -64,9 +64,9 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId }:
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Not in same voice channel**\nYou need to be in the same voice channel as me to use this command.\n\n**Voice channel:** ${queue.dispatcher.channel.name}`
+                        `**${embedOptions.icons.warning} Not in same voice channel**\nYou need to be in the same voice channel as me to use this command.\n\n**Voice channel:** ${queue.dispatcher.channel.name}`
                     )
-                    .setColor(this.embedOptions.colors.warning)
+                    .setColor(embedOptions.colors.warning)
             ]
         });
 

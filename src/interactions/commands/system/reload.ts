@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOption, ApplicationCommandOptionData, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { ExtendedClient } from '../../../types/clientTypes';
 import {
     BaseSlashCommandInteraction,
@@ -50,8 +50,17 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             });
         }
 
-        const commands: string[] | undefined = client!.commands?.map((command) => {
-            const params: string = command.data.options[0] ? `**\`${command.data.options[0].name}\`**` + ' ' : '';
+        const commands: string[] | undefined = client!.commands?.map((command: BaseSlashCommandInteraction) => {
+            let params: string = '';
+
+            if (command.data.options && command.data.options.length > 1) {
+                const options = command.data.options as unknown as ApplicationCommandOptionData[];
+
+                options.map((option: ApplicationCommandOption) => {
+                    params += `**\`${option.name}\`**` + ' ';
+                });
+            }
+
             return `- **\`/${command.data.name}\`** ${params}- ${command.data.description}`;
         });
 

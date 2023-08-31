@@ -27,9 +27,9 @@ export const handleError = async (
         embeds: [
             new EmbedBuilder()
                 .setDescription(
-                    `**${this.embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                 )
-                .setColor(this.embedOptions.colors.error)
+                .setColor(embedOptions.colors.error)
                 .setFooter({ text: `Execution ID: ${executionId}` })
         ]
     };

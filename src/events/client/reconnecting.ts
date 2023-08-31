@@ -36,10 +36,10 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `${this.embedOptions.icons.warning} **${client.user?.tag}** is **\`reconnecting\`**!` +
+                                    `${embedOptions.icons.warning} **${client.user?.tag}** is **\`reconnecting\`**!` +
                                         `\n\n<@${systemOptions.systemUserId}>`
                                 )
-                                .setColor(this.embedOptions.colors.warning)
+                                .setColor(embedOptions.colors.warning)
                         ]
                     });
                 }

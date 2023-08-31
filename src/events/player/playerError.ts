@@ -31,9 +31,9 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while streaming the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while streaming the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
                     )
-                    .setColor(this.embedOptions.colors.error)
+                    .setColor(embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
@@ -47,10 +47,10 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${this.embedOptions.icons.error} **player.events.on('playerError')**\nExecution id: ${executionId}\n${error.message}` +
+                                `${embedOptions.icons.error} **player.events.on('playerError')**\nExecution id: ${executionId}\n${error.message}` +
                                     `\n\n<@${systemOptions.systemUserId}>`
                             )
-                            .setColor(this.embedOptions.colors.error)
+                            .setColor(embedOptions.colors.error)
                             .setFooter({ text: `Execution ID: ${executionId}` })
                     ]
                 });
