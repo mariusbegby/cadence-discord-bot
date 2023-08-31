@@ -26,9 +26,9 @@ export const notValidGuildId = async ({ interaction, executionId }: NotValidGuil
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
+                        `**${this.embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
                     )
-                    .setColor(embedOptions.colors.warning)
+                    .setColor(this.embedOptions.colors.warning)
             ]
         });
 

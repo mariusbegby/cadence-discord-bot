@@ -46,9 +46,9 @@ const component: BaseComponentInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                            `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ],
                 components: []
             });
@@ -62,9 +62,9 @@ const component: BaseComponentInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                            `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ],
                 components: []
             });
@@ -77,7 +77,7 @@ const component: BaseComponentInteraction = {
                 : `\`${skippedTrack.duration}\``;
 
         if (skippedTrack.raw.live) {
-            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
         }
         queue.node.skip();
         logger.debug('Skipped the track.');
@@ -105,10 +105,10 @@ const component: BaseComponentInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${
+                        `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${skippedTrack.title}](${
                             skippedTrack.raw.url ?? skippedTrack.url
                         })**` +
                             `${
@@ -122,7 +122,7 @@ const component: BaseComponentInteraction = {
                             }`
                     )
                     .setThumbnail(skippedTrack.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });

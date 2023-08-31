@@ -103,7 +103,7 @@ const component: BaseComponentInteraction = {
                             })
                             .join('\n')}`
                     )
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });

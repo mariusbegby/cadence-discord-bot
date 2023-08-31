@@ -1,35 +1,26 @@
-import config from 'config';
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
-import loggerModule from '../../../services/logger';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
-import { EmbedOptions } from '../../../types/configTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
-import { Logger } from 'pino';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class SystemStatusCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('systemstatus')
+            .setDescription('Show the bot and system status.');
+        super(data);
+    }
 
-const command: BaseSlashCommandInteraction = {
-    isSystemCommand: true,
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('systemstatus')
-        .setDescription('Show the bot and system status.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, client, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'systemstatus.js',
-            module: 'slashCommand',
-            name: '/systemstatus',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction, client } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         if (await notValidGuildId({ interaction, executionId })) {
             return;
@@ -132,33 +123,33 @@ const command: BaseSlashCommandInteraction = {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**${embedOptions.icons.bot} Bot status**\n` + botStatusString)
+                    .setDescription(`**${this.embedOptions.icons.bot} Bot status**\n` + botStatusString)
                     .addFields(
                         {
-                            name: `**${embedOptions.icons.queue} Queue status**`,
+                            name: `**${this.embedOptions.icons.queue} Queue status**`,
                             value: queueStatusString,
                             inline: false
                         },
                         {
-                            name: `**${embedOptions.icons.server} System status**`,
+                            name: `**${this.embedOptions.icons.server} System status**`,
                             value: systemStatusString,
                             inline: false
                         },
                         {
-                            name: `**${embedOptions.icons.discord} Discord status**`,
+                            name: `**${this.embedOptions.icons.discord} Discord status**`,
                             value: discordStatusString,
                             inline: false
                         },
                         {
-                            name: `**${embedOptions.icons.bot} Dependencies**`,
+                            name: `**${this.embedOptions.icons.bot} Dependencies**`,
                             value: dependenciesString,
                             inline: false
                         }
                     )
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new SystemStatusCommand();

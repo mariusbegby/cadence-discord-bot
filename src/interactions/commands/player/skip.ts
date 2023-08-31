@@ -1,35 +1,27 @@
-import config from 'config';
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class SkipCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('test')
+            .setDescription('Skip current or specified track.')
+            .addNumberOption((option) =>
+                option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
+            );
+        super(data);
+    }
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('skip')
-        .setDescription('Skip current or specified track.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addNumberOption((option) =>
-            option.setName('tracknumber').setDescription('Track number to skip to in the queue.').setMinValue(1)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'skip.js',
-            module: 'slashCommand',
-            name: '/skip',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -57,9 +49,9 @@ const command: BaseSlashCommandInteraction = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nThere are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${skipToTrack}\`**.\n\nView tracks added to the queue with **\`/queue\`**.`
+                                `**${this.embedOptions.icons.warning} Oops!**\nThere are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${skipToTrack}\`**.\n\nView tracks added to the queue with **\`/queue\`**.`
                             )
-                            .setColor(embedOptions.colors.warning)
+                            .setColor(this.embedOptions.colors.warning)
                     ]
                 });
             } else {
@@ -72,7 +64,7 @@ const command: BaseSlashCommandInteraction = {
                         : `\`${skippedTrack.duration}\``;
 
                 if (skippedTrack.raw.live) {
-                    durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+                    durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
                 }
 
                 queue.node.skipTo(skipToTrack - 1);
@@ -92,15 +84,15 @@ const command: BaseSlashCommandInteraction = {
                         new EmbedBuilder()
                             .setAuthor({
                                 name: authorName,
-                                iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                                iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                             })
                             .setDescription(
-                                `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                                `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                                     skippedTrack.title
                                 }](${skippedTrack.raw.url ?? skippedTrack.url})**`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
-                            .setColor(embedOptions.colors.success)
+                            .setColor(this.embedOptions.colors.success)
                     ]
                 });
             }
@@ -113,9 +105,9 @@ const command: BaseSlashCommandInteraction = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                                `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                             )
-                            .setColor(embedOptions.colors.warning)
+                            .setColor(this.embedOptions.colors.warning)
                     ]
                 });
             }
@@ -128,7 +120,7 @@ const command: BaseSlashCommandInteraction = {
                     : `\`${skippedTrack.duration}\``;
 
             if (skippedTrack.raw.live) {
-                durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+                durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
             }
             queue.node.skip();
             logger.debug('Skipped current track.');
@@ -156,10 +148,10 @@ const command: BaseSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: authorName,
-                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
+                            `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                                 skippedTrack.title
                             }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
                                 `${
@@ -167,17 +159,17 @@ const command: BaseSlashCommandInteraction = {
                                         ? ''
                                         : `\n\n**${
                                             queue.repeatMode === 3
-                                                ? embedOptions.icons.autoplaying
-                                                : embedOptions.icons.looping
+                                                ? this.embedOptions.icons.autoplaying
+                                                : this.embedOptions.icons.looping
                                         } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
                                 }`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }
     }
-};
+}
 
-export default command;
+export default new SkipCommand();

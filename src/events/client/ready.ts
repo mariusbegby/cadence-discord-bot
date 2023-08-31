@@ -50,9 +50,9 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.success} All shards ready**\n**${client.user?.tag}** is now **\`online\`**!`
+                            `**${this.embedOptions.icons.success} All shards ready**\n**${client.user?.tag}** is now **\`online\`**!`
                         )
-                        .setColor(embedOptions.colors.success)
+                        .setColor(this.embedOptions.colors.success)
                 ]
             });
         }

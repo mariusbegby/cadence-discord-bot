@@ -1,39 +1,31 @@
-import config from 'config';
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class RemoveCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('remove')
+            .setDescription('Remove a specific track from the queue')
+            .addNumberOption((option) =>
+                option
+                    .setName('tracknumber')
+                    .setDescription('Track number to remove from queue.')
+                    .setMinValue(1)
+                    .setRequired(true)
+            );
+        super(data);
+    }
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('remove')
-        .setDescription('Remove a specific track from the queue.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addNumberOption((option) =>
-            option
-                .setName('tracknumber')
-                .setDescription('Track number to remove from queue.')
-                .setMinValue(1)
-                .setRequired(true)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'remove.js',
-            module: 'slashCommand',
-            name: '/remove',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -59,9 +51,9 @@ const command: BaseSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nTrack **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
+                            `**${this.embedOptions.icons.warning} Oops!**\nTrack **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -75,7 +67,7 @@ const command: BaseSlashCommandInteraction = {
                 : `\`${removedTrack.duration}\``;
 
         if (removedTrack.raw.live) {
-            durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
         }
 
         let authorName: string;
@@ -92,18 +84,18 @@ const command: BaseSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Removed track**\n**${durationFormat} [${removedTrack.title}](${
-                            removedTrack.raw.url ?? removedTrack.url
-                        })**`
+                        `**${this.embedOptions.icons.success} Removed track**\n**${durationFormat} [${
+                            removedTrack.title
+                        }](${removedTrack.raw.url ?? removedTrack.url})**`
                     )
                     .setThumbnail(removedTrack.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new RemoveCommand();

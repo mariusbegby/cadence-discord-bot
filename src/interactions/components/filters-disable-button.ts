@@ -56,12 +56,12 @@ const component: BaseComponentInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
+                        `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
                     )
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ],
             components: []
         });

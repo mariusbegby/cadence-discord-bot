@@ -1,34 +1,32 @@
 import config from 'config';
 import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
 import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('queue')
-        .setDescription('Show the list of tracks added to the queue.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addNumberOption((option) => option.setName('page').setDescription('Page number of the queue').setMinValue(1)),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'queue.js',
-            module: 'slashCommand',
-            name: '/queue',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class QueueCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('queue')
+            .setDescription('Show the list of tracks added to the queue.')
+            .addNumberOption((option) =>
+                option.setName('page').setDescription('Page number of the queue').setMinValue(1)
+            );
+        super(data);
+    }
+
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -58,11 +56,11 @@ const command: BaseSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nPage **\`${
+                            `**${this.embedOptions.icons.warning} Oops!**\nPage **\`${
                                 pageIndex + 1
                             }\`** is not a valid page number.\n\nThere are only a total of **\`${totalPages}\`** pages in the queue.`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -78,7 +76,7 @@ const command: BaseSlashCommandInteraction = {
                         Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
 
                     if (track.raw.live) {
-                        durationFormat = `${embedOptions.icons.liveTrack} \`LIVE\``;
+                        durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
                     }
 
                     return `**${pageIndex * 10 + index + 1}.** **${durationFormat} [${track.title}](${
@@ -116,15 +114,16 @@ const command: BaseSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `${repeatModeString}` + `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
+                            `${repeatModeString}` +
+                                `**${this.embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })
-                        .setColor(embedOptions.colors.info)
+                        .setColor(this.embedOptions.colors.info)
                 ]
             });
         } else {
@@ -144,7 +143,7 @@ const command: BaseSlashCommandInteraction = {
             }
 
             if (currentTrack.raw.live) {
-                bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
+                bar = `${this.embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
             }
 
             logger.debug('Responding with info embed.');
@@ -153,27 +152,27 @@ const command: BaseSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setAuthor({
                             name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
+                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
                         })
                         .setDescription(
-                            `**${embedOptions.icons.audioPlaying} Now playing**\n` +
+                            `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
                                 (currentTrack
                                     ? `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**`
                                     : 'None') +
                                 `\nRequested by: <@${currentTrack.requestedBy?.id}>` +
                                 `\n ${bar}\n\n` +
                                 `${repeatModeString}` +
-                                `**${embedOptions.icons.queue} Tracks in queue**\n${queueString}`
+                                `**${this.embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
                         .setThumbnail(currentTrack.thumbnail)
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })
-                        .setColor(embedOptions.colors.info)
+                        .setColor(this.embedOptions.colors.info)
                 ]
             });
         }
     }
-};
+}
 
-export default command;
+export default new QueueCommand();

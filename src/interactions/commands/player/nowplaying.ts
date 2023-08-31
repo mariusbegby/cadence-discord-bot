@@ -10,34 +10,29 @@ import {
     EmbedBuilder,
     SlashCommandBuilder
 } from 'discord.js';
-
-import loggerModule from '../../../services/logger';
-import { BaseSlashCommandInteraction, TrackMetadata } from '../../../types/interactionTypes';
-import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
+import { PlayerOptions } from '../../../types/configTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType,
+    TrackMetadata
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { Logger } from 'pino';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('nowplaying')
-        .setDescription('Show information about the track currently playing.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'nowplaying.js',
-            module: 'slashCommand',
-            name: '/nowplaying',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class NowPlayingCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('nowplaying')
+            .setDescription('Show information about the track currently playing.');
+        super(data);
+    }
+
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -64,11 +59,11 @@ const command: BaseSlashCommandInteraction = {
         ]);
 
         const sourceIcons: Map<string, string> = new Map([
-            ['youtube', embedOptions.icons.sourceYouTube],
-            ['soundcloud', embedOptions.icons.sourceSoundCloud],
-            ['spotify', embedOptions.icons.sourceSpotify],
-            ['apple_music', embedOptions.icons.sourceAppleMusic],
-            ['arbitrary', embedOptions.icons.sourceArbitrary]
+            ['youtube', this.embedOptions.icons.sourceYouTube],
+            ['soundcloud', this.embedOptions.icons.sourceSoundCloud],
+            ['spotify', this.embedOptions.icons.sourceSpotify],
+            ['apple_music', this.embedOptions.icons.sourceAppleMusic],
+            ['arbitrary', this.embedOptions.icons.sourceArbitrary]
         ]);
 
         const currentTrack: Track = queue.currentTrack!;
@@ -106,7 +101,7 @@ const command: BaseSlashCommandInteraction = {
         }
 
         if (currentTrack.raw.live) {
-            bar = `${embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
+            bar = `${this.embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
         }
 
         const customId: string = `nowplaying-skip-button_${currentTrack.id}`;
@@ -116,7 +111,7 @@ const command: BaseSlashCommandInteraction = {
             .setCustomId(customId)
             .setLabel('Skip track')
             .setStyle(ButtonStyle.Secondary)
-            .setEmoji(embedOptions.icons.nextTrack)
+            .setEmoji(this.embedOptions.icons.nextTrack)
             .toJSON();
 
         const nowPlayingActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
@@ -141,12 +136,12 @@ const command: BaseSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                        iconURL: interaction.guild!.iconURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
-                            : `**${embedOptions.icons.audioPlaying} Now Playing**\n`) +
+                            : `**${this.embedOptions.icons.audioPlaying} Now Playing**\n`) +
                             `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy?.id}>` +
                             `\n ${bar}\n\n` +
@@ -154,7 +149,9 @@ const command: BaseSlashCommandInteraction = {
                                 queue.repeatMode === 0
                                     ? ''
                                     : `**${
-                                        queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
+                                        queue.repeatMode === 3
+                                            ? this.embedOptions.icons.autoplay
+                                            : this.embedOptions.icons.loop
                                     } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
                             }`
                     )
@@ -181,11 +178,11 @@ const command: BaseSlashCommandInteraction = {
                         text: queueLength ? `${queueLength} other tracks in the queue...` : ' '
                     })
                     .setThumbnail(queue.currentTrack!.thumbnail)
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ],
             components: [nowPlayingActionRow as APIActionRowComponent<APIMessageActionRowComponent>]
         });
     }
-};
+}
 
-export default command;
+export default new NowPlayingCommand();

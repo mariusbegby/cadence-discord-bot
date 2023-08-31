@@ -1,38 +1,30 @@
-import config from 'config';
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions } from '../../../types/configTypes';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
+class SeekCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('seek')
+            .setDescription('Seek to a specified duration in the current track.')
+            .addStringOption((option) =>
+                option
+                    .setName('duration')
+                    .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
+                    .setRequired(true)
+            );
+        super(data);
+    }
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('seek')
-        .setDescription('Seek to a specified duration in the current track.')
-        .setDMPermission(false)
-        .setNSFW(false)
-        .addStringOption((option) =>
-            option
-                .setName('duration')
-                .setDescription('Duration in format 00:00:00 (HH:mm:ss) to seek to.')
-                .setRequired(true)
-        ),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'seek.js',
-            module: 'slashCommand',
-            name: '/seek',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -78,12 +70,12 @@ const command: BaseSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                            `**${this.embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
                                 '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -100,12 +92,12 @@ const command: BaseSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                            `**${this.embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
                                 '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -123,12 +115,12 @@ const command: BaseSlashCommandInteraction = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
+                            `**${this.embedOptions.icons.warning} Oops!**\nYou entered an invalid duration format, **\`${durationString}\`**.\n\nPlease use the format **\`HH:mm:ss\`**, **\`mm:ss\`** or **\`ss\`**, where **\`HH\`** is hours, **\`mm\`** is minutes and **\`ss\`** is seconds.\n\n**Examples:**\n` +
                                 '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
                                 '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
                                 '- **`/seek`** **`42`** - Seek to 42 seconds.'
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -146,12 +138,12 @@ const command: BaseSlashCommandInteraction = {
                     new EmbedBuilder()
                         .setDescription(
                             `**${
-                                embedOptions.icons.warning
+                                this.embedOptions.icons.warning
                             } Oops!**\nYou entered **\`${durationString}\`**, which is a duration that is longer than the duration for the current track.\n\nPlease try a duration that is less than the duration of the track (**\`${
                                 queue.currentTrack!.duration
                             }\`**).`
                         )
-                        .setColor(embedOptions.colors.warning)
+                        .setColor(this.embedOptions.colors.warning)
                 ]
             });
         }
@@ -173,16 +165,16 @@ const command: BaseSlashCommandInteraction = {
                 new EmbedBuilder()
                     .setAuthor({
                         name: authorName,
-                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
                     })
                     .setDescription(
-                        `**${embedOptions.icons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
+                        `**${this.embedOptions.icons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
                     )
                     .setThumbnail(queue.currentTrack!.thumbnail)
-                    .setColor(embedOptions.colors.success)
+                    .setColor(this.embedOptions.colors.success)
             ]
         });
     }
-};
+}
 
-export default command;
+export default new SeekCommand();

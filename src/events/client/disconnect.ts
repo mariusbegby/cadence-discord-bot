@@ -35,10 +35,10 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${embedOptions.icons.warning} **${client.user?.tag}** is **\`disconnected\`**!` +
+                                `${this.embedOptions.icons.warning} **${client.user?.tag}** is **\`disconnected\`**!` +
                                     `\n\n<@${systemOptions.systemUserId}>`
                             )
-                            .setColor(embedOptions.colors.warning)
+                            .setColor(this.embedOptions.colors.warning)
                     ]
                 });
             }

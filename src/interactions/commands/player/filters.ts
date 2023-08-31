@@ -13,33 +13,28 @@ import {
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
 } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../../../services/logger';
-import { EmbedOptions, FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
-import { BaseSlashCommandInteraction } from '../../../types/interactionTypes';
+import { FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
+import {
+    BaseSlashCommandInteraction,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../../../types/interactionTypes';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
-const command: BaseSlashCommandInteraction = {
-    isNew: false,
-    isBeta: false,
-    data: new SlashCommandBuilder()
-        .setName('filters')
-        .setDescription('Toggle various audio filters during playback.')
-        .setDMPermission(false)
-        .setNSFW(false),
-    execute: async ({ interaction, executionId }) => {
-        const logger: Logger = loggerModule.child({
-            source: 'filters.js',
-            module: 'slashCommand',
-            name: '/filters',
-            executionId: executionId,
-            shardId: interaction.guild?.shardId,
-            guildId: interaction.guild?.id
-        });
+class FiltersCommand extends BaseSlashCommandInteraction {
+    constructor() {
+        const data = new SlashCommandBuilder()
+            .setName('filters')
+            .setDescription('Toggle various audio filters during playback.');
+        super(data);
+    }
+
+    async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
+        const { executionId, interaction } = params;
+        const logger = this.getLogger(this.commandName, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -92,7 +87,7 @@ const command: BaseSlashCommandInteraction = {
             .setCustomId('filters-disable-button')
             .setLabel('Disable all filters')
             .setStyle(ButtonStyle.Secondary)
-            .setEmoji(embedOptions.icons.disable)
+            .setEmoji(this.embedOptions.icons.disable)
             .toJSON();
 
         const disableFiltersActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
@@ -105,11 +100,11 @@ const command: BaseSlashCommandInteraction = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription('**Toggle filters**\nEnable or disable audio filters for playback from the menu.')
-                    .setColor(embedOptions.colors.info)
+                    .setColor(this.embedOptions.colors.info)
             ],
             components: [filterActionRow, disableFiltersActionRow]
         });
     }
-};
+}
 
-export default command;
+export default new FiltersCommand();
