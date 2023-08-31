@@ -11,7 +11,7 @@ import {
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from './clientTypes';
-import { EmbedOptions } from './configTypes';
+import { BotOptions, EmbedOptions } from './configTypes';
 
 interface BaseInteractionParams {
     executionId: string;
@@ -21,6 +21,8 @@ export interface BaseSlashCommandParams extends BaseInteractionParams {
     interaction: ChatInputCommandInteraction;
     client?: ExtendedClient;
 }
+
+export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
 
 interface BaseAutocompleteParams extends BaseInteractionParams {
     interaction: AutocompleteInteraction;
@@ -86,24 +88,28 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
     isNew: boolean;
     isBeta: boolean;
     embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+    commandName: string;
 
     constructor(
         data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
-        isSystemCommand?: boolean,
-        isNew?: boolean,
-        isBeta?: boolean
+        isSystemCommand: boolean = false,
+        isNew: boolean = false,
+        isBeta: boolean = false
     ) {
         super();
         this.data = data.setDMPermission(false).setNSFW(false);
-        this.isSystemCommand = isSystemCommand || false;
-        this.isNew = isNew || false;
-        this.isBeta = isBeta || false;
+        this.isSystemCommand = isSystemCommand;
+        this.isNew = isNew;
+        this.isBeta = isBeta;
         this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+        this.commandName = data.name;
     }
 
     protected getLogger(source: string, executionId: string, interaction: Interaction): Logger {
         return super.getLoggerBase('slashCommand', source, executionId, interaction);
     }
 
-    abstract execute(params: BaseSlashCommandParams): Promise<Message<boolean> | void>;
+    abstract execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType;
 }
