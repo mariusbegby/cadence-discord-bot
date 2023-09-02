@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.1.0...v5.1.1) (2023-08-31)
+
+
+### Minor changes and bug fixes
+
+* fix "Unknown interaction" error not being handled due to uppercase I ([8a0ade3](https://github.com/mariusbegby/cadence-discord-bot/commit/8a0ade3ac42dece669d91169b7e677a79cddc17f))
+* Updated handling of interaction errors ([da919d1](https://github.com/mariusbegby/cadence-discord-bot/commit/da919d1c5a749a9f013245c9617e024bef128f3a))
+
 ## [5.1.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.0.5...v5.1.0) (2023-08-31)
 
 
