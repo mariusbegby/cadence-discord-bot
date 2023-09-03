@@ -1,35 +1,33 @@
-import { ActivityType, ColorResolvable, PresenceUpdateStatus, ShardingManagerOptions } from 'discord.js';
+import { ActivityType, ColorResolvable, PresenceUpdateStatus } from 'discord.js';
 import { LogLevel } from './serviceTypes';
 
-export interface BotOptions {
+export type BotOptions = {
     name: string;
     botInviteUrl: string;
     serverInviteUrl: string;
-}
+};
 
-export interface ShardingOptions extends ShardingManagerOptions {}
-
-export interface CustomLoggerOptions {
+export type CustomLoggerOptions = {
     minimumLogLevel: LogLevel;
     minimumLogLevelConsole: LogLevel;
     discordPlayerDebug: boolean;
-}
+};
 
-export interface SystemOptions {
+export type SystemOptions = {
     systemGuildIds: string[];
     systemMessageChannelId: string;
     systemUserId: string;
-}
+};
 
-export interface PresenceStatusOptions {
+export type PresenceStatusOptions = {
     status: PresenceUpdateStatus;
     activities: {
         name: string;
         type: ActivityType;
     }[];
-}
+};
 
-export interface EmbedOptions {
+export type EmbedOptions = {
     info: {
         fallbackThumbnailUrl: string;
         fallbackIconUrl: string;
@@ -85,9 +83,9 @@ export interface EmbedOptions {
         sourceSpotify: string;
         liveTrack: string;
     };
-}
+};
 
-export interface PlayerOptions {
+export type PlayerOptions = {
     leaveOnEmpty: boolean;
     leaveOnEmptyCooldown: number;
     leaveOnEnd: boolean;
@@ -107,22 +105,22 @@ export interface PlayerOptions {
         leftChar: string;
         rightChar: string;
     };
-}
+};
 
-export interface FFmpegFilterOption {
+export type FFmpegFilterOption = {
     label: string;
     value: string;
     description: string;
     emoji: string;
-}
+};
 
-export interface FFmpegFilterOptions {
+export type FFmpegFilterOptions = {
     threadAmount: string;
     availableFilters: FFmpegFilterOption[];
-}
+};
 
-export interface LoadTestOptions {
+export type LoadTestOptions = {
     enabled: boolean;
     trackUrl: string;
     channelIdsToJoin: string[];
-}
+};

@@ -1,10 +1,7 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -134,6 +131,13 @@ class SkipCommand extends BaseSlashCommandInteraction {
 
             const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
+            const getRepeatModeMessage = (repeatMode: number): string => {
+                const icon = repeatMode === 3 ? this.embedOptions.icons.autoplaying : this.embedOptions.icons.looping;
+                return `**${icon} Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`;
+            };
+
+            const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
+
             let authorName: string;
 
             if (interaction.member instanceof GuildMember) {
@@ -153,16 +157,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
                         .setDescription(
                             `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                                 skippedTrack.title
-                            }](${skippedTrack.raw.url ?? skippedTrack.url})**` +
-                                `${
-                                    queue.repeatMode === 0
-                                        ? ''
-                                        : `\n\n**${
-                                            queue.repeatMode === 3
-                                                ? this.embedOptions.icons.autoplaying
-                                                : this.embedOptions.icons.looping
-                                        } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
-                                }`
+                            }](${skippedTrack.raw.url ?? skippedTrack.url})**` + `\n\n${repeatModeString}`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
                         .setColor(this.embedOptions.colors.success)

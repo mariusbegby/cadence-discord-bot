@@ -1,11 +1,7 @@
 import { EmbedBuilder, EmbedField, SlashCommandBuilder } from 'discord.js';
 import { ExtendedClient } from '../../../types/clientTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType,
-    ShardInfo
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class ShardsCommand extends BaseSlashCommandInteraction {

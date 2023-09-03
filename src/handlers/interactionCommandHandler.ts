@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
-import { BaseSlashCommandInteraction } from '../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../classes/interactions';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
 export const handleCommand = async (

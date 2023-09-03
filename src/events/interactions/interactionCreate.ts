@@ -14,7 +14,7 @@ import { handleComponent } from '../../handlers/interactionComponentHandler';
 import { handleError } from '../../handlers/interactionErrorHandler';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
-import { CustomError } from '../../types/interactionTypes';
+import { CustomError } from '../../classes/interactions';
 
 module.exports = {
     name: Events.InteractionCreate,

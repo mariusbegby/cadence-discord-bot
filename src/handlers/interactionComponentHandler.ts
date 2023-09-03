@@ -2,7 +2,7 @@ import { MessageComponentInteraction } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
-import { BaseComponentInteraction } from '../types/interactionTypes';
+import { BaseComponentInteraction } from '../classes/interactions';
 import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
 
 export const handleComponent = async (

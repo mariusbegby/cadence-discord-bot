@@ -1,10 +1,7 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -14,10 +11,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
             .setName('seek')
             .setDescription('Seek to a duration in the current track.')
             .addStringOption((option) =>
-                option
-                    .setName('duration')
-                    .setDescription('Duration in format 00:00:00 (HH:mm:ss).')
-                    .setRequired(true)
+                option.setName('duration').setDescription('Duration in format 00:00:00 (HH:mm:ss).').setRequired(true)
             );
         super(data);
     }

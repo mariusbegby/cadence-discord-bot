@@ -1,6 +1,7 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
-import { BaseComponentInteraction, BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { BaseComponentInteraction } from '../../classes/interactions';
 import { queueDoesNotExist } from '../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 

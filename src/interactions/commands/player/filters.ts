@@ -14,11 +14,8 @@ import {
     StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -26,9 +23,7 @@ const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('filters')
-            .setDescription('Toggle various audio filters.');
+        const data = new SlashCommandBuilder().setName('filters').setDescription('Toggle various audio filters.');
         super(data);
     }
 

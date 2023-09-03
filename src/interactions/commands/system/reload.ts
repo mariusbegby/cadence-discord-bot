@@ -1,10 +1,7 @@
 import { ApplicationCommandOption, ApplicationCommandOptionData, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { ExtendedClient } from '../../../types/clientTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class ReloadCommand extends BaseSlashCommandInteraction {

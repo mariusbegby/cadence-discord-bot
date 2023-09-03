@@ -1,13 +1,10 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import {
-    BaseAutocompleteInteraction,
-    BaseAutocompleteParams,
-    BaseAutocompleteReturnType
-} from '../../types/interactionTypes';
+import { BaseAutocompleteParams, BaseAutocompleteReturnType } from '../../types/interactionTypes';
+import { BaseAutocompleteInteraction } from '../../classes/interactions';
 
-// TODO: create interface for recent query object
+// TODO: create type for recent query object
 const recentQueries = new Map();
 
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
@@ -34,7 +31,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
 
         const genius = lyricsExtractor();
         const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
-        // TODO: Update TS Type for lyricsResult and create response object interface
+        // TODO: Update TS Type for lyricsResult and create response object type
         let response: ApplicationCommandOptionChoiceData<string>[] = [];
 
         if (!lyricsResult) {

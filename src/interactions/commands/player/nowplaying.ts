@@ -11,12 +11,8 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { PlayerOptions } from '../../../types/configTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType,
-    TrackMetadata
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
@@ -36,7 +32,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        // TODO: define TS type/interface for validators
+        // TODO: define TS type for validators
         const validators = [
             () => notInVoiceChannel({ interaction, executionId }),
             () => notInSameVoiceChannel({ interaction, queue, executionId }),
@@ -128,6 +124,13 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
+        const getRepeatModeMessage = (repeatMode: number): string => {
+            const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
+            return `**${icon} Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`;
+        };
+
+        const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
+
         logger.debug('Successfully retrieved information about the current track.');
 
         logger.debug('Sending info embed with action row components.');
@@ -145,15 +148,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                             `**[${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**` +
                             `\nRequested by: <@${currentTrack.requestedBy?.id}>` +
                             `\n ${bar}\n\n` +
-                            `${
-                                queue.repeatMode === 0
-                                    ? ''
-                                    : `**${
-                                        queue.repeatMode === 3
-                                            ? this.embedOptions.icons.autoplay
-                                            : this.embedOptions.icons.loop
-                                    } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
-                            }`
+                            `${repeatModeString}`
                     )
                     .addFields(
                         {

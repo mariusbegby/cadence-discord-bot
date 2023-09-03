@@ -1,13 +1,9 @@
 import config from 'config';
 import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
+import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType,
-    CustomError
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';

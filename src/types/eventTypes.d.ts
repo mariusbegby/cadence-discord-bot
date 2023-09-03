@@ -7,11 +7,11 @@ export type ClientEventArguments = unknown[];
 export type ProcessEventArguments = unknown[];
 export type PlayerEventArguments = unknown[];
 
-export interface ExtendedGuildQueuePlayerNode extends GuildQueuePlayerNode<unknown> {
+export type ExtendedGuildQueuePlayerNode = {
     metadata:
         | undefined
         | {
               client: ExtendedClient;
               channel: BaseGuildTextChannel;
           };
-}
+} & GuildQueuePlayerNode<unknown>;

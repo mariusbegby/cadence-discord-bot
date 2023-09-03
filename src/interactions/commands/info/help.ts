@@ -1,15 +1,10 @@
 import { EmbedBuilder, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption } from 'discord.js';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('help')
-            .setDescription('Show the list of bot commands.');
+        const data = new SlashCommandBuilder().setName('help').setDescription('Show the list of bot commands.');
         super(data);
     }
 

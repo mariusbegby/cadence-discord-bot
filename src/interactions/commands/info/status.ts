@@ -2,11 +2,8 @@ import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 // @ts-ignore
 import { version } from '../../../../package.json';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 class StatusCommand extends BaseSlashCommandInteraction {

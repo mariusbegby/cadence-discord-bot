@@ -1,14 +1,13 @@
 import 'dotenv/config';
 
 import config from 'config';
-import { Client, Shard, ShardEvents, ShardingManager } from 'discord.js';
+import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Logger } from 'pino';
 import loggerModule from './services/logger';
-import { ShardingOptions } from './types/configTypes';
 
-const shardingOptions: ShardingOptions = config.get('shardingOptions');
+const shardingOptions: ShardingManagerOptions = config.get('shardingOptions');
 
 const manager: ShardingManager = new ShardingManager('./dist/bot.js', {
     token: process.env.DISCORD_BOT_TOKEN,

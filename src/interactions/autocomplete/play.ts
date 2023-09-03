@@ -1,12 +1,9 @@
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import {
-    BaseAutocompleteInteraction,
-    BaseAutocompleteParams,
-    BaseAutocompleteReturnType
-} from '../../types/interactionTypes';
+import { BaseAutocompleteParams, BaseAutocompleteReturnType } from '../../types/interactionTypes';
+import { BaseAutocompleteInteraction } from '../../classes/interactions';
 
-// TODO: create interface for recent query object
+// TODO: create type for recent query object
 const recentQueries = new Map();
 
 class PlayAutocomplete extends BaseAutocompleteInteraction {

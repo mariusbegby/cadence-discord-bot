@@ -26,6 +26,7 @@ module.exports = {
 
         logger.error(error, "player.events.on('error'): Player queue encountered error event");
 
+        // TODO: check for access to send message to channel to avoid possible DiscordAPIError - Missing Access
         await queue.metadata?.channel.send({
             embeds: [
                 new EmbedBuilder()

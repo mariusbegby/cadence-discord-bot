@@ -10,7 +10,7 @@ import {
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
-import { CustomError } from '../types/interactionTypes';
+import { CustomError } from '../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

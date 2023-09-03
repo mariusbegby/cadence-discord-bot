@@ -3,94 +3,94 @@ import { ChatInputCommandInteraction, MessageComponentInteraction } from 'discor
 
 import { ExtendedClient } from './clientTypes';
 
-export interface RegisterEventListenersParams {
+export type RegisterEventListenersParams = {
     client: ExtendedClient;
     player: Player;
     executionId: string;
-}
+};
 
-export interface RegisterClientInteractionsParams {
+export type RegisterClientInteractionsParams = {
     client: ExtendedClient;
     executionId: string;
-}
+};
 
-export interface CustomEvent {
+export type CustomEvent = {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     execute: (...args: any) => void;
     once?: boolean;
     isDebug?: boolean;
     isPlayerEvent?: boolean;
-}
+};
 
-export interface NotInVoiceChannelParams {
+export type NotInVoiceChannelParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
-}
+};
 
-export interface NotInSameVoiceChannelParams {
+export type NotInSameVoiceChannelParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
-}
+};
 
-export interface NotValidGuildIdParams {
+export type NotValidGuildIdParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
-}
+};
 
-export interface TransformQueryParams {
+export type TransformQueryParams = {
     query: string;
     executionId: string;
-}
+};
 
-export interface QueueDoesNotExistParams {
+export type QueueDoesNotExistParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
-}
+};
 
-export interface QueueNoCurrentTrackParams {
+export type QueueNoCurrentTrackParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
-}
+};
 
-export interface QueueIsEmptyParams {
+export type QueueIsEmptyParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue: GuildQueue;
     executionId: string;
-}
+};
 
-export interface CannotJoinVoiceOrTalkParams {
+export type CannotJoinVoiceOrTalkParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
-}
+};
 
-export interface CannotSendMessageInChannelParams {
+export type CannotSendMessageInChannelParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
-}
+};
 
-export interface GetUptimeFormattedParams {
+export type GetUptimeFormattedParams = {
     executionId: string;
-}
+};
 
-export interface StartLoadTestParams {
+export type StartLoadTestParams = {
     client: ExtendedClient;
     executionId: string;
-}
+};
 
-export interface PostBotStatsParams {
+export type PostBotStatsParams = {
     client: ExtendedClient;
     executionId: string;
-}
+};
 
-export interface PostBotStatsSite {
+export type PostBotStatsSite = {
     enabled: boolean;
     hostname: string;
     path: string;
     method: string;
     body: object;
     token: string;
-}
+};

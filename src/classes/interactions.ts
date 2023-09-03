@@ -10,55 +10,16 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { ExtendedClient } from './clientTypes';
-import { BotOptions, EmbedOptions } from './configTypes';
-
-export interface ShardInfo {
-    shardId: number;
-    memUsage: number;
-    guildCount: number;
-    guildMemberCount: number;
-    playerStatistics: {
-        activeVoiceConnections: number;
-        totalTracks: number;
-        totalListeners: number;
-    };
-}
-
-export interface TrackMetadata {
-    bridge: {
-        views: number;
-    };
-}
-
-export class CustomError extends Error {
-    type?: string;
-    code?: string;
-}
-
-interface BaseInteractionParams {
-    executionId: string;
-}
-
-export interface BaseSlashCommandParams extends BaseInteractionParams {
-    interaction: ChatInputCommandInteraction;
-    client?: ExtendedClient;
-}
-
-export interface BaseAutocompleteParams extends BaseInteractionParams {
-    interaction: AutocompleteInteraction;
-}
-
-export interface BaseComponentParams extends BaseInteractionParams {
-    interaction: MessageComponentInteraction;
-    referenceId?: string;
-}
-
-export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
-
-export type BaseAutocompleteReturnType = Promise<ApplicationCommandOptionChoiceData | void>;
-
-export type BaseComponentReturnType = Promise<Message<boolean> | void>;
+import { BotOptions, EmbedOptions } from '../types/configTypes';
+import {
+    BaseAutocompleteParams,
+    BaseAutocompleteReturnType,
+    BaseComponentParams,
+    BaseComponentReturnType,
+    BaseInteractionParams,
+    BaseSlashCommandParams,
+    BaseSlashCommandReturnType
+} from '../types/interactionTypes';
 
 abstract class BaseInteraction {
     protected getLoggerBase(
@@ -145,4 +106,9 @@ export abstract class BaseComponentInteraction extends BaseInteraction {
     }
 
     abstract execute(params: BaseComponentParams): BaseComponentReturnType;
+}
+
+export class CustomError extends Error {
+    type?: string;
+    code?: string;
 }

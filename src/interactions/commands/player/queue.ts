@@ -1,16 +1,12 @@
 import config from 'config';
 import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { EmbedOptions, PlayerOptions } from '../../../types/configTypes';
-import {
-    BaseSlashCommandInteraction,
-    BaseSlashCommandParams,
-    BaseSlashCommandReturnType
-} from '../../../types/interactionTypes';
+import { PlayerOptions } from '../../../types/configTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
 import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
-const embedOptions: EmbedOptions = config.get('embedOptions');
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
 class QueueCommand extends BaseSlashCommandInteraction {
@@ -97,13 +93,12 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
         const loopModeUserString: string = loopModesFormatted.get(queue.repeatMode)!;
 
-        const repeatModeString: string = `${
-            queue.repeatMode === 0
-                ? ''
-                : `**${
-                    queue.repeatMode === 3 ? embedOptions.icons.autoplay : embedOptions.icons.loop
-                } Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
-        }`;
+        const getRepeatModeMessage = (repeatMode: number): string => {
+            const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
+            return `**${icon} Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`;
+        };
+
+        const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
 
         if (!currentTrack) {
             logger.debug('Queue exists but there is no current track.');
