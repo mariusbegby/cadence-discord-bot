@@ -1,10 +1,9 @@
-import { Collection, Guild } from 'discord.js';
+import { Guild } from 'discord.js';
+import { ClientRequest, ClientRequestArgs } from 'node:http';
 import https from 'node:https';
-
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { PostBotStatsParams, PostBotStatsSite } from '../../types/utilTypes';
-import { Logger } from 'pino';
-import { ClientRequest, ClientRequestArgs } from 'node:http';
 
 export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
     const logger: Logger = loggerModule.child({
@@ -25,18 +24,18 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
         const shardId: number = client.shard.ids[0];
 
         logger.debug('Gathering data about guild and member count from shards...');
-        await client.shard
-            .fetchClientValues('guilds.cache')
+        await client!
+            .shard!.fetchClientValues('guilds.cache')
             .then((results) => {
-                const guildCaches: Collection<string, Guild>[] = results as Collection<string, Guild>[];
-                guildCaches.map((guildCache) => {
+                const guildCaches: Guild[][] = results as Guild[][];
+                guildCaches.map((guildCache: Guild[]) => {
                     if (guildCache) {
-                        guildCount += guildCache.size;
-                        memberCount += guildCache.reduce((acc, guild) => acc + guild.memberCount, 0);
+                        guildCount += guildCache.length;
+                        memberCount += guildCache.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0);
                     }
                 });
 
-                logger.debug('Successfully fetched client values from shards');
+                logger.debug('Successfully fetched client values from shards.');
             })
             .catch((error) => {
                 logger.error(error, 'Failed to fetch client values from shards.');
