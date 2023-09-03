@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.0...v5.2.1) (2023-09-03)
+
+
+### Minor changes and bug fixes
+
+* Fixed bug in postBotStats resulting in guildCount being NaN ([57c83ff](https://github.com/mariusbegby/cadence-discord-bot/commit/57c83ff48749e8421812b62f929617577256368d))
+
 ## [5.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.1.1...v5.2.0) (2023-09-03)
 
 
