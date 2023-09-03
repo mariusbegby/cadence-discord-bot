@@ -134,6 +134,13 @@ module.exports.playerOptions = {
     }
 };
 
+// Configuration for ip rotation. Used for avoiding rate limits on certain APIs.
+module.exports.ipRotationConfig = {
+    blocks: [],
+    exclude: [],
+    maxRetries: 3
+};
+
 // Configuration for ffmpeg filters for audio processing.
 module.exports.ffmpegFilterOptions = {
     threadAmount: '2',
@@ -191,6 +198,12 @@ module.exports.ffmpegFilterOptions = {
             value: 'normalizer',
             description: 'Normalize the audio (avoid distortion).',
             emoji: '🎶'
+        },
+        {
+            label: 'Remove silence',
+            value: 'silenceremove',
+            description: 'Remove silence from start of tracks.',
+            emoji: '🔇'
         }
     ]
 };
