@@ -1,8 +1,8 @@
-import { Player } from 'discord-player';
-
+import config from 'config';
+import { IPRotationConfig, Player } from 'discord-player';
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
-import { Logger } from 'pino';
 
 export const createPlayer = async ({ client, executionId }: CreatePlayerParams) => {
     const logger: Logger = loggerModule.child({
@@ -12,11 +12,14 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams) 
         shardId: client.shard?.ids[0]
     });
 
+    const ipRotationConfig = config.get<IPRotationConfig>('ipRotationConfig');
+
     try {
         logger.debug('Creating discord-player player...');
 
         const player: Player = new Player(client, {
             useLegacyFFmpeg: false,
+            ipconfig: ipRotationConfig,
             ytdlOptions: {
                 quality: 'highestaudio',
                 highWaterMark: 1 << 25,
