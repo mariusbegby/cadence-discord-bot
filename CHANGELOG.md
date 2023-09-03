@@ -1,5 +1,25 @@
 # Changelog
 
+## [5.2.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.1.1...v5.2.0) (2023-09-03)
+
+
+### Features
+
+* support new discord-player ip rotation config ([cfd45fc](https://github.com/mariusbegby/cadence-discord-bot/commit/cfd45fc711c31c9bfb1801a3335b4604d9fdcce1))
+
+
+### Minor changes and bug fixes
+
+* Add configurable option for ip rotation config ([8dd8860](https://github.com/mariusbegby/cadence-discord-bot/commit/8dd88609f8360266ae14cac46a280965b14861f6))
+* separated types and classes ([ea32ae6](https://github.com/mariusbegby/cadence-discord-bot/commit/ea32ae6c612c1863ffe7c4b58012da3454e90eb1))
+* Updated deps ([650e35b](https://github.com/mariusbegby/cadence-discord-bot/commit/650e35b48eb4c1cc73dd575fda784fb06368bb27))
+* Updated to discord-player 6.6.3 release ([4865e20](https://github.com/mariusbegby/cadence-discord-bot/commit/4865e208e17c20d15632fc9f069333f7e87f36cd))
+
+
+### Miscellaneous
+
+* updated linting and formatting, updated deps ([6dcddee](https://github.com/mariusbegby/cadence-discord-bot/commit/6dcddee2e993e3816f1ee1b3ff381cfe2bc4c864))
+
 ## [5.1.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.1.0...v5.1.1) (2023-08-31)
 
 
