@@ -1,16 +1,14 @@
-import 'dotenv/config';
-
+import { Player } from 'discord-player';
 import { Client } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
-
+import 'dotenv/config';
+import { randomUUID as uuidv4 } from 'node:crypto';
+import { Logger } from 'pino';
 import loggerModule from './services/logger';
 import { ExtendedClient } from './types/clientTypes';
 import { createClient } from './utils/factory/createClient';
 import { createPlayer } from './utils/factory/createPlayer';
 import { registerClientInteractions } from './utils/registerClientInteractions';
 import { registerEventListeners } from './utils/registerEventListeners';
-import { Player } from 'discord-player';
-import { Logger } from 'pino';
 
 const executionId: string = uuidv4();
 const logger: Logger = loggerModule.child({
