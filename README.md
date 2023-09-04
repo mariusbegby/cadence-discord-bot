@@ -70,7 +70,7 @@ Encounter an issue? Open an issue in this repository or join our [Discord suppor
 
 ## Credits and acknowledgments 🎉
 
-This project is made possible by using [discord.js](https://github.com/discordjs/discord.js/) and [discord-player](https://github.com/Androz2091/discord-player). A special thanks to [@skdhg](https://github.com/skdhg) for his work on [discord-player](https://github.com/Androz2091/discord-player), [mediaplex](https://github.com/androzdev/mediaplex) and for providing feedback and help during development of this bot.
+This project is made possible by using [discord.js](https://github.com/discordjs/discord.js/) and [discord-player](https://github.com/Androz2091/discord-player). A special thanks to [@twlite](https://github.com/twlite) for his work on [discord-player](https://github.com/Androz2091/discord-player), [mediaplex](https://github.com/androzdev/mediaplex) and for providing feedback and help during development of this bot.
 
 ### Contributors
 
