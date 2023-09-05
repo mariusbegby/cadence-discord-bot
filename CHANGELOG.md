@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.2.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.1...v5.2.2) (2023-09-05)
+
+
+### Minor changes and bug fixes
+
+* Update postBotStats to output status codes from request ([9e20805](https://github.com/mariusbegby/cadence-discord-bot/commit/9e20805529a1671772362e591a8518fa7eabd3ee))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/config from 3.3.0 to 3.3.1 ([260e1d6](https://github.com/mariusbegby/cadence-discord-bot/commit/260e1d637ad73d192e19046b95da0d1e11cc0e47))
+
 ## [5.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.0...v5.2.1) (2023-09-03)
 
 
