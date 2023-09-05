@@ -6,7 +6,8 @@ import {
     Interaction,
     Message,
     MessageComponentInteraction,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
@@ -43,7 +44,7 @@ abstract class BaseInteraction {
 }
 
 export abstract class BaseSlashCommandInteraction extends BaseInteraction {
-    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+    data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder;
     isSystemCommand: boolean;
     isNew: boolean;
     isBeta: boolean;
@@ -52,7 +53,7 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
     name: string;
 
     constructor(
-        data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
+        data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder,
         isSystemCommand: boolean = false,
         isNew: boolean = false,
         isBeta: boolean = false
