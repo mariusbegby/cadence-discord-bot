@@ -45,7 +45,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    protected async deleteQueue(queue: GuildQueue): Promise<void> {
+    private async deleteQueue(queue: GuildQueue): Promise<void> {
         if (!queue.deleted) {
             queue.delete();
         }
