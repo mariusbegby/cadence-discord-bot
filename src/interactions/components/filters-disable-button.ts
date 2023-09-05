@@ -2,12 +2,18 @@ import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { queueDoesNotExist } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
 class FiltersDisableButtonComponent extends BaseComponentInteraction {
     constructor() {
         super('filters-disable-button');
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -16,17 +22,7 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         // Reset filters before enabling provided filters
         if (queue.filters.ffmpeg.filters.length > 0) {

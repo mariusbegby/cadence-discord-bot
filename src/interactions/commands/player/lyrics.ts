@@ -3,8 +3,8 @@ import { GuildQueue, Player, QueryType, useMainPlayer, useQueue } from 'discord-
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -21,29 +21,26 @@ class LyricsCommand extends BaseSlashCommandInteraction {
                     .setAutocomplete(true)
             );
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const query: string = interaction.options.getString('query')!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
+
+        const query: string = interaction.options.getString('query')!;
         let geniusSearchQuery: string = '';
 
         if (!query) {
-            const validators = [
-                () => notInVoiceChannel({ interaction, executionId }),
-                () => notInSameVoiceChannel({ interaction, queue, executionId }),
-                () => queueDoesNotExist({ interaction, queue, executionId }),
-                () => queueNoCurrentTrack({ interaction, queue, executionId })
-            ];
-
-            for (const validator of validators) {
-                if (await validator()) {
-                    return;
-                }
-            }
+            await this.runValidators({ interaction, queue, executionId });
 
             geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 

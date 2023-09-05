@@ -3,13 +3,20 @@ import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -18,18 +25,7 @@ class PauseCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId }),
-            () => queueNoCurrentTrack({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         const currentTrack: Track = queue.currentTrack!;
 

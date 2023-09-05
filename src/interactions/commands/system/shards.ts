@@ -2,7 +2,7 @@ import { EmbedBuilder, EmbedField, SlashCommandBuilder } from 'discord.js';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -29,15 +29,15 @@ class ShardsCommand extends BaseSlashCommandInteraction {
             );
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
+
+        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
+        await this.runValidators({ interaction, executionId });
 
         let shardInfoList: ShardInfo[] = [];
 

@@ -2,8 +2,8 @@ import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -23,6 +23,12 @@ class LoopCommand extends BaseSlashCommandInteraction {
                     )
             );
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -31,17 +37,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         // TODO: create type for loop modes formatted
         const loopModesFormatted: Map<number, string> = new Map([

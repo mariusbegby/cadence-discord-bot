@@ -4,9 +4,10 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { InteractionValidationError } from '../../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-export const queueDoesNotExist = async ({ interaction, queue, executionId }: ValidatorParams) => {
+export const checkQueueExists = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueDoesNotExist',
@@ -30,13 +31,13 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Val
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no queue.`);
-        return true;
+        throw new InteractionValidationError('Queue does not exist.');
     }
 
-    return false;
+    return;
 };
 
-export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: ValidatorParams) => {
+export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
@@ -60,13 +61,13 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: V
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no current track.`);
-        return true;
+        throw new InteractionValidationError('Queue has no current track.');
     }
 
-    return false;
+    return;
 };
 
-export const queueIsEmpty = async ({ interaction, queue, executionId }: ValidatorParams) => {
+export const checkQueueEmpty = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueIsEmpty',
@@ -90,8 +91,8 @@ export const queueIsEmpty = async ({ interaction, queue, executionId }: Validato
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no tracks in the queue.`);
-        return true;
+        throw new InteractionValidationError('Queue is empty.');
     }
 
-    return false;
+    return;
 };

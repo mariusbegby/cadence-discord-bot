@@ -3,7 +3,7 @@ import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 import { BaseSlashCommandInteraction } from '../classes/interactions';
-import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
+import { checkChannelPermissionViewable } from '../utils/validation/permissionValidator';
 
 export const handleCommand = async (
     interaction: ChatInputCommandInteraction,
@@ -20,9 +20,7 @@ export const handleCommand = async (
     await interaction.deferReply();
     logger.debug('Interaction deferred.');
 
-    if (await cannotSendMessageInChannel({ interaction, executionId })) {
-        return;
-    }
+    await checkChannelPermissionViewable({ interaction, executionId });
 
     const slashCommand: BaseSlashCommandInteraction = client.slashCommandInteractions!.get(
         interactionIdentifier

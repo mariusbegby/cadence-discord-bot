@@ -2,8 +2,8 @@ import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -14,6 +14,13 @@ class SeekCommand extends BaseSlashCommandInteraction {
                 option.setName('duration').setDescription('Duration in format 00:00:00 (HH:mm:ss).').setRequired(true)
             );
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -22,18 +29,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId }),
-            () => queueNoCurrentTrack({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         const durationInput: string = interaction.options.getString('duration')!;
 

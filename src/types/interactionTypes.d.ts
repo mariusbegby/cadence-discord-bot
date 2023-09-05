@@ -7,22 +7,26 @@ import {
 } from 'discord.js';
 import { ExtendedClient } from './clientTypes';
 
+export type PlayerStatistics = {
+    activeVoiceConnections: number;
+    totalTracks: number;
+    totalListeners: number;
+};
+
 export type ShardInfo = {
     shardId: number;
     memUsage: number;
     guildCount: number;
     guildMemberCount: number;
-    playerStatistics: {
-        activeVoiceConnections: number;
-        totalTracks: number;
-        totalListeners: number;
-    };
+    playerStatistics: PlayerStatistics;
+};
+
+export type Bridge = {
+    views: number;
 };
 
 export type TrackMetadata = {
-    bridge: {
-        views: number;
-    };
+    bridge: Bridge;
 };
 
 type BaseInteractionParams = {
@@ -48,3 +52,10 @@ export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
 export type BaseAutocompleteReturnType = Promise<ApplicationCommandOptionChoiceData | void>;
 
 export type BaseComponentReturnType = Promise<Message<boolean> | void>;
+
+export enum FilterType {
+    FFmpeg = 'ffmpeg',
+    Biquad = 'biquad',
+    Equalizer = 'equalizer',
+    Disable = 'disable'
+}

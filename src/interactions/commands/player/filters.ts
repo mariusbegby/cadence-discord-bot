@@ -18,8 +18,8 @@ import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
@@ -34,19 +34,19 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     .setDescription('Audio filtering type to use.')
                     .setRequired(false)
                     .addChoices(
-                        { name: 'FFmpeg', value: 'ffmpeg' },
-                        { name: 'Biquad', value: 'biquad' },
-                        { name: 'Equalizer', value: 'equalizer' },
-                        { name: 'Disable', value: 'disable' }
+                        { name: 'FFmpeg', value: 'FFmpeg' },
+                        { name: 'Biquad', value: 'Biquad' },
+                        { name: 'Equalizer', value: 'Equalizer' },
+                        { name: 'Disable', value: 'Disable' }
                     )
             );
         super(data);
 
         this.validators = [
-            (args) => notInVoiceChannel(args),
-            (args) => notInSameVoiceChannel(args),
-            (args) => queueDoesNotExist(args),
-            (args) => queueNoCurrentTrack(args)
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
         ];
     }
 
@@ -56,11 +56,9 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId }).catch(() => {
-            return;
-        });
+        await this.runValidators({ interaction, queue, executionId });
 
-        const filterProvider: string = interaction.options.getString('type') || 'ffmpeg';
+        const filterProvider: string = interaction.options.getString('type') || 'FFmpeg';
 
         switch (filterProvider) {
             case 'ffmpeg':

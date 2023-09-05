@@ -10,7 +10,7 @@ import {
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
-import { CustomError } from '../classes/interactions';
+import { CustomError, InteractionValidationError } from '../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
@@ -27,6 +27,13 @@ export const handleError = async (
         name: 'interactionErrorHandler',
         executionId: executionId
     });
+
+    if (error instanceof InteractionValidationError) {
+        logger.debug(
+            `Interaction validation error '${error.message}' while handling interaction '${interactionIdentifier}'.`
+        );
+        return;
+    }
 
     // TODO: Extract replies for embeds
     const errorReply: InteractionReplyOptions = {

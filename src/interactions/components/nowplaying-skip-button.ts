@@ -2,12 +2,19 @@ import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, GuildMember } from 'discord.js';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueExists, checkQueueCurrentTrack } from '../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
 class NowplayingSkipButton extends BaseComponentInteraction {
     constructor() {
         super('nowplaying-skip-button');
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -16,18 +23,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId }),
-            () => queueNoCurrentTrack({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');

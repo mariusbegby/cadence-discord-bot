@@ -5,7 +5,7 @@ import { dependencies, version } from '../../../../package.json';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
-import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class SystemStatusCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -14,15 +14,15 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
             .setDescription('Show operational status of the bot with additional technical information.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
+
+        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
+        await this.runValidators({ interaction, executionId });
 
         // from normal /status command
         const uptimeString: string = await getUptimeFormatted({ executionId });

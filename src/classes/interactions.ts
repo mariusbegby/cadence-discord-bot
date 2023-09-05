@@ -3,6 +3,8 @@ import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
+    EmbedAuthorOptions,
+    GuildMember,
     Interaction,
     Message,
     MessageComponentInteraction,
@@ -21,7 +23,7 @@ import {
     BaseSlashCommandParams,
     BaseSlashCommandReturnType
 } from '../types/interactionTypes';
-import { ValidatorParams } from '../types/utilTypes';
+import { Validator, ValidatorParams } from '../types/utilTypes';
 
 abstract class BaseInteraction {
     protected getLoggerBase(
@@ -39,13 +41,11 @@ abstract class BaseInteraction {
         });
     }
 
-    protected validators: ((args: ValidatorParams) => Promise<boolean>)[] = [];
+    protected validators: Validator[] = [];
 
-    protected async runValidators(args: ValidatorParams): Promise<void> {
-        for (const validator of this.validators) {
-            if (await validator(args)) {
-                return Promise.reject();
-            }
+    protected async runValidators(args: ValidatorParams, validators?: Validator[]): Promise<void> {
+        for (const validator of validators ? validators : this.validators) {
+            await validator(args);
         }
     }
 
@@ -54,13 +54,38 @@ abstract class BaseInteraction {
     ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;
 }
 
-export abstract class BaseSlashCommandInteraction extends BaseInteraction {
+abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
+    embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+
+    constructor() {
+        super();
+        this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+    }
+
+    protected async getEmbedAuthor(
+        interaction: MessageComponentInteraction | ChatInputCommandInteraction
+    ): Promise<EmbedAuthorOptions> {
+        let authorName: string = '';
+        if (interaction.member instanceof GuildMember) {
+            authorName = interaction.member.nickname || interaction.user.username;
+        } else {
+            authorName = interaction.user.username;
+        }
+
+        return {
+            name: authorName,
+            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
+        };
+    }
+}
+
+export abstract class BaseSlashCommandInteraction extends BaseInteractionWithEmbedResponse {
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder;
     isSystemCommand: boolean;
     isNew: boolean;
     isBeta: boolean;
-    embedOptions: EmbedOptions;
-    botOptions: BotOptions;
     name: string;
 
     constructor(
@@ -74,8 +99,6 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
         this.isSystemCommand = isSystemCommand;
         this.isNew = isNew;
         this.isBeta = isBeta;
-        this.embedOptions = config.get('embedOptions');
-        this.botOptions = config.get('botOptions');
         this.name = data.name;
     }
 
@@ -86,22 +109,7 @@ export abstract class BaseSlashCommandInteraction extends BaseInteraction {
     abstract execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType;
 }
 
-export abstract class BaseAutocompleteInteraction extends BaseInteraction {
-    name: string;
-
-    constructor(name: string) {
-        super();
-        this.name = name;
-    }
-
-    protected getLogger(name: string, executionId: string, interaction: AutocompleteInteraction): Logger {
-        return super.getLoggerBase('autocompleteInteraction', name, executionId, interaction);
-    }
-
-    abstract execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType;
-}
-
-export abstract class BaseComponentInteraction extends BaseInteraction {
+export abstract class BaseComponentInteraction extends BaseInteractionWithEmbedResponse {
     embedOptions: EmbedOptions;
     botOptions: BotOptions;
     name: string;
@@ -120,7 +128,29 @@ export abstract class BaseComponentInteraction extends BaseInteraction {
     abstract execute(params: BaseComponentParams): BaseComponentReturnType;
 }
 
+export abstract class BaseAutocompleteInteraction extends BaseInteraction {
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.name = name;
+    }
+
+    protected getLogger(name: string, executionId: string, interaction: AutocompleteInteraction): Logger {
+        return super.getLoggerBase('autocompleteInteraction', name, executionId, interaction);
+    }
+
+    abstract execute(params: BaseAutocompleteParams): BaseAutocompleteReturnType;
+}
+
 export class CustomError extends Error {
     type?: string;
     code?: string;
+}
+
+export class InteractionValidationError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = 'InteractionValidationError';
+    }
 }

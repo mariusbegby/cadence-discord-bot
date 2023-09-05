@@ -3,7 +3,7 @@ import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 import { BaseComponentInteraction } from '../classes/interactions';
-import { cannotSendMessageInChannel } from '../utils/validation/permissionValidator';
+import { checkChannelPermissionViewable } from '../utils/validation/permissionValidator';
 
 export const handleComponent = async (
     interaction: MessageComponentInteraction,
@@ -25,9 +25,7 @@ export const handleComponent = async (
 
     logger.debug(`Parsed componentId '${componentId}' from identifier '${interactionIdentifier}'.`);
 
-    if (await cannotSendMessageInChannel({ interaction, executionId })) {
-        return;
-    }
+    await checkChannelPermissionViewable({ interaction, executionId });
 
     const component: BaseComponentInteraction = client.componentInteractions!.get(
         componentId

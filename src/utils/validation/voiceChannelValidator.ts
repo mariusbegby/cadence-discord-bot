@@ -4,9 +4,10 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { InteractionValidationError } from '../../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-export const notInVoiceChannel = async ({ interaction, executionId }: ValidatorParams) => {
+export const checkInVoiceChannel = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'validator',
         name: 'notInVoiceChannel',
@@ -30,13 +31,13 @@ export const notInVoiceChannel = async ({ interaction, executionId }: ValidatorP
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but was not in a voice channel.`);
-        return true;
+        throw new InteractionValidationError('User not in voice channel.');
     }
 
-    return false;
+    return;
 };
 
-export const notInSameVoiceChannel = async ({ interaction, queue, executionId }: ValidatorParams) => {
+export const checkSameVoiceChannel = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'notInSameVoiceChannel',
@@ -50,7 +51,7 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId }:
 
     if (!queue || !queue.dispatcher) {
         // If there is no queue or bot is not in voice channel, then there is no need to check if user is in same voice channel.
-        return false;
+        return;
     }
 
     if (
@@ -68,8 +69,8 @@ export const notInSameVoiceChannel = async ({ interaction, queue, executionId }:
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but was not in the same voice channel.`);
-        return true;
+        throw new InteractionValidationError('User not in same voice channel.');
     }
 
-    return false;
+    return;
 };

@@ -4,9 +4,9 @@ import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
+import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
@@ -25,26 +25,21 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setAutocomplete(true)
             );
         super(data);
+
+        this.validators = [(args) => checkInVoiceChannel(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
+        await this.runValidators({ interaction, executionId });
+
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
-            return;
-        }
-
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => cannotJoinVoiceOrTalk({ interaction, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
+        if (queue) {
+            await this.runValidators({ interaction, queue, executionId }, [checkSameVoiceChannel]);
+        } else {
+            await this.runValidators({ interaction, executionId }, [checkVoicePermissionJoinAndTalk]);
         }
 
         const player = useMainPlayer()!;

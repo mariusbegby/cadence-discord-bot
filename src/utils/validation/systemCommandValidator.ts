@@ -4,10 +4,11 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { InteractionValidationError } from '../../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
-export const notValidGuildId = async ({ interaction, executionId }: ValidatorParams) => {
+export const checkValidGuildId = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'notValidGuildId',
@@ -33,8 +34,8 @@ export const notValidGuildId = async ({ interaction, executionId }: ValidatorPar
         logger.debug(
             `User tried to use command '${interactionIdentifier}' but system command cannot be executed in the specified guild.`
         );
-        return true;
+        throw new InteractionValidationError('System command cannot be executed in the specified guild.');
     }
 
-    return false;
+    return;
 };

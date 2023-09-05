@@ -4,13 +4,19 @@ import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.
 import { FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { queueDoesNotExist } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
 class FiltersSelectMenuComponent extends BaseComponentInteraction {
     constructor() {
         super('filters-select-menu');
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -22,17 +28,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         const selectMenuInteraction: StringSelectMenuInteraction = interaction as StringSelectMenuInteraction;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         queue.filters.ffmpeg.setInputArgs([
             '-threads',

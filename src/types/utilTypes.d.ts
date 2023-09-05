@@ -23,6 +23,8 @@ export type CustomEvent = {
     isPlayerEvent?: boolean;
 };
 
+export type Validator = (args: ValidatorParams) => Promise<void>;
+
 export type ValidatorParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue?: GuildQueue;
