@@ -8,14 +8,13 @@ import {
     VoiceBasedChannel,
     VoiceChannel
 } from 'discord.js';
-
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '../../types/utilTypes';
+import { ValidatorParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
+export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
@@ -49,7 +48,7 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
     return false;
 };
 
-export const cannotSendMessageInChannel = async ({ interaction, executionId }: CannotSendMessageInChannelParams) => {
+export const cannotSendMessageInChannel = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'cannotSendMessageInChannel',

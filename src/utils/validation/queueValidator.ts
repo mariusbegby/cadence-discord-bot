@@ -1,13 +1,12 @@
 import config from 'config';
 import { EmbedBuilder, InteractionType } from 'discord.js';
-
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import { QueueDoesNotExistParams, QueueIsEmptyParams, QueueNoCurrentTrackParams } from '../../types/utilTypes';
-import { Logger } from 'pino';
+import { ValidatorParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-export const queueDoesNotExist = async ({ interaction, queue, executionId }: QueueDoesNotExistParams) => {
+export const queueDoesNotExist = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueDoesNotExist',
@@ -37,7 +36,7 @@ export const queueDoesNotExist = async ({ interaction, queue, executionId }: Que
     return false;
 };
 
-export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: QueueNoCurrentTrackParams) => {
+export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
@@ -49,7 +48,7 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
-    if (!queue.currentTrack) {
+    if (queue && !queue.currentTrack) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
@@ -67,7 +66,7 @@ export const queueNoCurrentTrack = async ({ interaction, queue, executionId }: Q
     return false;
 };
 
-export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsEmptyParams) => {
+export const queueIsEmpty = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'queueIsEmpty',
@@ -79,7 +78,7 @@ export const queueIsEmpty = async ({ interaction, queue, executionId }: QueueIsE
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
-    if (queue.tracks.data.length === 0) {
+    if (queue && queue.tracks.data.length === 0) {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()

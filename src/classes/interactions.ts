@@ -21,6 +21,7 @@ import {
     BaseSlashCommandParams,
     BaseSlashCommandReturnType
 } from '../types/interactionTypes';
+import { ValidatorParams } from '../types/utilTypes';
 
 abstract class BaseInteraction {
     protected getLoggerBase(
@@ -36,6 +37,16 @@ abstract class BaseInteraction {
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
+    }
+
+    protected validators: ((args: ValidatorParams) => Promise<boolean>)[] = [];
+
+    protected async runValidators(args: ValidatorParams): Promise<void> {
+        for (const validator of this.validators) {
+            if (await validator(args)) {
+                return Promise.reject();
+            }
+        }
     }
 
     abstract execute(

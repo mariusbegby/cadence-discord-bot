@@ -40,8 +40,14 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                         { name: 'Disable', value: 'disable' }
                     )
             );
-
         super(data);
+
+        this.validators = [
+            (args) => notInVoiceChannel(args),
+            (args) => notInSameVoiceChannel(args),
+            (args) => queueDoesNotExist(args),
+            (args) => queueNoCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -50,18 +56,9 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId }),
-            () => queueNoCurrentTrack({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId }).catch(() => {
+            return;
+        });
 
         const filterProvider: string = interaction.options.getString('type') || 'ffmpeg';
 

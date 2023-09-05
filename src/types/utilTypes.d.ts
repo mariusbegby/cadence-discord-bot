@@ -23,52 +23,14 @@ export type CustomEvent = {
     isPlayerEvent?: boolean;
 };
 
-export type NotInVoiceChannelParams = {
+export type ValidatorParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    executionId: string;
-};
-
-export type NotInSameVoiceChannelParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    queue: GuildQueue;
-    executionId: string;
-};
-
-export type NotValidGuildIdParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
+    queue?: GuildQueue;
     executionId: string;
 };
 
 export type TransformQueryParams = {
     query: string;
-    executionId: string;
-};
-
-export type QueueDoesNotExistParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    queue: GuildQueue;
-    executionId: string;
-};
-
-export type QueueNoCurrentTrackParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    queue: GuildQueue;
-    executionId: string;
-};
-
-export type QueueIsEmptyParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    queue: GuildQueue;
-    executionId: string;
-};
-
-export type CannotJoinVoiceOrTalkParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
-    executionId: string;
-};
-
-export type CannotSendMessageInChannelParams = {
-    interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     executionId: string;
 };
 
