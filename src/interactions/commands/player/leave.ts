@@ -1,9 +1,9 @@
 import { GuildQueue, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -11,6 +11,12 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             .setName('leave')
             .setDescription('Clear the queue and remove bot from voice channel.');
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -19,45 +25,30 @@ class LeaveCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
+        await this.runValidators({ interaction, queue, executionId });
 
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        logger.info('Validators passed, clearing queue.');
 
-        if (!queue.deleted) {
-            queue.delete();
-            logger.debug('Deleted the queue.');
-        }
-
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
+        logger.debug('Deleting queue.');
+        await this.deleteQueue(queue);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
                     )
                     .setColor(this.embedOptions.colors.success)
             ]
         });
+    }
+
+    protected async deleteQueue(queue: GuildQueue): Promise<void> {
+        if (!queue.deleted) {
+            queue.delete();
+        }
     }
 }
 

@@ -1,11 +1,10 @@
 import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-
+import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
-import { Logger } from 'pino';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');

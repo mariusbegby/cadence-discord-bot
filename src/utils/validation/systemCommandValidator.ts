@@ -1,14 +1,14 @@
 import config from 'config';
 import { EmbedBuilder, InteractionType } from 'discord.js';
-
+import { Logger } from 'pino';
+import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
-import { NotValidGuildIdParams } from '../../types/utilTypes';
-import { Logger } from 'pino';
+import { ValidatorParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
-export const notValidGuildId = async ({ interaction, executionId }: NotValidGuildIdParams) => {
+export const checkValidGuildId = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'notValidGuildId',
@@ -25,7 +25,7 @@ export const notValidGuildId = async ({ interaction, executionId }: NotValidGuil
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nNo permission to execute this command.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
+                        `**${embedOptions.icons.warning} Oops!**\nNo permission to perform this action.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -34,8 +34,8 @@ export const notValidGuildId = async ({ interaction, executionId }: NotValidGuil
         logger.debug(
             `User tried to use command '${interactionIdentifier}' but system command cannot be executed in the specified guild.`
         );
-        return true;
+        throw new InteractionValidationError('System command cannot be executed in the specified guild.');
     }
 
-    return false;
+    return;
 };

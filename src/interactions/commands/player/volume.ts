@@ -1,9 +1,9 @@
 import { GuildQueue, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -18,6 +18,12 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                     .setMaxValue(100)
             );
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -26,17 +32,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         const volume: number = interaction.options.getNumber('percentage')!;
 
@@ -76,23 +72,12 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             queue.node.setVolume(volume);
             logger.debug(`Set volume to ${volume}%.`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             if (volume === 0) {
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
-                            .setAuthor({
-                                name: authorName,
-                                iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                            })
+                            .setAuthor(await this.getEmbedUserAuthor(interaction))
                             .setDescription(
                                 `**${this.embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
                             )
@@ -105,10 +90,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
                         )

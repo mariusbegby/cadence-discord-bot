@@ -1,11 +1,11 @@
 import config from 'config';
 import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { queueDoesNotExist } from '../../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
@@ -18,6 +18,12 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 option.setName('page').setDescription('Page number to display for the queue').setMinValue(1)
             );
         super(data);
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args)
+        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -26,17 +32,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
         let queueString: string = '';
@@ -107,10 +103,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
                         .setDescription(
                             `${repeatModeString}` +
                                 `**${this.embedOptions.icons.queue} Tracks in queue**\n${queueString}`
@@ -145,10 +138,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
                         .setDescription(
                             `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
                                 (currentTrack

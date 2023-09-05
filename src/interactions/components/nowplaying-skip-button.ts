@@ -1,13 +1,20 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember } from 'discord.js';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { EmbedBuilder } from 'discord.js';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { queueDoesNotExist, queueNoCurrentTrack } from '../../utils/validation/queueValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
 class NowplayingSkipButton extends BaseComponentInteraction {
     constructor() {
         super('nowplaying-skip-button');
+
+        this.validators = [
+            (args) => checkInVoiceChannel(args),
+            (args) => checkSameVoiceChannel(args),
+            (args) => checkQueueExists(args),
+            (args) => checkQueueCurrentTrack(args)
+        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -16,18 +23,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => notInSameVoiceChannel({ interaction, queue, executionId }),
-            () => queueDoesNotExist({ interaction, queue, executionId }),
-            () => queueNoCurrentTrack({ interaction, queue, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
-        }
+        await this.runValidators({ interaction, queue, executionId });
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');
@@ -89,22 +85,11 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
         const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                             skippedTrack.title

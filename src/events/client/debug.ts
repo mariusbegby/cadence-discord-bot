@@ -1,8 +1,7 @@
 import { Events } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-
-import loggerModule from '../../services/logger';
 import { Logger } from 'pino';
+import loggerModule from '../../services/logger';
 
 module.exports = {
     name: Events.Debug,

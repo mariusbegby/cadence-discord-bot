@@ -8,14 +8,14 @@ import {
     VoiceBasedChannel,
     VoiceChannel
 } from 'discord.js';
-
 import { Logger } from 'pino';
+import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
-import { CannotJoinVoiceOrTalkParams, CannotSendMessageInChannelParams } from '../../types/utilTypes';
+import { ValidatorParams } from '../../types/utilTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: CannotJoinVoiceOrTalkParams) => {
+export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'cannotJoinVoiceOrTalk',
@@ -34,7 +34,7 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel you are in.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
+                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel <#${channel.id}>.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -43,13 +43,13 @@ export const cannotJoinVoiceOrTalk = async ({ interaction, executionId }: Cannot
         logger.debug(
             `User tried to use command '${interactionIdentifier}' but the bot had no permission to join/speak in the voice channel.`
         );
-        return true;
+        throw new InteractionValidationError('Bot cannot join or speak in voice channel.');
     }
 
-    return false;
+    return;
 };
 
-export const cannotSendMessageInChannel = async ({ interaction, executionId }: CannotSendMessageInChannelParams) => {
+export const checkChannelPermissionViewable = async ({ interaction, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'cannotSendMessageInChannel',
@@ -82,7 +82,7 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel you are in.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel <#${channel.id}>.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]
@@ -107,8 +107,8 @@ export const cannotSendMessageInChannel = async ({ interaction, executionId }: C
             }
         }
 
-        return true;
+        throw new InteractionValidationError('Bot cannot send message in channel.');
     }
 
-    return false;
+    return;
 };

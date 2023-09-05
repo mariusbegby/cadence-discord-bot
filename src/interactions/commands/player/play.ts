@@ -4,9 +4,9 @@ import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { cannotJoinVoiceOrTalk } from '../../../utils/validation/permissionValidator';
+import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
-import { notInSameVoiceChannel, notInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
@@ -25,26 +25,21 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setAutocomplete(true)
             );
         super(data);
+
+        this.validators = [(args) => checkInVoiceChannel(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
+        await this.runValidators({ interaction, executionId });
+
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        if (queue && (await notInSameVoiceChannel({ interaction, queue, executionId }))) {
-            return;
-        }
-
-        const validators = [
-            () => notInVoiceChannel({ interaction, executionId }),
-            () => cannotJoinVoiceOrTalk({ interaction, executionId })
-        ];
-
-        for (const validator of validators) {
-            if (await validator()) {
-                return;
-            }
+        if (queue) {
+            await this.runValidators({ interaction, queue, executionId }, [checkSameVoiceChannel]);
+        } else {
+            await this.runValidators({ interaction, executionId }, [checkVoicePermissionJoinAndTalk]);
         }
 
         const player = useMainPlayer()!;
@@ -243,22 +238,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
                                 track.title
@@ -275,22 +259,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         if (queue && queue.currentTrack === track && queue.tracks.data.length === 0) {
             logger.debug(`Track found and added with player.play(), started playing. Query: '${query}'.`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
                                 track.title
@@ -304,22 +277,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
         logger.debug(`Track found and added with player.play(), added to queue. Query: '${query}'.`);
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `${this.embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
                             track.raw.url ?? track.url

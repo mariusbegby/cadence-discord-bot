@@ -1,6 +1,5 @@
 import { GuildQueuePlayerNode } from 'discord-player';
 import { BaseGuildTextChannel } from 'discord.js';
-
 import { ExtendedClient } from './clientTypes';
 
 export type ClientEventArguments = unknown[];

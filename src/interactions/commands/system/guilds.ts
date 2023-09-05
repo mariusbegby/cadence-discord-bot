@@ -1,7 +1,7 @@
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class GuildsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -10,15 +10,15 @@ class GuildsCommand extends BaseSlashCommandInteraction {
             .setDescription('Show the top 25 guilds by member count.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
+
+        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
+        await this.runValidators({ interaction, executionId });
 
         let shardGuilds: Guild[] = [];
         let totalGuildCount: number = 0;

@@ -1,8 +1,8 @@
 import { ApplicationCommandOption, ApplicationCommandOptionData, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { notValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -11,15 +11,15 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             .setDescription('Reload slash command, autocomplete and component interactions across shards.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
+
+        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        if (await notValidGuildId({ interaction, executionId })) {
-            return;
-        }
+        await this.runValidators({ interaction, executionId });
 
         try {
             logger.debug('Reloading interaction module across all shards.');

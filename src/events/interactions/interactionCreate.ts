@@ -6,15 +6,15 @@ import {
     InteractionType,
     MessageComponentInteraction
 } from 'discord.js';
-import { Logger } from 'pino';
 import { randomUUID as uuidv4 } from 'node:crypto';
+import { Logger } from 'pino';
+import { CustomError } from '../../classes/interactions';
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
 import { handleComponent } from '../../handlers/interactionComponentHandler';
 import { handleError } from '../../handlers/interactionErrorHandler';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
-import { CustomError } from '../../classes/interactions';
 
 module.exports = {
     name: Events.InteractionCreate,

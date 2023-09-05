@@ -1,9 +1,7 @@
-import 'dotenv/config';
-
 import config from 'config';
 import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';
+import 'dotenv/config';
 import { randomUUID as uuidv4 } from 'node:crypto';
-
 import { Logger } from 'pino';
 import loggerModule from './services/logger';
 

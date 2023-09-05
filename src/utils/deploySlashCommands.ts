@@ -1,19 +1,16 @@
-import 'dotenv/config';
-
 import config from 'config';
 import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
+import 'dotenv/config';
+import { randomUUID as uuidv4 } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { randomUUID as uuidv4 } from 'node:crypto';
-
+import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { SystemOptions } from '../types/configTypes';
-import { Logger } from 'pino';
 
 const systemOptions: SystemOptions = config.get('systemOptions');
 
 const executionId: string = uuidv4();
-
 const logger: Logger = loggerModule.child({
     module: 'deploy',
     name: 'deploySlashCommands',
