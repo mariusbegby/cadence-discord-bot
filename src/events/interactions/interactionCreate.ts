@@ -7,7 +7,7 @@ import {
     MessageComponentInteraction
 } from 'discord.js';
 import { Logger } from 'pino';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID as uuidv4 } from 'node:crypto';
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
 import { handleComponent } from '../../handlers/interactionComponentHandler';

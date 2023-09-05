@@ -4,7 +4,7 @@ import config from 'config';
 import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID as uuidv4 } from 'node:crypto';
 
 import loggerModule from '../services/logger';
 import { SystemOptions } from '../types/configTypes';

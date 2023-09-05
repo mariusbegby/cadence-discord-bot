@@ -2,7 +2,7 @@ import config from 'config';
 import { Track } from 'discord-player';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { Logger } from 'pino';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID as uuidv4 } from 'node:crypto';
 import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
