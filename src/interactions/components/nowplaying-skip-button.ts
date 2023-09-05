@@ -1,9 +1,9 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember } from 'discord.js';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { EmbedBuilder } from 'discord.js';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
 class NowplayingSkipButton extends BaseComponentInteraction {
     constructor() {
@@ -85,22 +85,11 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
         const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                             skippedTrack.title

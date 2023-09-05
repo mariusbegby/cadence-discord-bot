@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder, SlashCommandNumberOption, SlashCommandStringOption } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {

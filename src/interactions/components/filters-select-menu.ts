@@ -1,11 +1,12 @@
 import config from 'config';
 import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, StringSelectMenuInteraction } from 'discord.js';
+import { EmbedBuilder, StringSelectMenuInteraction } from 'discord.js';
+import { BaseComponentInteraction } from '../../classes/interactions';
 import { FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
-import { BaseComponentInteraction } from '../../classes/interactions';
 import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
 class FiltersSelectMenuComponent extends BaseComponentInteraction {
@@ -61,22 +62,11 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         queue.filters.ffmpeg.toggle(selectMenuInteraction.values as (keyof QueueFilters)[]);
         logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
 
-        let authorName: string;
-
-        if (selectMenuInteraction.member instanceof GuildMember) {
-            authorName = selectMenuInteraction.member.nickname || selectMenuInteraction.user.username;
-        } else {
-            authorName = selectMenuInteraction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await selectMenuInteraction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: selectMenuInteraction.user.avatarURL() || ''
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${
                             this.embedOptions.icons.success

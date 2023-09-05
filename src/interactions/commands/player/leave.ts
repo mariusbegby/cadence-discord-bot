@@ -3,7 +3,7 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -36,7 +36,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedAuthor(interaction))
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
                     )

@@ -1,9 +1,9 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -63,22 +63,11 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 queue.node.skipTo(skipToTrack - 1);
                 logger.debug('Skipped to specified track number.');
 
-                let authorName: string;
-
-                if (interaction.member instanceof GuildMember) {
-                    authorName = interaction.member.nickname || interaction.user.username;
-                } else {
-                    authorName = interaction.user.username;
-                }
-
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
-                            .setAuthor({
-                                name: authorName,
-                                iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                            })
+                            .setAuthor(await this.getEmbedUserAuthor(interaction))
                             .setDescription(
                                 `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                                     skippedTrack.title
@@ -134,22 +123,11 @@ class SkipCommand extends BaseSlashCommandInteraction {
 
             const repeatModeString: string = queue.repeatMode === 0 ? '' : getRepeatModeMessage(queue.repeatMode);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                                 skippedTrack.title

@@ -1,6 +1,5 @@
 import config from 'config';
 import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
-
 import { CustomLoggerOptions } from '../types/configTypes';
 import { TargetOptions } from '../types/serviceTypes';
 

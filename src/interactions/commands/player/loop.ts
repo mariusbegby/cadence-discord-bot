@@ -1,9 +1,9 @@
 import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -106,14 +106,6 @@ class LoopCommand extends BaseSlashCommandInteraction {
             });
         }
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         if (queue.repeatMode === 0) {
             logger.debug('Disabled loop mode.');
 
@@ -122,10 +114,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
                         )
@@ -141,10 +130,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
                         )
@@ -159,10 +145,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`
                     )

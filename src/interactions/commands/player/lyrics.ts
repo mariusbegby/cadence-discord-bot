@@ -1,10 +1,10 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { GuildQueue, Player, QueryType, useMainPlayer, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {

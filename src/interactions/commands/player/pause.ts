@@ -1,10 +1,9 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -42,22 +41,11 @@ class PauseCommand extends BaseSlashCommandInteraction {
         queue.node.setPaused(!queue.node.isPaused());
         logger.debug(`Set paused state to ${queue.node.isPaused()}.`);
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.pauseResumed} ${
                             queue.node.isPaused() ? 'Paused Track' : 'Resumed track'

@@ -238,22 +238,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
                                 track.title
@@ -270,22 +259,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         if (queue && queue.currentTrack === track && queue.tracks.data.length === 0) {
             logger.debug(`Track found and added with player.play(), started playing. Query: '${query}'.`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             logger.debug('Responding with success embed.');
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
                                 track.title
@@ -299,22 +277,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
         logger.debug(`Track found and added with player.play(), added to queue. Query: '${query}'.`);
 
-        let authorName: string;
-
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
-
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: authorName,
-                        iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `${this.embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
                             track.raw.url ?? track.url

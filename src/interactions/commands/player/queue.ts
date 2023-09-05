@@ -1,11 +1,11 @@
 import config from 'config';
 import { GuildQueue, PlayerTimestamp, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
@@ -103,10 +103,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
                         .setDescription(
                             `${repeatModeString}` +
                                 `**${this.embedOptions.icons.queue} Tracks in queue**\n${queueString}`
@@ -141,10 +138,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
                         .setDescription(
                             `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
                                 (currentTrack

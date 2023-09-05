@@ -18,8 +18,8 @@ import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 

@@ -1,8 +1,8 @@
 import { AutocompleteInteraction } from 'discord.js';
 import { Logger } from 'pino';
+import { BaseAutocompleteInteraction } from '../classes/interactions';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
-import { BaseAutocompleteInteraction } from '../classes/interactions';
 
 export const handleAutocomplete = async (
     interaction: AutocompleteInteraction,

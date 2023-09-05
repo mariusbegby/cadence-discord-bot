@@ -2,8 +2,8 @@ import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
 import osu from 'node-os-utils';
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 

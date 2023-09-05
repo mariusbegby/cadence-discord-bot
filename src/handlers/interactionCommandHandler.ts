@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Logger } from 'pino';
+import { BaseSlashCommandInteraction } from '../classes/interactions';
 import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
-import { BaseSlashCommandInteraction } from '../classes/interactions';
 import { checkChannelPermissionViewable } from '../utils/validation/permissionValidator';
 
 export const handleCommand = async (

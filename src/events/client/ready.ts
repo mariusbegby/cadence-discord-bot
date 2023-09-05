@@ -1,7 +1,6 @@
 import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder, Events, PresenceData } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';

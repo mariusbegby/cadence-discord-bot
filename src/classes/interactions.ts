@@ -1,4 +1,5 @@
 import config from 'config';
+import { GuildQueue } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -64,7 +65,7 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         this.botOptions = config.get('botOptions');
     }
 
-    protected async getEmbedAuthor(
+    protected async getEmbedUserAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction
     ): Promise<EmbedAuthorOptions> {
         let authorName: string = '';
@@ -77,6 +78,16 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         return {
             name: authorName,
             iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
+        };
+    }
+
+    protected async getEmbedQueueAuthor(
+        interaction: MessageComponentInteraction | ChatInputCommandInteraction,
+        queue: GuildQueue
+    ): Promise<EmbedAuthorOptions> {
+        return {
+            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+            iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
         };
     }
 }

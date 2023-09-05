@@ -1,6 +1,6 @@
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class GuildsCommand extends BaseSlashCommandInteraction {

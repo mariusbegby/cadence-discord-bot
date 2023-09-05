@@ -1,7 +1,7 @@
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import { BaseAutocompleteParams, BaseAutocompleteReturnType } from '../../types/interactionTypes';
 import { BaseAutocompleteInteraction } from '../../classes/interactions';
+import { BaseAutocompleteParams, BaseAutocompleteReturnType } from '../../types/interactionTypes';
 
 // TODO: create type for recent query object
 const recentQueries = new Map();

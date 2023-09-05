@@ -1,9 +1,9 @@
 import { GuildQueue, useQueue } from 'discord-player';
-import { EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -72,23 +72,12 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             queue.node.setVolume(volume);
             logger.debug(`Set volume to ${volume}%.`);
 
-            let authorName: string;
-
-            if (interaction.member instanceof GuildMember) {
-                authorName = interaction.member.nickname || interaction.user.username;
-            } else {
-                authorName = interaction.user.username;
-            }
-
             if (volume === 0) {
                 logger.debug('Responding with success embed.');
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
-                            .setAuthor({
-                                name: authorName,
-                                iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                            })
+                            .setAuthor(await this.getEmbedUserAuthor(interaction))
                             .setDescription(
                                 `**${this.embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
                             )
@@ -101,10 +90,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor({
-                            name: authorName,
-                            iconURL: interaction.user.avatarURL() || this.embedOptions.info.fallbackIconUrl
-                        })
+                        .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
                         )

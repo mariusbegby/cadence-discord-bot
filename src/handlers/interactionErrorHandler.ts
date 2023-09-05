@@ -8,9 +8,9 @@ import {
     MessageComponentInteraction
 } from 'discord.js';
 import { Logger } from 'pino';
+import { CustomError, InteractionValidationError } from '../classes/interactions';
 import loggerModule from '../services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
-import { CustomError, InteractionValidationError } from '../classes/interactions';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

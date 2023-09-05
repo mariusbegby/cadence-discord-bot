@@ -1,11 +1,10 @@
 import { Collection } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-
-import loggerModule from '../services/logger';
-import { RegisterClientInteractionsParams } from '../types/utilTypes';
 import { Logger } from 'pino';
+import loggerModule from '../services/logger';
 import { ExtendedClient } from '../types/clientTypes';
+import { RegisterClientInteractionsParams } from '../types/utilTypes';
 
 export const registerClientInteractions = async ({ client, executionId }: RegisterClientInteractionsParams) => {
     const logger: Logger = loggerModule.child({

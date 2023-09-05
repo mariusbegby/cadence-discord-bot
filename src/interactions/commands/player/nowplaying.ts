@@ -10,11 +10,11 @@ import {
     EmbedBuilder,
     SlashCommandBuilder
 } from 'discord.js';
+import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { PlayerOptions } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { checkQueueExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
-import { checkSameVoiceChannel, checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const playerOptions: PlayerOptions = config.get('playerOptions');
 
@@ -132,10 +132,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor({
-                        name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
-                        iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
-                    })
+                    .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
                     .setDescription(
                         (queue.node.isPaused()
                             ? '**Currently Paused**\n'
