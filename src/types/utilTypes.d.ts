@@ -57,3 +57,16 @@ export type PostBotStatsSite = {
     body: object;
     token: string;
 };
+
+export type ShardPlayerStatistics = {
+    totalVoiceConnections: number;
+    totalTracksInQueues: number;
+    totalListeners: number;
+};
+
+export type PlayerStatistics = {
+    instances: number;
+    queuesCount: number;
+    queryCacheEnabled: boolean;
+    queues: GuildQueueStatisticsMetadata[];
+};
