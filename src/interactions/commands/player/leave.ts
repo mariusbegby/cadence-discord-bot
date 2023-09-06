@@ -25,8 +25,6 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        logger.info('Validators passed, clearing queue.');
-
         logger.debug('Deleting queue.');
         await this.deleteQueue(queue);
 
