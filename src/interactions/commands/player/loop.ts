@@ -1,9 +1,16 @@
 import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    Message,
+    SlashCommandBuilder,
+    SlashCommandStringOption
+} from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -16,10 +23,10 @@ class LoopCommand extends BaseSlashCommandInteraction {
                     .setDescription('Loop mode: Track, queue, autoplay or disabled.')
                     .setRequired(false)
                     .addChoices(
-                        { name: 'Track', value: '1' },
-                        { name: 'Queue', value: '2' },
-                        { name: 'Autoplay', value: '3' },
-                        { name: 'Disabled', value: '0' }
+                        { name: 'Track', value: QueueRepeatMode.TRACK.toString() },
+                        { name: 'Queue', value: QueueRepeatMode.QUEUE.toString() },
+                        { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY.toString() },
+                        { name: 'Disabled', value: QueueRepeatMode.OFF.toString() }
                     )
             );
         super(data);
@@ -37,119 +44,117 @@ class LoopCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        // TODO: create type for loop modes formatted
-        const loopModesFormatted: Map<number, string> = new Map([
-            [0, 'disabled'],
-            [1, 'track'],
-            [2, 'queue'],
-            [3, 'autoplay']
-        ]);
+        const userInputRepeatMode: QueueRepeatMode = parseInt(interaction.options.getString('mode')!);
+        const currentRepeatMode: QueueRepeatMode = queue.repeatMode;
 
-        const mode: number = parseInt(interaction.options.getString('mode')!);
-        const modeUserString: string = loopModesFormatted.get(mode)!;
-        const currentMode: QueueRepeatMode = queue.repeatMode;
-        const currentModeUserString: string = loopModesFormatted.get(currentMode)!;
-
-        if (!mode && mode !== 0) {
-            logger.debug('No mode input was provided, responding with current loop mode.');
-
-            logger.debug('Responding with info embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${
-                                currentMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop
-                            } Current loop mode**\nThe looping mode is currently set to **\`${currentModeUserString}\`**.`
-                        )
-                        .setColor(this.embedOptions.colors.info)
-                ]
-            });
+        if (!userInputRepeatMode && userInputRepeatMode !== 0) {
+            return await this.handleNoInputMode(logger, interaction, currentRepeatMode);
         }
 
-        if (mode === currentMode) {
-            logger.debug(`Loop mode is already set to ${modeUserString}.`);
-
-            logger.debug('Responding with warning embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${this.embedOptions.icons.warning} Oops!**\nLoop mode is already **\`${modeUserString}\`**.`
-                        )
-                        .setColor(this.embedOptions.colors.warning)
-                ]
-            });
+        if (userInputRepeatMode === currentRepeatMode) {
+            return await this.handleSameMode(logger, interaction, userInputRepeatMode);
         }
 
-        queue.setRepeatMode(mode);
+        return await this.handleChangeMode(logger, interaction, queue, currentRepeatMode, userInputRepeatMode);
+    }
 
-        // switch(queue.repeatMode) instead of multiple if statements
+    private async handleNoInputMode(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        currentRepeatMode: QueueRepeatMode
+    ): Promise<Message> {
+        logger.debug('No repeat mode was provided, responding with current repeat mode.');
 
-        if (queue.repeatMode !== mode) {
-            logger.warn(
-                'Failed to change loop mode. After setting queue repeat mode, the value was not the same as input.'
-            );
+        const repeatModeEmbedIcon =
+            currentRepeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
+        const repeatModeEmbedName = this.getRepeatModeEmbedName(currentRepeatMode);
 
-            logger.debug('Responding with error embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${this.embedOptions.icons.error} Uh-oh... Failed to change loop mode!**\nI tried to change the loop mode to **\`${modeUserString}\`**, but something went wrong.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect or the issue persists, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
-                        )
-                        .setColor(this.embedOptions.colors.error)
-                        .setFooter({ text: `Execution ID: ${executionId}` })
-                ]
-            });
-        }
+        logger.debug('Responding with info embed.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**${repeatModeEmbedIcon} Current loop mode**\nThe looping mode is currently set to **\`${repeatModeEmbedName}\`**.`
+                    )
+                    .setColor(this.embedOptions.colors.info)
+            ]
+        });
+    }
 
-        if (queue.repeatMode === 0) {
-            logger.debug('Disabled loop mode.');
+    private async handleSameMode(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        currentRepeatMode: QueueRepeatMode
+    ): Promise<Message> {
+        const repeatModeEmbedName = this.getRepeatModeEmbedName(currentRepeatMode);
+        logger.debug(`Loop mode is already set to '${repeatModeEmbedName}'.`);
+        logger.debug('Responding with warning embed.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**${this.embedOptions.icons.warning} Oops!**\nLoop mode is already **\`${repeatModeEmbedName}\`**.`
+                    )
+                    .setColor(this.embedOptions.colors.warning)
+            ]
+        });
+    }
 
-            // TODO: Different text when disabling autoplay.
-            logger.debug('Responding with success embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor(await this.getEmbedUserAuthor(interaction))
-                        .setDescription(
-                            `**${this.embedOptions.icons.success} Loop mode disabled**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${currentModeUserString} will no longer play on repeat!`
-                        )
-                        .setColor(this.embedOptions.colors.success)
-                ]
-            });
-        }
+    private async handleChangeMode(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
+        fromRepeatMode: QueueRepeatMode,
+        toRepeatMode: QueueRepeatMode
+    ): Promise<Message> {
+        const newRepeatModeEmbedName = this.getRepeatModeEmbedName(toRepeatMode);
+        const getChangedRepeatModeEmbedReply = this.getChangedRepeatModeEmbedReply(fromRepeatMode, toRepeatMode);
 
-        if (queue.repeatMode === 3) {
-            logger.debug('Enabled autoplay mode.');
-
-            logger.debug('Responding with success embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setAuthor(await this.getEmbedUserAuthor(interaction))
-                        .setDescription(
-                            `**${this.embedOptions.icons.autoplaying} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nWhen the queue is empty, similar tracks will start playing!`
-                        )
-                        .setColor(this.embedOptions.colors.success)
-                ]
-            });
-        }
-
-        logger.debug('Enabled loop mode.');
+        queue.setRepeatMode(toRepeatMode);
+        logger.debug(`Loop mode changed to '${newRepeatModeEmbedName}'.`);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
-                    .setDescription(
-                        `**${this.embedOptions.icons.looping} Loop mode changed**\nChanging loop mode from **\`${currentModeUserString}\`** to **\`${modeUserString}\`**.\n\nThe ${modeUserString} will now play on repeat!`
-                    )
+                    .setDescription(getChangedRepeatModeEmbedReply)
                     .setColor(this.embedOptions.colors.success)
             ]
         });
+    }
+
+    private getRepeatModeEmbedName(repeatMode: QueueRepeatMode): string {
+        const repeatModeEmbedString: { [key in QueueRepeatMode]: string } = {
+            [QueueRepeatMode.OFF]: 'disabled',
+            [QueueRepeatMode.TRACK]: 'track',
+            [QueueRepeatMode.QUEUE]: 'queue',
+            [QueueRepeatMode.AUTOPLAY]: 'autoplay'
+        };
+
+        return repeatModeEmbedString[repeatMode];
+    }
+
+    private getChangedRepeatModeEmbedReply(fromRepeatMode: QueueRepeatMode, toRepeatMode: QueueRepeatMode): string {
+        const fromRepeatModeEmbedName = this.getRepeatModeEmbedName(fromRepeatMode);
+        const toRepeatModeEmbedName = this.getRepeatModeEmbedName(toRepeatMode);
+
+        let repeatModeIcon = this.embedOptions.icons.looping;
+        let newRepeatModeMessage = `The ${toRepeatModeEmbedName} will now play on repeat!`;
+
+        if (toRepeatMode === QueueRepeatMode.OFF) {
+            repeatModeIcon = this.embedOptions.icons.success;
+            newRepeatModeMessage = `The ${fromRepeatModeEmbedName} will no longer play on repeat!`;
+        } else if (toRepeatMode === QueueRepeatMode.AUTOPLAY) {
+            repeatModeIcon = this.embedOptions.icons.autoplaying;
+            newRepeatModeMessage = 'When the queue is empty, similar tracks will start playing!';
+        }
+
+        return (
+            `**${repeatModeIcon} Loop mode changed**\n` +
+            `Changing loop mode from **\`${fromRepeatModeEmbedName}\`** to **\`${toRepeatModeEmbedName}\`**.\n\n` +
+            newRepeatModeMessage
+        );
     }
 }
 
