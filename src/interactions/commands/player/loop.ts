@@ -4,29 +4,29 @@ import {
     EmbedBuilder,
     Message,
     SlashCommandBuilder,
-    SlashCommandStringOption
+    SlashCommandNumberOption
 } from 'discord.js';
+import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { Logger } from 'pino';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('loop')
             .setDescription('Toggle looping a track, the whole queue or autoplay.')
-            .addStringOption(() =>
-                new SlashCommandStringOption()
+            .addNumberOption(() =>
+                new SlashCommandNumberOption()
                     .setName('mode')
                     .setDescription('Loop mode: Track, queue, autoplay or disabled.')
                     .setRequired(false)
                     .addChoices(
-                        { name: 'Track', value: QueueRepeatMode.TRACK.toString() },
-                        { name: 'Queue', value: QueueRepeatMode.QUEUE.toString() },
-                        { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY.toString() },
-                        { name: 'Disabled', value: QueueRepeatMode.OFF.toString() }
+                        { name: 'Track', value: QueueRepeatMode.TRACK },
+                        { name: 'Queue', value: QueueRepeatMode.QUEUE },
+                        { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY },
+                        { name: 'Disabled', value: QueueRepeatMode.OFF }
                     )
             );
         super(data);
@@ -44,7 +44,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const userInputRepeatMode: QueueRepeatMode = parseInt(interaction.options.getString('mode')!);
+        const userInputRepeatMode: QueueRepeatMode = interaction.options.getNumber('mode')!;
         const currentRepeatMode: QueueRepeatMode = queue.repeatMode;
 
         if (!userInputRepeatMode && userInputRepeatMode !== 0) {
