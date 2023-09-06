@@ -14,13 +14,6 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 option.setName('tracknumber').setDescription('The position in queue to skip to.').setMinValue(1)
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -29,7 +22,12 @@ class SkipCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueCurrentTrack
+        ]);
 
         const skipToTrack: number = interaction.options.getNumber('tracknumber')!;
 

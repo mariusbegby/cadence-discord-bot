@@ -18,12 +18,6 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                     .setRequired(true)
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -32,7 +26,11 @@ class RemoveCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         const removeTrackNumber: number = interaction.options.getNumber('tracknumber')!;
 

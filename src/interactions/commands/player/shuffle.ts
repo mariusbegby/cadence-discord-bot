@@ -11,13 +11,6 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
             .setName('shuffle')
             .setDescription('Randomly shuffle all tracks in the queue.');
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueEmpty(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -26,7 +19,12 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueEmpty
+        ]);
 
         queue.tracks.shuffle();
         logger.debug('Shuffled queue tracks.');

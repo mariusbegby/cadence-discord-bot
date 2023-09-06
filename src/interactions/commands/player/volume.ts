@@ -18,12 +18,6 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                     .setMaxValue(100)
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -32,7 +26,11 @@ class VolumeCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         const volume: number = interaction.options.getNumber('percentage')!;
 

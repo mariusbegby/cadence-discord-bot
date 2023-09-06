@@ -23,12 +23,6 @@ class LoopCommand extends BaseSlashCommandInteraction {
                     )
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -37,7 +31,11 @@ class LoopCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         // TODO: create type for loop modes formatted
         const loopModesFormatted: Map<number, string> = new Map([

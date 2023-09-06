@@ -9,13 +9,6 @@ class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -24,7 +17,12 @@ class PauseCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueCurrentTrack
+        ]);
 
         const currentTrack: Track = queue.currentTrack!;
 

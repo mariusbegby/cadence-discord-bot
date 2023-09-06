@@ -21,13 +21,6 @@ class LyricsCommand extends BaseSlashCommandInteraction {
                     .setAutocomplete(true)
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -40,7 +33,12 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         let geniusSearchQuery: string = '';
 
         if (!query) {
-            await this.runValidators({ interaction, queue, executionId });
+            await this.runValidators({ interaction, queue, executionId }, [
+                checkInVoiceChannel,
+                checkSameVoiceChannel,
+                checkQueueExists,
+                checkQueueCurrentTrack
+            ]);
 
             geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
 

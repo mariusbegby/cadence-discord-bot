@@ -41,13 +41,6 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     )
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -56,7 +49,12 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueCurrentTrack
+        ]);
 
         const filterProvider: string = interaction.options.getString('type') || 'FFmpeg';
 

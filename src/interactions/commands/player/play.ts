@@ -25,15 +25,13 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setAutocomplete(true)
             );
         super(data);
-
-        this.validators = [(args) => checkInVoiceChannel(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        await this.runValidators({ interaction, executionId });
+        await this.runValidators({ interaction, executionId }, [checkInVoiceChannel]);
 
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
         if (queue) {

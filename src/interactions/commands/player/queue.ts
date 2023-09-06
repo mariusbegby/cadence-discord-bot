@@ -18,12 +18,6 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 option.setName('page').setDescription('Page number to display for the queue').setMinValue(1)
             );
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -32,7 +26,11 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
         let queueString: string = '';

@@ -10,15 +10,13 @@ class GuildsCommand extends BaseSlashCommandInteraction {
             .setDescription('Show the top 25 guilds by member count.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
-
-        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        await this.runValidators({ interaction, executionId });
+        await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
         let shardGuilds: Guild[] = [];
         let totalGuildCount: number = 0;

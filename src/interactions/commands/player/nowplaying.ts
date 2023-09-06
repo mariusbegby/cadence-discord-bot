@@ -24,13 +24,6 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
             .setName('nowplaying')
             .setDescription('Show information about the current track.');
         super(data);
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
@@ -39,7 +32,12 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueCurrentTrack
+        ]);
 
         const sourceStringsFormatted: Map<string, string> = new Map([
             ['youtube', 'YouTube'],

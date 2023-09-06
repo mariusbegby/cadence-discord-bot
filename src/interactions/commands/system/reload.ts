@@ -11,15 +11,13 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             .setDescription('Reload slash command, autocomplete and component interactions across shards.');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
-
-        this.validators = [(args) => checkValidGuildId(args)];
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        await this.runValidators({ interaction, executionId });
+        await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
         try {
             logger.debug('Reloading interaction module across all shards.');
