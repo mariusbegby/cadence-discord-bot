@@ -5,6 +5,7 @@ import { randomUUID as uuidv4 } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Logger } from 'pino';
+import { BaseSlashCommandInteraction } from '../classes/interactions';
 import loggerModule from '../services/logger';
 import { SystemOptions } from '../types/configTypes';
 
@@ -17,10 +18,8 @@ const logger: Logger = loggerModule.child({
     executionId: executionId
 });
 
-//TODO: Fix deploying not working with require()
-
-const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
-const systemCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const userSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const systemSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
@@ -47,19 +46,21 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
             .filter((file) => file.endsWith('.js'));
 
         for (const file of commandFiles) {
-            // TODO: create commandModule type
             const { default: command } = await import(`../interactions/commands/${folder}/${file}`);
-            command.isSystemCommand
-                ? systemCommands.push(command.data.toJSON())
-                : slashCommands.push(command.data.toJSON());
+            const slashCommand = command as BaseSlashCommandInteraction;
+            slashCommand.isSystemCommand
+                ? systemSlashCommands.push(slashCommand.data.toJSON())
+                : userSlashCommands.push(slashCommand.data.toJSON());
         }
     }
 
     try {
-        logger.debug(`Bot user slash commands found: ${slashCommands.map((command) => `/${command.name}`).join(', ')}`);
+        logger.debug(
+            `Bot user slash commands found: ${userSlashCommands.map((command) => `/${command.name}`).join(', ')}`
+        );
 
         logger.info('Started refreshing user slash commands.');
-        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID!), slashCommands);
+        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID!), userSlashCommands);
         logger.info('Successfully refreshed user slash commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh user slash commands.');
@@ -67,7 +68,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
 
     try {
         logger.debug(
-            `Bot system slash commands found: ${systemCommands
+            `Bot system slash commands found: ${systemSlashCommands
                 .map((systemCommand) => `/${systemCommand.name}`)
                 .join(', ')}`
         );
@@ -79,7 +80,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
                 logger.debug(`Refreshing system slash command for guild id '${systemGuildId}'.`);
                 refreshCommands(
                     Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID!, systemGuildId),
-                    systemCommands
+                    systemSlashCommands
                 );
             })
         );

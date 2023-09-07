@@ -31,7 +31,6 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
 
         const genius = lyricsExtractor();
         const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
-        // TODO: Update TS Type for lyricsResult and create response object type
         let response: ApplicationCommandOptionChoiceData<string>[] = [];
 
         if (!lyricsResult) {

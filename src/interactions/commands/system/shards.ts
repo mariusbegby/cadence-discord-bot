@@ -49,8 +49,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
                         (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
                     );
 
-                    // TODO: Create shardInfo type
-                    const shardInfo = {
+                    const shardInfo: ShardInfo = {
                         shardId: shardClient.shard!.ids[0],
                         memUsage: nodeProcessMemUsageInMb,
                         guildCount: shardClient.guilds.cache.size,
