@@ -2,26 +2,28 @@ import { GuildQueueStatisticsMetadata } from 'discord-player';
 import { Client, Guild } from 'discord.js';
 import { PlayerStatistics, ShardPlayerStatistics } from '../types/utilTypes';
 
-async function fetchGuildsPerShard(client?: Client): Promise<Guild[][]> {
+async function fetchGuildsPerShard(client?: Client): Promise<Map<string, Guild>[]> {
     if (!client || !client.shard) {
         throw new Error('Client is undefined or not sharded.');
     }
 
     try {
-        return (await client.shard.fetchClientValues('guilds.cache')) as Guild[][];
+        return (await client.shard.fetchClientValues('guilds.cache')) as Map<string, Guild>[];
     } catch (error) {
         throw new Error('Failed to fetch client values from shards.');
     }
 }
 
-function calculateTotalCountForShard(guildList: Guild[]) {
+function calculateTotalCountForShard(guildListMap: Map<string, Guild>) {
+    const guildList: Guild[] = [...guildListMap.values()];
+
     const totalGuildCount: number = guildList.length;
     const totalMemberCount: number = guildList.reduce((acc: number, guild: Guild) => acc + guild.memberCount, 0);
 
     return { totalGuildCount, totalMemberCount };
 }
 
-function calculateTotalCountForAllShards(guildListPerShard: Guild[][]) {
+function calculateTotalCountForAllShards(guildListPerShard: Map<string, Guild>[]) {
     return guildListPerShard.reduce(
         (totals, guildList) => {
             const { totalGuildCount, totalMemberCount } = calculateTotalCountForShard(guildList);
@@ -35,7 +37,7 @@ function calculateTotalCountForAllShards(guildListPerShard: Guild[][]) {
 }
 
 export async function fetchTotalGuildStatistics(client?: Client) {
-    const guildsPerShard: Guild[][] = await fetchGuildsPerShard(client);
+    const guildsPerShard: Map<string, Guild>[] = await fetchGuildsPerShard(client);
     const { totalGuildCount, totalMemberCount } = calculateTotalCountForAllShards(guildsPerShard);
 
     return { totalGuildCount, totalMemberCount };
