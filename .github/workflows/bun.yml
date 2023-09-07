@@ -1,0 +1,25 @@
+name: Bun CI
+
+on:
+    pull_request:
+        branches: ['main']
+
+jobs:
+    build:
+        name: Bun ${{ matrix.bun-version }} on ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                bun-version: [latest, canary]
+                os: ['ubuntu-latest']
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Bun ${{ matrix.bun-version }}
+              uses: oven-sh/setup-bun@v1
+              with:
+                  bun-version: ${{ matrix.bun-version }}
+            - run: bun install
+            - run: bun run eslint
+            - run: bun run build
