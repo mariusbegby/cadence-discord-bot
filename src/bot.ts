@@ -1,6 +1,9 @@
+// .ENV file is loaded automatically by dotenv
+import 'dotenv/config';
+
+// Only after loading .ENV file, we can load other modules
 import { Player } from 'discord-player';
 import { Client } from 'discord.js';
-import 'dotenv/config';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
 import loggerModule from './services/logger';
