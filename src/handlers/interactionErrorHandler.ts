@@ -28,7 +28,7 @@ export const handleError = async (
         executionId: executionId
     });
 
-    if (error instanceof InteractionValidationError) {
+    if (error instanceof InteractionValidationError || error.type === 'InteractionValidationError') {
         logger.debug(
             `Interaction validation error '${error.message}' while handling interaction '${interactionIdentifier}'.`
         );
@@ -47,7 +47,7 @@ export const handleError = async (
         ]
     };
 
-    logger.debug(error, `Error handling interaction '${interactionIdentifier}' with execution ID ${executionId}`);
+    logger.debug(`Error handling interaction '${interactionIdentifier}'`);
 
     if (interaction instanceof ChatInputCommandInteraction) {
         switch (interaction.replied) {
