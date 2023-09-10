@@ -1,6 +1,7 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
-import { GuildQueue, Player, QueryType, useMainPlayer, useQueue } from 'discord-player';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { GuildQueue, Player, QueryType, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
@@ -28,9 +29,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
-
         const query: string = interaction.options.getString('query')!;
-        let geniusSearchQuery: string = '';
 
         if (!query) {
             await this.runValidators({ interaction, queue, executionId }, [
@@ -39,145 +38,181 @@ class LyricsCommand extends BaseSlashCommandInteraction {
                 checkQueueExists,
                 checkQueueCurrentTrack
             ]);
-
-            geniusSearchQuery = queue.currentTrack!.title.slice(0, 50);
-
-            logger.debug(
-                `No input query provided, using current track. Using query for genius: '${geniusSearchQuery}'`
-            );
         }
 
-        let searchResult;
-        if (query) {
-            logger.debug(`Query input provided, using query '${query}' for player.search().`);
-            const player: Player = useMainPlayer()!;
-            const searchResults = await player.search(query, {
-                searchEngine: QueryType.SPOTIFY_SEARCH
-            });
+        const geniusSearchQuery: string = this.getGeniusSearchQuery(logger, query, queue);
+        const [playerSearchResult, geniusLyricsResult] = await Promise.all([
+            this.getPlayerSearchResult(logger, query),
+            this.getGeniusLyricsResult(logger, geniusSearchQuery)
+        ]);
+        const finalLyricsData: LyricsData | null = this.validateGeniusLyricsResult(
+            logger,
+            geniusLyricsResult,
+            playerSearchResult,
+            queue
+        );
 
-            if (searchResults.tracks.length === 0) {
-                logger.debug('No search results using player.search() found.');
-
-                logger.debug('Responding with warning embed.');
-                return await interaction.editReply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setDescription(
-                                `**${this.embedOptions.icons.warning} No search results found**\nThere was no search results found for query **${query}**.`
-                            )
-                            .setColor(this.embedOptions.colors.warning)
-                    ]
-                });
-            }
-
-            searchResult = searchResults.tracks[0];
-            geniusSearchQuery = searchResults.tracks[0].title;
-            logger.debug(`Using query for genius: '${geniusSearchQuery}'`);
-        }
-
-        // get lyrics
-        const genius = lyricsExtractor();
-        let lyricsResult: LyricsData | null = await genius.search(geniusSearchQuery).catch(() => null);
-
-        // try again with shorter query (some titles just have added info in the end)
-        if (!lyricsResult && geniusSearchQuery.length > 20) {
-            logger.debug(
-                `No Genius lyrics found for query '${geniusSearchQuery}', trying again with shorter query (20 chars).`
-            );
-            lyricsResult = await genius.search(geniusSearchQuery.slice(0, 20)).catch(() => null);
-        }
-        if (!lyricsResult && geniusSearchQuery.length > 10) {
-            logger.debug(
-                `No Genius lyrics found for query '${geniusSearchQuery}', trying again with shorter query (10 chars).`
-            );
-            lyricsResult = await genius.search(geniusSearchQuery.slice(0, 10)).catch(() => null);
-        }
-
-        // Check if authors in track from searchResult includes the artist name from genius
-        if (searchResult && lyricsResult) {
-            const searchResultAuthorIncludesArtist = searchResult.author
-                .toLowerCase()
-                .includes(lyricsResult.artist.name.toLowerCase());
-            const lyricsResultArtistIncludesAuthor = lyricsResult.artist.name
-                .toLowerCase()
-                .includes(searchResult.author.toLowerCase());
-            const searchResultAuthorSplitIncludesArtist = lyricsResult.artist.name
-                .toLowerCase()
-                .includes(searchResult.author.split(', ')[0].toLowerCase());
-
-            if (
-                !searchResultAuthorIncludesArtist &&
-                !lyricsResultArtistIncludesAuthor &&
-                !searchResultAuthorSplitIncludesArtist
-            ) {
-                lyricsResult = null;
-                logger.debug('Found Genius lyrics but artist name did not match from player.search() result.');
-            }
-        }
-
-        if (!lyricsResult || !lyricsResult.lyrics) {
+        if (!finalLyricsData) {
             logger.debug('No matching lyrics found.');
-
-            logger.debug('Responding with warning embed.');
-            return await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            `**${this.embedOptions.icons.warning} No lyrics found**\nThere was no Genius lyrics found for track **${geniusSearchQuery}**.`
-                        )
-                        .setColor(this.embedOptions.colors.warning)
-                ]
-            });
+            return await this.sendNoLyricsFoundEmbed(logger, interaction, geniusSearchQuery);
         }
 
-        logger.debug(`Successfully found matching Genius lyrics for query '${geniusSearchQuery}'.`);
-
-        // If message length is too long, split into multiple messages
-        if (lyricsResult.lyrics.length > 3800) {
-            logger.debug('Lyrics text too long, splitting into multiple messages.');
-            const messageCount: number = Math.ceil(lyricsResult.lyrics.length / 3800);
-            for (let i: number = 0; i < messageCount; i++) {
-                logger.debug(`Lyrics, sending message ${i + 1} of ${messageCount}.`);
-                const message: string = lyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
-                if (i === 0) {
-                    logger.debug('Responding with info embed for first message with lyrics.');
-                    await interaction.editReply({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(
-                                    `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                                        `**Track: [${lyricsResult.title}](${lyricsResult.url})**\n` +
-                                        `**Artist: [${lyricsResult.artist.name}](${lyricsResult.artist.url})**` +
-                                        `\n\n\`\`\`fix\n${message}\`\`\``
-                                )
-                                .setColor(this.embedOptions.colors.info)
-                        ]
-                    });
-                    continue;
-                } else {
-                    logger.debug('Sending consecutive message with lyrics.');
-                    await interaction.channel!.send({
-                        embeds: [
-                            new EmbedBuilder()
-                                .setDescription(`\`\`\`fix\n${message}\`\`\``)
-                                .setColor(this.embedOptions.colors.info)
-                        ]
-                    });
-                }
-            }
-
-            return;
+        if (finalLyricsData.lyrics.length > 3800) {
+            return await this.sendMultipleLyricsMessages(logger, interaction, finalLyricsData);
         }
 
+        return await this.sendLyricsEmbed(finalLyricsData, interaction, logger);
+    }
+
+    private getGeniusSearchQuery(logger: Logger, query: string, queue: GuildQueue): string {
+        const geniusSearchQuery =
+            query ?? queue.currentTrack!.title.slice(0, 50) + ' ' + queue.currentTrack!.author.split(', ')[0];
+        logger.debug(`Using query for genius search: '${geniusSearchQuery}'`);
+        return geniusSearchQuery;
+    }
+
+    private async getPlayerSearchResult(logger: Logger, query: string): Promise<Track | null> {
+        if (!query) {
+            return null;
+        }
+        logger.debug(`Query input provided, using query '${query}' for player.search().`);
+        const player: Player = useMainPlayer()!;
+        const searchResults: SearchResult | null = await player
+            .search(query, {
+                searchEngine: QueryType.SPOTIFY_SEARCH
+            })
+            .catch(() => null);
+
+        if (!searchResults || searchResults.tracks.length === 0) {
+            logger.debug('No search results using player.search() found.');
+            return null;
+        }
+
+        return searchResults.tracks[0];
+    }
+
+    private async getGeniusLyricsResult(logger: Logger, geniusSearchQuery: string): Promise<LyricsData | null> {
+        const genius = lyricsExtractor();
+        let geniusLyricsResult: LyricsData | null = await genius.search(geniusSearchQuery).catch(() => null);
+
+        if (!geniusLyricsResult && geniusSearchQuery.length > 20) {
+            logger.debug('No lyrics found, trying again with shorter query.');
+            geniusLyricsResult = await this.retryGeniusLyricsSearchSorterQuery(logger, geniusSearchQuery);
+        }
+
+        return geniusLyricsResult;
+    }
+
+    private async retryGeniusLyricsSearchSorterQuery(
+        logger: Logger,
+        geniusSearchQuery: string
+    ): Promise<LyricsData | null> {
+        if (geniusSearchQuery.length < 10) {
+            return null;
+        }
+
+        const retryQuery: string = geniusSearchQuery.slice(0, geniusSearchQuery.length - 10);
+        const retryLyricsResult: LyricsData | null = await this.getGeniusLyricsResult(logger, retryQuery);
+
+        // recursively try again with shorter query
+        if (!retryLyricsResult) {
+            return this.retryGeniusLyricsSearchSorterQuery(logger, retryQuery);
+        }
+
+        return retryLyricsResult;
+    }
+
+    private validateGeniusLyricsResult(
+        logger: Logger,
+        geniusLyricsResult: LyricsData | null,
+        playerSearchResult: Track | null,
+        queue: GuildQueue
+    ): LyricsData | null {
+        if (geniusLyricsResult && !this.doesArtistNameMatch(playerSearchResult, geniusLyricsResult, queue)) {
+            logger.debug('Found Genius lyrics but artist name did not match from player.search() result.');
+            geniusLyricsResult = null;
+        }
+
+        if (!geniusLyricsResult || geniusLyricsResult.lyrics.length === 0) {
+            logger.debug('No Genius lyrics found.');
+            geniusLyricsResult = null;
+        }
+
+        return geniusLyricsResult;
+    }
+
+    private doesArtistNameMatch(
+        playerSearchResult: Track | null,
+        geniusLyricsResult: LyricsData,
+        queue: GuildQueue
+    ): boolean {
+        const playerAuthorLower = playerSearchResult?.author.toLowerCase() ?? queue.currentTrack!.author.toLowerCase();
+        const geniusArtistNameLower = geniusLyricsResult.artist.name.toLowerCase();
+
+        return (
+            playerAuthorLower.includes(geniusArtistNameLower) ||
+            geniusArtistNameLower.includes(playerAuthorLower) ||
+            geniusArtistNameLower.includes(playerAuthorLower.split(', ')[0])
+        );
+    }
+
+    private async sendNoLyricsFoundEmbed(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        geniusSearchQuery: string
+    ) {
+        logger.debug('Responding with warning embed.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**${this.embedOptions.icons.warning} No lyrics found**\nThere was no Genius lyrics found for track **${geniusSearchQuery}**.`
+                    )
+                    .setColor(this.embedOptions.colors.warning)
+            ]
+        });
+    }
+
+    private async sendMultipleLyricsMessages(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        geniusLyricsResult: LyricsData
+    ) {
+        logger.debug('Lyrics text too long, splitting into multiple messages.');
+        const messageCount: number = Math.ceil(geniusLyricsResult.lyrics.length / 3800);
+        const embedList: EmbedBuilder[] = [];
+        embedList.push(
+            new EmbedBuilder()
+                .setDescription(
+                    `**${this.embedOptions.icons.queue} Showing lyrics**\n**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n`
+                )
+                .setColor(this.embedOptions.colors.info)
+        );
+        for (let i: number = 0; i < messageCount; i++) {
+            logger.debug(`Adding message ${i + 1} of ${messageCount} to embed list.`);
+            const message: string = geniusLyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
+            embedList.push(
+                new EmbedBuilder().setDescription(`\`\`\`fix\n${message}\`\`\``).setColor(this.embedOptions.colors.info)
+            );
+        }
+
+        logger.debug('Responding with multiple info embeds.');
+        await interaction.editReply({
+            embeds: embedList
+        });
+    }
+
+    private async sendLyricsEmbed(
+        geniusLyricsResult: LyricsData,
+        interaction: ChatInputCommandInteraction,
+        logger: Logger
+    ) {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                            `**Track: [${lyricsResult.title}](${lyricsResult.url})**\n` +
-                            `**Artist: [${lyricsResult.artist.name}](${lyricsResult.artist.url})**` +
-                            `\n\n\`\`\`fix\n${lyricsResult.lyrics}\`\`\``
+                        `**${this.embedOptions.icons.queue} Showing lyrics**\n**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
                     )
                     .setColor(this.embedOptions.colors.info)
             ]
