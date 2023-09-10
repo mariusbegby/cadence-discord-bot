@@ -1,5 +1,35 @@
 # Changelog
 
+## [5.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.1...v5.3.0) (2023-09-07)
+
+
+### Features
+
+* refactored handling of validators ([8c05499](https://github.com/mariusbegby/cadence-discord-bot/commit/8c05499f08df6fac9cf7159a34b5a13cd642d7dc))
+
+
+### Minor changes and bug fixes
+
+* add bun scripts to package.json ([00aaece](https://github.com/mariusbegby/cadence-discord-bot/commit/00aaece22766a9a900c809a18c3ce288725dfad4))
+* changed loop mode option input to number ([c4bb6ee](https://github.com/mariusbegby/cadence-discord-bot/commit/c4bb6eef3fed1a3e5e6c2869b35a688aeb271812))
+* Extract logic for getting author value for embeds ([83e23d8](https://github.com/mariusbegby/cadence-discord-bot/commit/83e23d87b4d79e8b37d45dcca15ecaa603e8a30d))
+* extracted logic for retrieving shard status ([8da6f44](https://github.com/mariusbegby/cadence-discord-bot/commit/8da6f44ebbf56ede204d515b03f6aca5339daeda))
+* Fix .ENV file not being properly loaded ([1220ef1](https://github.com/mariusbegby/cadence-discord-bot/commit/1220ef171f5b1266a481881d5f7b2c5daa185e5e))
+* Fixed mapped guild list not being parsed by Bun ([d953fc9](https://github.com/mariusbegby/cadence-discord-bot/commit/d953fc97af2d9c2ece7ed232a892609f7ba27559))
+* refactor loop command ([03c1d5d](https://github.com/mariusbegby/cadence-discord-bot/commit/03c1d5d90f0c9860a21b3210281dac85498eba1b))
+* refactored help slash command ([9223377](https://github.com/mariusbegby/cadence-discord-bot/commit/922337769da9260e0c9eb0004fce49c892d7951e))
+* remove unneccessary logging in leave command ([6999598](https://github.com/mariusbegby/cadence-discord-bot/commit/6999598c8708e987233c4eaab1dcdf766ccd50be))
+* Update postBotStats to output status codes from request ([9e20805](https://github.com/mariusbegby/cadence-discord-bot/commit/9e20805529a1671772362e591a8518fa7eabd3ee))
+* Update validators with new types ([e67d000](https://github.com/mariusbegby/cadence-discord-bot/commit/e67d0004b05a7d6a72a723430c183880802cc6f4))
+* Updated sending in checks for validation runner ([56056cd](https://github.com/mariusbegby/cadence-discord-bot/commit/56056cd73d03d51d5a49e0cace710ccdcc930281))
+* Updated some validator error messages ([04dd7a7](https://github.com/mariusbegby/cadence-discord-bot/commit/04dd7a72181d69c6332692c4912c8fb5274a6581))
+
+
+### Miscellaneous
+
+* add Bun CI workflow ([15b0a54](https://github.com/mariusbegby/cadence-discord-bot/commit/15b0a54e298d237494ba2c1cdcc83880e03a1fbe))
+* **deps-dev:** bump @types/config from 3.3.0 to 3.3.1 ([260e1d6](https://github.com/mariusbegby/cadence-discord-bot/commit/260e1d637ad73d192e19046b95da0d1e11cc0e47))
+
 ## [5.2.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.0...v5.2.1) (2023-09-03)
 
 
