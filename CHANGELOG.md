@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.2...v5.3.3) (2023-09-10)
+
+
+### Minor changes and bug fixes
+
+* refactor nowplaying command ([f061000](https://github.com/mariusbegby/cadence-discord-bot/commit/f061000f933d89add34c8123ec1d8395e6da14fb))
+
 ## [5.3.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.1...v5.3.2) (2023-09-10)
 
 
