@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.3.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.1...v5.3.2) (2023-09-10)
+
+
+### Minor changes and bug fixes
+
+* dont log error object before handling ([c35a3ad](https://github.com/mariusbegby/cadence-discord-bot/commit/c35a3ad5aac96309f9f2afacd22186d2613d1e1a))
+* Fix deconstruction error if no lastQuery result in autocomplete ([851e932](https://github.com/mariusbegby/cadence-discord-bot/commit/851e9321f561f1b50f52ad55c9497fea60be7300))
+* refactored lyrics command ([c1de63d](https://github.com/mariusbegby/cadence-discord-bot/commit/c1de63da2735ada18dde25df9bfbe3c3a5212124))
+* use new runValidators format on components ([74c1447](https://github.com/mariusbegby/cadence-discord-bot/commit/74c1447e7d27e7a87dcfc9d1893f232550365824))
+
 ## [5.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.0...v5.3.1) (2023-09-10)
 
 
