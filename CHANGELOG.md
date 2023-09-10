@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.0...v5.3.1) (2023-09-10)
+
+
+### Minor changes and bug fixes
+
+* fix string comparison to lowercase for filter provider ([e89075e](https://github.com/mariusbegby/cadence-discord-bot/commit/e89075ef440fb56c4a42ffee6f90cefa7d5b5a56))
+* update deps ([608dfe5](https://github.com/mariusbegby/cadence-discord-bot/commit/608dfe556636bb4afae46093fd3f94f9af377c1f))
+
 ## [5.3.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.2.1...v5.3.0) (2023-09-07)
 
 
