@@ -8,12 +8,6 @@ import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validati
 class FiltersDisableButtonComponent extends BaseComponentInteraction {
     constructor() {
         super('filters-disable-button');
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -22,7 +16,11 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         // Reset filters before enabling provided filters
         if (queue.filters.ffmpeg.filters.length > 0) {

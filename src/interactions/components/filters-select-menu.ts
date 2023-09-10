@@ -12,12 +12,6 @@ const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions
 class FiltersSelectMenuComponent extends BaseComponentInteraction {
     constructor() {
         super('filters-select-menu');
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args)
-        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -29,7 +23,11 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         const selectMenuInteraction: StringSelectMenuInteraction = interaction as StringSelectMenuInteraction;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists
+        ]);
 
         queue.filters.ffmpeg.setInputArgs([
             '-threads',

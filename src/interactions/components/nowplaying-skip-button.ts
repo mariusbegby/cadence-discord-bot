@@ -8,13 +8,6 @@ import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validati
 class NowplayingSkipButton extends BaseComponentInteraction {
     constructor() {
         super('nowplaying-skip-button');
-
-        this.validators = [
-            (args) => checkInVoiceChannel(args),
-            (args) => checkSameVoiceChannel(args),
-            (args) => checkQueueExists(args),
-            (args) => checkQueueCurrentTrack(args)
-        ];
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -23,7 +16,12 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, queue, executionId });
+        await this.runValidators({ interaction, queue, executionId }, [
+            checkInVoiceChannel,
+            checkSameVoiceChannel,
+            checkQueueExists,
+            checkQueueCurrentTrack
+        ]);
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
             logger.debug('Tried skipping track but there was no queue.');
