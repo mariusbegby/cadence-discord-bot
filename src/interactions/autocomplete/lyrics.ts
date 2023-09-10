@@ -17,7 +17,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
 
         const query: string = interaction.options.getString('query', true);
-        const { lastQuery, result, timestamp } = recentQueries.get(interaction.user.id);
+        const { lastQuery, result, timestamp } = recentQueries.get(interaction.user.id) || {};
 
         if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
             logger.debug(`Responding with results from lastQuery for query '${query}'`);
