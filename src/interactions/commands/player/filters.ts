@@ -58,23 +58,19 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const filterProvider: string = interaction.options.getString('type') || 'FFmpeg';
 
-        switch (filterProvider) {
+        switch (filterProvider.toLowerCase()) {
             case 'ffmpeg':
-                logger.info('Handling ffmpeg filters.');
+                logger.debug('Handling ffmpeg filters.');
                 return await this.handleFfmpegFilters(queue, logger, interaction);
             case 'biquad':
-                logger.info('Biquad filters are not yet implemented.');
-                break;
+                logger.debug('Handling biquad filters.');
+                return await this.tempNotImplementedResponse(logger, interaction);
             case 'equalizer':
-                logger.info('Equalizer filters are not yet implemented.');
-                break;
+                logger.debug('Handling equalizer filters.');
+                return await this.tempNotImplementedResponse(logger, interaction);
             case 'disable':
-                logger.info('Disabling filters.');
-                if (queue.filters.ffmpeg.filters.length > 0) {
-                    queue.filters.ffmpeg.setFilters(false);
-                    logger.debug('Reset queue filters.');
-                }
-                logger.info('Response not yet implemented.');
+                logger.debug('Disabling filters.');
+                return await this.tempDisableFilters(queue, logger, interaction);
         }
     }
 
@@ -135,6 +131,40 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [filterActionRow, disableFiltersActionRow]
+        });
+    }
+
+    private async tempDisableFilters(queue: GuildQueue, logger: Logger, interaction: ChatInputCommandInteraction) {
+        if (queue.filters.ffmpeg.filters.length > 0) {
+            queue.filters.ffmpeg.setFilters(false);
+            logger.debug('Reset queue filters.');
+        }
+
+        logger.debug('Responding with success embed.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setDescription(
+                        `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
+                    )
+                    .setColor(this.embedOptions.colors.success)
+            ],
+            components: []
+        });
+    }
+
+    private async tempNotImplementedResponse(logger: Logger, interaction: ChatInputCommandInteraction) {
+        logger.debug('Responding with info embed.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**${this.embedOptions.icons.bot} Coming soon**\nThis functionality has not yet been implemented, and will be available soon.`
+                    )
+                    .setColor(this.embedOptions.colors.info)
+            ],
+            components: []
         });
     }
 }
