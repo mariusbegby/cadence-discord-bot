@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.3.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.3...v5.3.4) (2023-09-11)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.5.9 to 20.6.0 ([759171f](https://github.com/mariusbegby/cadence-discord-bot/commit/759171fd6b492198e92900bb92f429617fb51220))
+* **deps-dev:** bump eslint from 8.48.0 to 8.49.0 ([0f72034](https://github.com/mariusbegby/cadence-discord-bot/commit/0f7203447739ee94be641cd5511976cc01d9141f))
+* **deps:** bump mediaplex from 0.0.6 to 0.0.7 ([a79cb44](https://github.com/mariusbegby/cadence-discord-bot/commit/a79cb4467d3c02ad50229ba495b8cb83cbeabe0d))
+* **deps:** bump pino from 8.15.0 to 8.15.1 ([8814a55](https://github.com/mariusbegby/cadence-discord-bot/commit/8814a55f92e256418d25cbbab671bfe000bc2026))
+
 ## [5.3.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.2...v5.3.3) (2023-09-10)
 
 
