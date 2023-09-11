@@ -49,6 +49,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
 
         // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
         if (
+            ffmpegFilterOptions.forceNormalizerByBassBoost &&
             (selectMenuInteraction.values.includes('bassboost_low') ||
                 selectMenuInteraction.values.includes('bassboost')) &&
             !selectMenuInteraction.values.includes('normalizer')

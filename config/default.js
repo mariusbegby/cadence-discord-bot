@@ -144,6 +144,7 @@ module.exports.ipRotationConfig = {
 // Configuration for ffmpeg filters for audio processing.
 module.exports.ffmpegFilterOptions = {
     threadAmount: '2',
+    forceNormalizerByBassBoost: true,
     availableFilters: [
         {
             label: 'Bass boost',
