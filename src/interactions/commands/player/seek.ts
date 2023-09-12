@@ -147,7 +147,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         `**${this.embedOptions.icons.success} Seeking to duration**\nSeeking to **\`${durationString}\`** in current track.`
                     )
-                    .setThumbnail(queue.currentTrack!.thumbnail)
+                    .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.success)
             ]
         });

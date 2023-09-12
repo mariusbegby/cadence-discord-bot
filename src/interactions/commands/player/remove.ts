@@ -63,7 +63,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                             removedTrack
                         )}`
                     )
-                    .setThumbnail(removedTrack.thumbnail)
+                    .setThumbnail(this.getTrackThumbnailUrl(removedTrack))
                     .setColor(this.embedOptions.colors.success)
             ]
         });

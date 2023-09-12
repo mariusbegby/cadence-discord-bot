@@ -79,7 +79,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                     .setFooter({
                         text: tracksInQueueCount ? `${tracksInQueueCount} other tracks in the queue...` : ' '
                     })
-                    .setThumbnail(queue.currentTrack!.thumbnail)
+                    .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [embedActionRow as APIActionRowComponent<APIMessageActionRowComponent>]

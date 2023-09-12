@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { BotOptions, EmbedOptions } from '../types/configTypes';
+import { BotOptions, EmbedOptions, PlayerOptions } from '../types/configTypes';
 import {
     BaseAutocompleteParams,
     BaseAutocompleteReturnType,
@@ -29,10 +29,12 @@ import { Validator, ValidatorParams } from '../types/utilTypes';
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
     botOptions: BotOptions;
+    playerOptions: PlayerOptions;
 
     constructor() {
         this.embedOptions = config.get('embedOptions');
         this.botOptions = config.get('botOptions');
+        this.playerOptions = config.get('playerOptions');
     }
 
     protected getLoggerBase(
@@ -83,6 +85,32 @@ abstract class BaseInteraction {
         const formattedUrl = this.getFormattedTrackUrl(track);
 
         return `${formattedDuration} ${formattedUrl}`;
+    }
+
+    protected getTrackThumbnailUrl(track: Track): string {
+        let thumbnailUrl = '';
+
+        if (track.source === 'youtube') {
+            if (track.raw.thumbnail) {
+                // @ts-ignore -- discord-player bug with thumbnail for youtube?
+                thumbnailUrl = track.raw.thumbnail.url;
+            } else if (track.thumbnail && !track.thumbnail.endsWith('maxresdefault.jpg')) {
+                // @ts-ignore -- discord-player bug with thumbnail for youtube?
+                thumbnailUrl = track.thumbnail.url;
+            } else {
+                thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
+            }
+        } else {
+            if (track.raw.thumbnail) {
+                thumbnailUrl = track.raw.thumbnail;
+            } else if (track.thumbnail) {
+                thumbnailUrl = track.thumbnail;
+            } else {
+                thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
+            }
+        }
+
+        return thumbnailUrl;
     }
 
     abstract execute(

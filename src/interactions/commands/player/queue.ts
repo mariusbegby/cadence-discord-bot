@@ -138,7 +138,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                                 `${repeatModeString}` +
                                 `**${this.embedOptions.icons.queue} Tracks in queue**\n${queueString}`
                         )
-                        .setThumbnail(currentTrack.thumbnail)
+                        .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
                         .setFooter({
                             text: `Page ${pageIndex + 1} of ${totalPages} (${queueLength} tracks)`
                         })

@@ -62,7 +62,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
                                     this.embedOptions.icons.skipped
                                 } Skipped track**\n${this.getDisplayTrackDurationAndUrl(skippedTrack)}`
                             )
-                            .setThumbnail(skippedTrack.thumbnail)
+                            .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                             .setColor(this.embedOptions.colors.success)
                     ]
                 });
@@ -114,7 +114,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
                                 skippedTrack
                             )}` + `\n\n${repeatModeString}`
                         )
-                        .setThumbnail(skippedTrack.thumbnail)
+                        .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                         .setColor(this.embedOptions.colors.success)
                 ]
             });
