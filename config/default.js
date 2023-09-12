@@ -121,7 +121,7 @@ module.exports.playerOptions = {
     leaveOnStopCooldown: 1_800_000,
     defaultVolume: 50,
     maxQueueSize: 10_000,
-    maxHistorySize: 100,
+    maxHistorySize: 1_000,
     bufferingTimeout: 3_000,
     connectionTimeout: 20_000,
     progressBar: {
