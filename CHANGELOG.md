@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.3.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.4...v5.3.5) (2023-09-12)
+
+
+### Minor changes and bug fixes
+
+* increased default history size ([85e27af](https://github.com/mariusbegby/cadence-discord-bot/commit/85e27afc5c53d70f78388337bdb60e965a8b633a))
+* refactored pause command, added common method getDisplayTrackDurationAndUrl() ([0850d9b](https://github.com/mariusbegby/cadence-discord-bot/commit/0850d9b26d459dd8d9b6c81ec58cb47060b304f2))
+* refactored play command and added common method for getting thumbnail url ([bf30d56](https://github.com/mariusbegby/cadence-discord-bot/commit/bf30d565d7ad311a7daea5900fbe3d6bf1d7c008))
+* refactored queue command, added more common methods ([1ebb7c3](https://github.com/mariusbegby/cadence-discord-bot/commit/1ebb7c3b8951f2aca3f943e601b2fff127083fff))
+
 ## [5.3.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.3...v5.3.4) (2023-09-11)
 
 
