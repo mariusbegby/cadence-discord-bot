@@ -49,15 +49,6 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 const skippedTrack: Track = queue.currentTrack!;
                 logger.debug('Responding with warning embed.');
 
-                let durationFormat =
-                    Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
-                        ? ''
-                        : `\`${skippedTrack.duration}\``;
-
-                if (skippedTrack.raw.live) {
-                    durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-                }
-
                 queue.node.skipTo(skipToTrack - 1);
                 logger.debug('Skipped to specified track number.');
 
@@ -67,9 +58,9 @@ class SkipCommand extends BaseSlashCommandInteraction {
                         new EmbedBuilder()
                             .setAuthor(await this.getEmbedUserAuthor(interaction))
                             .setDescription(
-                                `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
-                                    skippedTrack.title
-                                }](${skippedTrack.raw.url ?? skippedTrack.url})**`
+                                `**${
+                                    this.embedOptions.icons.skipped
+                                } Skipped track**\n${this.getDisplayTrackDurationAndUrl(skippedTrack)}`
                             )
                             .setThumbnail(skippedTrack.thumbnail)
                             .setColor(this.embedOptions.colors.success)
@@ -94,14 +85,6 @@ class SkipCommand extends BaseSlashCommandInteraction {
 
             const skippedTrack: Track = queue.currentTrack!;
 
-            let durationFormat =
-                Number(skippedTrack.raw.duration) === 0 || skippedTrack.duration === '0:00'
-                    ? ''
-                    : `\`${skippedTrack.duration}\``;
-
-            if (skippedTrack.raw.live) {
-                durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-            }
             queue.node.skip();
             logger.debug('Skipped current track.');
 
@@ -127,9 +110,9 @@ class SkipCommand extends BaseSlashCommandInteraction {
                     new EmbedBuilder()
                         .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
-                            `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
-                                skippedTrack.title
-                            }](${skippedTrack.raw.url ?? skippedTrack.url})**` + `\n\n${repeatModeString}`
+                            `**${this.embedOptions.icons.skipped} Skipped track**\n${this.getDisplayTrackDurationAndUrl(
+                                skippedTrack
+                            )}` + `\n\n${repeatModeString}`
                         )
                         .setThumbnail(skippedTrack.thumbnail)
                         .setColor(this.embedOptions.colors.success)

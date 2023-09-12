@@ -52,14 +52,6 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         // Remove specified track number from queue
         const removedTrack: Track = queue.node.remove(removeTrackNumber - 1)!;
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
-        let durationFormat =
-            Number(removedTrack.raw.duration) === 0 || removedTrack.duration === '0:00'
-                ? ''
-                : `\`${removedTrack.duration}\``;
-
-        if (removedTrack.raw.live) {
-            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-        }
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -67,9 +59,9 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Removed track**\n**${durationFormat} [${
-                            removedTrack.title
-                        }](${removedTrack.raw.url ?? removedTrack.url})**`
+                        `**${this.embedOptions.icons.success} Removed track**\n${this.getDisplayTrackDurationAndUrl(
+                            removedTrack
+                        )}`
                     )
                     .setThumbnail(removedTrack.thumbnail)
                     .setColor(this.embedOptions.colors.success)

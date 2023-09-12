@@ -1,5 +1,6 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
@@ -26,18 +27,7 @@ class PauseCommand extends BaseSlashCommandInteraction {
 
         const currentTrack: Track = queue.currentTrack!;
 
-        let durationFormat =
-            Number(currentTrack.raw.duration) === 0 || currentTrack.duration === '0:00'
-                ? ''
-                : `\`${currentTrack.duration}\``;
-
-        if (currentTrack.raw.live) {
-            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-        }
-
-        // change paused state to opposite of current state
-        queue.node.setPaused(!queue.node.isPaused());
-        logger.debug(`Set paused state to ${queue.node.isPaused()}.`);
+        this.togglePauseState(queue, logger);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -47,12 +37,17 @@ class PauseCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         `**${this.embedOptions.icons.pauseResumed} ${
                             queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                        }**\n**${durationFormat} [${currentTrack.title}](${currentTrack.raw.url ?? currentTrack.url})**`
+                        }**\n ${this.getDisplayTrackDurationAndUrl(currentTrack)}`
                     )
                     .setThumbnail(currentTrack.thumbnail)
                     .setColor(this.embedOptions.colors.success)
             ]
         });
+    }
+
+    private togglePauseState(queue: GuildQueue, logger: Logger): void {
+        queue.node.setPaused(!queue.node.isPaused());
+        logger.debug(`Set paused state to ${queue.node.isPaused()}.`);
     }
 }
 

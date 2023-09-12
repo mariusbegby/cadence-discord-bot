@@ -42,7 +42,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const tracksInQueueCount: number = queue.tracks.data.length;
         const currentTrack: Track = queue.currentTrack!;
-        const displayTrackUrl: string = this.getDisplayTrackUrl(currentTrack);
+        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack);
         const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack);
         const displayTrackPlayingStatus: string = this.getDisplayTrackPlayingStatus(queue);
         const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
@@ -186,16 +186,6 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return queue.node.isPaused()
             ? '**Currently Paused**'
             : `**${this.embedOptions.icons.audioPlaying} Now Playing**`;
-    };
-
-    private getDisplayTrackUrl = (currentTrack: Track): string => {
-        const trackTitle = currentTrack.title ?? 'Title unavailable';
-        const trackUrl = currentTrack.url ?? currentTrack.raw.url;
-        if (!trackTitle || !trackUrl) {
-            return '**Unavailable**';
-        }
-
-        return `**[${trackTitle}](${trackUrl})**`;
     };
 
     private getDisplayTrackRequestedBy = (currentTrack: Track): string => {

@@ -62,16 +62,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             queueString = queue.tracks.data
                 .slice(pageIndex * 10, pageIndex * 10 + 10)
                 .map((track, index) => {
-                    let durationFormat =
-                        Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
-
-                    if (track.raw.live) {
-                        durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-                    }
-
-                    return `**${pageIndex * 10 + index + 1}.** **${durationFormat} [${track.title}](${
-                        track.raw.url ?? track.url
-                    })**`;
+                    return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track)}`;
                 })
                 .join('\n');
         }

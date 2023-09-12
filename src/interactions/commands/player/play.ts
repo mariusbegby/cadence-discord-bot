@@ -226,13 +226,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
             track.thumbnail = this.embedOptions.info.fallbackThumbnailUrl;
         }
 
-        let durationFormat =
-            Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `\`${track.duration}\``;
-
-        if (track.raw.live) {
-            durationFormat = `${this.embedOptions.icons.liveTrack} \`LIVE\``;
-        }
-
         if (searchResult.playlist && searchResult.tracks.length > 1) {
             logger.debug(`Playlist found and added with player.play(). Query: '${query}'`);
 
@@ -242,9 +235,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     new EmbedBuilder()
                         .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
-                            `**${this.embedOptions.icons.success} Added playlist to queue**\n**${durationFormat} [${
-                                track.title
-                            }](${track.raw.url ?? track.url})**\n\nAnd **${
+                            `**${
+                                this.embedOptions.icons.success
+                            } Added playlist to queue**\n${this.getDisplayTrackDurationAndUrl(track)}\n\nAnd **${
                                 searchResult.tracks.length - 1
                             }** more tracks... **\`/queue\`** to view all.`
                         )
@@ -263,9 +256,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     new EmbedBuilder()
                         .setAuthor(await this.getEmbedUserAuthor(interaction))
                         .setDescription(
-                            `**${this.embedOptions.icons.audioStartedPlaying} Started playing**\n**${durationFormat} [${
-                                track.title
-                            }](${track.raw.url ?? track.url})**`
+                            `**${
+                                this.embedOptions.icons.audioStartedPlaying
+                            } Started playing**\n${this.getDisplayTrackDurationAndUrl(track)}`
                         )
                         .setThumbnail(track.thumbnail)
                         .setColor(this.embedOptions.colors.success)
@@ -281,9 +274,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `${this.embedOptions.icons.success} **Added to queue**\n**${durationFormat} [${track.title}](${
-                            track.raw.url ?? track.url
-                        })**`
+                        `${this.embedOptions.icons.success} **Added to queue**\n${this.getDisplayTrackDurationAndUrl(
+                            track
+                        )}`
                     )
                     .setThumbnail(track.thumbnail)
                     .setColor(this.embedOptions.colors.success)

@@ -1,5 +1,5 @@
 import config from 'config';
-import { GuildQueue } from 'discord-player';
+import { GuildQueue, Track } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -27,6 +27,14 @@ import {
 import { Validator, ValidatorParams } from '../types/utilTypes';
 
 abstract class BaseInteraction {
+    embedOptions: EmbedOptions;
+    botOptions: BotOptions;
+
+    constructor() {
+        this.embedOptions = config.get('embedOptions');
+        this.botOptions = config.get('botOptions');
+    }
+
     protected getLoggerBase(
         module: string,
         name: string,
@@ -50,19 +58,41 @@ abstract class BaseInteraction {
         }
     }
 
+    protected getFormattedDuration(track: Track): string {
+        let durationFormat =
+            Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `**\`${track.duration}\`**`;
+
+        if (track.raw.live) {
+            durationFormat = `**${this.embedOptions.icons.liveTrack} \`LIVE\`**`;
+        }
+
+        return durationFormat;
+    }
+
+    protected getFormattedTrackUrl(track: Track): string {
+        const trackTitle = track.title ?? 'Title unavailable';
+        const trackUrl = track.url ?? track.raw.url;
+        if (!trackTitle || !trackUrl) {
+            return '**Unavailable**';
+        }
+        return `**[${trackTitle}](${trackUrl})**`;
+    }
+
+    protected getDisplayTrackDurationAndUrl(track: Track): string {
+        const formattedDuration = this.getFormattedDuration(track);
+        const formattedUrl = this.getFormattedTrackUrl(track);
+
+        return `${formattedDuration} ${formattedUrl}`;
+    }
+
     abstract execute(
         params: BaseInteractionParams
     ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;
 }
 
 abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
-    embedOptions: EmbedOptions;
-    botOptions: BotOptions;
-
     constructor() {
         super();
-        this.embedOptions = config.get('embedOptions');
-        this.botOptions = config.get('botOptions');
     }
 
     protected async getEmbedUserAuthor(
@@ -121,14 +151,10 @@ export abstract class BaseSlashCommandInteraction extends BaseInteractionWithEmb
 }
 
 export abstract class BaseComponentInteraction extends BaseInteractionWithEmbedResponse {
-    embedOptions: EmbedOptions;
-    botOptions: BotOptions;
     name: string;
 
     constructor(name: string) {
         super();
-        this.embedOptions = config.get('embedOptions');
-        this.botOptions = config.get('botOptions');
         this.name = name;
     }
 
