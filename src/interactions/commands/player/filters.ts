@@ -61,7 +61,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         switch (filterProvider.toLowerCase()) {
             case 'ffmpeg':
                 logger.debug('Handling ffmpeg filters.');
-                return await this.handleFfmpegFilters(queue, logger, interaction);
+                return await this.handleFfmpegFilters(logger, interaction, queue);
             case 'biquad':
                 logger.debug('Handling biquad filters.');
                 return await this.tempNotImplementedResponse(logger, interaction);
@@ -70,14 +70,14 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                 return await this.tempNotImplementedResponse(logger, interaction);
             case 'disable':
                 logger.debug('Disabling filters.');
-                return await this.tempDisableFilters(queue, logger, interaction);
+                return await this.tempDisableFilters(logger, interaction, queue);
         }
     }
 
     private async handleFfmpegFilters(
-        queue: GuildQueue<unknown>,
         logger: Logger,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue<unknown>
     ) {
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
@@ -134,7 +134,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async tempDisableFilters(queue: GuildQueue, logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async tempDisableFilters(logger: Logger, interaction: ChatInputCommandInteraction, queue: GuildQueue) {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);
             logger.debug('Reset queue filters.');

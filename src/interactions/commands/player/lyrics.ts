@@ -61,7 +61,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             return await this.sendMultipleLyricsMessages(logger, interaction, finalLyricsData);
         }
 
-        return await this.sendLyricsEmbed(finalLyricsData, interaction, logger);
+        return await this.sendLyricsEmbed(logger, interaction, finalLyricsData);
     }
 
     private getGeniusSearchQuery(logger: Logger, query: string, queue: GuildQueue): string {
@@ -203,9 +203,9 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     }
 
     private async sendLyricsEmbed(
-        geniusLyricsResult: LyricsData,
+        logger: Logger,
         interaction: ChatInputCommandInteraction,
-        logger: Logger
+        geniusLyricsResult: LyricsData
     ) {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({

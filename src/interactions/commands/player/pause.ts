@@ -27,7 +27,7 @@ class PauseCommand extends BaseSlashCommandInteraction {
 
         const currentTrack: Track = queue.currentTrack!;
 
-        this.togglePauseState(queue, logger);
+        this.togglePauseState(logger, queue);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -45,7 +45,7 @@ class PauseCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private togglePauseState(queue: GuildQueue, logger: Logger): void {
+    private togglePauseState(logger: Logger, queue: GuildQueue): void {
         queue.node.setPaused(!queue.node.isPaused());
         logger.debug(`Set paused state to ${queue.node.isPaused()}.`);
     }
