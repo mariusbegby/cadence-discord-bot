@@ -153,7 +153,10 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const loopModeUserString: string = this.getRepeatModeString(repeatMode);
         const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
-        return `**${icon} Looping**\nLoop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`;
+        return (
+            `**${icon} Looping**\n` +
+            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
+        );
     };
 
     private getDisplayTrackPlayingStatus = (queue: GuildQueue): string => {

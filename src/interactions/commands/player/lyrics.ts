@@ -166,7 +166,8 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} No lyrics found**\nThere was no Genius lyrics found for track **${geniusSearchQuery}**.`
+                        `**${this.embedOptions.icons.warning} No lyrics found**\n` +
+                            `There was no Genius lyrics found for track **${geniusSearchQuery}**.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -184,7 +185,9 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         embedList.push(
             new EmbedBuilder()
                 .setDescription(
-                    `**${this.embedOptions.icons.queue} Showing lyrics**\n**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n`
+                    `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
+                        `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
+                        `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n`
                 )
                 .setColor(this.embedOptions.colors.info)
         );
@@ -212,7 +215,10 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.queue} Showing lyrics**\n**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
+                        `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
+                            `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
+                            `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n` +
+                            `\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
                     )
                     .setColor(this.embedOptions.colors.info)
             ]

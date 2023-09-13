@@ -127,7 +127,9 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription('**Toggle filters**\nEnable or disable audio filters for playback from the menu.')
+                    .setDescription(
+                        '**Toggle filters**\n' + 'Enable or disable audio filters for playback from the menu.'
+                    )
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [filterActionRow, disableFiltersActionRow]
@@ -146,7 +148,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
+                        `**${this.embedOptions.icons.success} Disabled filters**\n` +
+                            'All audio filters have been disabled.'
                     )
                     .setColor(this.embedOptions.colors.success)
             ],
@@ -160,7 +163,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.bot} Coming soon**\nThis functionality has not yet been implemented, and will be available soon.`
+                        `**${this.embedOptions.icons.bot} Coming soon**\n` +
+                            'This functionality has not yet been implemented, and will be available soon.'
                     )
                     .setColor(this.embedOptions.colors.info)
             ],

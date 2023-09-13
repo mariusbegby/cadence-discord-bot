@@ -55,7 +55,9 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nTrack **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.\n\nView tracks added to the queue with **\`/queue\`**.`
+                        `**${this.embedOptions.icons.warning} Oops!**\n` +
+                            `Track **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.` +
+                            '\n\nView tracks added to the queue with **`/queue`**.'
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]

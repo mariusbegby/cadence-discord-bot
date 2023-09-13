@@ -38,7 +38,9 @@ class StopCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Stopped playing**\nStopped playing audio and cleared the track queue.\n\nTo play more music, use the **\`/play\`** command!`
+                        `**${this.embedOptions.icons.success} Stopped playing**\n` +
+                            'Stopped playing audio and cleared the track queue.\n\n' +
+                            'To play more music, use the **`/play`** command!'
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

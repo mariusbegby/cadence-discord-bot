@@ -34,7 +34,9 @@ class LeaveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Leaving channel**\nCleared the track queue and left voice channel.\n\nTo play more music, use the **\`/play\`** command!`
+                        `**${this.embedOptions.icons.success} Leaving channel**\n` +
+                            'Cleared the track queue and left voice channel.\n\n' +
+                            'To play more music, use the **`/play`** command!'
                     )
                     .setColor(this.embedOptions.colors.success)
             ]
