@@ -36,7 +36,7 @@ class StopCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.success} Stopped playing**\nStopped playing audio and cleared the track queue.\n\nTo play more music, use the **\`/play\`** command!`
                     )

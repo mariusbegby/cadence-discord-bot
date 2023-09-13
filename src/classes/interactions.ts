@@ -162,9 +162,9 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         super();
     }
 
-    protected async getEmbedUserAuthor(
+    protected getEmbedUserAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction
-    ): Promise<EmbedAuthorOptions> {
+    ): EmbedAuthorOptions {
         let authorName: string = '';
         if (interaction.member instanceof GuildMember) {
             authorName = interaction.member.nickname || interaction.user.username;
@@ -178,10 +178,10 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         };
     }
 
-    protected async getEmbedQueueAuthor(
+    protected getEmbedQueueAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction,
         queue: GuildQueue
-    ): Promise<EmbedAuthorOptions> {
+    ): EmbedAuthorOptions {
         return {
             name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
             iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl

@@ -87,7 +87,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.skipped} Skipped track**\n**${durationFormat} [${
                             skippedTrack.title

@@ -63,7 +63,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
                     .setDescription(
                         `${displayTrackPlayingStatus}\n` +
                             `${displayTrackUrl}\n` +

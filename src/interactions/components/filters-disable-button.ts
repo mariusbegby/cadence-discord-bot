@@ -32,7 +32,7 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
                     )

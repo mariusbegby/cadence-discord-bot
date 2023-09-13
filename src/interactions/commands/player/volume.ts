@@ -75,7 +75,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
-                            .setAuthor(await this.getEmbedUserAuthor(interaction))
+                            .setAuthor(this.getEmbedUserAuthor(interaction))
                             .setDescription(
                                 `**${this.embedOptions.icons.volumeMuted} Audio muted**\nPlayback audio has been muted, because volume was set to **\`${volume}%\`**.`
                             )
@@ -88,7 +88,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor(await this.getEmbedUserAuthor(interaction))
+                        .setAuthor(this.getEmbedUserAuthor(interaction))
                         .setDescription(
                             `**${this.embedOptions.icons.volumeChanged} Volume changed**\nPlayback volume has been changed to **\`${volume}%\`**.`
                         )

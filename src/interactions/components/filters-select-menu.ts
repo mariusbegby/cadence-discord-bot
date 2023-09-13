@@ -65,7 +65,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         return await selectMenuInteraction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${
                             this.embedOptions.icons.success

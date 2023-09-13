@@ -59,7 +59,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
                     .setDescription(
                         `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
                             `${this.getFormattedTrackUrl(currentTrack)}\n` +
@@ -89,7 +89,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
                     .setDescription(
                         `${this.getDisplayRepeatMode(queue.repeatMode)}` +
                             `**${this.embedOptions.icons.queue} Tracks in queue**\n` +

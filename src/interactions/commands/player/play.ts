@@ -165,7 +165,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(message)
                     .setThumbnail(this.getTrackThumbnailUrl(track))
                     .setColor(this.embedOptions.colors.success)

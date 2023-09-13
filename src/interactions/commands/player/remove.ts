@@ -76,7 +76,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(await this.getEmbedUserAuthor(interaction))
+                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
                         `**${this.embedOptions.icons.success} Removed track**\n${this.getDisplayTrackDurationAndUrl(
                             removedTrack
