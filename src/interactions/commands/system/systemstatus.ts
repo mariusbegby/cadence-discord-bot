@@ -42,7 +42,7 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
         const discordPlayerVersion: string = dependencies['discord-player'];
         const extractorVersion: string = dependencies['@discord-player/extractor'];
         const mediaplexVersion: string = dependencies['mediaplex'];
-        const distubeYtdlVersion: string = dependencies['@distube/ytdl-core'];
+        const youtubeExtVersion: string = dependencies['youtube-ext'];
 
         logger.debug('Fetching player statistics from all shards.');
 
@@ -70,7 +70,7 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
             `**┗ ${extractorVersion}** @discord-player/extractor\n` +
             `**${voiceVersion}** discord-voip\n` +
             `**${mediaplexVersion}** mediaplex\n` +
-            `**${distubeYtdlVersion}** @distube/ytdl-core`;
+            `**${youtubeExtVersion}** youtube-ext`;
 
         const discordWebsocketPingEmbedString: string = `**${client!.ws.ping} ms** Discord API latency`;
 
