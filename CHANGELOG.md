@@ -1,5 +1,31 @@
 # Changelog
 
+## [5.3.6](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.5...v5.3.6) (2023-09-13)
+
+
+### Minor changes and bug fixes
+
+* add requested by string before mention ([e3efa48](https://github.com/mariusbegby/cadence-discord-bot/commit/e3efa48ade580db411246b85afcd57bf7a516dff))
+* fix duration validation not using padded and formatted duration ([c4f9403](https://github.com/mariusbegby/cadence-discord-bot/commit/c4f9403ecffdefff892085bedd32c4d8da4c02d3))
+* refactor filters disable button ([9458ed6](https://github.com/mariusbegby/cadence-discord-bot/commit/9458ed60a1c4eaf654bc32e9eb26bb719c0cf60b))
+* refactor guilds command ([c689452](https://github.com/mariusbegby/cadence-discord-bot/commit/c68945272e6b26654d1baa173d9087cba994b0ff))
+* refactor remove command ([230ba5f](https://github.com/mariusbegby/cadence-discord-bot/commit/230ba5fd9388ca67fa25720671706853e0a72aad))
+* refactor volume command ([fca1a90](https://github.com/mariusbegby/cadence-discord-bot/commit/fca1a9048986d56136994824b949545e68933abf))
+* refactored autocomplete interactions ([af78759](https://github.com/mariusbegby/cadence-discord-bot/commit/af7875981364fc01cc96d8d2c3624f3ac70dd2f9))
+* refactored filters select menu component ([a9ce285](https://github.com/mariusbegby/cadence-discord-bot/commit/a9ce2856502aeb6b27dfeefe3c5e43b5c2e0454b))
+* refactored guilds command ([56b25f9](https://github.com/mariusbegby/cadence-discord-bot/commit/56b25f9b97addc13ffb233ef45642dca6c990ae3))
+* refactored nowplaying skip button component + more common methods ([78e8f12](https://github.com/mariusbegby/cadence-discord-bot/commit/78e8f12c99f9f3650d013bb92c7a20177f59b636))
+* refactored seek command ([c871a75](https://github.com/mariusbegby/cadence-discord-bot/commit/c871a758222cc99ce7e50eae916a9d79f4c5bd33))
+* refactored shards command ([9259bc2](https://github.com/mariusbegby/cadence-discord-bot/commit/9259bc2ffa8f9e4c72fd8baac5c203ec07f6f8b4))
+* refactored skip command ([90346e7](https://github.com/mariusbegby/cadence-discord-bot/commit/90346e74698864b999bfebd29df3d10fbfab646b))
+* refactored status commands ([20bc4aa](https://github.com/mariusbegby/cadence-discord-bot/commit/20bc4aa88f624719fe296092378e23fba94b1193))
+* remove async from class methods for getting author ([fe14fc3](https://github.com/mariusbegby/cadence-discord-bot/commit/fe14fc308fe1d85f04f528a649034043dfda21c8))
+
+
+### Miscellaneous
+
+* formatting strings to multiple lines ([e57dcaf](https://github.com/mariusbegby/cadence-discord-bot/commit/e57dcaf399affd40d3ef28717a3b52b8ea6bc9df))
+
 ## [5.3.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.4...v5.3.5) (2023-09-12)
 
 
