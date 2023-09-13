@@ -6,6 +6,7 @@ import { FFmpegFilterOption, FFmpegFilterOptions } from '../../types/configTypes
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { Logger } from 'pino';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 
@@ -29,25 +30,25 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
             checkQueueExists
         ]);
 
-        queue.filters.ffmpeg.setInputArgs([
-            '-threads',
-            ffmpegFilterOptions.threadAmount,
-            '-reconnect',
-            '1',
-            '-reconnect_streamed',
-            '1',
-            '-reconnect_delay_max',
-            '10',
-            '-vn'
-        ]);
+        this.resetFilters(queue, logger);
+        this.enableNormalizerIfRequired(selectMenuInteraction);
+        this.enableProvidedFilters(selectMenuInteraction, queue, logger);
 
-        // Reset filters before enabling provided filters
+        logger.debug('Responding with success embed.');
+        return await selectMenuInteraction.editReply({
+            embeds: [this.buildSuccessEmbed(selectMenuInteraction)],
+            components: []
+        });
+    }
+
+    private resetFilters(queue: GuildQueue, logger: Logger) {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);
             logger.debug('Reset queue filters.');
         }
+    }
 
-        // if bassboost is enabled and not normalizer, also enable normalizer to avoid distrorion
+    private enableNormalizerIfRequired(selectMenuInteraction: StringSelectMenuInteraction) {
         if (
             ffmpegFilterOptions.forceNormalizerByBassBoost &&
             (selectMenuInteraction.values.includes('bassboost_low') ||
@@ -56,38 +57,38 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         ) {
             selectMenuInteraction.values.push('normalizer');
         }
+    }
 
-        // Enable provided filters
+    private enableProvidedFilters(
+        selectMenuInteraction: StringSelectMenuInteraction,
+        queue: GuildQueue,
+        logger: Logger
+    ) {
         queue.filters.ffmpeg.toggle(selectMenuInteraction.values as (keyof QueueFilters)[]);
         logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
+    }
 
-        logger.debug('Responding with success embed.');
-        return await selectMenuInteraction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
-                    .setDescription(
-                        `**${
-                            this.embedOptions.icons.success
-                        } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
-                            .map((enabledFilter: string) => {
-                                const filter: FFmpegFilterOption | undefined =
-                                    ffmpegFilterOptions.availableFilters.find(
-                                        (filter) => enabledFilter == filter.value
-                                    );
+    private buildSuccessEmbed(selectMenuInteraction: StringSelectMenuInteraction) {
+        return new EmbedBuilder()
+            .setAuthor(this.getEmbedUserAuthor(selectMenuInteraction))
+            .setDescription(
+                `**${
+                    this.embedOptions.icons.success
+                } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
+                    .map((enabledFilter: string) => {
+                        const filter: FFmpegFilterOption | undefined = ffmpegFilterOptions.availableFilters.find(
+                            (filter) => enabledFilter == filter.value
+                        );
 
-                                if (!filter) {
-                                    return enabledFilter;
-                                }
+                        if (!filter) {
+                            return enabledFilter;
+                        }
 
-                                return `- **${filter.emoji} ${filter.label}**`;
-                            })
-                            .join('\n')}`
-                    )
-                    .setColor(this.embedOptions.colors.success)
-            ],
-            components: []
-        });
+                        return `- **${filter.emoji} ${filter.label}**`;
+                    })
+                    .join('\n')}`
+            )
+            .setColor(this.embedOptions.colors.success);
     }
 }
 
