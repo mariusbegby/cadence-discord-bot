@@ -63,7 +63,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
                             `${this.getFormattedTrackUrl(currentTrack)}\n` +
-                            `${this.getDisplayTrackRequestedBy(currentTrack)}\n` +
+                            `**Requested by:** ${this.getDisplayTrackRequestedBy(currentTrack)}\n` +
                             `${this.getDisplayQueueProgressBar(queue)}\n\n` +
                             `${this.getDisplayRepeatMode(queue.repeatMode)}` +
                             `**${this.embedOptions.icons.queue} Tracks in queue**\n` +

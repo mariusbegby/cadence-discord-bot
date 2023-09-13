@@ -67,7 +67,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         `${displayTrackPlayingStatus}\n` +
                             `${displayTrackUrl}\n` +
-                            `${displayTrackRequestedBy}\n` +
+                            `**Requested by:** ${displayTrackRequestedBy}\n` +
                             `${displayEmbedProgressBar}\n\n ` +
                             `${displayQueueRepeatMode}\n\n`
                     )
