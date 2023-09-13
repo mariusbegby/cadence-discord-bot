@@ -152,6 +152,26 @@ abstract class BaseInteraction {
         return progressBar;
     }
 
+    protected getDisplayRepeatMode(repeatMode: number): string {
+        const repeatModesFormatted = new Map([
+            [0, 'disabled'],
+            [1, 'track'],
+            [2, 'queue'],
+            [3, 'autoplay']
+        ]);
+
+        if (repeatMode === 0) {
+            return '';
+        }
+
+        const loopModeUserString: string = repeatModesFormatted.get(repeatMode)!;
+        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
+        return (
+            `**${icon} Looping**\n` +
+            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
+        );
+    }
+
     abstract execute(
         params: BaseInteractionParams
     ): Promise<Message<boolean> | ApplicationCommandOptionChoiceData | void>;

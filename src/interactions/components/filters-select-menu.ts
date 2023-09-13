@@ -69,24 +69,26 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     }
 
     private buildSuccessEmbed(selectMenuInteraction: StringSelectMenuInteraction) {
+        const enabledFilters: string = selectMenuInteraction.values
+            .map((enabledFilter: string) => {
+                const filter: FFmpegFilterOption | undefined = ffmpegFilterOptions.availableFilters.find(
+                    (filter) => enabledFilter == filter.value
+                );
+
+                if (!filter) {
+                    return enabledFilter;
+                }
+
+                return `- **${filter.emoji} ${filter.label}**`;
+            })
+            .join('\n');
+
         return new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(selectMenuInteraction))
             .setDescription(
-                `**${
-                    this.embedOptions.icons.success
-                } Filters toggled**\nNow using these filters:\n${selectMenuInteraction.values
-                    .map((enabledFilter: string) => {
-                        const filter: FFmpegFilterOption | undefined = ffmpegFilterOptions.availableFilters.find(
-                            (filter) => enabledFilter == filter.value
-                        );
-
-                        if (!filter) {
-                            return enabledFilter;
-                        }
-
-                        return `- **${filter.emoji} ${filter.label}**`;
-                    })
-                    .join('\n')}`
+                `**${this.embedOptions.icons.success} Filters toggled**\n` +
+                    'Now using these filters:\n' +
+                    `${enabledFilters}`
             )
             .setColor(this.embedOptions.colors.success);
     }

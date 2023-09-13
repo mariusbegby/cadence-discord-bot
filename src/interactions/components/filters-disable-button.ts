@@ -31,7 +31,8 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Disabled filters**\nAll audio filters have been disabled.`
+                        `**${this.embedOptions.icons.success} Disabled filters**\n` +
+                            'All audio filters have been disabled.'
                     )
                     .setColor(this.embedOptions.colors.success)
             ],
