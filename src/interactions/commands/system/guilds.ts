@@ -1,5 +1,7 @@
 import { EmbedBuilder, Guild, SlashCommandBuilder } from 'discord.js';
+import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
@@ -18,45 +20,15 @@ class GuildsCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
-        let shardGuilds: Guild[] = [];
-        let totalGuildCount: number = 0;
-
-        logger.debug('Fetching guilds from all shards.');
-        await client!
-            .shard!.broadcastEval((c) => {
-                return c.guilds.cache.map((guild) => {
-                    return guild;
-                });
-            })
-            .then((guilds) => {
-                shardGuilds = guilds.flat(1) as Guild[];
-            });
-
-        totalGuildCount = shardGuilds.length;
+        const shardGuilds = await this.fetchShardGuilds(client!, logger);
+        const totalGuildCount = shardGuilds.length;
 
         logger.debug(`Successfully fetched ${totalGuildCount} guilds.`);
 
-        const guildListFormatted: string = shardGuilds
-            .map((guild) => {
-                return {
-                    name: guild.name,
-                    memberCount: guild.memberCount
-                };
-            })
-            .sort((a, b) => b.memberCount - a.memberCount)
-            .slice(0, 25)
-            .map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``)
-            .join('\n');
+        const guildListFormatted = this.formatGuildListAsString(shardGuilds);
+        const totalMemberCount = this.calculateTotalMemberCount(shardGuilds);
 
-        const totalMemberCount: number = shardGuilds.reduce((a, b) => a + b.memberCount, 0);
-
-        let embedDescription =
-            `**${this.embedOptions.icons.bot} ${
-                totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds'
-            } by member count (${totalGuildCount} total)**\n${guildListFormatted}` +
-            `\n\n**Total members:** **\`${totalMemberCount}\`**`;
-
-        logger.debug('Transformed guild into into embed description.');
+        let embedDescription = this.buildEmbedDescription(totalGuildCount, guildListFormatted, totalMemberCount);
 
         if (embedDescription.length >= 4000) {
             logger.debug('Embed description is too long, truncating.');
@@ -67,6 +39,47 @@ class GuildsCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(this.embedOptions.colors.info)]
         });
+    }
+
+    private async fetchShardGuilds(client: ExtendedClient, logger: Logger): Promise<Guild[]> {
+        logger.debug('Fetching guilds from all shards.');
+        const guilds = await client!.shard!.broadcastEval((c) => c.guilds.cache.map((guild) => guild));
+        return guilds.flat(1) as Guild[];
+    }
+
+    private formatGuildListAsString(shardGuilds: Guild[]): string {
+        const guilds = this.mapGuilds(shardGuilds);
+        const topGuilds = this.getTopGuilds(guilds);
+        return this.guildsToString(topGuilds);
+    }
+
+    private mapGuilds(shardGuilds: Guild[]) {
+        return shardGuilds.map((guild) => ({ name: guild.name, memberCount: guild.memberCount }));
+    }
+
+    private getTopGuilds(guilds: { name: string; memberCount: number }[]) {
+        return guilds.sort((a, b) => b.memberCount - a.memberCount).slice(0, 25);
+    }
+
+    private guildsToString(guilds: { name: string; memberCount: number }[]) {
+        return guilds.map((guild, index) => `${index + 1}. \`${guild.name} (#${guild.memberCount})\``).join('\n');
+    }
+
+    private calculateTotalMemberCount(shardGuilds: Guild[]): number {
+        return shardGuilds.reduce((a, b) => a + b.memberCount, 0);
+    }
+
+    private buildEmbedDescription(
+        totalGuildCount: number,
+        guildListFormattedString: string,
+        totalMemberCount: number
+    ): string {
+        const topGuildsString = totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds';
+        return (
+            `**${this.embedOptions.icons.bot} ${topGuildsString} by member count (${totalGuildCount} total)**\n` +
+            `${guildListFormattedString}\n\n` +
+            `**Total members:** **\`${totalMemberCount}\`**`
+        );
     }
 }
 
