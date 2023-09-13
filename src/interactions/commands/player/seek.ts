@@ -33,7 +33,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
         const durationInputSplit: string[] = interaction.options.getString('duration')!.split(':');
         const formattedDurationString: string = this.parseDurationArray(durationInputSplit);
 
-        if (!this.validateDurationFormat(durationInputSplit, formattedDurationString)) {
+        if (!this.validateDurationFormat(formattedDurationString)) {
             return await this.handleInvalidDurationFormat(logger, interaction, formattedDurationString);
         }
 
@@ -149,12 +149,13 @@ class SeekCommand extends BaseSlashCommandInteraction {
         return durationInputSplit.join(':');
     }
 
-    private validateDurationFormat(durationInputSplit: string[], formattedDurationString: string): boolean {
-        if (durationInputSplit.length === 0 || durationInputSplit.length > 3) {
+    private validateDurationFormat(formattedDurationString: string): boolean {
+        const formattedDurationSplit: string[] = formattedDurationString.split(':');
+        if (formattedDurationSplit.length === 0 || formattedDurationSplit.length > 3) {
             return false;
         }
 
-        if (!durationInputSplit.every((value) => value.length === 2)) {
+        if (!formattedDurationSplit.every((value) => value.length === 2)) {
             return false;
         }
 
