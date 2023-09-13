@@ -1,11 +1,9 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import osu from 'node-os-utils';
 // @ts-ignore
 import { version } from '../../../../package.json';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from '../../../utils/shardUtils';
-import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 
 class StatusCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -17,29 +15,10 @@ class StatusCommand extends BaseSlashCommandInteraction {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const uptimeString: string = await getUptimeFormatted({ executionId });
-        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-        const cpuUsage: number = await osu.cpu.usage();
-        const releaseVersion: string = version;
-        const { totalGuildCount, totalMemberCount } = await fetchTotalGuildStatistics(client);
-        const { totalVoiceConnections, totalTracksInQueues, totalListeners } = await fetchTotalPlayerStatistics(client);
-
-        const botStatisticsEmbedString =
-            `**${totalGuildCount.toLocaleString('en-US')}** Joined servers\n` +
-            `**${totalMemberCount.toLocaleString('en-US')}** Total members\n` +
-            `**v${releaseVersion}** Release version`;
-
-        const playerStatisticsEmbedString =
-            `**${totalVoiceConnections.toLocaleString('en-US')}** Voice connections\n` +
-            `**${totalTracksInQueues.toLocaleString('en-US')}** Tracks in queues\n` +
-            `**${totalListeners.toLocaleString('en-US')}** Users listening`;
-
-        const systemStatusEmbedString =
-            `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`;
-
-        const discordWebsocketPingEmbedString: string = `**${client!.ws.ping} ms** Discord API latency`;
-
-        logger.debug('Transformed status info into embed description.');
+        const botStatisticsEmbedString = await getBotStatistics(client!, version);
+        const playerStatisticsEmbedString = await getPlayerStatistics(client!);
+        const systemStatusEmbedString = await getSystemStatus(executionId, false);
+        const discordStatus = getDiscordStatus(client!);
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -57,7 +36,7 @@ class StatusCommand extends BaseSlashCommandInteraction {
                         },
                         {
                             name: `**${this.embedOptions.icons.discord} Discord status**`,
-                            value: discordWebsocketPingEmbedString
+                            value: discordStatus
                         }
                     )
                     .setColor(this.embedOptions.colors.info)

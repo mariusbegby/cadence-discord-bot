@@ -1,11 +1,9 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import osu from 'node-os-utils';
 // @ts-ignore
 import { dependencies, version } from '../../../../package.json';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
+import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from '../../../utils/shardUtils';
-import { getUptimeFormatted } from '../../../utils/system/getUptimeFormatted';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 
 class SystemStatusCommand extends BaseSlashCommandInteraction {
@@ -23,58 +21,11 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
-        // from normal /status command
-        const uptimeString: string = await getUptimeFormatted({ executionId });
-        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-        const cpuUsage: number = await osu.cpu.usage();
-        const releaseVersion: string = version;
-        const { totalGuildCount, totalMemberCount } = await fetchTotalGuildStatistics(client);
-        const { totalVoiceConnections, totalTracksInQueues, totalListeners } = await fetchTotalPlayerStatistics(client);
-
-        // specific to /systemstatus command
-        const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
-        const cpuCores: number = osu.cpu.count();
-        const platform: string = osu.os.platform();
-        const discordJsVersion: string = dependencies['discord.js'];
-        const opusVersion: string = dependencies['@discord-player/opus'];
-        const restVersion: string = dependencies['@discordjs/rest'];
-        const voiceVersion: string = dependencies['discord-voip'];
-        const discordPlayerVersion: string = dependencies['discord-player'];
-        const extractorVersion: string = dependencies['@discord-player/extractor'];
-        const mediaplexVersion: string = dependencies['mediaplex'];
-        const youtubeExtVersion: string = dependencies['youtube-ext'];
-
-        logger.debug('Fetching player statistics from all shards.');
-
-        const botStatisticsEmbedString =
-            `**${totalGuildCount.toLocaleString('en-US')}** Joined servers\n` +
-            `**${totalMemberCount.toLocaleString('en-US')}** Total members\n` +
-            `**v${releaseVersion}** Release version`;
-
-        const playerStatisticsEmbedString =
-            `**${totalVoiceConnections.toLocaleString('en-US')}** Voice connections\n` +
-            `**${totalTracksInQueues.toLocaleString('en-US')}** Tracks in queues\n` +
-            `**${totalListeners.toLocaleString('en-US')}** Users listening`;
-
-        const systemStatusEmbedString =
-            `**${platform}** Platform\n` +
-            `**${uptimeString}** Uptime\n` +
-            `**${cpuUsage}% @ ${cpuCores} cores** CPU usage\n` +
-            `**${usedMemoryInMB} / ${totalMemoryInMb} MB** Memory usage`;
-
-        const dependenciesEmbedString =
-            `**${discordJsVersion}** discord.js\n` +
-            `**┗ ${restVersion}** @discordjs/rest\n` +
-            `**${discordPlayerVersion}** discord-player\n` +
-            `**┗ ${opusVersion}** @discord-player/opus\n` +
-            `**┗ ${extractorVersion}** @discord-player/extractor\n` +
-            `**${voiceVersion}** discord-voip\n` +
-            `**${mediaplexVersion}** mediaplex\n` +
-            `**${youtubeExtVersion}** youtube-ext`;
-
-        const discordWebsocketPingEmbedString: string = `**${client!.ws.ping} ms** Discord API latency`;
-
-        logger.debug('Transformed system status into embed description.');
+        const botStatisticsEmbedString = await getBotStatistics(client!, version);
+        const playerStatisticsEmbedString = await getPlayerStatistics(client!);
+        const systemStatusEmbedString = await getSystemStatus(executionId, true);
+        const discordStatusEmbedString = getDiscordStatus(client!);
+        const dependenciesEmbedString = this.getDependencies();
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -92,7 +43,7 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
                         },
                         {
                             name: `**${this.embedOptions.icons.discord} Discord status**`,
-                            value: discordWebsocketPingEmbedString
+                            value: discordStatusEmbedString
                         },
                         {
                             name: `**${this.embedOptions.icons.bot} Dependencies**`,
@@ -102,6 +53,19 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
                     .setColor(this.embedOptions.colors.info)
             ]
         });
+    }
+
+    private getDependencies(): string {
+        return (
+            `**${dependencies['discord.js']}** discord.js\n` +
+            `**┗ ${dependencies['@discordjs/rest']}** @discordjs/rest\n` +
+            `**${dependencies['discord-player']}** discord-player\n` +
+            `**┗ ${dependencies['@discord-player/opus']}** @discord-player/opus\n` +
+            `**┗ ${dependencies['@discord-player/extractor']}** @discord-player/extractor\n` +
+            `**${dependencies['discord-voip']}** discord-voip\n` +
+            `**${dependencies['mediaplex']}** mediaplex\n` +
+            `**${dependencies['youtube-ext']}** youtube-ext`
+        );
     }
 }
 
