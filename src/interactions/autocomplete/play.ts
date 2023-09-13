@@ -1,12 +1,12 @@
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
 import { BaseAutocompleteInteraction } from '../../classes/interactions';
-import { BaseAutocompleteParams, BaseAutocompleteReturnType } from '../../types/interactionTypes';
-
-// TODO: create type for recent query object
-const recentQueries = new Map();
+import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/autocompleteUtils';
+import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
 
 class PlayAutocomplete extends BaseAutocompleteInteraction {
+    private recentQueries = new Map<string, RecentQuery>();
+
     constructor() {
         super('play');
     }
@@ -15,50 +15,53 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const player: Player = useMainPlayer()!;
         const query: string = interaction.options.getString('query', true);
 
-        const { lastQuery, results, timestamp } = recentQueries.get(interaction.user.id) || {};
+        const { lastQuery, result, timestamp } = this.recentQueries.get(interaction.user.id) || {};
 
-        if (lastQuery && (query.startsWith(lastQuery) || lastQuery.startsWith(query)) && Date.now() - timestamp < 500) {
+        if (shouldUseLastQuery(query, lastQuery, timestamp)) {
             logger.debug(`Responding with results from lastQuery for query '${query}'`);
-            return interaction.respond(results);
+            return interaction.respond(result as ApplicationCommandOptionChoiceData<string | number>[]);
         }
 
-        if (query.length < 3) {
+        if (isQueryTooShort(query)) {
             logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
             return interaction.respond([]);
         }
-        const searchResults: SearchResult = await player.search(query);
 
-        let response: ApplicationCommandOptionChoiceData<string>[] = [];
+        const autocompleteChoices: ApplicationCommandOptionChoiceData<string>[] =
+            await this.getAutocompleteChoices(query);
 
-        response = searchResults.tracks.slice(0, 5).map((track) => {
-            if (track.url.length > 100) {
-                track.url = track.title.slice(0, 100);
-            }
-            return {
-                name:
-                    `${track.title} [Author: ${track.author}]`.length > 100
-                        ? `${track.title}`.slice(0, 100)
-                        : `${track.title} [Author: ${track.author}]`,
-                value: track.url
-            };
-        });
-
-        recentQueries.set(interaction.user.id, {
-            lastQuery: query,
-            results: response,
-            timestamp: Date.now()
-        });
-
-        if (!response || response.length === 0) {
+        if (!autocompleteChoices || autocompleteChoices.length === 0) {
             logger.debug(`Responding with empty results for query '${query}'`);
             return interaction.respond([]);
         }
 
+        this.updateRecentQuery(interaction.user.id, query, autocompleteChoices);
+
         logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
-        return interaction.respond(response);
+        return interaction.respond(autocompleteChoices);
+    }
+
+    private async getAutocompleteChoices(query: string): Promise<ApplicationCommandOptionChoiceData<string>[]> {
+        const player: Player = useMainPlayer()!;
+        const searchResults: SearchResult = await player.search(query);
+        return searchResults.tracks.slice(0, 5).map((track) => ({
+            name: getTrackName(track),
+            value: track.url
+        }));
+    }
+
+    private updateRecentQuery(
+        userId: string,
+        query: string,
+        result: ApplicationCommandOptionChoiceData<string>[]
+    ): void {
+        this.recentQueries.set(userId, {
+            lastQuery: query,
+            result: result,
+            timestamp: Date.now()
+        });
     }
 }
 

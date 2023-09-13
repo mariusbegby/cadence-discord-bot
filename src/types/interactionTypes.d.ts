@@ -59,3 +59,9 @@ export enum FilterType {
     Equalizer = 'equalizer',
     Disable = 'disable'
 }
+
+export type RecentQuery = {
+    lastQuery: string;
+    result: ApplicationCommandOptionChoiceData<string>[];
+    timestamp: number;
+};
