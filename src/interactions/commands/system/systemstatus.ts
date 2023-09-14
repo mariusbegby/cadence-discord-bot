@@ -21,9 +21,11 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
-        const botStatisticsEmbedString = await getBotStatistics(client!, version);
-        const playerStatisticsEmbedString = await getPlayerStatistics(client!);
-        const systemStatusEmbedString = await getSystemStatus(executionId, true);
+        const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
+            getBotStatistics(client!, version),
+            getPlayerStatistics(client!),
+            getSystemStatus(executionId, false)
+        ]);
         const discordStatusEmbedString = getDiscordStatus(client!);
         const dependenciesEmbedString = this.getDependencies();
 

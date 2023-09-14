@@ -15,9 +15,11 @@ class StatusCommand extends BaseSlashCommandInteraction {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const botStatisticsEmbedString = await getBotStatistics(client!, version);
-        const playerStatisticsEmbedString = await getPlayerStatistics(client!);
-        const systemStatusEmbedString = await getSystemStatus(executionId, false);
+        const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
+            getBotStatistics(client!, version),
+            getPlayerStatistics(client!),
+            getSystemStatus(executionId, false)
+        ]);
         const discordStatus = getDiscordStatus(client!);
 
         logger.debug('Responding with info embed.');
