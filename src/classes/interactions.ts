@@ -153,19 +153,26 @@ abstract class BaseInteraction {
     }
 
     protected getDisplayRepeatMode(repeatMode: number): string {
-        const repeatModesFormatted = new Map([
-            [0, 'disabled'],
-            [1, 'track'],
-            [2, 'queue'],
-            [3, 'autoplay']
-        ]);
+        let loopModeUserString: string;
+        let icon: string;
 
-        if (repeatMode === 0) {
-            return '';
+        switch (repeatMode) {
+            case 1:
+                loopModeUserString = 'track';
+                icon = this.embedOptions.icons.loop;
+                break;
+            case 2:
+                loopModeUserString = 'queue';
+                icon = this.embedOptions.icons.loop;
+                break;
+            case 3:
+                loopModeUserString = 'autoplay';
+                icon = this.embedOptions.icons.autoplay;
+                break;
+            default:
+                return '';
         }
 
-        const loopModeUserString: string = repeatModesFormatted.get(repeatMode)!;
-        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
         return (
             `**${icon} Looping**\n` +
             `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
