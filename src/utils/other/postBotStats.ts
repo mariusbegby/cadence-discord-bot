@@ -44,12 +44,10 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
         logger.error(error, 'Failed to gather data about guild and member count from shards.');
     }
 
-    logger.info(`Starting to post bot stats with guild count ${guildCount} and member count ${memberCount}...`);
-
     /* eslint-disable camelcase */
     const sites: PostBotStatsSite[] = [
         {
-            enabled: false,
+            enabled: process.env.NODE_ENV === 'production' && process.env.BOTLIST_TOP_GG_API_TOKEN ? true : false,
             hostname: 'top.gg',
             path: `/api/bots/${process.env.DISCORD_APPLICATION_ID}/stats`,
             method: 'POST',
@@ -61,7 +59,10 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: process.env.BOTLIST_TOP_GG_API_TOKEN ?? ''
         },
         {
-            enabled: false,
+            enabled:
+                process.env.NODE_ENV === 'production' && process.env.BOTLIST_DISCORD_BOT_LIST_COM_API_TOKEN
+                    ? true
+                    : false,
             hostname: 'discordbotlist.com',
             path: `/api/v1/bots/${process.env.DISCORD_APPLICATION_ID}/stats`,
             method: 'POST',
@@ -73,7 +74,7 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: process.env.BOTLIST_DISCORD_BOT_LIST_COM_API_TOKEN ?? ''
         },
         {
-            enabled: false,
+            enabled: process.env.NODE_ENV === 'production' && process.env.BOTLIST_DISCORDS_COM_API_TOKEN ? true : false,
             hostname: 'discords.com',
             path: `/bots/api/bot/${process.env.DISCORD_APPLICATION_ID}`,
             method: 'POST',
@@ -83,7 +84,8 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: process.env.BOTLIST_DISCORDS_COM_API_TOKEN ?? ''
         },
         {
-            enabled: false,
+            enabled:
+                process.env.NODE_ENV === 'production' && process.env.BOTLIST_DISCORD_BOTS_GG_API_TOKEN ? true : false,
             hostname: 'discord.bots.gg',
             path: `/api/v1/bots/${process.env.DISCORD_APPLICATION_ID}/stats`,
             method: 'POST',
@@ -95,7 +97,7 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: process.env.BOTLIST_DISCORD_BOTS_GG_API_TOKEN ?? ''
         },
         {
-            enabled: false,
+            enabled: process.env.NODE_ENV === 'production' && process.env.BOTLIST_BOTLIST_ME_API_TOKEN ? true : false,
             hostname: 'api.botlist.me',
             path: `/api/v1/bots/${process.env.DISCORD_APPLICATION_ID}/stats`,
             method: 'POST',
@@ -106,7 +108,8 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: process.env.BOTLIST_BOTLIST_ME_API_TOKEN ?? ''
         },
         {
-            enabled: false,
+            enabled:
+                process.env.NODE_ENV === 'production' && process.env.BOTLIST_DISCORDLIST_GG_API_TOKEN ? true : false,
             hostname: 'api.discordlist.gg',
             path: `/v0/bots/${process.env.DISCORD_APPLICATION_ID}/guilds`,
             method: 'POST',
@@ -116,7 +119,10 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
             token: `Bearer ${process.env.BOTLIST_DISCORDLIST_GG_API_TOKEN}`
         },
         {
-            enabled: false,
+            enabled:
+                process.env.NODE_ENV === 'production' && process.env.BOTLIST_DISCORD_BOTLIST_EU_API_TOKEN
+                    ? true
+                    : false,
             hostname: 'api.discord-botlist.eu',
             path: '/v1/update',
             method: 'PATCH',
@@ -128,14 +134,19 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
     ];
 
     try {
-        const statusPromises = sites.map((site) => {
-            return new Promise<number | null>((resolve) => {
-                if (!site.enabled) {
-                    // return if site is disabled
-                    resolve(null);
-                    return;
-                }
+        const enabledSites = sites.filter((site) => site.enabled);
 
+        if (enabledSites.length === 0) {
+            logger.debug('No sites are enabled. Not posting bot stats.');
+            return;
+        }
+
+        logger.info(
+            `Starting to post bot stats with guild count ${guildCount} and member count ${memberCount} for ${enabledSites.length} sites...`
+        );
+
+        const statusPromises = enabledSites.map((site) => {
+            return new Promise<number | null>((resolve, reject) => {
                 const options: ClientRequestArgs = {
                     protocol: 'https:',
                     hostname: site.hostname,
@@ -162,15 +173,18 @@ export const postBotStats = async ({ client, executionId }: PostBotStatsParams) 
                     }
                 });
 
+                request.on('error', (error) => {
+                    logger.error(error, `Request to ${site.hostname} failed.`);
+                    reject(error);
+                });
+
                 request.write(JSON.stringify(site.body));
                 request.end();
             });
         });
 
         const statusCodes = await Promise.all(statusPromises);
-        logger.info(
-            `Successfully posted bot stats with status codes ${statusCodes.filter((code) => code !== null).join(', ')}.`
-        );
+        logger.info(`Successfully posted bot stats with status codes ${statusCodes.join(', ')}.`);
     } catch (error) {
         logger.error(error, 'Failed to post bot stats to sites.');
     }
