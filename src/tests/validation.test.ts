@@ -50,6 +50,4 @@ describe('searchQueryValidator', () => {
 
         expect(transformedQuery).toBe(expectedUrl);
     });
-
-    // not numbers
 });
