@@ -1,5 +1,26 @@
 # Changelog
 
+## [5.3.7](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.6...v5.3.7) (2023-09-14)
+
+
+### Minor changes and bug fixes
+
+* Added setup for unit tests ([f04d5ab](https://github.com/mariusbegby/cadence-discord-bot/commit/f04d5ab79b360ba1f66cb2913ef1d24f08896ca2))
+* change map to switch statement ([7018b69](https://github.com/mariusbegby/cadence-discord-bot/commit/7018b690bbc591b1b1eb689dfb4b36ab199165f3))
+* Fix posting bot stats status codes. ([6beb29d](https://github.com/mariusbegby/cadence-discord-bot/commit/6beb29d8b75bcf3efd7e4237dc5b604e4d65eb00))
+* possibly solve duplicate event 'interactionCreate' listener bug ([2d08a9a](https://github.com/mariusbegby/cadence-discord-bot/commit/2d08a9aa858fcd7f82c02fe0f0dc9b6e4524421c))
+* refactor postBotStats.ts ([f06f2ae](https://github.com/mariusbegby/cadence-discord-bot/commit/f06f2ae352c72844317b519a46650807bddc3eb2))
+* remove async from getUptimeFormatted ([4041404](https://github.com/mariusbegby/cadence-discord-bot/commit/4041404f01e58fd88009d73950691f2a5cbd3e1f))
+* small change to getEmbedQueueAuthor for bitrate calculation ([f3de02a](https://github.com/mariusbegby/cadence-discord-bot/commit/f3de02a6a8f4fc8cfe3e80a8b49117d076b5a9f5))
+* update interactionCreate event handling ([7902a84](https://github.com/mariusbegby/cadence-discord-bot/commit/7902a8427c5516c0586a86f27c2646cad1d81151))
+* use Promise.all when fetching info for status commands ([2d7ffc1](https://github.com/mariusbegby/cadence-discord-bot/commit/2d7ffc1a3ff9f58740dd1c77078feadcce6478d7))
+
+
+### Miscellaneous
+
+* adjust getUptimeFormatted method ([5558c0b](https://github.com/mariusbegby/cadence-discord-bot/commit/5558c0bca2ec2241a2899e5e1c00a1a6090c0fce))
+* more type annotations ([10c03d5](https://github.com/mariusbegby/cadence-discord-bot/commit/10c03d599f9eb060304b10e5e5b6572c7ab253b0))
+
 ## [5.3.6](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.5...v5.3.6) (2023-09-13)
 
 
