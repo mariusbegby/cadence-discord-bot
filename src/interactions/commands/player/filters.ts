@@ -10,6 +10,7 @@ import {
     ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
+    Message,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
@@ -78,7 +79,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue<unknown>
-    ) {
+    ): Promise<Message> {
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
         ffmpegFilterOptions.availableFilters.forEach((filter: FFmpegFilterOption) => {
@@ -136,7 +137,11 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async tempDisableFilters(logger: Logger, interaction: ChatInputCommandInteraction, queue: GuildQueue) {
+    private async tempDisableFilters(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue
+    ): Promise<Message> {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);
             logger.debug('Reset queue filters.');
@@ -157,7 +162,10 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async tempNotImplementedResponse(logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async tempNotImplementedResponse(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction
+    ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [

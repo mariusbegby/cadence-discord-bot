@@ -21,7 +21,7 @@ export const registerClientInteractions = async ({ client, executionId }: Regist
     logger.debug('Registering all client interactions complete.');
 };
 
-async function registerSlashCommandInteractions(logger: Logger, client: ExtendedClient) {
+async function registerSlashCommandInteractions(logger: Logger, client: ExtendedClient): Promise<void> {
     logger.debug('Registering client slash command interactions...');
     client.slashCommandInteractions = new Collection();
 
@@ -61,7 +61,7 @@ async function registerSlashCommandInteractions(logger: Logger, client: Extended
     logger.trace('Registering client slash command interactions complete.');
 }
 
-async function registerAutocompleteInteractions(logger: Logger, client: ExtendedClient) {
+async function registerAutocompleteInteractions(logger: Logger, client: ExtendedClient): Promise<void> {
     logger.debug('Registering client autocomplete interactions...');
     client.autocompleteInteractions = new Collection();
 
@@ -91,7 +91,7 @@ async function registerAutocompleteInteractions(logger: Logger, client: Extended
     logger.trace('Registering client autocomplete interactions complete.');
 }
 
-async function registerComponentInteractions(logger: Logger, client: ExtendedClient) {
+async function registerComponentInteractions(logger: Logger, client: ExtendedClient): Promise<void> {
     logger.debug('Registering client component interactions...');
     client.componentInteractions = new Collection();
 

@@ -1,6 +1,6 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { GuildQueue, Player, QueryType, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -178,7 +178,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData
-    ) {
+    ): Promise<Message> {
         logger.debug('Lyrics text too long, splitting into multiple messages.');
         const messageCount: number = Math.ceil(geniusLyricsResult.lyrics.length / 3800);
         const embedList: EmbedBuilder[] = [];
@@ -200,7 +200,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         }
 
         logger.debug('Responding with multiple info embeds.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: embedList
         });
     }
@@ -209,7 +209,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData
-    ) {
+    ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [

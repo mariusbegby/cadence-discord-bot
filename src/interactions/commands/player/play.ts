@@ -1,5 +1,5 @@
 import { GuildQueue, Player, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -75,9 +75,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
         transformedQuery: string,
         interaction: ChatInputCommandInteraction,
         logger: Logger
-    ) {
+    ): Promise<SearchResult | undefined> {
         logger.debug(`Searching for track with query: '${transformedQuery}'.`);
-        let searchResult;
+        let searchResult: SearchResult | undefined;
         try {
             searchResult = await player.search(transformedQuery, {
                 requestedBy: interaction.user
@@ -95,7 +95,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         executionId: string,
         query: string
-    ) {
+    ): Promise<Track | void> {
         let track;
         try {
             logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
@@ -116,11 +116,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         } catch (error) {
             if (error instanceof CustomError) {
                 if (error.message.includes('Sign in to confirm your age')) {
-                    return this.handleAgeConfirmationError(interaction, logger, executionId);
+                    this.handleAgeConfirmationError(interaction, logger, executionId);
                 }
 
                 if (error.message.includes('The following content may contain')) {
-                    return this.handleSensitiveTopicError(interaction, logger, executionId);
+                    this.handleSensitiveTopicError(interaction, logger, executionId);
                 }
 
                 if (
@@ -128,17 +128,19 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     error.message.includes('Failed to fetch resources for ytdl streaming') ||
                     error.message.includes('Could not extract stream for this track')
                 ) {
-                    return this.handleStreamError(interaction, logger, executionId, error, query);
+                    this.handleStreamError(interaction, logger, executionId, error, query);
                 }
 
                 if (error.message === 'Cancelled') {
-                    return this.handleCancelledError(interaction, logger, executionId, query);
+                    this.handleCancelledError(interaction, logger, executionId, query);
                 }
 
                 logger.error(error, 'Failed to play track with player.play(), unhandled error.');
             } else {
                 throw error;
             }
+
+            return Promise.resolve();
         }
         return track;
     }
@@ -148,7 +150,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         searchResult: SearchResult,
         interaction: ChatInputCommandInteraction,
         logger: Logger
-    ) {
+    ): Promise<Message> {
         logger.debug('Result found and added with player.play(), added to queue.');
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const trackUrl = this.getDisplayTrackDurationAndUrl(track);
@@ -177,7 +179,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         transformedQuery: string,
         interaction: ChatInputCommandInteraction,
         logger: Logger
-    ) {
+    ): Promise<Message> {
         logger.debug(`No results found for query: '${transformedQuery}'`);
 
         logger.debug('Responding with warning embed.');
@@ -194,7 +196,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async handlePlaylistTooLarge(query: string, interaction: ChatInputCommandInteraction, logger: Logger) {
+    private async handlePlaylistTooLarge(
+        query: string,
+        interaction: ChatInputCommandInteraction,
+        logger: Logger
+    ): Promise<Message> {
         logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
 
         logger.debug('Responding with warning embed.');
@@ -215,11 +221,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         logger: Logger,
         executionId: string
-    ) {
+    ): Promise<Message> {
         logger.debug('Found track but failed to retrieve audio due to age confirmation warning.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -231,18 +237,17 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
-        return Promise.resolve();
     }
 
     private async handleSensitiveTopicError(
         interaction: ChatInputCommandInteraction,
         logger: Logger,
         executionId: string
-    ) {
+    ): Promise<Message> {
         logger.debug('Found track but failed to retrieve audio due to graphic/mature/sensitive topic warning.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -254,7 +259,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
-        return Promise.resolve();
     }
 
     private async handleStreamError(
@@ -263,11 +267,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         executionId: string,
         error: Error,
         query: string
-    ) {
+    ): Promise<Message> {
         logger.debug(error, `Found track but failed to retrieve audio. Query: ${query}.`);
 
         logger.debug('Responding with error embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -280,7 +284,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
-        return Promise.resolve();
     }
 
     private async handleCancelledError(
@@ -288,11 +291,11 @@ class PlayCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         executionId: string,
         query: string
-    ) {
+    ): Promise<Message> {
         logger.debug(`Operation cancelled. Query: ${query}.`);
 
         logger.debug('Responding with error embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -305,7 +308,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     .setFooter({ text: `Execution ID: ${executionId}` })
             ]
         });
-        return Promise.resolve();
     }
 }
 
