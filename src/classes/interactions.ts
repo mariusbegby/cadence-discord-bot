@@ -209,8 +209,9 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         interaction: MessageComponentInteraction | ChatInputCommandInteraction,
         queue: GuildQueue
     ): EmbedAuthorOptions {
+        const bitrate = queue.channel ? queue.channel.bitrate / 1000 : 0;
         return {
-            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+            name: `Channel: ${queue.channel!.name} (${bitrate}kbps)`,
             iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
         };
     }
