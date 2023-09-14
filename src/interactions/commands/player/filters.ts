@@ -17,12 +17,13 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { FFmpegFilterOption, FFmpegFilterOptions } from '../../../types/configTypes';
+import { BiquadFilterOptions, FFmpegFilterOptions, FilterOption } from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
+const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -32,13 +33,13 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             .addStringOption((option) =>
                 option
                     .setName('type')
-                    .setDescription('Audio filtering type to use.')
+                    .setDescription('Audio filter type to use.')
                     .setRequired(false)
                     .addChoices(
-                        { name: 'FFmpeg', value: 'FFmpeg' },
-                        { name: 'Biquad', value: 'Biquad' },
-                        { name: 'Equalizer', value: 'Equalizer' },
-                        { name: 'Disable', value: 'Disable' }
+                        { name: 'FFmpeg', value: 'ffmpeg' },
+                        { name: 'Biquad', value: 'biquad' },
+                        { name: 'Equalizer', value: 'equalizer' },
+                        { name: 'Disable', value: 'disable' }
                     )
             );
         super(data);
@@ -57,21 +58,19 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const filterProvider: string = interaction.options.getString('type') || 'FFmpeg';
+        const filterProvider: string = interaction.options.getString('type') || 'ffmpeg';
 
-        switch (filterProvider.toLowerCase()) {
+        switch (filterProvider) {
             case 'ffmpeg':
-                logger.debug('Handling ffmpeg filters.');
                 return await this.handleFfmpegFilters(logger, interaction, queue);
             case 'biquad':
-                logger.debug('Handling biquad filters.');
-                return await this.tempNotImplementedResponse(logger, interaction);
+                return await this.handleBiquadFilters(logger, interaction, queue);
             case 'equalizer':
+                // TODO: implement
                 logger.debug('Handling equalizer filters.');
                 return await this.tempNotImplementedResponse(logger, interaction);
             case 'disable':
-                logger.debug('Disabling filters.');
-                return await this.tempDisableFilters(logger, interaction, queue);
+                return await this.disableAllFiltersAndRespondWithSuccess(logger, interaction, queue);
         }
     }
 
@@ -80,9 +79,10 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue<unknown>
     ): Promise<Message> {
+        logger.debug('Handling ffmpeg filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
-        ffmpegFilterOptions.availableFilters.forEach((filter: FFmpegFilterOption) => {
+        ffmpegFilterOptions.availableFilters.forEach((filter: FilterOption) => {
             let isEnabled: boolean = false;
 
             if (queue.filters.ffmpeg.filters.includes(filter.value as keyof QueueFilters)) {
@@ -99,11 +99,69 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             );
         });
 
+        return await this.sendFiltersEmbed(logger, interaction, 'ffmpeg', filterOptions);
+    }
+
+    private async handleBiquadFilters(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue<unknown>
+    ): Promise<Message> {
+        logger.debug('Handling biquad filters.');
+        const filterOptions: StringSelectMenuOptionBuilder[] = [];
+
+        biquadFilterOptions.availableFilters.forEach((filter: FilterOption) => {
+            let isEnabled: boolean = false;
+            if (queue.filters.biquad!.biquadFilter === (filter.value as keyof BiquadFilterType)) {
+                isEnabled = true;
+            }
+
+            filterOptions.push(
+                new StringSelectMenuOptionBuilder()
+                    .setLabel(filter.label)
+                    .setDescription(filter.description)
+                    .setValue(filter.value)
+                    .setEmoji(filter.emoji)
+                    .setDefault(isEnabled)
+            );
+        });
+
+        return await this.sendFiltersEmbed(logger, interaction, 'biquad', filterOptions);
+    }
+
+    private async sendFiltersEmbed(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        filterProvider: string,
+        filterOptions: StringSelectMenuOptionBuilder[]
+    ): Promise<Message> {
+        const actionRows = this.buildFilterActionRows(filterOptions, filterProvider);
+
+        logger.debug('Sending info embed with action row components.');
+        return await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**Toggle filters (${filterProvider})**\n` +
+                            'Enable or disable audio filters for playback from the menu.'
+                    )
+                    .setColor(this.embedOptions.colors.info)
+            ],
+            components: actionRows
+        });
+    }
+
+    private buildFilterActionRows(
+        filterOptions: StringSelectMenuOptionBuilder[],
+        filterProvider: string
+    ): APIActionRowComponent<APIMessageActionRowComponent>[] {
         const filterSelect: APIStringSelectComponent = new StringSelectMenuBuilder()
-            .setCustomId('filters-select-menu')
-            .setPlaceholder('Select multiple options.')
+            .setCustomId(`filters-select-menu_${filterProvider}`)
+            .setPlaceholder(
+                filterProvider === 'ffmpeg' ? 'Select one or multiple filters.' : 'Select a filter from the menu.'
+            )
             .setMinValues(0)
-            .setMaxValues(filterOptions.length)
+            .setMaxValues(1)
             .addOptions(filterOptions)
             .toJSON();
 
@@ -124,28 +182,27 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             components: [disableButton]
         };
 
-        logger.debug('Sending info embed with action row components.');
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        '**Toggle filters**\n' + 'Enable or disable audio filters for playback from the menu.'
-                    )
-                    .setColor(this.embedOptions.colors.info)
-            ],
-            components: [filterActionRow, disableFiltersActionRow]
-        });
+        return [filterActionRow, disableFiltersActionRow];
     }
 
-    private async tempDisableFilters(
+    private async disableAllFiltersAndRespondWithSuccess(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue
     ): Promise<Message> {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);
-            logger.debug('Reset queue filters.');
         }
+
+        if (queue.filters.biquad) {
+            queue.filters.biquad.disable();
+        }
+
+        if (queue.filters.equalizer) {
+            queue.filters.equalizer.disable();
+        }
+
+        logger.debug('Reset queue filters.');
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({

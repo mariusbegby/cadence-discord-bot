@@ -107,7 +107,7 @@ export type PlayerOptions = {
     };
 };
 
-export type FFmpegFilterOption = {
+export type FilterOption = {
     label: string;
     value: string;
     description: string;
@@ -117,6 +117,10 @@ export type FFmpegFilterOption = {
 export type FFmpegFilterOptions = {
     threadAmount: string;
     forceNormalizerByBassBoost: boolean;
+    availableFilters: FFmpegFilterOption[];
+};
+
+export type BiquadFilterOptions = {
     availableFilters: FFmpegFilterOption[];
 };
 

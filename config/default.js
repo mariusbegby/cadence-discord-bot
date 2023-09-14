@@ -209,6 +209,71 @@ module.exports.ffmpegFilterOptions = {
     ]
 };
 
+module.exports.biquadFilterOptions = {
+    availableFilters: [
+        {
+            label: 'Basic Low Pass (Approx.)',
+            value: 'SinglePoleLowPassApprox',
+            description: 'Low frequencies pass, approximate.',
+            emoji: '🔉'
+        },
+        {
+            label: 'Basic Low Pass',
+            value: 'SinglePoleLowPass',
+            description: 'Low frequencies pass.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Advanced Low Pass',
+            value: 'LowPass',
+            description: 'Enhanced low frequency pass.',
+            emoji: '🔊'
+        },
+        {
+            label: 'High Pass',
+            value: 'HighPass',
+            description: 'High frequencies pass.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Band Pass',
+            value: 'BandPass',
+            description: 'Specific frequency range pass.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Notch Filter',
+            value: 'Notch',
+            description: 'Reduces specific frequency.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Phase Adjuster',
+            value: 'AllPass',
+            description: 'Alters sound phase.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Low Shelf',
+            value: 'LowShelf',
+            description: 'Boosts/reduces low frequencies.',
+            emoji: '🔊'
+        },
+        {
+            label: 'High Shelf',
+            value: 'HighShelf',
+            description: 'Boosts/reduces high frequencies.',
+            emoji: '🔊'
+        },
+        {
+            label: 'Peaking Equalizer',
+            value: 'PeakingEQ',
+            description: 'Adjusts specific frequencies.',
+            emoji: '🔊'
+        }
+    ]
+};
+
 // Configuration for load testing. Enables the bot to simulate certain behaviors for testing purposes.
 // If enabled, the bot will join the specified channels and play specified track.
 module.exports.loadTestOptions = {

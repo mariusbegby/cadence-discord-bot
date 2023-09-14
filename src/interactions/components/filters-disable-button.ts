@@ -45,6 +45,10 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
             queue.filters.ffmpeg.setFilters(false);
             logger.debug('Reset queue filters.');
         }
+
+        if (queue.filters.biquad) {
+            queue.filters.biquad.disable();
+        }
     }
 }
 
