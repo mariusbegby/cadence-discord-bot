@@ -26,7 +26,7 @@ export async function getPlayerStatistics(client: ExtendedClient): Promise<strin
 
 export async function getSystemStatus(executionId: string, extended: boolean): Promise<string> {
     if (!extended) {
-        const uptimeString: string = await getUptimeFormatted({ executionId });
+        const uptimeString: string = getUptimeFormatted({ executionId });
         const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
         const cpuUsage: number = await osu.cpu.usage();
 
@@ -35,7 +35,7 @@ export async function getSystemStatus(executionId: string, extended: boolean): P
         );
     }
 
-    const uptimeString: string = await getUptimeFormatted({ executionId });
+    const uptimeString: string = getUptimeFormatted({ executionId });
     const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
     const cpuCores: number = osu.cpu.count();
     const platform: string = osu.os.platform();

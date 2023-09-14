@@ -4,7 +4,7 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
 
-export const createPlayer = async ({ client, executionId }: CreatePlayerParams) => {
+export const createPlayer = async ({ client, executionId }: CreatePlayerParams): Promise<Player> => {
     const logger: Logger = loggerModule.child({
         module: 'utilFactory',
         name: 'createPlayer',
