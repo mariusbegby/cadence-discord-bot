@@ -6,7 +6,7 @@ describe('searchQueryValidator', () => {
         async (countryCode) => {
             const trackId = '5T8EDUDqKcs6OSOwEsfqG7';
             const query: string = `https://open.spotify.com/${countryCode}/track/${trackId}`;
-            const transformedQuery: string = await transformQuery({ query, executionId: 'test' });
+            const transformedQuery: string = transformQuery({ query, executionId: 'test' });
 
             expect(transformedQuery).toBe(`https://open.spotify.com/track/${trackId}`);
         }
@@ -17,7 +17,7 @@ describe('searchQueryValidator', () => {
         async (path) => {
             const trackId = '5T8EDUDqKcs6OSOwEsfqG7';
             const query: string = `https://open.spotify.com/${path}/track/${trackId}`;
-            const transformedQuery: string = await transformQuery({ query, executionId: 'test' });
+            const transformedQuery: string = transformQuery({ query, executionId: 'test' });
 
             expect(transformedQuery).toBe(`https://open.spotify.com/${path}/track/${trackId}`);
         }
@@ -28,7 +28,7 @@ describe('searchQueryValidator', () => {
         async (path) => {
             const trackId = '5T8EDUDqKcs6OSOwEsfqG7';
             const query: string = `https://open.spotify.com/${path}/track/${trackId}`;
-            const transformedQuery: string = await transformQuery({ query, executionId: 'test' });
+            const transformedQuery: string = transformQuery({ query, executionId: 'test' });
 
             expect(transformedQuery).toBe(`https://open.spotify.com/${path}/track/${trackId}`);
         }
@@ -46,7 +46,7 @@ describe('searchQueryValidator', () => {
         ]
     ])('should return the same url if it is not a valid Spotify url', async (inputUrl, expectedUrl) => {
         const executionId: string = 'test';
-        const transformedQuery: string = await transformQuery({ query: inputUrl, executionId });
+        const transformedQuery: string = transformQuery({ query: inputUrl, executionId });
 
         expect(transformedQuery).toBe(expectedUrl);
     });

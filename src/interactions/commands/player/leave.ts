@@ -26,7 +26,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
         ]);
 
         logger.debug('Deleting queue.');
-        await this.deleteQueue(queue);
+        this.deleteQueue(queue);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -43,7 +43,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async deleteQueue(queue: GuildQueue): Promise<void> {
+    private deleteQueue(queue: GuildQueue): void {
         if (!queue.deleted) {
             queue.delete();
         }

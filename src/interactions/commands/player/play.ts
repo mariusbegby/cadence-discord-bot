@@ -39,7 +39,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
         const player = useMainPlayer()!;
         const searchQuery = interaction.options.getString('query')!;
-        const transformedQuery = await transformQuery({ query: searchQuery, executionId });
+        const transformedQuery = transformQuery({ query: searchQuery, executionId });
 
         const searchResult = await this.searchTrack(player, transformedQuery, interaction, logger);
         if (!searchResult || searchResult.tracks.length === 0) {

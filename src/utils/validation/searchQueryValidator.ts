@@ -2,7 +2,7 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { TransformQueryParams } from '../../types/utilTypes';
 
-export const transformQuery = async ({ query, executionId }: TransformQueryParams) => {
+export const transformQuery = ({ query, executionId }: TransformQueryParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
         name: 'transformQuery',

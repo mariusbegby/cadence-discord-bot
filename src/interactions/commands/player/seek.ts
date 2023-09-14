@@ -1,5 +1,5 @@
 import { GuildQueue, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
@@ -57,11 +57,11 @@ class SeekCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         formattedDurationString: string
-    ) {
+    ): Promise<Message> {
         logger.debug('Invalid duration format input.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -76,7 +76,6 @@ class SeekCommand extends BaseSlashCommandInteraction {
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
-        return Promise.resolve();
     }
 
     private async seekToDurationInCurrentTrack(
@@ -85,12 +84,12 @@ class SeekCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         durationInMilliseconds: number,
         formattedDurationString: string
-    ) {
+    ): Promise<Message> {
         queue.node.seek(durationInMilliseconds);
         logger.debug(`Seeked to '${formattedDurationString}' in current track.`);
 
         logger.debug('Responding with success embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
@@ -102,7 +101,6 @@ class SeekCommand extends BaseSlashCommandInteraction {
                     .setColor(this.embedOptions.colors.success)
             ]
         });
-        return Promise.resolve();
     }
 
     private async handleDurationLongerThanTrack(
@@ -110,11 +108,11 @@ class SeekCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         formattedDurationString: string,
         queue: GuildQueue
-    ) {
+    ): Promise<Message> {
         logger.debug('Duration specified is longer than the track duration.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -127,7 +125,6 @@ class SeekCommand extends BaseSlashCommandInteraction {
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
-        return Promise.resolve();
     }
 
     private parseDurationArray(durationInputSplit: string[]): string {
