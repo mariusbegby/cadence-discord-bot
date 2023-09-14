@@ -70,7 +70,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
                 `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                    `**${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
                     `${this.getDisplayRepeatMode(queue.repeatMode)}`
             )
             .setThumbnail(skippedTrack.thumbnail)
