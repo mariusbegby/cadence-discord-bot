@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.8](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.7...v5.3.8) (2023-09-14)
+
+
+### Minor changes and bug fixes
+
+* remove incorrect ** from string ([cf45bde](https://github.com/mariusbegby/cadence-discord-bot/commit/cf45bde80b42e69e7a8e797905502b261e86e269))
+* update getDisplayRepeatMode showing wrong icon on success ([ea8cf10](https://github.com/mariusbegby/cadence-discord-bot/commit/ea8cf100f5fb98b57fd19e1bd4ec40712968add5))
+
 ## [5.3.7](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.6...v5.3.7) (2023-09-14)
 
 
