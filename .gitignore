@@ -2,6 +2,7 @@
 /.env
 /config/*.js
 !/config/default.js
+!/config/test.js
 /logs
 /logs/app-*.log
 /cookies.json
