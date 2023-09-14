@@ -71,7 +71,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
             .setDescription(
                 `**${this.embedOptions.icons.skipped} Skipped track**\n` +
                     `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode)}`
+                    `${this.getDisplayRepeatMode(queue.repeatMode, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

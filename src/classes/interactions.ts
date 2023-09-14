@@ -152,22 +152,22 @@ abstract class BaseInteraction {
         return progressBar;
     }
 
-    protected getDisplayRepeatMode(repeatMode: number): string {
+    protected getDisplayRepeatMode(repeatMode: number, state: string = 'info'): string {
         let loopModeUserString: string;
         let icon: string;
 
         switch (repeatMode) {
             case 1:
                 loopModeUserString = 'track';
-                icon = this.embedOptions.icons.loop;
+                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
                 break;
             case 2:
                 loopModeUserString = 'queue';
-                icon = this.embedOptions.icons.loop;
+                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
                 break;
             case 3:
                 loopModeUserString = 'autoplay';
-                icon = this.embedOptions.icons.autoplay;
+                icon = state === 'info' ? this.embedOptions.icons.autoplay : this.embedOptions.icons.autoplaying;
                 break;
             default:
                 return '';
