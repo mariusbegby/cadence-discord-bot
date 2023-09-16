@@ -1,6 +1,6 @@
 {
     "name": "cadence-discord-bot",
-    "version": "5.4.0",
+    "version": "5.4.1",
     "description": "A free Discord music and audio bot.",
     "repository": {
         "type": "git",

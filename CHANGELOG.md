@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.4.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.4.0...v5.4.1) (2023-09-16)
+
+
+### Minor changes and bug fixes
+
+* update deps ([e029314](https://github.com/mariusbegby/cadence-discord-bot/commit/e029314ee2e125a90db2756b20e116a7b8fa45f5))
+
+
+### Miscellaneous
+
+* add jest coverage npm script ([b73dee5](https://github.com/mariusbegby/cadence-discord-bot/commit/b73dee52adaf348cc0106527a7987b25908e0c47))
+* created simple command class method unit test ([aa37704](https://github.com/mariusbegby/cadence-discord-bot/commit/aa37704331e529248b612a803f94feb92505329f))
+
 ## [5.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.8...v5.4.0) (2023-09-16)
 
 
