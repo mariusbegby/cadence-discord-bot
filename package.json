@@ -42,11 +42,11 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@discord-player/extractor": "^4.4.3",
+        "@discord-player/extractor": "^4.4.4",
         "@discord-player/opus": "^0.1.2",
         "@discordjs/rest": "^2.0.1",
         "config": "^3.3.9",
-        "discord-player": "^6.6.3",
+        "discord-player": "^6.6.4",
         "discord-voip": "^0.1.2",
         "discord.js": "^14.13.0",
         "dotenv": "^16.3.1",
