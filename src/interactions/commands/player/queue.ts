@@ -1,10 +1,11 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, EmbedFooterData, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { formatDuration } from '../../../common/formattingUtils';
 
 class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -70,7 +71,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                             queueTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
-                    .setFooter(this.getFooterDisplayPageInfo(interaction, queue))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue))
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -95,7 +96,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                             `**${this.embedOptions.icons.queue} Tracks in queue**\n` +
                             queueTracksListString
                     )
-                    .setFooter(this.getFooterDisplayPageInfo(interaction, queue))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue))
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -143,6 +144,34 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track)}`;
             })
             .join('\n');
+    }
+
+    private getDisplayQueueTotalDuration(queue: GuildQueue): string {
+        if (queue.tracks.data.length > 1000) {
+            return 'Estimated duration: A really long time';
+        }
+
+        let queueDurationMs: number = queue.estimatedDuration;
+        if (queue.currentTrack) {
+            queueDurationMs += queue.currentTrack.durationMS;
+        }
+
+        if (queueDurationMs < 0) {
+            return 'Estimated duration: A really long time';
+        }
+
+        return `Estimated duration: ${formatDuration(queueDurationMs)}`;
+    }
+
+    private getDisplayFullFooterInfo(interaction: ChatInputCommandInteraction, queue: GuildQueue): EmbedFooterData {
+        const pagination = this.getFooterDisplayPageInfo(interaction, queue);
+        const totalDuration = this.getDisplayQueueTotalDuration(queue);
+
+        const fullFooterData = {
+            text: `${pagination.text} - ${totalDuration}`
+        };
+
+        return fullFooterData;
     }
 }
 
