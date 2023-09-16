@@ -28,6 +28,7 @@
     "scripts": {
         "test": "jest",
         "test:watch": "jest --watch",
+        "coverage": "jest --coverage",
         "start": "node ./dist/index.js",
         "start-pretty": "node ./dist/index.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,executionTime,shardId,guildId,interactionType",
         "start-pretty-no-ignore": "node ./dist/index.js | pino-pretty",
