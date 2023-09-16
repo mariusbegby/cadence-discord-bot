@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.4.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.8...v5.4.0) (2023-09-16)
+
+
+### Features
+
+* add biquad filters support ([0b94a9b](https://github.com/mariusbegby/cadence-discord-bot/commit/0b94a9b5ec3fdb3108cbd0bd960c9d97ea866c76))
+* show queue total duration in footer, update uptime duration format ([b139516](https://github.com/mariusbegby/cadence-discord-bot/commit/b1395164ea0d4117ecf6ae5f09a4eeecb25c3d86))
+
+
+### Minor changes and bug fixes
+
+* remove unnecessary async/await ([7dc7b4f](https://github.com/mariusbegby/cadence-discord-bot/commit/7dc7b4ff7e80df4c1979fb1e95ad511ce3bea831))
+
 ## [5.3.8](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.3.7...v5.3.8) (2023-09-14)
 
 
