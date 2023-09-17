@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.4.1...v5.5.0) (2023-09-17)
+
+
+### Features
+
+* added equalizer filters to /filters command ([9584fe8](https://github.com/mariusbegby/cadence-discord-bot/commit/9584fe8ebe7b1cb97200d7a13e8763b1f4babba2))
+
 ## [5.4.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.4.0...v5.4.1) (2023-09-16)
 
 
