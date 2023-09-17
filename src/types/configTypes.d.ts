@@ -124,6 +124,10 @@ export type BiquadFilterOptions = {
     availableFilters: FFmpegFilterOption[];
 };
 
+export type EqualizerFilterOptions = {
+    availableFilters: FFmpegFilterOption[];
+};
+
 export type LoadTestOptions = {
     enabled: boolean;
     trackUrl: string;

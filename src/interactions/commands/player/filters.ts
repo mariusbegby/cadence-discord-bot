@@ -17,13 +17,19 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BiquadFilterOptions, FFmpegFilterOptions, FilterOption } from '../../../types/configTypes';
+import {
+    BiquadFilterOptions,
+    EqualizerFilterOptions,
+    FFmpegFilterOptions,
+    FilterOption
+} from '../../../types/configTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
+const equalizerFilterOptions: EqualizerFilterOptions = config.get('equalizerFilterOptions');
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -66,9 +72,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             case 'biquad':
                 return await this.handleBiquadFilters(logger, interaction, queue);
             case 'equalizer':
-                // TODO: implement
-                logger.debug('Handling equalizer filters.');
-                return await this.tempNotImplementedResponse(logger, interaction);
+                return await this.handleEqualizerFilters(logger, interaction);
             case 'disable':
                 return await this.disableAllFiltersAndRespondWithSuccess(logger, interaction, queue);
         }
@@ -127,6 +131,24 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
 
         return await this.sendFiltersEmbed(logger, interaction, 'biquad', filterOptions);
+    }
+
+    private async handleEqualizerFilters(logger: Logger, interaction: ChatInputCommandInteraction): Promise<Message> {
+        logger.debug('Handling biquad filters.');
+        const filterOptions: StringSelectMenuOptionBuilder[] = [];
+
+        equalizerFilterOptions.availableFilters.forEach((filter: FilterOption) => {
+            filterOptions.push(
+                new StringSelectMenuOptionBuilder()
+                    .setLabel(filter.label)
+                    .setDescription(filter.description)
+                    .setValue(filter.value)
+                    .setEmoji(filter.emoji)
+                    .setDefault(false)
+            );
+        });
+
+        return await this.sendFiltersEmbed(logger, interaction, 'equalizer', filterOptions);
     }
 
     private async sendFiltersEmbed(
@@ -214,24 +236,6 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                             'All audio filters have been disabled.'
                     )
                     .setColor(this.embedOptions.colors.success)
-            ],
-            components: []
-        });
-    }
-
-    private async tempNotImplementedResponse(
-        logger: Logger,
-        interaction: ChatInputCommandInteraction
-    ): Promise<Message> {
-        logger.debug('Responding with info embed.');
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        `**${this.embedOptions.icons.bot} Coming soon**\n` +
-                            'This functionality has not yet been implemented, and will be available soon.'
-                    )
-                    .setColor(this.embedOptions.colors.info)
             ],
             components: []
         });

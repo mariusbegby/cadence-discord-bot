@@ -1,15 +1,21 @@
 import config from 'config';
-import { BiquadFilters, GuildQueue, QueueFilters, useQueue } from 'discord-player';
+import { BiquadFilters, EqualizerConfigurationPreset, GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, Message, StringSelectMenuInteraction } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseComponentInteraction } from '../../classes/interactions';
-import { BiquadFilterOptions, FFmpegFilterOptions, FilterOption } from '../../types/configTypes';
+import {
+    EqualizerFilterOptions,
+    BiquadFilterOptions,
+    FFmpegFilterOptions,
+    FilterOption
+} from '../../types/configTypes';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
+const equalizerFilterOptions: EqualizerFilterOptions = config.get('equalizerFilterOptions');
 
 class FiltersSelectMenuComponent extends BaseComponentInteraction {
     constructor() {
@@ -44,9 +50,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
             case 'biquad':
                 return await this.handleBiquadFilterToggle(logger, selectMenuInteraction, queue, filterType);
             case 'equalizer':
-                // TODO: implement
-                logger.info('equalizer');
-                break;
+                return await this.handleEqualizerFilterToggle(logger, selectMenuInteraction, queue, filterType);
             default:
                 logger.warn(`Unknown filter type '${filterType}'.`);
                 return;
@@ -78,12 +82,28 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType);
     }
 
+    private async handleEqualizerFilterToggle(
+        logger: Logger,
+        selectMenuInteraction: StringSelectMenuInteraction,
+        queue: GuildQueue,
+        filterType: string
+    ): Promise<Message> {
+        this.toggleEqualizerFilter(selectMenuInteraction, queue, logger);
+
+        logger.debug('Responding with success embed.');
+        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType);
+    }
+
     private toggleFfmpegFilters(
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
         logger: Logger
     ): void {
         try {
+            if (!queue.filters.ffmpeg) {
+                throw new Error('FFmpeg filter is not enabled.');
+            }
+
             queue.filters.ffmpeg.toggle(selectMenuInteraction.values as (keyof QueueFilters)[]);
             logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
         } catch (error) {
@@ -98,8 +118,35 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     ): void {
         try {
             queue.filters.biquad!.enable();
+
+            if (!queue.filters.biquad) {
+                throw new Error('Biquad filter is not enabled.');
+            }
+
             queue.filters.biquad!.setGain(5);
             queue.filters.biquad!.setFilter(selectMenuInteraction.values[0] as BiquadFilters);
+            logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
+        } catch (error) {
+            logger.error(error, 'Unhandled error while toggling filters.');
+        }
+    }
+
+    private toggleEqualizerFilter(
+        selectMenuInteraction: StringSelectMenuInteraction,
+        queue: GuildQueue,
+        logger: Logger
+    ): void {
+        try {
+            queue.filters.equalizer!.enable();
+
+            const inputFilter = selectMenuInteraction.values[0] as keyof typeof EqualizerConfigurationPreset;
+            const eqFilter = EqualizerConfigurationPreset[inputFilter];
+
+            if (!queue.filters.equalizer) {
+                throw new Error('Equalizer filter is not enabled.');
+            }
+
+            queue.filters.equalizer!.setEQ(eqFilter);
             logger.debug(`Enabled filters ${selectMenuInteraction.values.join(', ')}.`);
         } catch (error) {
             logger.error(error, 'Unhandled error while toggling filters.');
@@ -159,7 +206,8 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
                 availableFilters = biquadFilterOptions.availableFilters;
                 break;
             case 'equalizer':
-                break; // TODO: implement
+                availableFilters = equalizerFilterOptions.availableFilters;
+                break;
             default:
                 break;
         }
