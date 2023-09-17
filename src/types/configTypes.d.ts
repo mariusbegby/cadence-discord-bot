@@ -1,12 +1,6 @@
 import { ActivityType, ColorResolvable, PresenceUpdateStatus } from 'discord.js';
 import { LogLevel } from './serviceTypes';
 
-export type BotOptions = {
-    name: string;
-    botInviteUrl: string;
-    serverInviteUrl: string;
-};
-
 export type CustomLoggerOptions = {
     minimumLogLevel: LogLevel;
     minimumLogLevelConsole: LogLevel;
@@ -40,48 +34,44 @@ export type EmbedOptions = {
         note: ColorResolvable;
     };
     icons: {
-        logo: string;
-        beta: string;
-        new: string;
-        rule: string;
-        support: string;
-        bot: string;
-        server: string;
-        discord: string;
-        audioPlaying: string;
-        audioStartedPlaying: string;
-        success: string;
-        error: string;
-        warning: string;
-        disable: string;
-        enable: string;
-        disabled: string;
-        enabled: string;
-        nextTrack: string;
-        previousTrack: string;
-        pauseResumeTrack: string;
-        shuffleQueue: string;
-        loop: string;
-        loopAction: string;
         autoplay: string;
-        autoplayAction: string;
-        looping: string;
-        autoplaying: string;
-        skipped: string;
-        back: string;
-        pauseResumed: string;
-        shuffled: string;
-        volume: string;
-        volumeIsMuted: string;
-        volumeChanged: string;
-        volumeMuted: string;
+        liveTrack: string;
         queue: string;
+        shuffled: string;
+        skipped: string;
         sourceArbitrary: string;
         sourceAppleMusic: string;
         sourceYouTube: string;
         sourceSoundCloud: string;
         sourceSpotify: string;
-        liveTrack: string;
+        volume: string;
+        volumeChanged: string;
+        volumeIsMuted: string;
+        volumeMuted: string;
+        resolved: string;
+        investigating: string;
+        outage: string;
+        repeat: string;
+        nyctophileZuiDart: string;
+        nyctophileZuiDisable: string;
+        nyctophileZuiGlobe: string;
+        nyctophileZuiHeadphones: string;
+        nyctophileZuiLeave: string;
+        nyctophileZuiMegaphone: string;
+        nyctophileZuiModified: string;
+        nyctophileZuiModify: string;
+        nyctophileZuiPause: string;
+        nyctophileZuiPlay: string;
+        nyctophileZuiRepeat: string;
+        nyctophileZuiRobot: string;
+        nyctophileZuiServer: string;
+        nyctophileZuiStop: string;
+        nyctophileZuiSuccess: string;
+        nyctophileZuiThumbsDown: string;
+        nyctophileZuiThumbsUp: string;
+        nyctophileZuiTrash: string;
+        nyctophileZuiQueue: string;
+        nyctophileZuiWarning: string;
     };
 };
 
@@ -110,7 +100,6 @@ export type PlayerOptions = {
 export type FFmpegFilterOption = {
     label: string;
     value: string;
-    description: string;
     emoji: string;
 };
 

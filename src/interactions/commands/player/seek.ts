@@ -65,7 +65,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} Oops!**\n` +
                             `You entered an invalid duration format, **\`${formattedDurationString}\`**.\n` +
                             'Please use the format **`HH:mm:ss`**, **`mm:ss`** or **`ss`**.\n\n' +
                             '**Examples:**\n' +
@@ -95,7 +95,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Seeking to duration**\n` +
+                        `**${this.embedOptions.icons.nyctophileZuiSuccess} Seeking to duration**\n` +
                             `Seeking to **\`${formattedDurationString}\`** in current track.`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
@@ -118,7 +118,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} Oops!**\n` +
                             `You entered **\`${formattedDurationString}\`**, which is a duration that is longer than the duration for the current track.\n\n` +
                             `Please try a duration that is less than the duration of the track (**\`${
                                 queue.currentTrack!.duration

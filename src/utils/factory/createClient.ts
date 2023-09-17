@@ -2,7 +2,7 @@ import Discord, { Client } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 
-export const createClient = async ({ executionId }: { executionId: string }) => {
+export const createClient = async ({ executionId }: { executionId: string }): Promise<Client> => {
     const logger: Logger = loggerModule.child({
         module: 'utilFactory',
         name: 'createClient',

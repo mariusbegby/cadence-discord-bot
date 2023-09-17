@@ -25,12 +25,20 @@ const logger: Logger = loggerModule.child({
     try {
         const client: ExtendedClient = await createClient({ executionId });
         const player: Player = await createPlayer({ client, executionId });
+        let allShardsReadyReceived: boolean = false;
 
         client.on('allShardsReady', async () => {
+            if (allShardsReadyReceived) {
+                logger.debug('allShardsReady event received, but already received before. Ignoring.');
+                return;
+            }
+
+            logger.debug('allShardsReady event received, registering client interactions and event listeners.');
             client.registerClientInteractions = registerClientInteractions;
             await registerEventListeners({ client, player, executionId });
             await registerClientInteractions({ client, executionId });
             client.emit('ready', client as Client);
+            allShardsReadyReceived = true;
         });
 
         client.login(process.env.DISCORD_BOT_TOKEN);

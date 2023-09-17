@@ -3,11 +3,10 @@ import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
-import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
 // Emitted when the player queue encounters error (general error with queue)
 module.exports = {
@@ -31,7 +30,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue related to the queue or current track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                        `**${embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya ada masalah terkait antrian atau lagu (tracks) saat ini!`
                     )
                     .setColor(embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -46,12 +45,13 @@ module.exports = {
                 await channel.send({
                     embeds: [
                         new EmbedBuilder()
+                            .setTitle("player.events.on('error')")
                             .setDescription(
-                                `${embedOptions.icons.error} **player.events.on('error')**\nExecution id: ${executionId}\n${error.message}` +
-                                    `\n\n<@${systemOptions.systemUserId}>`
+                                `**${embedOptions.icons.nyctophileZuiMegaphone} | Kesalahan** pada: ${error.message}\n` +
+                                    `\n<@${systemOptions.systemUserId}>`
                             )
-                            .setColor(embedOptions.colors.error)
                             .setFooter({ text: `Execution ID: ${executionId}` })
+                            .setColor(embedOptions.colors.error)
                     ]
                 });
             }

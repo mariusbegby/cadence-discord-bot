@@ -1,15 +1,6 @@
 // Import Discord.js types for TypeScript support.
 const { ActivityType, PresenceUpdateStatus } = require('discord.js');
 
-// Description: Config file for Cadence Discord bot.
-
-// General metadata about the bot displayed in certain embeds.
-module.exports.botOptions = {
-    name: 'Cadence',
-    botInviteUrl: '',
-    serverInviteUrl: ''
-};
-
 // Configuration for bot sharding. Refers to splitting a Discord bot into multiple processes.
 // For more information, refer to Discord.js sharding documentation: https://discordjs.guide/sharding/
 module.exports.shardingOptions = {
@@ -30,20 +21,23 @@ module.exports.loggerOptions = {
 // Options for identifying specific system command.
 module.exports.systemOptions = {
     // List of guild IDs where system commands can be executed. e.g. ['123456789012345678', '123456789012345678']
-    systemGuildIds: [],
+    systemGuildIds: ['968117722544238592', '1095033605769658565'],
     // Channel for sending system messages, such as bot errors and disconnect events. e.g. '123456789012345678'
-    systemMessageChannelId: '',
+    // Selene
+    systemMessageChannelId: '1152593650560274454',
+    // Nyctophile
+    // systemMessageChannelId: '',
     // Bot administrator user ID for specific notifications through mentions in system channel. e.g. '123456789012345678'
-    systemUserId: ''
+    systemUserId: '981619626138017883'
 };
 
 // Configuration for the bot's presence and activity status.
 // Incude const { ActivityType, PresenceUpdateStatus } = require('discord.js'); at the top of config file.
 module.exports.presenceStatusOptions = {
-    status: PresenceUpdateStatus.Online,
+    status: PresenceUpdateStatus.DoNotDisturb,
     activities: [
         {
-            name: '/help 🎶',
+            name: 'Cindy\'s 💗',
             type: ActivityType.Listening
         }
     ]
@@ -66,48 +60,44 @@ module.exports.embedOptions = {
         note: '#80848E'
     },
     icons: {
-        logo: '🤖',
-        beta: '`beta`',
-        new: '`new`',
-        rule: '📒',
-        support: '❓',
-        bot: '🤖',
-        server: '🖥️',
-        discord: '🌐',
-        audioPlaying: '🎶',
-        audioStartedPlaying: '🎶',
-        success: '✅',
-        error: '⚠️',
-        warning: '⚠️',
-        disable: '🚫',
-        enable: '✅',
-        disabled: '✅',
-        enabled: '✅',
-        nextTrack: '⏭️',
-        previousTrack: '⏮️',
-        pauseResumeTrack: '⏯️',
-        shuffleQueue: '🔀',
-        loop: '🔁',
-        loopAction: '🔁',
         autoplay: '♾️',
-        autoplayAction: '♾️',
-        looping: '🔁',
-        autoplaying: '♾️',
-        skipped: '⏭️',
-        back: '⏮️',
-        pauseResumed: '⏯️',
-        shuffled: '🔀',
-        volume: '🔊',
-        volumeIsMuted: '🔇',
-        volumeChanged: '🔊',
-        volumeMuted: '🔇',
+        liveTrack: '<:nyctophileLiveTrack:1152604122621685880>',
         queue: '🎶',
+        shuffled: '🔀',
+        skipped: '⏭️',
         sourceArbitrary: '🎵',
         sourceAppleMusic: '🎵',
-        sourceYouTube: '🎵',
-        sourceSoundCloud: '🎵',
-        sourceSpotify: '🎵',
-        liveTrack: '🔴'
+        sourceYouTube: '<:nyctophileYouTube:1152788207969247242>',
+        sourceSoundCloud: '<:nyctophileSoundcloud:1152788189505925171>',
+        sourceSpotify: '<:nyctophileSpotify:1152788199584825436>',
+        volume: '🔊',
+        volumeChanged: '🔊',
+        volumeIsMuted: '🔇',
+        volumeMuted: '🔇',
+        resolved: '<:nyctophileResolved:1152212451375468637>',
+        investigating: '<:nyctophileInvestigating:1152212441439158324>',
+        outage: '<:nyctophileOutage:1152212446543630408>',
+        repeat: '<:nyctophileRepeat:1152601108741640273>',
+        nyctophileZuiDart: '<:nyctophileZuiDart:1152957723609145445>',
+        nyctophileZuiDisable: '<:nyctophileZuiDisable:1152952370347638845>',
+        nyctophileZuiGlobe: '<:nyctophileZuiGlobe:1152952376794300536>',
+        nyctophileZuiHeadphones: '<:nyctophileZuiHeadphones:1152955621587554355>',
+        nyctophileZuiLeave: '<:nyctophileZuiLeave:1152952383115100160>',
+        nyctophileZuiMegaphone: '<:nyctophileZuiMegaphone:1152952387686899885>',
+        nyctophileZuiModified: '<:nyctophileZuiModified:1152952405248450562>',
+        nyctophileZuiModify: '<:nyctophileZuiModify:1152954893951320215>',
+        nyctophileZuiPause: '<:nyctophileZuiPause:1152790550324453457>',
+        nyctophileZuiPlay: '<:nyctophileZuiPlay:1152952418523414689>',
+        nyctophileZuiRepeat: '<:nyctophileZuiRepeat:1152975657903607809>',
+        nyctophileZuiRobot: '<:nyctophileZuiRobot:1152975587615457337>',
+        nyctophileZuiServer: '<:nyctophileZuiServer:1152989220571467977>',
+        nyctophileZuiStop: '<:nyctophileZuiStop:1152790580192096368>',
+        nyctophileZuiSuccess: '<:nyctophileZuiSuccess:1152952433492893727>',
+        nyctophileZuiThumbsDown: '<:nyctophileZuiThumbsDown:1152952439494942742>',
+        nyctophileZuiThumbsUp: '<:nyctophileZuiThumbsUp:1152952447950651503>',
+        nyctophileZuiTrash: '<:nyctophileZuiTrash:1152808983476846592>',
+        nyctophileZuiQueue: '<:nyctophileZuiQueue:1152952426643587134>',
+        nyctophileZuiWarning: '<:nyctophileZuiWarning:1152952454795759719>'
     }
 };
 
@@ -147,63 +137,53 @@ module.exports.ffmpegFilterOptions = {
     forceNormalizerByBassBoost: true,
     availableFilters: [
         {
-            label: 'Bass boost',
+            label: 'Bass Boost',
             value: 'bassboost_low',
-            description: 'Boost the bass of the audio.',
             emoji: '🔉'
         },
         {
-            label: 'Bass boost high',
+            label: 'Bass Boost High',
             value: 'bassboost',
-            description: 'Boost the bass of the audio a lot.',
             emoji: '🔊'
         },
         {
-            label: 'Night core',
+            label: 'Night Core',
             value: 'nightcore',
-            description: 'Speed up the audio (higher pitch).',
             emoji: '🐱'
         },
         {
             label: 'Lo-fi',
             value: 'lofi',
-            description: 'Low fidelity effect (lower quality).',
             emoji: '📻'
         },
         {
             label: 'Vaporwave',
             value: 'vaporwave',
-            description: 'Slow down the audio (lower pitch).',
             emoji: '🌸'
         },
         {
-            label: 'Ear rape',
+            label: 'Ear Rape',
             value: 'earrape',
-            description: 'Extremely loud and distorted audio.',
             emoji: '👂'
         },
         {
             label: '8D',
             value: '8D',
-            description: 'Simulate 8D audio effect (surround).',
             emoji: '🎧'
         },
         {
             label: 'Treble',
             value: 'treble',
-            description: 'Increase the high frequencies.',
             emoji: '🎼'
         },
         {
             label: 'Normalizer',
             value: 'normalizer',
-            description: 'Normalize the audio (avoid distortion).',
             emoji: '🎶'
         },
         {
-            label: 'Remove silence',
+            label: 'Remove Silince',
             value: 'silenceremove',
-            description: 'Remove silence from start of tracks.',
             emoji: '🔇'
         }
     ]

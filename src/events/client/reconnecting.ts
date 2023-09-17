@@ -34,8 +34,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `${embedOptions.icons.warning} **${client.user?.tag}** is **\`reconnecting\`**!` +
-                                        `\n\n<@${systemOptions.systemUserId}>`
+                                    `**${embedOptions.icons.investigating} | ${client.user?.tag}** sedang \`menghubungkan kembali\`! <@${systemOptions.systemUserId}>`
                                 )
                                 .setColor(embedOptions.colors.warning)
                         ]

@@ -5,7 +5,6 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
-import { postBotStats } from '../../utils/other/postBotStats';
 import { startLoadTest } from '../../utils/other/startLoadTest';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -47,14 +46,12 @@ module.exports = {
             channel.send({
                 embeds: [
                     new EmbedBuilder()
-                        .setDescription(
-                            `**${embedOptions.icons.success} All shards ready**\n**${client.user?.tag}** is now **\`online\`**!`
-                        )
+                        .setDescription(`**${embedOptions.icons.resolved} | ${client.user?.tag}** sekarang \`online\`!`)
                         .setColor(embedOptions.colors.success)
                 ]
             });
         }
 
-        process.env.NODE_ENV === 'production' ? await postBotStats({ client, executionId }) : null;
+        // process.env.NODE_ENV === 'production' ? await postBotStats({ client, executionId }) : null;
     }
 };

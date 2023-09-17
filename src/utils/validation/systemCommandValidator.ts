@@ -25,7 +25,7 @@ export const checkValidGuildId = async ({ interaction, executionId }: ValidatorP
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nNo permission to perform this action.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya aku ngga punya izin (permissions) di server ini untuk melakukan perintah \`/${interactionIdentifier}\` ini!`
                     )
                     .setColor(embedOptions.colors.warning)
             ]

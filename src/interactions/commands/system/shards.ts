@@ -67,7 +67,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.server} Shard overview - ${shardCount} total shards**\n`
+                        `**${this.embedOptions.icons.nyctophileZuiServer} Shard overview - ${shardCount} total shards**\n`
                     )
                     .addFields(...embedFields)
                     .setColor(this.embedOptions.colors.info)
@@ -213,7 +213,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} Oops!**\n` +
                             `Page **\`${pageIndex + 1}\`** is not a valid page number.\n\n` +
                             `There are only a total of **\`${totalPages}\`** pages available.`
                     )

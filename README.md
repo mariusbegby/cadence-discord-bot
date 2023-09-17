@@ -1,34 +1,3 @@
-<h1 align="center">
-    <br>
-    Cadence - A free Discord music and audio bot
-    <br><br>
-    <img src="./assets/logo-rounded-128px.png" alt="Cadence icon">
-    <br><br>
-</h1>
-
-<h3 align="center">
-    🎶 A free music and audio bot for Discord. No locked functionality, free forever. Open source!
-</h3>
-
-<p align="center">
-    <a href="https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands">
-        <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Add%20bot&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Add Cadence Discord bot">
-    </a>&nbsp;
-    <a href="https://discord.gg/t6Bm8wPpXB">
-        <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Support%20Server&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Cadence Discord support server">
-    </a>&nbsp;
-    <a href="https://github.com/mariusbegby/cadence-discord-bot/blob/main/LICENSE.md">
-        <img src="https://img.shields.io/github/license/mariusbegby/cadence-discord-bot?style=for-the-badge&label=License&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot license">
-    </a>
-    <br>
-    <a href="https://github.com/mariusbegby/cadence-discord-bot/releases">
-        <img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=Version&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release">
-    </a>&nbsp;
-    <a href="https://hub.docker.com/r/mariusbegby/cadence">
-        <img src="https://img.shields.io/docker/pulls/mariusbegby/cadence.svg?style=for-the-badge&label=Pulls&labelColor=1b1c1d&logo=docker&logoColor=white&color=4c73df" alt="Docker pulls for Cadence">
-    </a>
-</p>
-
 ## Adding the bot 🤖
 
 To add the bot to your Discord server, click [here](https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands). This will invite the bot to your Discord server.

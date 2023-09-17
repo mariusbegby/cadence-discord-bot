@@ -31,62 +31,17 @@ module.exports = {
         });
 
         logger.debug('Interaction received.');
-
-        let interactionIdentifier: string = 'Unknown';
-        if (
-            interaction.type === InteractionType.ApplicationCommand ||
-            interaction.type === InteractionType.ApplicationCommandAutocomplete
-        ) {
-            interactionIdentifier = (interaction as ChatInputCommandInteraction).commandName;
-        } else if (interaction.type === InteractionType.MessageComponent) {
-            interactionIdentifier = (interaction as MessageComponentInteraction).customId;
-        }
+        const interactionIdentifier: string = getInteractionIdentifier(interaction);
 
         try {
             logger.debug('Started handling interaction.');
-            switch (interaction.type) {
-                case InteractionType.ApplicationCommand:
-                    await handleCommand(
-                        interaction as ChatInputCommandInteraction,
-                        client,
-                        executionId,
-                        interactionIdentifier
-                    );
-                    break;
-
-                case InteractionType.ApplicationCommandAutocomplete:
-                    await handleAutocomplete(
-                        interaction as AutocompleteInteraction,
-                        client,
-                        executionId,
-                        interactionIdentifier
-                    );
-                    break;
-
-                case InteractionType.MessageComponent:
-                    await handleComponent(
-                        interaction as MessageComponentInteraction,
-                        client,
-                        executionId,
-                        interactionIdentifier
-                    );
-                    break;
-
-                default:
-                    logger.error(
-                        interaction,
-                        `Interaction of type '${interaction.type}' was not handled, interaction attached as object.`
-                    );
-                    break;
-            }
+            await handleInteraction(interaction, client, executionId, interactionIdentifier);
         } catch (error) {
             logger.debug('Error while handling received interaction.');
             await handleError(interaction, error as CustomError, executionId, interactionIdentifier);
         }
 
-        const outputTime: number = new Date().getTime();
-        const executionTime: number = outputTime - inputTime;
-
+        const executionTime: number = new Date().getTime() - inputTime;
         const interactionType: string = InteractionType[interaction.type];
 
         logger.info(
@@ -106,3 +61,49 @@ module.exports = {
         return;
     }
 };
+
+async function handleInteraction(
+    interaction: Interaction,
+    client: ExtendedClient,
+    executionId: string,
+    interactionIdentifier: string
+) {
+    switch (interaction.type) {
+        case InteractionType.ApplicationCommand:
+            await handleCommand(interaction as ChatInputCommandInteraction, client, executionId, interactionIdentifier);
+            break;
+
+        case InteractionType.ApplicationCommandAutocomplete:
+            await handleAutocomplete(
+                interaction as AutocompleteInteraction,
+                client,
+                executionId,
+                interactionIdentifier
+            );
+            break;
+
+        case InteractionType.MessageComponent:
+            await handleComponent(
+                interaction as MessageComponentInteraction,
+                client,
+                executionId,
+                interactionIdentifier
+            );
+            break;
+
+        default:
+            throw new Error(`Interaction of type '${interaction.type}' was not handled`);
+    }
+}
+
+function getInteractionIdentifier(interaction: Interaction): string {
+    if (
+        interaction.type === InteractionType.ApplicationCommand ||
+        interaction.type === InteractionType.ApplicationCommandAutocomplete
+    ) {
+        return (interaction as ChatInputCommandInteraction).commandName;
+    } else if (interaction.type === InteractionType.MessageComponent) {
+        return (interaction as MessageComponentInteraction).customId;
+    }
+    return 'Unknown';
+}

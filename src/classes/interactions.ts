@@ -15,7 +15,7 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { BotOptions, EmbedOptions, PlayerOptions } from '../types/configTypes';
+import { EmbedOptions, PlayerOptions } from '../types/configTypes';
 import {
     BaseAutocompleteParams,
     BaseAutocompleteReturnType,
@@ -29,12 +29,10 @@ import { Validator, ValidatorParams } from '../types/utilTypes';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
-    botOptions: BotOptions;
     playerOptions: PlayerOptions;
 
     constructor() {
         this.embedOptions = config.get('embedOptions');
-        this.botOptions = config.get('botOptions');
         this.playerOptions = config.get('playerOptions');
     }
 
@@ -73,12 +71,13 @@ abstract class BaseInteraction {
     }
 
     protected getFormattedTrackUrl(track: Track): string {
-        const trackTitle = track.title ?? 'Title unavailable';
+        const trackTitle = track.title ?? 'Judul ngga tersedia';
+        const trackAuthor = track.author ?? 'Author ngga tersedia';
         const trackUrl = track.url ?? track.raw.url;
-        if (!trackTitle || !trackUrl) {
-            return '**Unavailable**';
+        if (!trackTitle || !trackUrl || !trackAuthor) {
+            return 'Ngga tersedia';
         }
-        return `**[${trackTitle}](${trackUrl})**`;
+        return `**[${trackTitle} - ${trackAuthor}](${trackUrl})**`;
     }
 
     protected getDisplayTrackDurationAndUrl(track: Track): string {
@@ -116,18 +115,18 @@ abstract class BaseInteraction {
 
     protected getFooterDisplayPageInfo(interaction: ChatInputCommandInteraction, queue: GuildQueue): EmbedFooterData {
         if (!queue.tracks.data.length) {
-            return { text: 'Page 1 of 1 (0 tracks)' };
+            return { text: 'Halaman 1 dari 1 (0 lagu (tracks))' };
         }
 
         const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
         const totalPages: number = Math.ceil(queue.tracks.data.length / 10) || 1;
         return {
-            text: `Page ${pageIndex + 1} of ${totalPages} (${queue.tracks.data.length} tracks)`
+            text: `Halaman ${pageIndex + 1} dari ${totalPages} (${queue.tracks.data.length} lagu (tracks))`
         };
     }
 
     protected getDisplayTrackRequestedBy = (track: Track): string => {
-        return track.requestedBy ? `<@${track.requestedBy.id}>` : 'Unavailable';
+        return track.requestedBy ? `${track.requestedBy.username}` : 'Ngga tersedia';
     };
 
     protected getDisplayQueueProgressBar(queue: GuildQueue): string {
@@ -142,34 +141,38 @@ abstract class BaseInteraction {
         })} **\`${timestamp.total.label}\`**`;
 
         if (Number(queue.currentTrack?.raw.duration) === 0 || queue.currentTrack?.duration === '0:00') {
-            progressBar = '_No duration available._';
+            progressBar = '_Tidak ada durasi yang tersedia._';
         }
 
         if (queue.currentTrack?.raw.live) {
-            progressBar = `${this.embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
+            progressBar = `${this.embedOptions.icons.liveTrack} **\`LIVE\`** — Memutar terus menerus dari sumber live.`;
         }
 
         return progressBar;
     }
 
     protected getDisplayRepeatMode(repeatMode: number): string {
-        const repeatModesFormatted = new Map([
-            [0, 'disabled'],
-            [1, 'track'],
-            [2, 'queue'],
-            [3, 'autoplay']
-        ]);
+        let loopModeUserString: string;
+        let icon: string;
 
-        if (repeatMode === 0) {
-            return '';
+        switch (repeatMode) {
+            case 1:
+                loopModeUserString = 'track';
+                icon = this.embedOptions.icons.nyctophileZuiRepeat;
+                break;
+            case 2:
+                loopModeUserString = 'queue';
+                icon = this.embedOptions.icons.nyctophileZuiRepeat;
+                break;
+            case 3:
+                loopModeUserString = 'autoplay';
+                icon = this.embedOptions.icons.autoplay;
+                break;
+            default:
+                return '';
         }
 
-        const loopModeUserString: string = repeatModesFormatted.get(repeatMode)!;
-        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
-        return (
-            `**${icon} Looping**\n` +
-            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
-        );
+        return `**${icon} | Menggunakan** mode pengulangan **\`${loopModeUserString}\`**.`;
     }
 
     abstract execute(
@@ -202,8 +205,10 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         interaction: MessageComponentInteraction | ChatInputCommandInteraction,
         queue: GuildQueue
     ): EmbedAuthorOptions {
+        const bitrate = queue.channel ? queue.channel.bitrate / 1000 : 0;
+
         return {
-            name: `Channel: ${queue.channel!.name} (${queue.channel!.bitrate / 1000}kbps)`,
+            name: `Channel: ${queue.channel!.name} (${bitrate}kbps)`,
             iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
         };
     }
@@ -212,21 +217,15 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
 export abstract class BaseSlashCommandInteraction extends BaseInteractionWithEmbedResponse {
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder;
     isSystemCommand: boolean;
-    isNew: boolean;
-    isBeta: boolean;
     name: string;
 
     constructor(
         data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder,
-        isSystemCommand: boolean = false,
-        isNew: boolean = false,
-        isBeta: boolean = false
+        isSystemCommand: boolean = false
     ) {
         super();
         this.data = data.setDMPermission(false).setNSFW(false);
         this.isSystemCommand = isSystemCommand;
-        this.isNew = isNew;
-        this.isBeta = isBeta;
         this.name = data.name;
     }
 

@@ -9,14 +9,13 @@ class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('leave')
-            .setDescription('Clear the queue and remove bot from voice channel.');
+            .setDescription('Keluar dari voice channel dan membersihkan semua lagu (tracks) dalam antrian');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         await this.runValidators({ interaction, queue, executionId }, [
@@ -32,11 +31,8 @@ class LeaveCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Leaving channel**\n` +
-                            'Cleared the track queue and left voice channel.\n\n' +
-                            'To play more music, use the **`/play`** command!'
+                        `**${this.embedOptions.icons.nyctophileZuiLeave} | Aku** keluar dari voice channel dan antrian lagu telah di bersihkan!`
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

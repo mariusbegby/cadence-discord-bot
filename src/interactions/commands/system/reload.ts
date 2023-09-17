@@ -15,7 +15,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('reload')
-            .setDescription('Reload slash command, autocomplete and component interactions across shards.');
+            .setDescription('Reload slash command, autocomplete and component interactions across shards');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }
@@ -59,8 +59,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Oops!**\n` +
-                            '_Hmm.._ It seems I am unable to reload interaction module across shards.'
+                        `**${this.embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya aku ngga bisa memuat ulang module interaksi di seluruh shards, deh...`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -78,7 +77,12 @@ class ReloadCommand extends BaseSlashCommandInteraction {
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
-            embeds: [new EmbedBuilder().setDescription(embedDescription).setColor(this.embedOptions.colors.success)]
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle('Memuat ulang seluruh perintah (commands)')
+                    .setDescription(embedDescription)
+                    .setColor(this.embedOptions.colors.success)
+            ]
         });
     }
 
@@ -104,7 +108,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
     }
 
     private buildEmbedDescription(commands: string[] | undefined): string {
-        return `**${this.embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
+        return `${commands?.join('\n')}`;
     }
 }
 

@@ -4,11 +4,10 @@ import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
-import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
 // Emitted when the audio player fails to load the stream for a track
 module.exports = {
@@ -31,7 +30,7 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while loading stream for the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                        `**${embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya ada masalah terkait antrian atau lagu (trakcs) saat ini!`
                     )
                     .setColor(embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -46,12 +45,13 @@ module.exports = {
                 await channel.send({
                     embeds: [
                         new EmbedBuilder()
+                            .setTitle("player.events.on('playerSkip')")
                             .setDescription(
-                                `${embedOptions.icons.error} **player.events.on('playerSkip')**\nExecution id: ${executionId}\n${track.url}` +
-                                    `\n\n<@${systemOptions.systemUserId}>`
+                                `**${embedOptions.icons.nyctophileZuiMegaphone} | Kesalahan** pada: ${track.url}\n` +
+                                    `\n<@${systemOptions.systemUserId}>`
                             )
-                            .setColor(embedOptions.colors.error)
                             .setFooter({ text: `Execution ID: ${executionId}` })
+                            .setColor(embedOptions.colors.error)
                     ]
                 });
             }

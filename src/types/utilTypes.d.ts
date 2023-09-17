@@ -44,20 +44,6 @@ export type StartLoadTestParams = {
     executionId: string;
 };
 
-export type PostBotStatsParams = {
-    client: ExtendedClient;
-    executionId: string;
-};
-
-export type PostBotStatsSite = {
-    enabled: boolean;
-    hostname: string;
-    path: string;
-    method: string;
-    body: object;
-    token: string;
-};
-
 export type ShardPlayerStatistics = {
     totalVoiceConnections: number;
     totalTracksInQueues: number;

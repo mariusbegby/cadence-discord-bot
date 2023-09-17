@@ -34,7 +34,7 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel <#${channel.id}>.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya aku ngga punya izin (permissions) untuk memutar audio di voice channel <#${channel.id}> ini. Tolong pastikan terlebih dahulu bahwa aku punya izin (permissions) **\`Connect\`** dan **\`Speak\`** di voice channel tersebut dengan cara hubungi Administrator!`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -82,7 +82,7 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel <#${channel.id}>.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                                `**${embedOptions.icons.nyctophileZuiMegaphone} Oops!** Sepertinya aku ngga punya izin (permissions) untuk mengirim pesan di text channel <#${channel.id}> ini. Tolong pastikan terlebih dahulu bahwa aku punya izin (permission) **\`View Channel\`** di text channel tersebut dengan cara hubungi Administrator!`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]

@@ -24,7 +24,7 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya ngga ada lagu (tracks) di antrian yang sedang di mainkan.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -54,7 +54,7 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya ngga ada lagu (tracks) yang sedang di mainkan.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -84,7 +84,7 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks added to the queue. First add some tracks with **\`/play\`**!`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya ngga ada lagu (tracks) yang di tambahkan ke antrian.`
                     )
                     .setColor(embedOptions.colors.warning)
             ]

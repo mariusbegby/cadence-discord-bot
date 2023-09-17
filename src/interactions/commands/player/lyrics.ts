@@ -1,6 +1,6 @@
 import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { GuildQueue, Player, QueryType, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -11,11 +11,11 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('lyrics')
-            .setDescription('Search Genius lyrics for current or specified track.')
+            .setDescription('Cari lirik lagu (tracks) yang sedang di mainkan atau yang ingin di tentukan')
             .addStringOption((option) =>
                 option
-                    .setName('query')
-                    .setDescription('Search query by text or URL.')
+                    .setName('judul')
+                    .setDescription('Cari judul lagu atau tautan (url)')
                     .setRequired(false)
                     .setMinLength(2)
                     .setMaxLength(500)
@@ -27,9 +27,8 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        const query: string = interaction.options.getString('query')!;
+        const query: string = interaction.options.getString('judul')!;
 
         if (!query) {
             await this.runValidators({ interaction, queue, executionId }, [
@@ -56,7 +55,6 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             logger.debug('No matching lyrics found.');
             return await this.sendNoLyricsFoundEmbed(logger, interaction, geniusSearchQuery);
         }
-
         if (finalLyricsData.lyrics.length > 3800) {
             return await this.sendMultipleLyricsMessages(logger, interaction, finalLyricsData);
         }
@@ -132,7 +130,6 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             logger.debug('Found Genius lyrics but artist name did not match from player.search() result.');
             geniusLyricsResult = null;
         }
-
         if (!geniusLyricsResult || geniusLyricsResult.lyrics.length === 0) {
             logger.debug('No Genius lyrics found.');
             geniusLyricsResult = null;
@@ -166,8 +163,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} No lyrics found**\n` +
-                            `There was no Genius lyrics found for track **${geniusSearchQuery}**.`
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Aku ngga bisa menemukan lirik lagu (tracks) **${geniusSearchQuery}**.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -178,29 +174,26 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData
-    ) {
+    ): Promise<Message> {
         logger.debug('Lyrics text too long, splitting into multiple messages.');
         const messageCount: number = Math.ceil(geniusLyricsResult.lyrics.length / 3800);
         const embedList: EmbedBuilder[] = [];
         embedList.push(
             new EmbedBuilder()
-                .setDescription(
-                    `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                        `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
-                        `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n`
-                )
+                .setAuthor({
+                    name: `${geniusLyricsResult.fullTitle}`,
+                    iconURL: `${geniusLyricsResult.thumbnail}`
+                })
                 .setColor(this.embedOptions.colors.info)
         );
         for (let i: number = 0; i < messageCount; i++) {
             logger.debug(`Adding message ${i + 1} of ${messageCount} to embed list.`);
             const message: string = geniusLyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
-            embedList.push(
-                new EmbedBuilder().setDescription(`\`\`\`fix\n${message}\`\`\``).setColor(this.embedOptions.colors.info)
-            );
+            embedList.push(new EmbedBuilder().setDescription(`${message}`));
         }
 
         logger.debug('Responding with multiple info embeds.');
-        await interaction.editReply({
+        return await interaction.editReply({
             embeds: embedList
         });
     }
@@ -209,17 +202,16 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData
-    ) {
+    ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(
-                        `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                            `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
-                            `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n` +
-                            `\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
-                    )
+                    .setAuthor({
+                        name: `${geniusLyricsResult.fullTitle}`,
+                        iconURL: `${geniusLyricsResult.thumbnail}`
+                    })
+                    .setDescription(`${geniusLyricsResult.lyrics}`)
                     .setColor(this.embedOptions.colors.info)
             ]
         });

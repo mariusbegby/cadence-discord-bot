@@ -9,7 +9,7 @@ class GuildsCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('guilds')
-            .setDescription('Show the top 25 guilds by member count.');
+            .setDescription('Menampilkan 25 guild teratas berdasarkan jumlah member');
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }
@@ -76,9 +76,9 @@ class GuildsCommand extends BaseSlashCommandInteraction {
     ): string {
         const topGuildsString = totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds';
         return (
-            `**${this.embedOptions.icons.bot} ${topGuildsString} by member count (${totalGuildCount} total)**\n` +
-            `${guildListFormattedString}\n\n` +
-            `**Total members:** **\`${totalMemberCount}\`**`
+            `**${this.embedOptions.icons.nyctophileZuiRobot} ${topGuildsString} berdasarkan jumlah members (total ${totalGuildCount})**\n` +
+            `${guildListFormattedString}\n` +
+            `\n**Total members:** **\`${totalMemberCount}\`**`
         );
     }
 }

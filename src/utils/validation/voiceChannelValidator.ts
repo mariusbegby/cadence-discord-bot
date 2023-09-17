@@ -24,7 +24,7 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Not in a voice channel**\nYou need to be in a voice channel to perform this action.`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Kamu** harus berada di voice channel untuk menggunakan perintah (command) ini!`
                     )
                     .setColor(embedOptions.colors.warning)
             ]
@@ -62,7 +62,7 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Not in same voice channel**\nYou need to be in the same voice channel as me to perform this action.\n\n**Voice channel:** <#${queue.dispatcher.channel.id}>`
+                        `**${embedOptions.icons.nyctophileZuiMegaphone} | Kamu** harus berada di voice channel (<#${queue.dispatcher.channel.id}>) yang sama dengan aku untuk menggunakan perintah (command) ini!`
                     )
                     .setColor(embedOptions.colors.warning)
             ]

@@ -1,5 +1,5 @@
 {
-    "ignorePatterns": ["config/**/*.js"],
+    "ignorePatterns": [ "config/**/*.js" ],
     "env": {
         "node": true,
         "es2021": true
@@ -16,10 +16,10 @@
         "sourceType": "module",
         "project": "./tsconfig.json"
     },
-    "plugins": ["@typescript-eslint"],
+    "plugins": [ "@typescript-eslint" ],
     "rules": {
         "prettier/prettier": "error",
-        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "indent": [ "error", 4, { "SwitchCase": 1 } ],
         "max-len": [
             "error",
             {
@@ -31,13 +31,13 @@
                 "ignoreUrls": true
             }
         ],
-        "linebreak-style": ["error", "windows"],
-        "quotes": ["error", "single", { "avoidEscape": true }],
-        "semi": ["error", "always"],
+        "linebreak-style": [ "error", "windows" ],
+        "quotes": [ "error", "single", { "avoidEscape": true } ],
+        "semi": [ "error", "always" ],
         "camelcase": "error",
-        "array-bracket-spacing": ["error", "never"],
-        "object-curly-spacing": ["error", "always"],
-        "jsx-quotes": ["error", "prefer-single"],
+        "array-bracket-spacing": [ "error", "never" ],
+        "object-curly-spacing": [ "error", "always" ],
+        "jsx-quotes": [ "error", "prefer-single" ],
         "key-spacing": [
             "error",
             {
@@ -52,11 +52,11 @@
                 "ignoreComments": true
             }
         ],
-        "curly": ["error", "all"],
-        "no-console": ["error"],
-        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "curly": [ "error", "all" ],
+        "no-console": [ "error" ],
+        "@typescript-eslint/no-unused-vars": [ "error", { "argsIgnorePattern": "^_" } ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/consistent-type-definitions": ["error", "type"]
+        "@typescript-eslint/consistent-type-definitions": [ "error", "type" ]
     }
 }

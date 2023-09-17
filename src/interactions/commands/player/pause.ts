@@ -8,14 +8,15 @@ import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/valid
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
+        const data = new SlashCommandBuilder()
+            .setName('pause')
+            .setDescription('Jeda lagu (tracks) yang sedang dimainkan');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         await this.runValidators({ interaction, queue, executionId }, [
@@ -26,20 +27,19 @@ class PauseCommand extends BaseSlashCommandInteraction {
         ]);
 
         const currentTrack: Track = queue.currentTrack!;
-
         this.togglePauseState(logger, queue);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.pauseResumed} ${
-                            queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                        }**\n ${this.getDisplayTrackDurationAndUrl(currentTrack)}`
+                        `${
+                            queue.node.isPaused()
+                                ? `**${this.embedOptions.icons.nyctophileZuiThumbsDown} | Dijeda**`
+                                : `**${this.embedOptions.icons.nyctophileZuiThumbsUp} | Dilanjutkan**`
+                        } ${this.getFormattedTrackUrl(currentTrack)}.`
                     )
-                    .setThumbnail(currentTrack.thumbnail)
                     .setColor(this.embedOptions.colors.success)
             ]
         });

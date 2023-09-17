@@ -3,14 +3,12 @@ import { ExtendedClient } from '../types/clientTypes';
 import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from '../utils/shardUtils';
 import { getUptimeFormatted } from '../utils/system/getUptimeFormatted';
 
-export async function getBotStatistics(client: ExtendedClient, version: string): Promise<string> {
-    const releaseVersion: string = version;
+export async function getBotStatistics(client: ExtendedClient): Promise<string> {
     const { totalGuildCount, totalMemberCount } = await fetchTotalGuildStatistics(client);
 
     return (
-        `**${totalGuildCount.toLocaleString('en-US')}** Joined servers\n` +
-        `**${totalMemberCount.toLocaleString('en-US')}** Total members\n` +
-        `**v${releaseVersion}** Release version`
+        `Aku uda bergabung di **${totalGuildCount.toLocaleString('id-ID')}** server(s)\n` +
+        `Aku uda bertemu dengan **${totalMemberCount.toLocaleString('id-ID')}** user(s)`
     );
 }
 
@@ -18,28 +16,28 @@ export async function getPlayerStatistics(client: ExtendedClient): Promise<strin
     const { totalVoiceConnections, totalTracksInQueues, totalListeners } = await fetchTotalPlayerStatistics(client);
 
     return (
-        `**${totalVoiceConnections.toLocaleString('en-US')}** Voice connections\n` +
-        `**${totalTracksInQueues.toLocaleString('en-US')}** Tracks in queues\n` +
-        `**${totalListeners.toLocaleString('en-US')}** Users listening`
+        `Ada **${totalVoiceConnections.toLocaleString('id-ID')}** voice(s) terhubung dengan-ku\n` +
+        `Ada **${totalTracksInQueues.toLocaleString('id-ID')}** track(s) dalam antrian-ku\n` +
+        `Ada **${totalListeners.toLocaleString('id-ID')}** user(s) sedang mendengarkan-ku`
     );
 }
 
 export async function getSystemStatus(executionId: string, extended: boolean): Promise<string> {
     if (!extended) {
-        const uptimeString: string = await getUptimeFormatted({ executionId });
-        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
+        const uptimeString: string = getUptimeFormatted({ executionId });
+        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('id-ID');
         const cpuUsage: number = await osu.cpu.usage();
 
         return (
-            `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`
+            `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory Usage`
         );
     }
 
-    const uptimeString: string = await getUptimeFormatted({ executionId });
-    const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
+    const uptimeString: string = getUptimeFormatted({ executionId });
+    const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('id-ID');
     const cpuCores: number = osu.cpu.count();
     const platform: string = osu.os.platform();
-    const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
+    const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('id-ID');
     const cpuUsage: number = await osu.cpu.usage();
 
     return (

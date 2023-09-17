@@ -79,16 +79,13 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
                     return enabledFilter;
                 }
 
-                return `- **${filter.emoji} ${filter.label}**`;
+                return `**${filter.emoji} ${filter.label}**`;
             })
-            .join('\n');
+            .join(', ');
 
         return new EmbedBuilder()
-            .setAuthor(this.getEmbedUserAuthor(selectMenuInteraction))
             .setDescription(
-                `**${this.embedOptions.icons.success} Filters toggled**\n` +
-                    'Now using these filters:\n' +
-                    `${enabledFilters}`
+                `**${this.embedOptions.icons.nyctophileZuiModified} | Filter** telah di modifikasi menjadi: ${enabledFilters}`
             )
             .setColor(this.embedOptions.colors.success);
     }

@@ -44,7 +44,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertinya ngga ada lagu (tracks) yang sedang di mainkan.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -57,7 +57,7 @@ class NowplayingSkipButton extends BaseComponentInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Sepertiya lagu (tracks) ini sudah di lewati atau tidak lagi di mainkan.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -67,13 +67,11 @@ class NowplayingSkipButton extends BaseComponentInteraction {
 
     private async handleSuccess(interaction: MessageComponentInteraction, skippedTrack: Track, queue: GuildQueue) {
         const successEmbed = new EmbedBuilder()
-            .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                    `**${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
+                `**${this.embedOptions.icons.skipped} Melewati** lagu (tracks)\n` +
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
                     `${this.getDisplayRepeatMode(queue.repeatMode)}`
             )
-            .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);
 
         return await interaction.editReply({

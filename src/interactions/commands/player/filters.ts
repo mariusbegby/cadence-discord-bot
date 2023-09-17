@@ -10,6 +10,7 @@ import {
     ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
+    Message,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
@@ -27,11 +28,11 @@ class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('filters')
-            .setDescription('Toggle various audio filters.')
+            .setDescription('Mengaktifkan berbagai filter audio')
             .addStringOption((option) =>
                 option
-                    .setName('type')
-                    .setDescription('Audio filtering type to use.')
+                    .setName('tipe')
+                    .setDescription('Tipe filter audio yang ingin digunakan')
                     .setRequired(false)
                     .addChoices(
                         { name: 'FFmpeg', value: 'FFmpeg' },
@@ -46,7 +47,6 @@ class FiltersCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         await this.runValidators({ interaction, queue, executionId }, [
@@ -56,7 +56,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const filterProvider: string = interaction.options.getString('type') || 'FFmpeg';
+        const filterProvider: string = interaction.options.getString('tipe') || 'FFmpeg';
 
         switch (filterProvider.toLowerCase()) {
             case 'ffmpeg':
@@ -78,7 +78,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue<unknown>
-    ) {
+    ): Promise<Message> {
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
         ffmpegFilterOptions.availableFilters.forEach((filter: FFmpegFilterOption) => {
@@ -91,7 +91,6 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             filterOptions.push(
                 new StringSelectMenuOptionBuilder()
                     .setLabel(filter.label)
-                    .setDescription(filter.description)
                     .setValue(filter.value)
                     .setEmoji(filter.emoji)
                     .setDefault(isEnabled)
@@ -100,24 +99,21 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const filterSelect: APIStringSelectComponent = new StringSelectMenuBuilder()
             .setCustomId('filters-select-menu')
-            .setPlaceholder('Select multiple options.')
-            .setMinValues(0)
+            .setPlaceholder('Kamu bisa memilih beberapa opsi')
+            .setMinValues(1)
             .setMaxValues(filterOptions.length)
             .addOptions(filterOptions)
             .toJSON();
-
         const filterActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,
             components: [filterSelect]
         };
-
         const disableButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId('filters-disable-button')
-            .setLabel('Disable all filters')
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.disable)
+            .setLabel('Non-aktifkan semua filter audio')
+            .setStyle(ButtonStyle.Danger)
+            .setDisabled(false)
             .toJSON();
-
         const disableFiltersActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,
             components: [disableButton]
@@ -128,7 +124,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        '**Toggle filters**\n' + 'Enable or disable audio filters for playback from the menu.'
+                        `**${this.embedOptions.icons.nyctophileZuiModify} | Modifikasi** filter audio dari menu dibawah.`
                     )
                     .setColor(this.embedOptions.colors.info)
             ],
@@ -136,7 +132,11 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async tempDisableFilters(logger: Logger, interaction: ChatInputCommandInteraction, queue: GuildQueue) {
+    private async tempDisableFilters(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue
+    ): Promise<Message> {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);
             logger.debug('Reset queue filters.');
@@ -146,10 +146,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Disabled filters**\n` +
-                            'All audio filters have been disabled.'
+                        `**${this.embedOptions.icons.nyctophileZuiDisable} | Semua** filter audio telah di non-aktifkan.`
                     )
                     .setColor(this.embedOptions.colors.success)
             ],
@@ -157,14 +155,17 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private async tempNotImplementedResponse(logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async tempNotImplementedResponse(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction
+    ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
+                    .setTitle('Belum tersedia')
                     .setDescription(
-                        `**${this.embedOptions.icons.bot} Coming soon**\n` +
-                            'This functionality has not yet been implemented, and will be available soon.'
+                        `**${this.embedOptions.icons.nyctophileZuiRobot} | Fitur** ini belum di implementasikan, dan akan segera tersedia.`
                     )
                     .setColor(this.embedOptions.colors.info)
             ],

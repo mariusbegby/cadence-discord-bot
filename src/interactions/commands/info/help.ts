@@ -11,7 +11,9 @@ import { ExtendedClient } from '../../../types/clientTypes';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('help').setDescription('Show the list of bot commands.');
+        const data = new SlashCommandBuilder()
+            .setName('help')
+            .setDescription('Menampilkan seluruh daftar perintah (commands) bot');
         super(data);
     }
 
@@ -19,24 +21,11 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const { executionId, client, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const [commandEmbedString, supportServerString, addBotString] = await Promise.all([
-            this.getCommandEmbedString(client!),
-            this.getSupportServerString(),
-            this.getAddBotString()
-        ]);
+        const [commandEmbedString] = await Promise.all([this.getCommandEmbedString(client!)]);
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        `${this.embedOptions.icons.rule} **List of commands**\n` +
-                            commandEmbedString +
-                            supportServerString +
-                            addBotString
-                    )
-                    .setColor(this.embedOptions.colors.info)
-            ]
+            embeds: [new EmbedBuilder().setDescription(commandEmbedString).setColor(this.embedOptions.colors.info)]
         });
     }
 
@@ -64,9 +53,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
 
     private getCommandString(command: BaseSlashCommandInteraction): string {
         const commandParams: string = this.getCommandParams(command);
-        const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
-        const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
-        return `- **\`/${command.data.name}\`** ${commandParams}- ${beta}${newCommand}${command.data.description}`;
+        return `- **\`/${command.data.name}\`** ${commandParams}- ${command.data.description}`;
     }
 
     private getCommandParams(command: BaseSlashCommandInteraction): string {
@@ -75,34 +62,6 @@ class HelpCommand extends BaseSlashCommandInteraction {
             return `**\`${option.name}\`** `;
         }
         return '';
-    }
-
-    private async getSupportServerString(): Promise<string> {
-        if (!this.botOptions.serverInviteUrl) {
-            return '';
-        }
-
-        const embedString = `
-            ${this.embedOptions.icons.support} **Support server**
-            Join the support server for help or to suggest improvements: 
-            **${this.botOptions.serverInviteUrl}**
-        `;
-
-        return embedString;
-    }
-
-    private async getAddBotString(): Promise<string> {
-        if (!this.botOptions.botInviteUrl) {
-            return '';
-        }
-
-        const embedString = `
-            ${this.embedOptions.icons.bot} **Enjoying ${this.botOptions.name}?**
-            Add me to another server: 
-            **[Click me!](${this.botOptions.botInviteUrl})**
-        `;
-
-        return embedString;
     }
 }
 

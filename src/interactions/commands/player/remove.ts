@@ -10,11 +10,11 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('remove')
-            .setDescription('Remove specified track from the queue')
+            .setDescription('Hapus lagu (tracks) tertentu dari antrian')
             .addNumberOption((option) =>
                 option
-                    .setName('tracknumber')
-                    .setDescription('The position in queue for track to remove.')
+                    .setName('nomor')
+                    .setDescription('Posisi lagu (tracks) yang ingin dihapus dari antrian')
                     .setMinValue(1)
                     .setRequired(true)
             );
@@ -33,7 +33,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const removeTrackNumber: number = interaction.options.getNumber('tracknumber')!;
+        const removeTrackNumber: number = interaction.options.getNumber('nomor')!;
 
         if (removeTrackNumber > queue.tracks.data.length) {
             return await this.handleInvalidTrackNumber(logger, interaction, removeTrackNumber, queue);
@@ -55,9 +55,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `Track **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.` +
-                            '\n\nView tracks added to the queue with **`/queue`**.'
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** **\`${removeTrackNumber}\`** bukan nomor antrian lagu (tracks) yang bener. Pastikan terlebih dahulu, karena ada **\`${queue.tracks.data.length}\`** lagu (tracks) dalam antrian.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -73,18 +71,16 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     ) {
         const removedTrack: Track = queue.node.remove(removeTrackNumber - 1)!;
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
-
         logger.debug('Responding with success embed.');
+
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Removed track**\n${this.getDisplayTrackDurationAndUrl(
+                        `**${this.embedOptions.icons.nyctophileZuiDisable} | ${this.getFormattedTrackUrl(
                             removedTrack
-                        )}`
+                        )}** ini telah dihapus dari antrian.`
                     )
-                    .setThumbnail(this.getTrackThumbnailUrl(removedTrack))
                     .setColor(this.embedOptions.colors.success)
             ]
         });

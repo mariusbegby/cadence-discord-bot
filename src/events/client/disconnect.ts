@@ -33,8 +33,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${embedOptions.icons.warning} **${client.user?.tag}** is **\`disconnected\`**!` +
-                                    `\n\n<@${systemOptions.systemUserId}>`
+                                `**${embedOptions.icons.outage} | ${client.user?.tag}** telah \`terputus\`! <@${systemOptions.systemUserId}>`
                             )
                             .setColor(embedOptions.colors.warning)
                     ]

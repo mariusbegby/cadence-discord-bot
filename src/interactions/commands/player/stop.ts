@@ -9,14 +9,13 @@ class StopCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('stop')
-            .setDescription('Clear the queue and stop playing audio.');
+            .setDescription('Menghentikan dan menghapus lagu (tracks) dalam antrian');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         await this.runValidators({ interaction, queue, executionId }, [
@@ -36,11 +35,8 @@ class StopCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Stopped playing**\n` +
-                            'Stopped playing audio and cleared the track queue.\n\n' +
-                            'To play more music, use the **`/play`** command!'
+                        `**${this.embedOptions.icons.nyctophileZuiSuccess} Menghentikan** dan membersihkan lagu (tracks) dalam antrian.`
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

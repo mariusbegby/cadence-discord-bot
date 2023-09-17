@@ -10,11 +10,11 @@ class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('volume')
-            .setDescription('Show or change the playback volume for tracks.')
+            .setDescription('Menampilkan atau memodifikasi volume lagu (tracks) yang sedang diputar')
             .addNumberOption((option) =>
                 option
-                    .setName('percentage')
-                    .setDescription('Volume percentage: From 1% to 100%.')
+                    .setName('persentase')
+                    .setDescription('Persentase volume: dari 1% ke 100%')
                     .setMinValue(0)
                     .setMaxValue(100)
             );
@@ -33,7 +33,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const volume: number = interaction.options.getNumber('percentage')!;
+        const volume: number = interaction.options.getNumber('persentase')!;
 
         if (!volume && volume !== 0) {
             return await this.handleShowCurrentVolume(queue, logger, interaction);
@@ -55,10 +55,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(
-                        `**${currentVolumeIcon} Playback volume**\n` +
-                            `The playback volume is currently set to **\`${currentVolume}%\`**.`
-                    )
+                    .setDescription(`**${currentVolumeIcon} | Volume** saat ini **\`${currentVolume}%\`**.`)
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -72,8 +69,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `You cannot set the volume to **\`${volume}%\`**, please pick a value betwen **\`1%\`** and **\`100%\`**.`
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} Oops!** Kamu ngga bisa mengatur volume ke **\`${volume}%\`**, silahkan pilih nomor antara **\`1%\`** dan **\`100%\`**.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -94,10 +90,8 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             return await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
-                        .setAuthor(this.getEmbedUserAuthor(interaction))
                         .setDescription(
-                            `**${this.embedOptions.icons.volumeMuted} Audio muted**\n` +
-                                `Playback audio has been muted, because volume was set to **\`${volume}%\`**.`
+                            `**${this.embedOptions.icons.volumeMuted} | Aku** di bisukan karena volume diatur ke **\`${volume}%\`**.`
                         )
                         .setColor(this.embedOptions.colors.success)
                 ]
@@ -108,10 +102,8 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.volumeChanged} Volume changed**\n` +
-                            `Playback volume has been changed to **\`${volume}%\`**.`
+                        `**${this.embedOptions.icons.volumeChanged} | Volume** di modifikasi menjadi **\`${volume}%\`**`
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

@@ -9,7 +9,7 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('shuffle')
-            .setDescription('Randomly shuffle all tracks in the queue.');
+            .setDescription('Acak semua lagu (tracks) dalam antrian');
         super(data);
     }
 
@@ -33,11 +33,8 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.shuffled} Shuffled queue tracks**\n` +
-                            `The **${queue.tracks.data.length}** tracks in the queue has been shuffled.\n\n` +
-                            'View the new queue order with **`/queue`**.'
+                        `**${this.embedOptions.icons.shuffled} | Mengacak** ${queue.tracks.data.length} lagu (tracks) dalam antrian.`
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

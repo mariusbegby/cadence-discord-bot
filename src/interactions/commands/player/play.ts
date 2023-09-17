@@ -11,11 +11,13 @@ class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('play')
-            .setDescription('Add a track or playlist to the queue by search query or URL.')
+            .setDescription(
+                'Tambahkan lagu (tracks) atau playlist kedalam antrian, dengan judul lagu atau tautan (url)'
+            )
             .addStringOption((option) =>
                 option
-                    .setName('query')
-                    .setDescription('Search query by text or URL')
+                    .setName('judul')
+                    .setDescription('Cari judul lagu (tracks) atau tautan (url)')
                     .setRequired(true)
                     .setMinLength(2)
                     .setMaxLength(500)
@@ -31,6 +33,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel]);
 
         let queue: GuildQueue = useQueue(interaction.guild!.id)!;
+
         if (queue) {
             await this.runValidators({ interaction, queue, executionId }, [checkSameVoiceChannel]);
         } else {
@@ -38,10 +41,10 @@ class PlayCommand extends BaseSlashCommandInteraction {
         }
 
         const player = useMainPlayer()!;
-        const searchQuery = interaction.options.getString('query')!;
+        const searchQuery = interaction.options.getString('judul')!;
         const transformedQuery = await transformQuery({ query: searchQuery, executionId });
-
         const searchResult = await this.searchTrack(player, transformedQuery, interaction, logger);
+
         if (!searchResult || searchResult.tracks.length === 0) {
             return await this.handleNoResultsFound(transformedQuery, interaction, logger);
         }
@@ -85,6 +88,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         } catch (error) {
             logger.error(error, `Failed to search for track with player.search() with query: ${transformedQuery}.`);
         }
+
         return searchResult;
     }
 
@@ -118,11 +122,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 if (error.message.includes('Sign in to confirm your age')) {
                     return this.handleAgeConfirmationError(interaction, logger, executionId);
                 }
-
                 if (error.message.includes('The following content may contain')) {
                     return this.handleSensitiveTopicError(interaction, logger, executionId);
                 }
-
                 if (
                     error.message === "Cannot read properties of null (reading 'createStream')" ||
                     error.message.includes('Failed to fetch resources for ytdl streaming') ||
@@ -130,7 +132,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 ) {
                     return this.handleStreamError(interaction, logger, executionId, error, query);
                 }
-
                 if (error.message === 'Cancelled') {
                     return this.handleCancelledError(interaction, logger, executionId, query);
                 }
@@ -140,6 +141,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 throw error;
             }
         }
+
         return track;
     }
 
@@ -151,25 +153,19 @@ class PlayCommand extends BaseSlashCommandInteraction {
     ) {
         logger.debug('Result found and added with player.play(), added to queue.');
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        const trackUrl = this.getDisplayTrackDurationAndUrl(track);
+        const trackUrl = this.getFormattedTrackUrl(track);
 
-        let message = `${this.embedOptions.icons.success} **Added to queue**\n${trackUrl}`;
+        let message = `**${this.embedOptions.icons.nyctophileZuiHeadphones} | Menambahkan** ${trackUrl} ke dalam antrian.`;
+
         if (searchResult.playlist) {
-            const otherTracksString = `And **${searchResult.tracks.length}** more tracks... **\`/queue\`** to view all.`;
-            message = `${this.embedOptions.icons.success} **Added playlist to queue**\n${trackUrl}\n\n${otherTracksString}`;
+            message = `**${this.embedOptions.icons.nyctophileZuiHeadphones} | Menambahkan** playlist kedalam antrian. ${trackUrl} dan **${searchResult.tracks.length}** lagu (tracks) lainnya. Gunakan perintah (command) **\`/queue\`** untuk melihat semua antrian.`;
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            message = `**${this.embedOptions.icons.audioStartedPlaying} Now playing**\n${trackUrl}`;
+            message = `**${this.embedOptions.icons.nyctophileZuiPlay} | Memainkan** ${trackUrl}.`;
         }
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
-                    .setDescription(message)
-                    .setThumbnail(this.getTrackThumbnailUrl(track))
-                    .setColor(this.embedOptions.colors.success)
-            ]
+            embeds: [new EmbedBuilder().setDescription(message).setColor(this.embedOptions.colors.success)]
         });
     }
 
@@ -179,15 +175,12 @@ class PlayCommand extends BaseSlashCommandInteraction {
         logger: Logger
     ) {
         logger.debug(`No results found for query: '${transformedQuery}'`);
-
         logger.debug('Responding with warning embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} No track found**\n` +
-                            `No results found for **\`${transformedQuery}\`**.\n\n` +
-                            'If you specified a URL, please make sure it is valid and public.'
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Maaf** sepertinya aku ngga bisa nemuin lagu (tracks) **\`${transformedQuery}\`**. Kalau kamu menggunakan tautan (url), pastikan tautan tersebut valid dan publik.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -202,9 +195,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Playlist too large**\n` +
-                            'This playlist is too large to be added to the queue.\n\n' +
-                            `The maximum amount of tracks that can be added to the queue is **${this.playerOptions.maxQueueSize}**.`
+                        `**${this.embedOptions.icons.nyctophileZuiDart} | Oops!** Aku cuma bisa menampung sebanyak **${this.playerOptions.maxQueueSize}** lagu (tracks). Dan sepertinya lagu (tracks) yang ada di dalam playlist kamu terlalu banyak! Tenang, aku akan menambahkan-nya kedalam antrian.\n\n`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -223,9 +214,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya lagu (tracks) ini memiliki batasan usia dan membutuhkan login untuk mengaksesnya. Oleh karena itu aku ngga dapat memainkan lagu (tracks) ini.`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -246,9 +235,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya lagu (tracks) ini tidak dapat diputar karena sumber video-nya memiliki peringatan sensitif. Itu membutuhkan konfirmasi manual untuk memutar video, oleh karena itu aku ngga bisa memainkan lagu (tracks) ini.`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -271,10 +258,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\n` +
-                            'After finding a result, I was unable to retrieve audio for the track.\n\n' +
-                            'You can try to perform the command again.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Setelah menemukan hasil, aku gagal mengambil audio untuk lagu (tracks)!`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -296,10 +280,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**` +
-                            '\nSomething unexpected happened and the operation was cancelled.\n\n' +
-                            'You can try to perform the command again.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sesuatu yang tidak terduga terjadi, aku gagal menambahkan lagu (tracks)!`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })

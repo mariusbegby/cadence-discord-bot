@@ -10,10 +10,9 @@ import {
 import { Logger } from 'pino';
 import { CustomError, InteractionValidationError } from '../classes/interactions';
 import loggerModule from '../services/logger';
-import { BotOptions, EmbedOptions } from '../types/configTypes';
+import { EmbedOptions } from '../types/configTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
-const botOptions: BotOptions = config.get('botOptions');
 
 // TODO: Update TS Type for handlError
 export const handleError = async (
@@ -40,7 +39,7 @@ export const handleError = async (
         embeds: [
             new EmbedBuilder()
                 .setDescription(
-                    `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                    `**${embedOptions.icons.nyctophileZuiWarning} | Uh-oh...** Sepertinya ada masalah terkait antrian atau lagu (tracks) saat ini!`
                 )
                 .setColor(embedOptions.colors.error)
                 .setFooter({ text: `Execution ID: ${executionId}` })

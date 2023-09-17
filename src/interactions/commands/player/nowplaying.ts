@@ -19,14 +19,13 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('nowplaying')
-            .setDescription('Show information about the current track.');
+            .setDescription('Menampilkan informasi tentang lagu (tracks) saat ini');
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
-
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
         await this.runValidators({ interaction, queue, executionId }, [
@@ -38,22 +37,18 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const tracksInQueueCount: number = queue.tracks.data.length;
         const currentTrack: Track = queue.currentTrack!;
-        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack);
         const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack);
-        const displayTrackPlayingStatus: string = this.getDisplayTrackPlayingStatus(queue);
         const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
         const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue);
-
         const customId: string = `nowplaying-skip-button_${currentTrack.id}`;
+
         logger.debug(`Generated custom id for skip button: ${customId}`);
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(customId)
-            .setLabel('Skip track')
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.nextTrack)
+            .setLabel('Lewati lagu (tracks)')
+            .setStyle(ButtonStyle.Primary)
             .toJSON();
-
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,
             components: [skipButton]
@@ -63,17 +58,14 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
-                    .setDescription(
-                        `${displayTrackPlayingStatus}\n` +
-                            `${displayTrackUrl}\n` +
-                            `**Requested by:** ${displayTrackRequestedBy}\n` +
-                            `${displayEmbedProgressBar}\n\n ` +
-                            `${displayQueueRepeatMode}\n\n`
-                    )
+                    .setTitle(`${currentTrack.title}`)
+                    .setDescription(`${displayEmbedProgressBar}\n\n ` + `${displayQueueRepeatMode}\n\n`)
                     .addFields(this.getEmbedFields(currentTrack))
                     .setFooter({
-                        text: tracksInQueueCount ? `${tracksInQueueCount} other tracks in the queue...` : ' '
+                        text: tracksInQueueCount
+                            ? `${tracksInQueueCount} lagu (tracks) lainnya dalam antrian...`
+                            : `${displayTrackRequestedBy} memainkan lagu ini`,
+                        iconURL: tracksInQueueCount ? '' : interaction.user.displayAvatarURL()
                     })
                     .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.info)
@@ -84,22 +76,23 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
     private getDisplayPlays(currentTrack: Track | undefined): string {
         const trackMetadata = currentTrack?.metadata as TrackMetadata;
-
         let displayPlays: string =
-            (currentTrack?.views || trackMetadata?.bridge?.views || 0).toLocaleString('en-US') ?? '0';
+            (currentTrack?.views || trackMetadata?.bridge?.views || 0).toLocaleString('id-ID') ?? '0';
 
         if (displayPlays === '0') {
-            displayPlays = 'Unavailable';
+            displayPlays = 'Ngga tersedia';
         }
 
         return displayPlays;
     }
 
     private getDisplayTrackAuthor(currentTrack: Track | undefined): string {
-        let author: string = currentTrack?.author ? currentTrack.author : 'Unavailable';
+        let author: string = currentTrack?.author ? currentTrack.author : 'Ngga tersedia';
+
         if (author === 'cdn.discordapp.com') {
-            author = 'Unavailable';
+            author = 'Ngga tersedia';
         }
+
         return author;
     }
 
@@ -112,7 +105,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
             ['arbitrary', 'Direct source']
         ]);
 
-        return sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Unavailable';
+        return sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Ngga tersedia';
     }
 
     private getTrackSourceIcon(currentTrack: Track): string {
@@ -128,7 +121,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
     }
 
     private getDisplayTrackSource(currentTrack: Track) {
-        const trackSource: string = this.getTrackSourceString(currentTrack) ?? 'Unavailable';
+        const trackSource: string = this.getTrackSourceString(currentTrack) ?? 'Ngga tersedia';
         const trackSourceIcon: string = this.getTrackSourceIcon(currentTrack) ?? '';
 
         return `**${trackSourceIcon} [${trackSource}](${currentTrack.raw.url ?? currentTrack.url})**`;
@@ -147,22 +140,15 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
     private getDisplayQueueRepeatMode = (queue: GuildQueue): string => {
         const repeatMode: number = queue.repeatMode;
+
         if (repeatMode === 0) {
             return '';
         }
 
         const loopModeUserString: string = this.getRepeatModeString(repeatMode);
-        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
-        return (
-            `**${icon} Looping**\n` +
-            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
-        );
-    };
+        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.nyctophileZuiRepeat;
 
-    private getDisplayTrackPlayingStatus = (queue: GuildQueue): string => {
-        return queue.node.isPaused()
-            ? '**Currently Paused**'
-            : `**${this.embedOptions.icons.audioPlaying} Now Playing**`;
+        return `**${icon} | Sedang** menggunakan mode pengulangan **\`${loopModeUserString}\`**.`;
     };
 
     private getEmbedFields = (currentTrack: Track): EmbedField[] => {
@@ -173,12 +159,12 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                 inline: true
             },
             {
-                name: '**Plays**',
+                name: '**Dimainkan**',
                 value: this.getDisplayPlays(currentTrack),
                 inline: true
             },
             {
-                name: '**Track source**',
+                name: '**Sumber**',
                 value: this.getDisplayTrackSource(currentTrack),
                 inline: true
             }

@@ -10,9 +10,12 @@ class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('skip')
-            .setDescription('Skip track to next or specified position in queue.')
+            .setDescription('Lewati lagu (tracks) berikutnya atau pilih posisi tertentu dalam antrian')
             .addNumberOption((option) =>
-                option.setName('tracknumber').setDescription('The position in queue to skip to.').setMinValue(1)
+                option
+                    .setName('nomor')
+                    .setDescription('Posisi lagu (tracks) dalam antrian yang ingin dilewati')
+                    .setMinValue(1)
             );
         super(data);
     }
@@ -30,7 +33,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const skipToTrackInput: number = interaction.options.getNumber('tracknumber')!;
+        const skipToTrackInput: number = interaction.options.getNumber('nomor')!;
 
         if (skipToTrackInput) {
             return await this.handleSkipToTrack(logger, interaction, queue, skipToTrackInput);
@@ -66,9 +69,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `There are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${skipToTrack}\`**.\n\n` +
-                            'View tracks added to the queue with **`/queue`**.'
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Hanya ada **\`${queue.tracks.data.length}\`** lagu (tracks) dalam antrian. Kamu ngga bisa melewati lagu (tracks) diurutan nomor **\`${skipToTrack}\`**.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -92,8 +93,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'There is nothing currently playing. First add some tracks with **`/play`**!'
+                        `**${this.embedOptions.icons.nyctophileZuiMegaphone} | Oops!** Ngga ada lagu (tracks) yang sedang dimainkan`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -104,12 +104,11 @@ class SkipCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                            `${this.getDisplayTrackDurationAndUrl(skippedTrack)}`
+                        `**${this.embedOptions.icons.skipped} | Melewati** lagu ${this.getFormattedTrackUrl(
+                            skippedTrack
+                        )}`
                     )
-                    .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                     .setColor(this.embedOptions.colors.success)
             ]
         });

@@ -16,7 +16,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
     async execute({ executionId, interaction }: BaseAutocompleteParams): BaseAutocompleteReturnType {
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const query: string = interaction.options.getString('query', true);
+        const query: string = interaction.options.getString('judul', true);
         const { lastQuery, result, timestamp } = this.recentQueries.get(interaction.user.id) || {};
 
         if (shouldUseLastQuery(query, lastQuery, timestamp)) {
