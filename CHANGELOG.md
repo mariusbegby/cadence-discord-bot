@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.5.0...v5.6.0) (2023-09-18)
+
+
+### Features
+
+* add /join command ([9901374](https://github.com/mariusbegby/cadence-discord-bot/commit/990137468e7ce1302b22ac5f5b935a551812814d))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/jest from 29.5.4 to 29.5.5 ([c689589](https://github.com/mariusbegby/cadence-discord-bot/commit/c689589b495ebb56c20c58c0f1dd2de4e4671ae1))
+* **deps-dev:** bump @types/node from 20.6.0 to 20.6.2 ([97869a0](https://github.com/mariusbegby/cadence-discord-bot/commit/97869a04fdb21a2afd98dac656ca677d06d26368))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([dfa4393](https://github.com/mariusbegby/cadence-discord-bot/commit/dfa439368364b6a11169ac87fb54d2b681c68d61))
+* **deps-dev:** bump @typescript-eslint/parser from 6.6.0 to 6.7.0 ([2e9dd22](https://github.com/mariusbegby/cadence-discord-bot/commit/2e9dd229da4d696f630d0f20ba628e41aec55ac3))
+* **deps:** bump mediaplex from 0.0.7 to 0.0.8 ([e348fc3](https://github.com/mariusbegby/cadence-discord-bot/commit/e348fc368669a30bb66ef666d72318f83b72e374))
+
 ## [5.5.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.4.1...v5.5.0) (2023-09-17)
 
 
