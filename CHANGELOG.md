@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.6.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.0...v5.6.1) (2023-09-25)
+
+
+### Minor changes and bug fixes
+
+* change Dockerfile base image to fix mediaplex not working ([3360782](https://github.com/mariusbegby/cadence-discord-bot/commit/3360782d2ed8bf5cd05933f25f2de1c2a9cfaac5))
+* remove caching from npm ci in Dockerfile ([5e591c7](https://github.com/mariusbegby/cadence-discord-bot/commit/5e591c739f7679efcf29df9e0ac37e12083bf0cd))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.6.2 to 20.6.5 ([9684c8b](https://github.com/mariusbegby/cadence-discord-bot/commit/9684c8b1f4de1e92f3b7bd29ef286d5b6763c65c))
+* **deps-dev:** bump @types/node-os-utils from 1.3.1 to 1.3.2 ([5f2e0d5](https://github.com/mariusbegby/cadence-discord-bot/commit/5f2e0d5f1cb05d85a784c1156a25dd988cc5d5e9))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([eed285c](https://github.com/mariusbegby/cadence-discord-bot/commit/eed285c98990bfa702d7ed09a332884bdb3e312b))
+* **deps-dev:** bump @typescript-eslint/parser from 6.7.0 to 6.7.3 ([2bc1729](https://github.com/mariusbegby/cadence-discord-bot/commit/2bc17298fa7b2678ab44f2d50d45260dd192263f))
+* **deps-dev:** bump eslint from 8.49.0 to 8.50.0 ([ebae3f1](https://github.com/mariusbegby/cadence-discord-bot/commit/ebae3f186cf77905267858c6e4f5e9e6c861f830))
+
 ## [5.6.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.5.0...v5.6.0) (2023-09-18)
 
 
