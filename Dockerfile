@@ -2,12 +2,12 @@
 # Dockerfile for https://hub.docker.com/r/mariusbegby/cadence/
 # Images automatically published: docker pull mariusbegby/cadence
 
-# Using Node 18.16 (LTS) on Alpine base
+# Using Node 18.16 (LTS) on bookworm-slim base
 ARG NODE_VERSION=18.16
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-bookworm-slim
 
 # Install npm build dependencies and ffmpeg
-RUN apk add --no-cache python3 make build-base ffmpeg
+RUN apt-get update && apt-get install -y python3 make build-essential ffmpeg
 
 # Set work directory for subsequent commands
 WORKDIR /cadence-discord-bot
@@ -27,8 +27,8 @@ RUN npm run build && \
     npm ci --omit=dev
 
 # Cleanup of unneeded packages, apk cache, and TypeScript source files
-RUN apk del python3 make build-base && \
-    rm -rf /var/cache/apk/* /tmp/* ./src/
+RUN apt remove -y python3 make build-essential && \
+    rm -rf /var/cache/apt/* /tmp/* ./src/
 
 # Startup command to run the bot after deploying slash commands
 CMD /bin/sh -c "npm run deploy && npm run start"
