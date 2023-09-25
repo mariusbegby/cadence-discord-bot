@@ -18,10 +18,8 @@ COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 
-# Install dependencies from package-lock.json and omit dev dependencies
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+# Install dependencies from package-lock.json
+RUN npm ci
 
 # Transpile TypeScript to JavaScript, remove dev dependencies, and install production dependencies
 RUN npm run build && \
