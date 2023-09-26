@@ -114,11 +114,11 @@ module.exports.embedOptions = {
 // Configuration for the audio player. Includes behavior upon various events and UI components.
 module.exports.playerOptions = {
     leaveOnEmpty: true,
-    leaveOnEmptyCooldown: 1_800_000,
-    leaveOnEnd: true,
-    leaveOnEndCooldown: 1_800_000,
-    leaveOnStop: true,
-    leaveOnStopCooldown: 1_800_000,
+    leaveOnEmptyCooldown: 600_000,
+    leaveOnEnd: false,
+    leaveOnEndCooldown: 600_000,
+    leaveOnStop: false,
+    leaveOnStopCooldown: 600_000,
     defaultVolume: 50,
     maxQueueSize: 10_000,
     maxHistorySize: 1_000,
