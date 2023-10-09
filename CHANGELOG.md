@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.6.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.1...v5.6.2) (2023-10-02)
+
+
+### Minor changes and bug fixes
+
+* update default leave settings ([ee0f769](https://github.com/mariusbegby/cadence-discord-bot/commit/ee0f769ba5fe8ffe02aa66387e33dfdd5a484cc4))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.6.5 to 20.8.0 ([ef9381d](https://github.com/mariusbegby/cadence-discord-bot/commit/ef9381d7d27572e44095119daecf57b961fca31d))
+* **deps:** bump pino from 8.15.1 to 8.15.3 ([adb2174](https://github.com/mariusbegby/cadence-discord-bot/commit/adb2174ffbaaa76182b60ca8c8ade820cdddc31d))
+
 ## [5.6.1](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.0...v5.6.1) (2023-09-25)
 
 
