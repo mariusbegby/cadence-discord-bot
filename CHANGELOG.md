@@ -1,5 +1,29 @@
 # Changelog
 
+## [5.6.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.2...v5.6.3) (2023-10-24)
+
+
+### Minor changes and bug fixes
+
+* update deps ([dd06263](https://github.com/mariusbegby/cadence-discord-bot/commit/dd06263699e6fc75d5c987ce1c59ce3f9bd03e0c))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/traverse from 7.22.17 to 7.23.2 ([aea0683](https://github.com/mariusbegby/cadence-discord-bot/commit/aea068377b3a6c338c1c620f00069a05a14c769f))
+* **deps-dev:** bump @types/jest from 29.5.5 to 29.5.6 ([a36cbee](https://github.com/mariusbegby/cadence-discord-bot/commit/a36cbee8b90567670f348c772e5e5d99f1412270))
+* **deps-dev:** bump @types/node from 20.8.0 to 20.8.4 ([963af52](https://github.com/mariusbegby/cadence-discord-bot/commit/963af52470b4e25a920d6d5ece6c7dde10ba65c8))
+* **deps-dev:** bump @types/node from 20.8.4 to 20.8.7 ([7dd5739](https://github.com/mariusbegby/cadence-discord-bot/commit/7dd57395abf1ed9a4c8cad104143e9cb9f8920ad))
+* **deps-dev:** bump @types/node-os-utils from 1.3.2 to 1.3.3 ([3544c76](https://github.com/mariusbegby/cadence-discord-bot/commit/3544c76c24e0886a249efcfb7f36da086a4cae9e))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([9d6931e](https://github.com/mariusbegby/cadence-discord-bot/commit/9d6931ebe913082186f11b136c1ce46c0ba3687b))
+* **deps-dev:** bump @typescript-eslint/parser from 6.7.3 to 6.7.5 ([229e32b](https://github.com/mariusbegby/cadence-discord-bot/commit/229e32b955cfb1d110950eab2b8b0ba5be598520))
+* **deps-dev:** bump @typescript-eslint/parser from 6.7.5 to 6.9.0 ([3789bf0](https://github.com/mariusbegby/cadence-discord-bot/commit/3789bf0cb9a8b89c05c358c86ee6288d9ab9a0ba))
+* **deps-dev:** bump eslint from 8.50.0 to 8.51.0 ([ff2d82c](https://github.com/mariusbegby/cadence-discord-bot/commit/ff2d82cd5b6aa88563e75ab2fecd1016d68036b9))
+* **deps-dev:** bump eslint from 8.51.0 to 8.52.0 ([2e9ca21](https://github.com/mariusbegby/cadence-discord-bot/commit/2e9ca212b27c54d5ed540936a8925d0443bef2ac))
+* **deps-dev:** bump eslint-plugin-prettier from 5.0.0 to 5.0.1 ([96cad41](https://github.com/mariusbegby/cadence-discord-bot/commit/96cad413ed3aadd01a431e783f6529f987a68df5))
+* **deps:** bump pino from 8.15.3 to 8.15.7 ([bc0c8bb](https://github.com/mariusbegby/cadence-discord-bot/commit/bc0c8bbbc9c8371557428c64ffc4af0e2800d5ff))
+* **deps:** bump youtube-ext from 1.1.14 to 1.1.16 ([0ae1993](https://github.com/mariusbegby/cadence-discord-bot/commit/0ae19931ddc814426942cd879d379099207353f9))
+
 ## [5.6.2](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.1...v5.6.2) (2023-10-02)
 
 
