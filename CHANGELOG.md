@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.3...v5.6.4) (2023-10-24)
+
+
+### Minor changes and bug fixes
+
+* update deps, change opus provider ([814029e](https://github.com/mariusbegby/cadence-discord-bot/commit/814029e6361ed3824aa7854f7857b46ecb065c71))
+
 ## [5.6.3](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.2...v5.6.3) (2023-10-24)
 
 
