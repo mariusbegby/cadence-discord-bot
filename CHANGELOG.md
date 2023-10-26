@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.4...v5.6.5) (2023-10-26)
+
+
+### Minor changes and bug fixes
+
+* set skipFFmpeg to false to solve bug ([ea8f97d](https://github.com/mariusbegby/cadence-discord-bot/commit/ea8f97dc2b405b5ed0ace99b6016fd1937790117))
+
 ## [5.6.4](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.3...v5.6.4) (2023-10-24)
 
 
