@@ -19,6 +19,7 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
 
         const player: Player = new Player(client, {
             useLegacyFFmpeg: false,
+            skipFFmpeg: false,
             ipconfig: ipRotationConfig,
             ytdlOptions: {
                 quality: 'highestaudio',
