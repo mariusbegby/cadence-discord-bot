@@ -91,6 +91,13 @@ This project is made possible by using [discord.js](https://github.com/discordjs
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
+        <a href=https://github.com/twlite>
+            <img src=https://avatars.githubusercontent.com/u/46562212?v=4 width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Archaeopteryx/>
+            <br />
+            <sub style="font-size:14px"><b>Archaeopteryx</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
         <a href=https://github.com/Kriblin>
             <img src=https://avatars.githubusercontent.com/u/28916166?v=4 width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Niko G./>
             <br />
