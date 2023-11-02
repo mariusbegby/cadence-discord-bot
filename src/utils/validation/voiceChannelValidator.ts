@@ -27,6 +27,10 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
                         `**${embedOptions.icons.warning} Not in a voice channel**\nYou need to be in a voice channel to perform this action.`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text: interaction.member.nickname || interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 
@@ -65,6 +69,10 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
                         `**${embedOptions.icons.warning} Not in same voice channel**\nYou need to be in the same voice channel as me to perform this action.\n\n**Voice channel:** <#${queue.dispatcher.channel.id}>`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text: interaction.member.nickname || interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 

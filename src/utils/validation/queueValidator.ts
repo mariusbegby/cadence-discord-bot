@@ -1,5 +1,5 @@
 import config from 'config';
-import { EmbedBuilder, InteractionType } from 'discord.js';
+import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
 import { Logger } from 'pino';
 import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
@@ -27,6 +27,13 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
                         `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text:
+                            interaction.member instanceof GuildMember
+                                ? interaction.member.nickname || interaction.user.username
+                                : interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 
@@ -57,6 +64,13 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
                         `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text:
+                            interaction.member instanceof GuildMember
+                                ? interaction.member.nickname || interaction.user.username
+                                : interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 
@@ -87,6 +101,13 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
                         `**${embedOptions.icons.warning} Oops!**\nThere are no tracks added to the queue. First add some tracks with **\`/play\`**!`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text:
+                            interaction.member instanceof GuildMember
+                                ? interaction.member.nickname || interaction.user.username
+                                : interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 

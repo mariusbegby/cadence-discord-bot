@@ -37,6 +37,13 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
                         `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel <#${channel.id}>.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
                     )
                     .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text:
+                            interaction.member instanceof GuildMember
+                                ? interaction.member.nickname || interaction.user.username
+                                : interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
             ]
         });
 
@@ -85,6 +92,13 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
                                 `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel <#${channel.id}>.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
                             )
                             .setColor(embedOptions.colors.warning)
+                            .setFooter({
+                                text:
+                                    interaction.member instanceof GuildMember
+                                        ? interaction.member.nickname || interaction.user.username
+                                        : interaction.user.username,
+                                iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                            })
                     ]
                 });
             }
