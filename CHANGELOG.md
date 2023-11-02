@@ -1,5 +1,20 @@
 # Changelog
 
+## [5.6.6](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.5...v5.6.6) (2023-11-02)
+
+
+### Minor changes and bug fixes
+
+* add user in footer on validation warnings ([eb26f5a](https://github.com/mariusbegby/cadence-discord-bot/commit/eb26f5ab93019b36a9a2dab85a819c7a28ae9c83))
+* **playerSkip:** only log on error ([f5a39f4](https://github.com/mariusbegby/cadence-discord-bot/commit/f5a39f430eb99c8702ad3cd502a385ef545bf22c))
+* update extractor to stable ([d7ef706](https://github.com/mariusbegby/cadence-discord-bot/commit/d7ef706604c3fb23b497075f3637b2c55c99cc92))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.8.8 to 20.8.10 ([8d35f0b](https://github.com/mariusbegby/cadence-discord-bot/commit/8d35f0b4f9ecc5d53dc7620b3580cf1c8e3074ce))
+* **deps:** bump discord-player from 6.6.5-dev.4 to 6.6.6 ([34ad44e](https://github.com/mariusbegby/cadence-discord-bot/commit/34ad44ea5ffd35296c0f431904cbaf75fa96a423))
+
 ## [5.6.5](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.4...v5.6.5) (2023-10-26)
 
 
