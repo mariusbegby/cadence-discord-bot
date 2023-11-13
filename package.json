@@ -45,7 +45,7 @@
     "dependencies": {
         "@discord-player/extractor": "^4.4.5",
         "@discord-player/opus": "^0.1.2",
-        "@discordjs/rest": "^2.0.0",
+        "@discordjs/rest": "^2.1.0",
         "config": "^3.3.9",
         "discord-player": "^6.6.6",
         "discord-voip": "^0.1.3",
