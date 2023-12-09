@@ -38,7 +38,7 @@ const logger: Logger = loggerModule.child({
             client.registerClientInteractions = registerClientInteractions;
             await registerEventListeners({ client, player, executionId });
             await registerClientInteractions({ client, executionId });
-            client.emit('ready', client as Client);
+            client.emit('ready', client as Client<true>);
             allShardsReadyReceived = true;
         });
 
