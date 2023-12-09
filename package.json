@@ -16,7 +16,7 @@
     },
     "publisher": "mariusbegby",
     "license": "MIT",
-    "main": "index.js",
+    "main": "dist/index.js",
     "jest": {
         "preset": "ts-jest",
         "testEnvironment": "node",
