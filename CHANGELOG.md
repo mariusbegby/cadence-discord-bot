@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.8](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.7...v5.6.8) (2023-12-09)
+
+
+### Minor changes and bug fixes
+
+* update mediaplex to latest ([78b5d85](https://github.com/mariusbegby/cadence-discord-bot/commit/78b5d85c9e045eb26f47063f33d04dfef96e0f24))
+
 ## [5.6.7](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.6...v5.6.7) (2023-12-09)
 
 
