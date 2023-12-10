@@ -42,7 +42,7 @@ const logger: Logger = loggerModule.child({
             allShardsReadyReceived = true;
         });
 
-        client.login(process.env.DISCORD_BOT_TOKEN);
+        await client.login(process.env.DISCORD_BOT_TOKEN);
     } catch (error) {
         logger.error(error);
     }
