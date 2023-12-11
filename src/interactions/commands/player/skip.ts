@@ -33,23 +33,23 @@ class SkipCommand extends BaseSlashCommandInteraction {
         const skipToTrackInput: number = interaction.options.getNumber('tracknumber')!;
 
         if (skipToTrackInput) {
-            return await this.handleSkipToTrack(logger, interaction, queue, skipToTrackInput);
+            return await this.handleSkipToTrackPosition(logger, interaction, queue, skipToTrackInput);
         } else {
             return await this.handleSkipToNextTrack(logger, interaction, queue);
         }
     }
 
-    private async handleSkipToTrack(
+    private async handleSkipToTrackPosition(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        skipToTrack: number
+        skipToTrackPosition: number
     ) {
-        if (skipToTrack > queue.tracks.data.length) {
-            return await this.handleTrackNumberHigherThanTotalTracks(skipToTrack, queue, logger, interaction);
+        if (skipToTrackPosition > queue.tracks.data.length) {
+            return await this.handleTrackNumberHigherThanTotalTracks(skipToTrackPosition, queue, logger, interaction);
         } else {
             const skippedTrack: Track = queue.currentTrack!;
-            queue.node.skipTo(skipToTrack - 1);
+            queue.node.skipTo(skipToTrackPosition - 1);
             logger.debug('Skipped to specified track number.');
             return await this.respondWithSuccessEmbed(skippedTrack, interaction);
         }
@@ -93,7 +93,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setDescription(
                         `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'There is nothing currently playing. First add some tracks with **`/play`**!'
+                            'The queue is empty, add some tracks with **`/play`**!'
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
