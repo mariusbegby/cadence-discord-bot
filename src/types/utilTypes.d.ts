@@ -27,6 +27,7 @@ export type Validator = (args: ValidatorParams) => Promise<void>;
 export type ValidatorParams = {
     interaction: ChatInputCommandInteraction | MessageComponentInteraction;
     queue?: GuildQueue;
+    history?: GuildQueueHistory;
     executionId: string;
 };
 
