@@ -1,5 +1,5 @@
 import config from 'config';
-import { GuildQueue, PlayerTimestamp, Track } from 'discord-player';
+import { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -114,7 +114,10 @@ abstract class BaseInteraction {
         return thumbnailUrl;
     }
 
-    protected getFooterDisplayPageInfo(interaction: ChatInputCommandInteraction, queue: GuildQueue): EmbedFooterData {
+    protected getFooterDisplayPageInfo(
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue | GuildQueueHistory
+    ): EmbedFooterData {
         if (!queue.tracks.data.length) {
             return { text: 'Page 1 of 1 (0 tracks)' };
         }

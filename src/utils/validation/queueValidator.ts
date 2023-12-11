@@ -44,6 +44,43 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
     return;
 };
 
+export const checkHistoryExists = async ({ interaction, history, executionId }: ValidatorParams) => {
+    const logger: Logger = loggerModule.child({
+        module: 'utilValidation',
+        name: 'historyDoesNotExist',
+        executionId: executionId,
+        shardId: interaction.guild?.shardId,
+        guildId: interaction.guild?.id
+    });
+
+    const interactionIdentifier =
+        interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
+
+    if (!history) {
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription(
+                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the history and nothing currently playing. First add some tracks with **\`/play\`**!`
+                    )
+                    .setColor(embedOptions.colors.warning)
+                    .setFooter({
+                        text:
+                            interaction.member instanceof GuildMember
+                                ? interaction.member.nickname || interaction.user.username
+                                : interaction.user.username,
+                        iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                    })
+            ]
+        });
+
+        logger.debug(`User tried to use command '${interactionIdentifier}' but there was no history.`);
+        throw new InteractionValidationError('History does not exist.');
+    }
+
+    return;
+};
+
 export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }: ValidatorParams) => {
     const logger: Logger = loggerModule.child({
         module: 'utilValidation',
