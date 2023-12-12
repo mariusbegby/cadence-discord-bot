@@ -75,13 +75,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     ) {
         logger.debug('History exists with current track, gathering information.');
 
-        const playPauseButton: APIButtonComponent = new ButtonBuilder()
-            .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
-            .setLabel(queue.node.isPaused() ? 'Resume' : 'Pause')
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.pauseResumeTrack)
-            .toJSON();
-        const components: APIMessageActionRowComponent[] = [playPauseButton];
+        const components: APIMessageActionRowComponent[] = [];
+
         const previousButton: APIButtonComponent = new ButtonBuilder()
             .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
             .setCustomId(`action-previous-button_${currentTrack.id}`)
@@ -89,7 +84,16 @@ class HistoryCommand extends BaseSlashCommandInteraction {
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)
             .toJSON();
-        components.unshift(previousButton);
+        components.push(previousButton);
+
+        const playPauseButton: APIButtonComponent = new ButtonBuilder()
+            .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
+            .setLabel(queue.node.isPaused() ? 'Resume' : 'Pause')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.pauseResumeTrack)
+            .toJSON();
+        components.push(playPauseButton);
+
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-skip-button_${currentTrack.id}`)
             .setLabel('Skip')

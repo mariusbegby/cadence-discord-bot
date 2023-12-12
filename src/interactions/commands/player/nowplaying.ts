@@ -44,19 +44,36 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
         const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue);
 
-        const customId: string = `action-skip-button_${currentTrack.id}`;
-        logger.debug(`Generated custom id for skip button: ${customId}`);
+        const components: APIMessageActionRowComponent[] = [];
+
+        const previousButton: APIButtonComponent = new ButtonBuilder()
+            .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
+            .setCustomId(`action-previous-button_${currentTrack.id}`)
+            .setLabel('Previous')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.previousTrack)
+            .toJSON();
+        components.push(previousButton);
+
+        const playPauseButton: APIButtonComponent = new ButtonBuilder()
+            .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
+            .setLabel(queue.node.isPaused() ? 'Resume' : 'Pause')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.pauseResumeTrack)
+            .toJSON();
+        components.push(playPauseButton);
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
-            .setCustomId(customId)
+            .setCustomId(`action-skip-button_${currentTrack.id}`)
             .setLabel('Skip')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.nextTrack)
             .toJSON();
+        components.push(skipButton);
 
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,
-            components: [skipButton]
+            components
         };
 
         logger.debug('Sending info embed with action row components.');
@@ -78,7 +95,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                     .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.info)
             ],
-            components: [embedActionRow as APIActionRowComponent<APIMessageActionRowComponent>]
+            components: [embedActionRow]
         });
     }
 
