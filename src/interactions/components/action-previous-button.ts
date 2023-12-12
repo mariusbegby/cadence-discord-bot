@@ -6,9 +6,9 @@ import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
 
-class NowplayingBackButton extends BaseComponentInteraction {
+class ActionPreviousButton extends BaseComponentInteraction {
     constructor() {
-        super('nowplaying-back-button');
+        super('action-previous-button');
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -108,4 +108,4 @@ class NowplayingBackButton extends BaseComponentInteraction {
     }
 }
 
-export default new NowplayingBackButton();
+export default new ActionPreviousButton();

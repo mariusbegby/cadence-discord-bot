@@ -44,12 +44,12 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
         const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue);
 
-        const customId: string = `nowplaying-skip-button_${currentTrack.id}`;
+        const customId: string = `action-skip-button_${currentTrack.id}`;
         logger.debug(`Generated custom id for skip button: ${customId}`);
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(customId)
-            .setLabel('Skip track')
+            .setLabel('Skip')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.nextTrack)
             .toJSON();
