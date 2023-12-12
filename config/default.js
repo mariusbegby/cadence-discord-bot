@@ -66,7 +66,7 @@ module.exports.embedOptions = {
         note: '#80848E'
     },
     components: {
-        showButtonLabels: false
+        showButtonLabels: true
     },
     icons: {
         logo: '🤖',
