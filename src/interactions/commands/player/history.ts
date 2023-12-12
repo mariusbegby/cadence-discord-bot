@@ -1,5 +1,16 @@
 import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, EmbedFooterData, SlashCommandBuilder } from 'discord.js';
+import {
+    APIActionRowComponent,
+    APIButtonComponent,
+    APIMessageActionRowComponent,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    ComponentType,
+    EmbedBuilder,
+    EmbedFooterData,
+    SlashCommandBuilder
+} from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -64,6 +75,34 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     ) {
         logger.debug('History exists with current track, gathering information.');
 
+        const playPauseButton: APIButtonComponent = new ButtonBuilder()
+            .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
+            .setLabel(queue.node.isPaused() ? 'Resume' : 'Pause')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.pauseResumeTrack)
+            .toJSON();
+        const components: APIMessageActionRowComponent[] = [playPauseButton];
+        const previousButton: APIButtonComponent = new ButtonBuilder()
+            .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
+            .setCustomId(`action-previous-button_${currentTrack.id}`)
+            .setLabel('Previous')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.previousTrack)
+            .toJSON();
+        components.unshift(previousButton);
+        const skipButton: APIButtonComponent = new ButtonBuilder()
+            .setCustomId(`action-skip-button_${currentTrack.id}`)
+            .setLabel('Skip')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(this.embedOptions.icons.nextTrack)
+            .toJSON();
+        components.push(skipButton);
+
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components
+        };
+
         logger.debug('Responding with info embed.');
         await interaction.editReply({
             embeds: [
@@ -81,7 +120,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
                     .setFooter(this.getDisplayFullFooterInfo(interaction, history))
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            components: [embedActionRow]
         });
         return Promise.resolve();
     }
