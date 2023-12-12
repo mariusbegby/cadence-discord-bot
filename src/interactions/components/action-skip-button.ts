@@ -5,9 +5,9 @@ import { BaseComponentParams, BaseComponentReturnType } from '../../types/intera
 import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 
-class NowplayingPlayPauseButton extends BaseComponentInteraction {
+class ActionSkipButton extends BaseComponentInteraction {
     constructor() {
-        super('nowplaying-playpause-button');
+        super('action-skip-button');
     }
 
     async execute(params: BaseComponentParams): BaseComponentReturnType {
@@ -31,17 +31,12 @@ class NowplayingPlayPauseButton extends BaseComponentInteraction {
             return await this.handleAlreadySkipped(interaction);
         }
 
-        const currentTrack: Track = queue.currentTrack!;
-        if (queue.node.isPaused()) {
-            queue.node.resume();
-            logger.debug('Resumed the track.');
-        } else {
-            queue.node.pause();
-            logger.debug('Paused the track.');
-        }
+        const skippedTrack: Track = queue.currentTrack!;
+        queue.node.skip();
+        logger.debug('Skipped the track.');
 
         logger.debug('Responding with success embed.');
-        return await this.handleSuccess(interaction, currentTrack, queue);
+        return await this.handleSuccess(interaction, skippedTrack, queue);
     }
 
     private async handleNoQueue(interaction: MessageComponentInteraction) {
@@ -62,7 +57,7 @@ class NowplayingPlayPauseButton extends BaseComponentInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has been skipped or is no longer playing.`
+                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -70,16 +65,15 @@ class NowplayingPlayPauseButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleSuccess(interaction: MessageComponentInteraction, track: Track, queue: GuildQueue) {
+    private async handleSuccess(interaction: MessageComponentInteraction, skippedTrack: Track, queue: GuildQueue) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                `**${this.embedOptions.icons.pauseResumed} ${
-                    queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                }**\n ${this.getDisplayTrackDurationAndUrl(queue.currentTrack!)}\n\n` +
+                `**${this.embedOptions.icons.skipped} Skipped track**\n` +
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
                     `${this.getDisplayRepeatMode(queue.repeatMode, 'success')}`
             )
-            .setThumbnail(track.thumbnail)
+            .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);
 
         return await interaction.editReply({
@@ -89,4 +83,4 @@ class NowplayingPlayPauseButton extends BaseComponentInteraction {
     }
 }
 
-export default new NowplayingPlayPauseButton();
+export default new ActionSkipButton();
