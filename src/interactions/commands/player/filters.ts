@@ -194,10 +194,13 @@ class FiltersCommand extends BaseSlashCommandInteraction {
 
         const disableButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId('filters-disable-button')
-            .setLabel('Disable all filters')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.disable)
             .toJSON();
+
+        if (this.embedOptions.components.showButtonLabels) {
+            disableButton.label = 'Disable all filters';
+        }
 
         const disableFiltersActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,

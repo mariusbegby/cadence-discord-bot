@@ -72,7 +72,6 @@ class QueueCommand extends BaseSlashCommandInteraction {
         const previousButton: APIButtonComponent = new ButtonBuilder()
             .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
             .setCustomId(`action-previous-button_${currentTrack.id}`)
-            .setLabel('Previous')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)
             .toJSON();
@@ -80,7 +79,6 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
         const playPauseButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
-            .setLabel(queue.node.isPaused() ? 'Resume' : 'Pause')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.pauseResumeTrack)
             .toJSON();
@@ -88,11 +86,16 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-skip-button_${currentTrack.id}`)
-            .setLabel('Skip')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.nextTrack)
             .toJSON();
         components.push(skipButton);
+
+        if (this.embedOptions.components.showButtonLabels) {
+            previousButton.label = 'Previous';
+            playPauseButton.label = queue.node.isPaused() ? 'Resume' : 'Pause';
+            skipButton.label = 'Skip';
+        }
 
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
             type: ComponentType.ActionRow,

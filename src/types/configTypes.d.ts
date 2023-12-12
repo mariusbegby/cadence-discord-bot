@@ -39,6 +39,9 @@ export type EmbedOptions = {
         info: ColorResolvable;
         note: ColorResolvable;
     };
+    components: {
+        showButtonLabels: boolean;
+    };
     icons: {
         logo: string;
         beta: string;
