@@ -5,6 +5,7 @@ import 'dotenv/config';
 import config from 'config';
 import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
+import { exec } from 'child_process';
 import { Logger } from 'pino';
 import loggerModule from './services/logger';
 const shardingOptions: ShardingManagerOptions = config.get('shardingOptions');
@@ -52,6 +53,22 @@ manager.on('shardCreate', (shard: Shard) => {
     shard.on(ShardEvents.Reconnecting, () => {
         logger.warn('Shard reconnecting.');
     });
+});
+
+exec('ffmpeg -version', (error) => {
+    if (error) {
+        const logger: Logger = loggerModule.child({
+            module: 'shardingManager',
+            name: 'shardingManager',
+            shardId: 'manager'
+        });
+
+        logger.error('FFmpeg is not installed or available on your system.');
+        logger.error('Install FFmpeg (https://ffmpeg.org/download.html) and try again.');
+        logger.error('If you are using Windows, make sure to add FFmpeg to your PATH.');
+
+        process.exit();
+    }
 });
 
 manager.spawn();
