@@ -1,5 +1,27 @@
 # Changelog
 
+## [5.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.8...v5.7.0) (2023-12-13)
+
+
+### Features
+
+* Add new /history command to show previously played tracks ([bf461c2](https://github.com/mariusbegby/cadence-discord-bot/commit/bf461c2f26ebbc24f6e3dc1d33b0657bfec3f065))
+* Add new /move command to move a track to specified position ([100325b](https://github.com/mariusbegby/cadence-discord-bot/commit/100325b7d819243cc8785edbad69f8f02c9a55e9))
+* Add new config option to enable/disable button labels ([47d3c36](https://github.com/mariusbegby/cadence-discord-bot/commit/47d3c36cc727531eaa4436d069c28d1426f88602))
+* Added /back command to go back in history ([e11df37](https://github.com/mariusbegby/cadence-discord-bot/commit/e11df3706fa02dfdba73c8b3856071b7cca1b785))
+* Updated /remove command with options for range, queue, user and duplicates! ([27d4c6c](https://github.com/mariusbegby/cadence-discord-bot/commit/27d4c6c0220e84f4005c077a768040528ebbdffb))
+
+
+### Minor changes and bug fixes
+
+* Add check on startup to see if ffmpeg is available ([0b72e92](https://github.com/mariusbegby/cadence-discord-bot/commit/0b72e926934e5dc942a4af8b24458a2d299c7e03))
+* Add new action buttons also to /history command ([fac39e4](https://github.com/mariusbegby/cadence-discord-bot/commit/fac39e45cbd752db7148ea4be590a5cd05a88fb9))
+* await client.login, thanks to @Kriblin ([64a709b](https://github.com/mariusbegby/cadence-discord-bot/commit/64a709b03226b2f4d2b0489bdd7d3ba59f59e2fc))
+* change addNumberOption to addIntegerOption ([6ca7ce3](https://github.com/mariusbegby/cadence-discord-bot/commit/6ca7ce3e4be92e9240208c76c6bdf1418193ccef))
+* Small changes to new action buttons ([981be70](https://github.com/mariusbegby/cadence-discord-bot/commit/981be707f04af0fd21481075683c63a3d0d42a2f))
+* solve bug using getNumber after changing to addIntegerOption ([4b630e2](https://github.com/mariusbegby/cadence-discord-bot/commit/4b630e2512282a481b50678714f7dd580d3f4be5))
+* update default config value for button labels to true ([ee54513](https://github.com/mariusbegby/cadence-discord-bot/commit/ee5451320e99f92edeb89dbcf21641304f0ca296))
+
 ## [5.6.8](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.7...v5.6.8) (2023-12-09)
 
 
