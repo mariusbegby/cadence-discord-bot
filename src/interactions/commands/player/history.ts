@@ -22,7 +22,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('history')
             .setDescription('Show history of tracks that have been played.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('page').setDescription('Page number to display for the history').setMinValue(1)
             );
         super(data);
@@ -182,7 +182,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     }
 
     private getPageIndex(interaction: ChatInputCommandInteraction): number {
-        return (interaction.options.getNumber('page') || 1) - 1;
+        return (interaction.options.getInteger('page') || 1) - 1;
     }
 
     private getTotalPages(history: GuildQueueHistory): number {

@@ -31,7 +31,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
                         { name: 'Members', value: 'members' }
                     )
             )
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('page').setDescription('Page number to display for the shards').setMinValue(1)
             );
         const isSystemCommand: boolean = true;
@@ -189,7 +189,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
     }
 
     private getPageIndex(interaction: ChatInputCommandInteraction): number {
-        return (interaction.options.getNumber('page') || 1) - 1;
+        return (interaction.options.getInteger('page') || 1) - 1;
     }
 
     private getTotalPages(shardCount: number): number {

@@ -4,7 +4,7 @@ import {
     EmbedBuilder,
     Message,
     SlashCommandBuilder,
-    SlashCommandNumberOption
+    SlashCommandIntegerOption
 } from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
@@ -17,8 +17,8 @@ class LoopCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('loop')
             .setDescription('Toggle looping a track, the whole queue or autoplay.')
-            .addNumberOption(() =>
-                new SlashCommandNumberOption()
+            .addIntegerOption(() =>
+                new SlashCommandIntegerOption()
                     .setName('mode')
                     .setDescription('Loop mode: Track, queue, autoplay or disabled.')
                     .setRequired(false)
@@ -44,7 +44,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const userInputRepeatMode: QueueRepeatMode = interaction.options.getNumber('mode')!;
+        const userInputRepeatMode: QueueRepeatMode = interaction.options.getInteger('mode')!;
         const currentRepeatMode: QueueRepeatMode = queue.repeatMode;
 
         if (!userInputRepeatMode && userInputRepeatMode !== 0) {

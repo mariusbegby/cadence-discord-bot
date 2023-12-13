@@ -122,7 +122,7 @@ abstract class BaseInteraction {
             return { text: 'Page 1 of 1 (0 tracks)' };
         }
 
-        const pageIndex: number = (interaction.options.getNumber('page') || 1) - 1;
+        const pageIndex: number = (interaction.options.getInteger('page') || 1) - 1;
         const totalPages: number = Math.ceil(queue.tracks.data.length / 10) || 1;
         return {
             text: `Page ${pageIndex + 1} of ${totalPages} (${queue.tracks.data.length} tracks)`

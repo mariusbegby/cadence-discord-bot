@@ -11,7 +11,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('back')
             .setDescription('Go back to previous track or specified position in history.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('position').setDescription('The position in history to go back to.').setMinValue(1)
             );
         super(data);
@@ -30,7 +30,7 @@ class BackCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const backToTrackInput: number = interaction.options.getNumber('position')!;
+        const backToTrackInput: number = interaction.options.getInteger('position')!;
 
         if (backToTrackInput) {
             return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput);

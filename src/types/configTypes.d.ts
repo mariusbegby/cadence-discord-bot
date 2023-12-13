@@ -74,6 +74,7 @@ export type EmbedOptions = {
         back: string;
         pauseResumed: string;
         shuffled: string;
+        moved: string;
         volume: string;
         volumeIsMuted: string;
         volumeChanged: string;

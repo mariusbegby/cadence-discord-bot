@@ -23,7 +23,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('queue')
             .setDescription('Show tracks that have been added to the queue.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('page').setDescription('Page number to display for the queue').setMinValue(1)
             );
         super(data);
@@ -173,7 +173,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
     }
 
     private getPageIndex(interaction: ChatInputCommandInteraction): number {
-        return (interaction.options.getNumber('page') || 1) - 1;
+        return (interaction.options.getInteger('page') || 1) - 1;
     }
 
     private getTotalPages(queue: GuildQueue): number {

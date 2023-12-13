@@ -11,7 +11,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('volume')
             .setDescription('Show or change the playback volume for tracks.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option
                     .setName('percentage')
                     .setDescription('Volume percentage: From 1% to 100%.')
@@ -33,7 +33,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const volume: number = interaction.options.getNumber('percentage')!;
+        const volume: number = interaction.options.getInteger('percentage')!;
 
         if (!volume && volume !== 0) {
             return await this.handleShowCurrentVolume(queue, logger, interaction);
