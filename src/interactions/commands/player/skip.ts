@@ -12,7 +12,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             .setName('skip')
             .setDescription('Skip track to next or specified position in queue.')
             .addNumberOption((option) =>
-                option.setName('tracknumber').setDescription('The position in queue to skip to.').setMinValue(1)
+                option.setName('position').setDescription('The position in queue to skip to.').setMinValue(1)
             );
         super(data);
     }
@@ -30,10 +30,10 @@ class SkipCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const skipToTrackInput: number = interaction.options.getNumber('tracknumber')!;
+        const trackPositionInput: number = interaction.options.getNumber('position')!;
 
-        if (skipToTrackInput) {
-            return await this.handleSkipToTrackPosition(logger, interaction, queue, skipToTrackInput);
+        if (trackPositionInput) {
+            return await this.handleSkipToTrackPosition(logger, interaction, queue, trackPositionInput);
         } else {
             return await this.handleSkipToNextTrack(logger, interaction, queue);
         }
@@ -43,31 +43,31 @@ class SkipCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        skipToTrackPosition: number
+        trackPosition: number
     ) {
-        if (skipToTrackPosition > queue.tracks.data.length) {
-            return await this.handleTrackNumberHigherThanTotalTracks(skipToTrackPosition, queue, logger, interaction);
+        if (trackPosition > queue.tracks.data.length) {
+            return await this.handleTrackPositionHigherThanQueueLength(trackPosition, queue, logger, interaction);
         } else {
             const skippedTrack: Track = queue.currentTrack!;
-            queue.node.skipTo(skipToTrackPosition - 1);
-            logger.debug('Skipped to specified track number.');
+            queue.node.skipTo(trackPosition - 1);
+            logger.debug('Skipped to specified track position.');
             return await this.respondWithSuccessEmbed(skippedTrack, interaction);
         }
     }
 
-    private async handleTrackNumberHigherThanTotalTracks(
-        skipToTrack: number,
+    private async handleTrackPositionHigherThanQueueLength(
+        trackPosition: number,
         queue: GuildQueue,
         logger: Logger,
         interaction: ChatInputCommandInteraction
     ) {
-        logger.debug('Specified track number was higher than total tracks.');
+        logger.debug('Specified track position was higher than total tracks.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
                         `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `There are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${skipToTrack}\`**.\n\n` +
+                            `There are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${trackPosition}\`**.\n\n` +
                             'View tracks added to the queue with **`/queue`**.'
                     )
                     .setColor(this.embedOptions.colors.warning)
