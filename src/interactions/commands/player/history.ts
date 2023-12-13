@@ -22,7 +22,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('history')
             .setDescription('Show history of tracks that have been played.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('page').setDescription('Page number to display for the history').setMinValue(1)
             );
         super(data);

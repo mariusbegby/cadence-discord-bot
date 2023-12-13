@@ -31,7 +31,7 @@ class ShardsCommand extends BaseSlashCommandInteraction {
                         { name: 'Members', value: 'members' }
                     )
             )
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('page').setDescription('Page number to display for the shards').setMinValue(1)
             );
         const isSystemCommand: boolean = true;

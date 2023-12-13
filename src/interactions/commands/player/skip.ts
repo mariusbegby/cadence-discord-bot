@@ -11,7 +11,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         const data = new SlashCommandBuilder()
             .setName('skip')
             .setDescription('Skip track to next or specified position in queue.')
-            .addNumberOption((option) =>
+            .addIntegerOption((option) =>
                 option.setName('position').setDescription('The position in queue to skip to.').setMinValue(1)
             );
         super(data);

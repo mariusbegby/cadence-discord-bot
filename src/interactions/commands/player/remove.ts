@@ -31,12 +31,14 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                         option
                             .setName('start')
                             .setDescription('The starting position of the range to remove')
+                            .setMinValue(1)
                             .setRequired(true)
                     )
                     .addIntegerOption((option) =>
                         option
                             .setName('end')
                             .setDescription('The ending position of the range to remove')
+                            .setMinValue(1)
                             .setRequired(true)
                     )
             )
