@@ -100,6 +100,7 @@ module.exports.embedOptions = {
         back: '⏮️',
         pauseResumed: '⏯️',
         shuffled: '🔀',
+        moved: '🔀',
         volume: '🔊',
         volumeIsMuted: '🔇',
         volumeChanged: '🔊',
