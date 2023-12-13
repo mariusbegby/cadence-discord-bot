@@ -33,7 +33,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const volume: number = interaction.options.getNumber('percentage')!;
+        const volume: number = interaction.options.getInteger('percentage')!;
 
         if (!volume && volume !== 0) {
             return await this.handleShowCurrentVolume(queue, logger, interaction);

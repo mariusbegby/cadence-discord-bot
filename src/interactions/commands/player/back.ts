@@ -30,7 +30,7 @@ class BackCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const backToTrackInput: number = interaction.options.getNumber('position')!;
+        const backToTrackInput: number = interaction.options.getInteger('position')!;
 
         if (backToTrackInput) {
             return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput);

@@ -30,7 +30,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const trackPositionInput: number = interaction.options.getNumber('position')!;
+        const trackPositionInput: number = interaction.options.getInteger('position')!;
 
         if (trackPositionInput) {
             return await this.handleSkipToTrackPosition(logger, interaction, queue, trackPositionInput);

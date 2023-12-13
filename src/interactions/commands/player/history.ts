@@ -182,7 +182,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     }
 
     private getPageIndex(interaction: ChatInputCommandInteraction): number {
-        return (interaction.options.getNumber('page') || 1) - 1;
+        return (interaction.options.getInteger('page') || 1) - 1;
     }
 
     private getTotalPages(history: GuildQueueHistory): number {
