@@ -10,13 +10,41 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = new SlashCommandBuilder()
             .setName('remove')
-            .setDescription('Remove specified track from the queue')
-            .addNumberOption((option) =>
-                option
-                    .setName('tracknumber')
-                    .setDescription('The position in queue for track to remove.')
-                    .setMinValue(1)
-                    .setRequired(true)
+            .setDescription('Remove tracks from the queue')
+            .addSubcommand((subcommand) =>
+                subcommand
+                    .setName('track')
+                    .setDescription('Remove a track from the queue')
+                    .addIntegerOption((option) =>
+                        option
+                            .setName('position')
+                            .setDescription('The position in queue for track to remove.')
+                            .setMinValue(1)
+                            .setRequired(true)
+                    )
+            )
+            .addSubcommand((subcommand) =>
+                subcommand
+                    .setName('range')
+                    .setDescription('Remove a range of tracks from the queue')
+                    .addIntegerOption((option) =>
+                        option
+                            .setName('start')
+                            .setDescription('The starting position of the range to remove')
+                            .setRequired(true)
+                    )
+                    .addIntegerOption((option) =>
+                        option
+                            .setName('end')
+                            .setDescription('The ending position of the range to remove')
+                            .setRequired(true)
+                    )
+            )
+            .addSubcommand((subcommand) =>
+                subcommand.setName('queue').setDescription('Remove all tracks from the queue')
+            )
+            .addSubcommand((subcommand) =>
+                subcommand.setName('duplicates').setDescription('Remove all duplicate tracks from the queue')
             );
         super(data);
     }
@@ -33,22 +61,29 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        const removeTrackNumber: number = interaction.options.getNumber('tracknumber')!;
+        const subcommand = interaction.options.getSubcommand();
 
-        if (removeTrackNumber > queue.tracks.data.length) {
-            return await this.handleInvalidTrackNumber(logger, interaction, removeTrackNumber, queue);
+        switch (subcommand) {
+            default:
+                return Promise.resolve();
         }
 
-        return await this.removeTrackFromQueue(logger, interaction, queue, removeTrackNumber);
+        const trackPositionInput: number = interaction.options.getNumber('position')!;
+
+        if (trackPositionInput > queue.tracks.data.length) {
+            return await this.handleTrackPositionHigherThanQueueLength(logger, interaction, trackPositionInput, queue);
+        }
+
+        return await this.removeTrackFromQueue(logger, interaction, queue, trackPositionInput);
     }
 
-    private async handleInvalidTrackNumber(
+    private async handleTrackPositionHigherThanQueueLength(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        removeTrackNumber: number,
+        trackPositionInput: number,
         queue: GuildQueue
     ) {
-        logger.debug('Specified track number is higher than total tracks.');
+        logger.debug('Specified track position is higher than total tracks.');
 
         logger.debug('Responding with warning embed.');
         await interaction.editReply({
@@ -56,7 +91,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setDescription(
                         `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `Track **\`${removeTrackNumber}\`** is not a valid track number. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.` +
+                            `Track **\`${trackPositionInput}\`** is not a valid track position. There are a total of **\`${queue.tracks.data.length}\`** tracks in the queue.` +
                             '\n\nView tracks added to the queue with **`/queue`**.'
                     )
                     .setColor(this.embedOptions.colors.warning)
@@ -69,9 +104,9 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        removeTrackNumber: number
+        trackPositionInput: number
     ) {
-        const removedTrack: Track = queue.node.remove(removeTrackNumber - 1)!;
+        const removedTrack: Track = queue.node.remove(trackPositionInput - 1)!;
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
 
         logger.debug('Responding with success embed.');

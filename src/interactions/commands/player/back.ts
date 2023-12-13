@@ -12,7 +12,7 @@ class BackCommand extends BaseSlashCommandInteraction {
             .setName('back')
             .setDescription('Go back to previous track or specified position in history.')
             .addNumberOption((option) =>
-                option.setName('tracknumber').setDescription('The position in history to go back to.').setMinValue(1)
+                option.setName('position').setDescription('The position in history to go back to.').setMinValue(1)
             );
         super(data);
     }
@@ -30,7 +30,7 @@ class BackCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
-        const backToTrackInput: number = interaction.options.getNumber('tracknumber')!;
+        const backToTrackInput: number = interaction.options.getNumber('position')!;
 
         if (backToTrackInput) {
             return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput);
@@ -46,22 +46,27 @@ class BackCommand extends BaseSlashCommandInteraction {
         backtoTrackPosition: number
     ) {
         if (backtoTrackPosition > history.tracks.data.length) {
-            return await this.handleTrackNumberHigherThanTotalTracks(backtoTrackPosition, history, logger, interaction);
+            return await this.handleTrackPositionHigherThanQueueLength(
+                backtoTrackPosition,
+                history,
+                logger,
+                interaction
+            );
         } else {
             await history.back();
             const recoveredTrack: Track = history.currentTrack! ?? history.tracks.data[backtoTrackPosition - 1];
-            logger.debug('Went back to specified track number in history.');
+            logger.debug('Went back to specified track position in history.');
             return await this.respondWithSuccessEmbed(recoveredTrack, interaction);
         }
     }
 
-    private async handleTrackNumberHigherThanTotalTracks(
+    private async handleTrackPositionHigherThanQueueLength(
         backToTrackPosition: number,
         history: GuildQueueHistory,
         logger: Logger,
         interaction: ChatInputCommandInteraction
     ) {
-        logger.debug('Specified track number was higher than total tracks.');
+        logger.debug('Specified track position was higher than total tracks.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
