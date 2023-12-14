@@ -1,6 +1,5 @@
-// .ENV file is loaded automatically by dotenv
+// .ENV file is loaded auomaically by doenv
 import 'dotenv/config';
-
 // Only after loading .ENV file, we can load other modules
 import config from 'config';
 import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';

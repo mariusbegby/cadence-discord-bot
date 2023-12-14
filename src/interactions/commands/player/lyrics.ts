@@ -6,21 +6,24 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('lyrics')
-            .setDescription('Search Genius lyrics for current or specified track.')
-            .addStringOption((option) =>
-                option
-                    .setName('query')
-                    .setDescription('Search query by text or URL.')
-                    .setRequired(false)
-                    .setMinLength(2)
-                    .setMaxLength(500)
-                    .setAutocomplete(true)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('lyrics')
+                // .setDescription('Search Genius lyrics for current or specified track.')
+                .addStringOption((option) =>
+                    option
+                        .setName('query')
+                        // .setDescription('Search query by text or URL.')
+                        .setRequired(false)
+                        .setMinLength(2)
+                        .setMaxLength(500)
+                        .setAutocomplete(true)
+                )
+        );
         super(data);
     }
 
