@@ -30,7 +30,12 @@ interface Resources {
               "description": "Audio filter type to use."
             }
           }
-        }
+        },
+        "disableAllFiltersButton": "Disable all filters",
+        "allFiltersDisabled": "{{icon}} **Disabled filters**\nAll audio filters have been disabled.",
+        "selectFilterPlaceholder": "Select a filter from the menu.",
+        "selectFilterPlaceholderMany": "Select one or multiple filters.",
+        "toggleFilterInstructions": "**Toggle filters ({{provider}})**\nEnable or disable audio filters for playback from the menu."
       },
       "guilds": {
         "metadata": {
