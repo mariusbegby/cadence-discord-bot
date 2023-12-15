@@ -1,3 +1,5 @@
+import { TFunction } from 'i18next';
+
 export function formatDuration(durationMs: number): string {
     const durationDate: Date = new Date(0);
     durationDate.setMilliseconds(durationMs);
@@ -16,4 +18,11 @@ export function formatDuration(durationMs: number): string {
     } else {
         return `${durationSeconds}s`;
     }
+}
+
+export function formatSlashCommand(commandName: string, translator: TFunction): string {
+    const translatedName = translator(`commands.${commandName}.metadata.name`, {
+        defaultValue: commandName
+    });
+    return `**\`/${translatedName}\`**`;
 }
