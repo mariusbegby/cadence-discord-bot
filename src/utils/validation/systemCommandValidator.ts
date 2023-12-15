@@ -5,6 +5,8 @@ import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { useServerTranslator } from '../../common/localeUtil';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
@@ -16,6 +18,7 @@ export const checkValidGuildId = async ({ interaction, executionId }: ValidatorP
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -25,7 +28,10 @@ export const checkValidGuildId = async ({ interaction, executionId }: ValidatorP
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nNo permission to perform this action.\n\nThe command **\`/${interactionIdentifier}\`** cannot be executed in this server.`
+                        translator('validation.notValidGuildId', {
+                            icon: embedOptions.icons.warning,
+                            command: formatSlashCommand(interactionIdentifier, translator)
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
             ]

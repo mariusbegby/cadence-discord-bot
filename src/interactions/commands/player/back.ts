@@ -50,7 +50,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         if (backtoTrackPosition > history.tracks.data.length) {
-            return await this.handleTrackPositionHigherThanQueueLength(
+            return await this.handleTrackPositionHigherThanHistoryLength(
                 backtoTrackPosition,
                 history,
                 logger,
@@ -65,7 +65,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    private async handleTrackPositionHigherThanQueueLength(
+    private async handleTrackPositionHigherThanHistoryLength(
         backToTrackPosition: number,
         history: GuildQueueHistory,
         logger: Logger,
@@ -77,7 +77,7 @@ class BackCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        translator('commands.back.trackPositionHigherThanQueueLength', {
+                        translator('commands.back.trackPositionHigherThanHistoryLength', {
                             icon: this.embedOptions.icons.warning,
                             count: history.tracks.data.length,
                             backPosition: backToTrackPosition,
@@ -137,7 +137,7 @@ class BackCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         translator('commands.back.trackRecovered', {
                             icon: this.embedOptions.icons.back,
-                            track: this.getDisplayTrackDurationAndUrl(recoveredTrack)
+                            track: this.getDisplayTrackDurationAndUrl(recoveredTrack, translator)
                         })
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(recoveredTrack))

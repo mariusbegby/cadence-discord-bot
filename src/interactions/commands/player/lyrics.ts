@@ -6,7 +6,8 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -23,6 +24,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const query: string = interaction.options.getString('query')!;
@@ -50,14 +52,14 @@ class LyricsCommand extends BaseSlashCommandInteraction {
 
         if (!finalLyricsData) {
             logger.debug('No matching lyrics found.');
-            return await this.sendNoLyricsFoundEmbed(logger, interaction, geniusSearchQuery);
+            return await this.sendNoLyricsFoundEmbed(logger, interaction, geniusSearchQuery, translator);
         }
 
         if (finalLyricsData.lyrics.length > 3800) {
-            return await this.sendMultipleLyricsMessages(logger, interaction, finalLyricsData);
+            return await this.sendMultipleLyricsMessages(logger, interaction, finalLyricsData, translator);
         }
 
-        return await this.sendLyricsEmbed(logger, interaction, finalLyricsData);
+        return await this.sendLyricsEmbed(logger, interaction, finalLyricsData, translator);
     }
 
     private getGeniusSearchQuery(logger: Logger, query: string, queue: GuildQueue): string {
@@ -155,15 +157,18 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     private async sendNoLyricsFoundEmbed(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        geniusSearchQuery: string
+        geniusSearchQuery: string,
+        translator: TFunction
     ) {
         logger.debug('Responding with warning embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} No lyrics found**\n` +
-                            `There was no Genius lyrics found for track **${geniusSearchQuery}**.`
+                        translator('commands.lyrics.noLyricsFound', {
+                            icon: this.embedOptions.icons.warning,
+                            query: geniusSearchQuery
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -173,7 +178,8 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     private async sendMultipleLyricsMessages(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        geniusLyricsResult: LyricsData
+        geniusLyricsResult: LyricsData,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Lyrics text too long, splitting into multiple messages.');
         const messageCount: number = Math.ceil(geniusLyricsResult.lyrics.length / 3800);
@@ -181,9 +187,13 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         embedList.push(
             new EmbedBuilder()
                 .setDescription(
-                    `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                        `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
-                        `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n`
+                    translator('commands.lyrics.lyricsEmbed', {
+                        icon: this.embedOptions.icons.queue,
+                        trackTitle: geniusLyricsResult.title,
+                        trackUrl: geniusLyricsResult.url,
+                        artistName: geniusLyricsResult.artist.name,
+                        artistUrl: geniusLyricsResult.artist.url
+                    })
                 )
                 .setColor(this.embedOptions.colors.info)
         );
@@ -204,16 +214,23 @@ class LyricsCommand extends BaseSlashCommandInteraction {
     private async sendLyricsEmbed(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        geniusLyricsResult: LyricsData
+        geniusLyricsResult: LyricsData,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.queue} Showing lyrics**\n` +
-                            `**Track: [${geniusLyricsResult.title}](${geniusLyricsResult.url})**\n` +
-                            `**Artist: [${geniusLyricsResult.artist.name}](${geniusLyricsResult.artist.url})**\n\n` +
+                        translator('commands.lyrics.lyricsEmbed', {
+                            icon: this.embedOptions.icons.queue,
+                            trackTitle: geniusLyricsResult.title,
+                            trackUrl: geniusLyricsResult.url,
+                            artistName: geniusLyricsResult.artist.name,
+                            artistUrl: geniusLyricsResult.artist.url
+                        }) +
+                            '\n' +
+                            '\n' +
                             `\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
                     )
                     .setColor(this.embedOptions.colors.info)

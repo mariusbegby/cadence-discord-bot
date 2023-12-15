@@ -16,7 +16,9 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkHistoryExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class HistoryCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -31,6 +33,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const history: GuildQueueHistory = useHistory(interaction.guild!.id)!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
@@ -45,10 +48,10 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         const totalPages: number = this.getTotalPages(history);
 
         if (pageIndex > totalPages - 1) {
-            return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages);
+            return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages, translator);
         }
 
-        const historyTracksListString: string = this.getHistoryTracksListString(history, pageIndex);
+        const historyTracksListString: string = this.getHistoryTracksListString(history, pageIndex, translator);
 
         const currentTrack: Track = history.currentTrack!;
         if (currentTrack) {
@@ -58,11 +61,19 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 queue,
                 history,
                 currentTrack,
-                historyTracksListString
+                historyTracksListString,
+                translator
             );
         }
 
-        return await this.handleNoCurrentTrack(logger, interaction, queue, history, historyTracksListString);
+        return await this.handleNoCurrentTrack(
+            logger,
+            interaction,
+            queue,
+            history,
+            historyTracksListString,
+            translator
+        );
     }
 
     private async handleCurrentTrack(
@@ -71,7 +82,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         history: GuildQueueHistory,
         currentTrack: Track,
-        historyTracksListString: string
+        historyTracksListString: string,
+        translator: TFunction
     ) {
         logger.debug('History exists with current track, gathering information.');
 
@@ -100,9 +112,11 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         components.push(skipButton);
 
         if (this.embedOptions.components.showButtonLabels) {
-            previousButton.label = 'Previous';
-            playPauseButton.label = queue.node.isPaused() ? 'Resume' : 'Pause';
-            skipButton.label = 'Skip';
+            previousButton.label = translator('musicPlayerCommon.controls.previous');
+            playPauseButton.label = queue.node.isPaused()
+                ? translator('musicPlayerCommon.controls.resume')
+                : translator('musicPlayerCommon.controls.pause');
+            skipButton.label = translator('musicPlayerCommon.controls.skip');
         }
 
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
@@ -114,18 +128,30 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
-                            `${this.getFormattedTrackUrl(currentTrack)}\n` +
-                            `**Requested by:** ${this.getDisplayTrackRequestedBy(currentTrack)}\n` +
-                            `${this.getDisplayQueueProgressBar(queue)}\n\n` +
-                            `${this.getDisplayRepeatMode(queue.repeatMode)}` +
-                            `**${this.embedOptions.icons.queue} Tracks in history**\n` +
+                        translator('musicPlayerCommon.nowPlayingTitle', {
+                            icon: this.embedOptions.icons.audioPlaying
+                        }) +
+                            '\n' +
+                            this.getFormattedTrackUrl(currentTrack, translator) +
+                            '\n' +
+                            translator('musicPlayerCommon.requestedBy', {
+                                user: this.getDisplayTrackRequestedBy(currentTrack, translator)
+                            }) +
+                            '\n' +
+                            this.getDisplayQueueProgressBar(queue, translator) +
+                            '\n' +
+                            '\n' +
+                            this.getDisplayRepeatMode(queue.repeatMode, translator) +
+                            translator('commands.history.tracksInHistoryTitle', {
+                                icon: this.embedOptions.icons.queue
+                            }) +
+                            '\n' +
                             historyTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, history))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [embedActionRow]
@@ -138,7 +164,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         history: GuildQueueHistory,
-        historyTracksListString: string
+        historyTracksListString: string,
+        translator: TFunction
     ) {
         logger.debug('History exists but there is no current track.');
 
@@ -146,13 +173,15 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `${this.getDisplayRepeatMode(queue.repeatMode)}` +
-                            `**${this.embedOptions.icons.queue} Tracks in history**\n` +
+                        translator('commands.history.tracksInHistoryTitle', {
+                            icon: this.embedOptions.icons.queue
+                        }) +
+                            '\n' +
                             historyTracksListString
                     )
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, history))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -162,7 +191,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         pageIndex: number,
-        totalPages: number
+        totalPages: number,
+        translator: TFunction
     ) {
         logger.debug('Specified page was higher than total pages.');
 
@@ -171,9 +201,11 @@ class HistoryCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `Page **\`${pageIndex + 1}\`** is not a valid page number.\n\n` +
-                            `There are only a total of **\`${totalPages}\`** pages in the history.`
+                        translator('commands.history.invalidPageNumber', {
+                            icon: this.embedOptions.icons.warning,
+                            page: pageIndex + 1,
+                            count: totalPages
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -189,24 +221,27 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         return Math.ceil(history.tracks.data.length / 10) || 1;
     }
 
-    private getHistoryTracksListString(history: GuildQueueHistory, pageIndex: number): string {
+    private getHistoryTracksListString(history: GuildQueueHistory, pageIndex: number, translator: TFunction): string {
         if (!history || history.tracks.data.length === 0) {
-            return 'The history is empty, add some tracks with **`/play`**!';
+            return translator('commands.history.emptyHistory', {
+                playCommand: formatSlashCommand('play', translator)
+            });
         }
 
         return history.tracks.data
             .slice(pageIndex * 10, pageIndex * 10 + 10)
             .map((track, index) => {
-                return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track)}`;
+                return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track, translator)}`;
             })
             .join('\n');
     }
 
     private getDisplayFullFooterInfo(
         interaction: ChatInputCommandInteraction,
-        history: GuildQueueHistory
+        history: GuildQueueHistory,
+        translator: TFunction
     ): EmbedFooterData {
-        const pagination = this.getFooterDisplayPageInfo(interaction, history);
+        const pagination = this.getFooterDisplayPageInfo(interaction, history, translator);
 
         const fullFooterData = {
             text: `${pagination.text}`

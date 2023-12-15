@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { APIApplicationCommandOption, Interaction, Locale, SlashCommandBuilder } from 'discord.js';
+import { APIApplicationCommandOption, BaseInteraction, Locale, SlashCommandBuilder } from 'discord.js';
 import { lstatSync, readdirSync } from 'fs';
 import i18n from 'i18next';
 import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
@@ -23,11 +23,11 @@ translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
     }
 });
 
-export function useServerTranslator(interaction: Interaction) {
+export function useServerTranslator(interaction: BaseInteraction) {
     return translatorInstance.getFixedT(interaction.guildLocale ?? 'en');
 }
 
-export function useUserTranslator(interaction: Interaction) {
+export function useUserTranslator(interaction: BaseInteraction) {
     return translatorInstance.getFixedT(interaction.locale ?? 'en');
 }
 

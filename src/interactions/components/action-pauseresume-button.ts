@@ -4,6 +4,8 @@ import { BaseComponentInteraction } from '../../classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { TFunction } from 'i18next';
+import { useServerTranslator } from '../../common/localeUtil';
 
 class ActionPauseResumeButton extends BaseComponentInteraction {
     constructor() {
@@ -13,6 +15,7 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction, referenceId } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -41,7 +44,7 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
         }
 
         logger.debug('Responding with success embed.');
-        return await this.handleSuccess(interaction, currentTrack, queue);
+        return await this.handleSuccess(interaction, currentTrack, queue, translator);
     }
 
     private async handleNoQueue(interaction: MessageComponentInteraction) {
@@ -70,14 +73,19 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleSuccess(interaction: MessageComponentInteraction, track: Track, queue: GuildQueue) {
+    private async handleSuccess(
+        interaction: MessageComponentInteraction,
+        track: Track,
+        queue: GuildQueue,
+        translator: TFunction
+    ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
                 `**${this.embedOptions.icons.pauseResumed} ${
                     queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                }**\n ${this.getDisplayTrackDurationAndUrl(queue.currentTrack!)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode, 'success')}`
+                }**\n ${this.getDisplayTrackDurationAndUrl(queue.currentTrack!, translator)}\n\n` +
+                    `${this.getDisplayRepeatMode(queue.repeatMode, translator, 'success')}`
             )
             .setThumbnail(track.thumbnail)
             .setColor(this.embedOptions.colors.success);

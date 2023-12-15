@@ -14,7 +14,7 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -25,6 +25,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -37,11 +38,11 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const tracksInQueueCount: number = queue.tracks.data.length;
         const currentTrack: Track = queue.currentTrack!;
-        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack);
-        const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack);
+        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack, translator);
+        const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack, translator);
         const displayTrackPlayingStatus: string = this.getDisplayTrackPlayingStatus(queue);
         const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
-        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue);
+        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue, translator);
 
         const components: APIMessageActionRowComponent[] = [];
 
@@ -82,7 +83,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
                         `${displayTrackPlayingStatus}\n` +
                             `${displayTrackUrl}\n` +

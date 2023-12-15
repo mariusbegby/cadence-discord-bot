@@ -4,6 +4,8 @@ import { BaseComponentInteraction } from '../../classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { TFunction } from 'i18next';
+import { useServerTranslator } from '../../common/localeUtil';
 
 class ActionSkipButton extends BaseComponentInteraction {
     constructor() {
@@ -13,6 +15,7 @@ class ActionSkipButton extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction, referenceId } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -36,7 +39,7 @@ class ActionSkipButton extends BaseComponentInteraction {
         logger.debug('Skipped the track.');
 
         logger.debug('Responding with success embed.');
-        return await this.handleSuccess(interaction, skippedTrack, queue);
+        return await this.handleSuccess(interaction, skippedTrack, queue, translator);
     }
 
     private async handleNoQueue(interaction: MessageComponentInteraction) {
@@ -65,13 +68,18 @@ class ActionSkipButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleSuccess(interaction: MessageComponentInteraction, skippedTrack: Track, queue: GuildQueue) {
+    private async handleSuccess(
+        interaction: MessageComponentInteraction,
+        skippedTrack: Track,
+        queue: GuildQueue,
+        translator: TFunction
+    ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
                 `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                    `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode, 'success')}`
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n\n` +
+                    `${this.getDisplayRepeatMode(queue.repeatMode, translator, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

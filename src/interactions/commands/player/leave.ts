@@ -4,7 +4,8 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -15,6 +16,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -33,9 +35,10 @@ class LeaveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Leaving channel**\n` +
-                            'Cleared the track queue and left voice channel.\n\n' +
-                            'To play more music, use the **`/play`** command!'
+                        translator('commands.leave.leavingChannel', {
+                            icon: this.embedOptions.icons.success,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

@@ -13,6 +13,7 @@ import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { useServerTranslator } from '../../common/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId }: ValidatorParams) => {
@@ -23,6 +24,7 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const channel: VoiceBasedChannel | null =
         interaction.member instanceof GuildMember ? interaction.member.voice.channel : null;
@@ -34,7 +36,10 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nI do not have permission to play audio in the voice channel <#${channel.id}>.\n\nPlease make sure I have the **\`Connect\`** and **\`Speak\`** permissions in this voice channel.`
+                        translator('validation.cannotJoinVoiceOrTalk', {
+                            icon: embedOptions.icons.warning,
+                            channel: `<#${channel.id}>`
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
@@ -64,6 +69,7 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const channel: TextBasedChannel | null = interaction.channel;
 
@@ -89,7 +95,10 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\nI do not have permission to send message replies in the channel <#${channel.id}>.\n\nPlease make sure I have the **\`View Channel\`** permission in this text channel.`
+                                translator('validation.cannotSendMessageInChannel', {
+                                    icon: embedOptions.icons.warning,
+                                    channel: `<#${channel.id}>`
+                                })
                             )
                             .setColor(embedOptions.colors.warning)
                             .setFooter({

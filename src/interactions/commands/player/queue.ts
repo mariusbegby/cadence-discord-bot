@@ -17,7 +17,8 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { formatDuration } from '../../../common/formattingUtils';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -32,6 +33,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -48,14 +50,21 @@ class QueueCommand extends BaseSlashCommandInteraction {
             return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages);
         }
 
-        const queueTracksListString: string = this.getQueueTracksListString(queue, pageIndex);
+        const queueTracksListString: string = this.getQueueTracksListString(queue, pageIndex, translator);
 
         const currentTrack: Track = queue.currentTrack!;
         if (currentTrack) {
-            return await this.handleCurrentTrack(logger, interaction, queue, currentTrack, queueTracksListString);
+            return await this.handleCurrentTrack(
+                logger,
+                interaction,
+                queue,
+                currentTrack,
+                queueTracksListString,
+                translator
+            );
         }
 
-        return await this.handleNoCurrentTrack(logger, interaction, queue, queueTracksListString);
+        return await this.handleNoCurrentTrack(logger, interaction, queue, queueTracksListString, translator);
     }
 
     private async handleCurrentTrack(
@@ -63,7 +72,8 @@ class QueueCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         currentTrack: Track,
-        queueTracksListString: string
+        queueTracksListString: string,
+        translator: TFunction
     ) {
         logger.debug('Queue exists with current track, gathering information.');
 
@@ -92,9 +102,11 @@ class QueueCommand extends BaseSlashCommandInteraction {
         components.push(skipButton);
 
         if (this.embedOptions.components.showButtonLabels) {
-            previousButton.label = 'Previous';
-            playPauseButton.label = queue.node.isPaused() ? 'Resume' : 'Pause';
-            skipButton.label = 'Skip';
+            previousButton.label = translator('musicPlayerCommon.controls.previous');
+            playPauseButton.label = queue.node.isPaused()
+                ? translator('musicPlayerCommon.controls.resume')
+                : translator('musicPlayerCommon.controls.pause');
+            skipButton.label = translator('musicPlayerCommon.controls.skip');
         }
 
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
@@ -106,18 +118,29 @@ class QueueCommand extends BaseSlashCommandInteraction {
         await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `**${this.embedOptions.icons.audioPlaying} Now playing**\n` +
-                            `${this.getFormattedTrackUrl(currentTrack)}\n` +
-                            `**Requested by:** ${this.getDisplayTrackRequestedBy(currentTrack)}\n` +
-                            `${this.getDisplayQueueProgressBar(queue)}\n\n` +
-                            `${this.getDisplayRepeatMode(queue.repeatMode)}` +
-                            `**${this.embedOptions.icons.queue} Tracks in queue**\n` +
+                        translator('musicPlayerCommon.nowPlayingTitle', {
+                            icon: this.embedOptions.icons.audioPlaying
+                        }) +
+                            this.getFormattedTrackUrl(currentTrack, translator) +
+                            '\n' +
+                            translator('musicPlayerCommon.requestedBy', {
+                                user: this.getDisplayTrackRequestedBy(currentTrack, translator)
+                            }) +
+                            '\n' +
+                            this.getDisplayQueueProgressBar(queue, translator) +
+                            '\n' +
+                            '\n' +
+                            this.getDisplayRepeatMode(queue.repeatMode, translator) +
+                            translator('commands.queue.tracksInQueueTitle', {
+                                icon: this.embedOptions.icons.queue
+                            }) +
+                            '\n' +
                             queueTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [embedActionRow]
@@ -129,7 +152,8 @@ class QueueCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        queueTracksListString: string
+        queueTracksListString: string,
+        translator: TFunction
     ) {
         logger.debug('Queue exists but there is no current track.');
 
@@ -137,13 +161,13 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `${this.getDisplayRepeatMode(queue.repeatMode)}` +
+                        `${this.getDisplayRepeatMode(queue.repeatMode, translator)}` +
                             `**${this.embedOptions.icons.queue} Tracks in queue**\n` +
                             queueTracksListString
                     )
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -180,7 +204,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return Math.ceil(queue.tracks.data.length / 10) || 1;
     }
 
-    private getQueueTracksListString(queue: GuildQueue, pageIndex: number): string {
+    private getQueueTracksListString(queue: GuildQueue, pageIndex: number, translator: TFunction): string {
         if (!queue || queue.tracks.data.length === 0) {
             return 'The queue is empty, add some tracks with **`/play`**!';
         }
@@ -188,7 +212,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return queue.tracks.data
             .slice(pageIndex * 10, pageIndex * 10 + 10)
             .map((track, index) => {
-                return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track)}`;
+                return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track, translator)}`;
             })
             .join('\n');
     }
@@ -210,8 +234,12 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return `Estimated duration: ${formatDuration(queueDurationMs)}`;
     }
 
-    private getDisplayFullFooterInfo(interaction: ChatInputCommandInteraction, queue: GuildQueue): EmbedFooterData {
-        const pagination = this.getFooterDisplayPageInfo(interaction, queue);
+    private getDisplayFullFooterInfo(
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
+        translator: TFunction
+    ): EmbedFooterData {
+        const pagination = this.getFooterDisplayPageInfo(interaction, queue, translator);
         const totalDuration = this.getDisplayQueueTotalDuration(queue);
 
         const fullFooterData = {

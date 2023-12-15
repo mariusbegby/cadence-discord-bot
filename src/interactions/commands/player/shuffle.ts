@@ -4,7 +4,8 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueEmpty, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class ShuffleCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -15,6 +16,7 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -34,9 +36,11 @@ class ShuffleCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.shuffled} Shuffled queue tracks**\n` +
-                            `The **${queue.tracks.data.length}** tracks in the queue has been shuffled.\n\n` +
-                            'View the new queue order with **`/queue`**.'
+                        translator('commands.shuffle.shuffledTracks', {
+                            icon: this.embedOptions.icons.shuffled,
+                            count: queue.tracks.data.length,
+                            queueCommand: formatSlashCommand('queue', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

@@ -6,7 +6,9 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -23,6 +25,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel]);
 
@@ -39,14 +42,14 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
         const searchResult = await this.searchTrack(player, transformedQuery, interaction, logger);
         if (!searchResult || searchResult.tracks.length === 0) {
-            return await this.handleNoResultsFound(transformedQuery, interaction, logger);
+            return await this.handleNoResultsFound(transformedQuery, interaction, logger, translator);
         }
 
         queue = useQueue(interaction.guild!.id)!;
         const queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist! && searchResult.tracks.length) > this.playerOptions.maxQueueSize - queueSize) {
-            return await this.handlePlaylistTooLarge(searchQuery, interaction, logger);
+            return await this.handlePlaylistTooLarge(searchQuery, interaction, logger, translator);
         }
 
         const track: Track | void = await this.addResultsToPlayer(
@@ -63,7 +66,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             throw new Error('Failed to add track to player.');
         }
 
-        return await this.handleResultAddedToQueue(track, searchResult, interaction, logger);
+        return await this.handleResultAddedToQueue(track, searchResult, interaction, logger, translator);
     }
 
     private async searchTrack(
@@ -145,18 +148,39 @@ class PlayCommand extends BaseSlashCommandInteraction {
         track: Track,
         searchResult: SearchResult,
         interaction: ChatInputCommandInteraction,
-        logger: Logger
+        logger: Logger,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Result found and added with player.play(), added to queue.');
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
-        const trackUrl = this.getDisplayTrackDurationAndUrl(track);
+        const trackUrl = this.getDisplayTrackDurationAndUrl(track, translator);
 
-        let message = `${this.embedOptions.icons.success} **Added to queue**\n${trackUrl}`;
+        let message =
+            translator('commands.play.addedToQueueTitle', {
+                icon: this.embedOptions.icons.success
+            }) +
+            '\n' +
+            trackUrl;
         if (searchResult.playlist) {
-            const otherTracksString = `And **${searchResult.tracks.length}** more tracks... **\`/queue\`** to view all.`;
-            message = `${this.embedOptions.icons.success} **Added playlist to queue**\n${trackUrl}\n\n${otherTracksString}`;
+            message =
+                translator('commands.play.playlistAddedTitle', {
+                    icon: this.embedOptions.icons.success
+                }) +
+                '\n' +
+                trackUrl +
+                '\n' +
+                '\n' +
+                translator('commands.play.playlistAddedTrackCount', {
+                    count: searchResult.tracks.length,
+                    queueCommand: formatSlashCommand('queue', translator)
+                });
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            message = `**${this.embedOptions.icons.audioStartedPlaying} Now playing**\n${trackUrl}`;
+            message =
+                translator('musicPlayerCommon.nowPlayingTitle', {
+                    icon: this.embedOptions.icons.audioStartedPlaying
+                }) +
+                '\n' +
+                trackUrl;
         }
 
         logger.debug('Responding with success embed.');
@@ -174,7 +198,8 @@ class PlayCommand extends BaseSlashCommandInteraction {
     private async handleNoResultsFound(
         transformedQuery: string,
         interaction: ChatInputCommandInteraction,
-        logger: Logger
+        logger: Logger,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug(`No results found for query: '${transformedQuery}'`);
 
@@ -183,9 +208,10 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} No track found**\n` +
-                            `No results found for **\`${transformedQuery}\`**.\n\n` +
-                            'If you specified a URL, please make sure it is valid and public.'
+                        translator('commands.play.trackNotFound', {
+                            icon: this.embedOptions.icons.warning,
+                            query: transformedQuery
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -195,7 +221,8 @@ class PlayCommand extends BaseSlashCommandInteraction {
     private async handlePlaylistTooLarge(
         query: string,
         interaction: ChatInputCommandInteraction,
-        logger: Logger
+        logger: Logger,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
 
@@ -204,9 +231,10 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Playlist too large**\n` +
-                            'This playlist is too large to be added to the queue.\n\n' +
-                            `The maximum amount of tracks that can be added to the queue is **${this.playerOptions.maxQueueSize}**.`
+                        translator('commands.play.playlistTooLarge', {
+                            icon: this.embedOptions.icons.warning,
+                            count: this.playerOptions.maxQueueSize
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]

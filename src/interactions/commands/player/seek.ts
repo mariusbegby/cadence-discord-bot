@@ -5,7 +5,8 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -20,6 +21,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -34,14 +36,20 @@ class SeekCommand extends BaseSlashCommandInteraction {
         const formattedDurationString: string = this.parseDurationArray(durationInputSplit);
 
         if (!this.validateDurationFormat(formattedDurationString)) {
-            return await this.handleInvalidDurationFormat(logger, interaction, formattedDurationString);
+            return await this.handleInvalidDurationFormat(logger, interaction, formattedDurationString, translator);
         }
 
         const currentTrackMaxDurationInMs: number = queue.currentTrack!.durationMS;
         const inputDurationInMilliseconds: number = this.getDurationInputInMilliseconds(durationInputSplit);
 
         if (inputDurationInMilliseconds > currentTrackMaxDurationInMs - 1000) {
-            return await this.handleDurationLongerThanTrack(logger, interaction, formattedDurationString, queue);
+            return await this.handleDurationLongerThanTrack(
+                logger,
+                interaction,
+                formattedDurationString,
+                queue,
+                translator
+            );
         }
 
         return await this.seekToDurationInCurrentTrack(
@@ -49,14 +57,16 @@ class SeekCommand extends BaseSlashCommandInteraction {
             interaction,
             queue,
             inputDurationInMilliseconds,
-            formattedDurationString
+            formattedDurationString,
+            translator
         );
     }
 
     private async handleInvalidDurationFormat(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        formattedDurationString: string
+        formattedDurationString: string,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Invalid duration format input.');
 
@@ -65,13 +75,10 @@ class SeekCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `You entered an invalid duration format, **\`${formattedDurationString}\`**.\n` +
-                            'Please use the format **`HH:mm:ss`**, **`mm:ss`** or **`ss`**.\n\n' +
-                            '**Examples:**\n' +
-                            '- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n' +
-                            '- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n' +
-                            '- **`/seek`** **`42`** - Seek to 42 seconds.'
+                        translator('commands.seek.correctFormatInstruction', {
+                            icon: this.embedOptions.icons.warning,
+                            wrongDuration: formattedDurationString
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -83,7 +90,8 @@ class SeekCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         durationInMilliseconds: number,
-        formattedDurationString: string
+        formattedDurationString: string,
+        translator: TFunction
     ): Promise<Message> {
         queue.node.seek(durationInMilliseconds);
         logger.debug(`Seeked to '${formattedDurationString}' in current track.`);
@@ -94,8 +102,10 @@ class SeekCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(await this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Seeking to duration**\n` +
-                            `Seeking to **\`${formattedDurationString}\`** in current track.`
+                        translator('commands.seek.seekingToTimestamp', {
+                            icon: this.embedOptions.icons.success,
+                            duration: formattedDurationString
+                        })
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.success)
@@ -107,7 +117,8 @@ class SeekCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         formattedDurationString: string,
-        queue: GuildQueue
+        queue: GuildQueue,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Duration specified is longer than the track duration.');
 
@@ -116,11 +127,11 @@ class SeekCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `You entered **\`${formattedDurationString}\`**, which is a duration that is longer than the duration for the current track.\n\n` +
-                            `Please try a duration that is less than the duration of the track (**\`${
-                                queue.currentTrack!.duration
-                            }\`**).`
+                        translator('commands.seek.durationLongerThanTrackDuration', {
+                            icon: this.embedOptions.icons.warning,
+                            wrongDuration: formattedDurationString,
+                            trackDuration: queue.currentTrack!.duration
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]

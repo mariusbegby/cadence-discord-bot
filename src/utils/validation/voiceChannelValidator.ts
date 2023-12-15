@@ -5,6 +5,7 @@ import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { useServerTranslator } from '../../common/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkInVoiceChannel = async ({ interaction, executionId }: ValidatorParams) => {
@@ -15,6 +16,7 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -24,7 +26,9 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Not in a voice channel**\nYou need to be in a voice channel to perform this action.`
+                        translator('validation.notInVoiceChannel', {
+                            icon: embedOptions.icons.warning
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
@@ -49,6 +53,7 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -66,7 +71,10 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Not in same voice channel**\nYou need to be in the same voice channel as me to perform this action.\n\n**Voice channel:** <#${queue.dispatcher.channel.id}>`
+                        translator('validation.notInSameVoiceChannel', {
+                            icon: embedOptions.icons.warning,
+                            channel: `<#${queue.dispatcher.channel.id}>`
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
