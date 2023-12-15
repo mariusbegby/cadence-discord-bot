@@ -2,54 +2,78 @@ import osu from 'node-os-utils';
 import { ExtendedClient } from '../types/clientTypes';
 import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from '../utils/shardUtils';
 import { getUptimeFormatted } from '../utils/system/getUptimeFormatted';
+import { TFunction } from 'i18next';
 
-export async function getBotStatistics(client: ExtendedClient, version: string): Promise<string> {
+export async function getBotStatistics(
+    client: ExtendedClient,
+    version: string,
+    translator: TFunction
+): Promise<string> {
     const releaseVersion: string = version;
     const { totalGuildCount, totalMemberCount } = await fetchTotalGuildStatistics(client);
 
     return (
-        `**${totalGuildCount.toLocaleString('en-US')}** Joined servers\n` +
-        `**${totalMemberCount.toLocaleString('en-US')}** Total members\n` +
-        `**v${releaseVersion}** Release version`
+        translator('statistics.botStatus.joinedServers', {
+            count: totalGuildCount
+        }) +
+        '\n' +
+        translator('statistics.botStatus.totalMembers', {
+            count: totalMemberCount
+        }) +
+        '\n' +
+        translator('statistics.botStatus.releaseVersion', {
+            version: `v${releaseVersion}`
+        })
     );
 }
 
-export async function getPlayerStatistics(client: ExtendedClient): Promise<string> {
+export async function getPlayerStatistics(client: ExtendedClient, translator: TFunction): Promise<string> {
     const { totalVoiceConnections, totalTracksInQueues, totalListeners } = await fetchTotalPlayerStatistics(client);
 
     return (
-        `**${totalVoiceConnections.toLocaleString('en-US')}** Voice connections\n` +
-        `**${totalTracksInQueues.toLocaleString('en-US')}** Tracks in queues\n` +
-        `**${totalListeners.toLocaleString('en-US')}** Users listening`
+        translator('statistics.queueStatus.voiceConnections', {
+            count: totalVoiceConnections
+        }) +
+        '\n' +
+        translator('statistics.queueStatus.tracksInQueues', {
+            count: totalTracksInQueues
+        }) +
+        '\n' +
+        translator('statistics.queueStatus.usersListening', {
+            count: totalListeners
+        })
     );
 }
 
-export async function getSystemStatus(executionId: string, extended: boolean): Promise<string> {
+export async function getSystemStatus(executionId: string, extended: boolean, translator: TFunction): Promise<string> {
+    const uptimeString: string = getUptimeFormatted({ executionId });
+    const usedMemoryInMB: number = Math.ceil((await osu.mem.info()).usedMemMb);
+    const cpuUsage: number = await osu.cpu.usage();
     if (!extended) {
-        const uptimeString: string = getUptimeFormatted({ executionId });
-        const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-        const cpuUsage: number = await osu.cpu.usage();
-
         return (
-            `**${uptimeString}** Uptime\n` + `**${cpuUsage}%** CPU usage\n` + `**${usedMemoryInMB} MB** Memory usage`
+            translator('statistics.systemStatus.uptime', { value: uptimeString }) +
+            '\n' +
+            translator('statistics.systemStatus.cpu', { value: cpuUsage }) +
+            '\n' +
+            translator('statistics.systemStatus.memory', { value: usedMemoryInMB })
         );
     }
 
-    const uptimeString: string = getUptimeFormatted({ executionId });
-    const totalMemoryInMb: string = Math.ceil((await osu.mem.info()).totalMemMb).toLocaleString('en-US');
+    const totalMemoryInMb: number = Math.ceil((await osu.mem.info()).totalMemMb);
     const cpuCores: number = osu.cpu.count();
     const platform: string = osu.os.platform();
-    const usedMemoryInMB: string = Math.ceil((await osu.mem.info()).usedMemMb).toLocaleString('en-US');
-    const cpuUsage: number = await osu.cpu.usage();
 
     return (
-        `**${platform}** Platform\n` +
-        `**${uptimeString}** Uptime\n` +
-        `**${cpuUsage}% @ ${cpuCores} cores** CPU usage\n` +
-        `**${usedMemoryInMB} / ${totalMemoryInMb} MB** Memory usage`
+        translator('statistics.systemStatus.platform', { value: platform }) +
+        '\n' +
+        translator('statistics.systemStatus.uptime', { value: uptimeString }) +
+        '\n' +
+        translator('statistics.systemStatus.cpuDetailed', { usage: cpuUsage, cores: cpuCores }) +
+        '\n' +
+        translator('statistics.systemStatus.memoryDetailed', { used: usedMemoryInMB, total: totalMemoryInMb })
     );
 }
 
-export function getDiscordStatus(client: ExtendedClient): string {
-    return `**${client!.ws.ping} ms** Discord API latency`;
+export function getDiscordStatus(client: ExtendedClient, translator: TFunction): string {
+    return translator('statistics.discordStatus.apiLatency', { value: client.ws.ping });
 }

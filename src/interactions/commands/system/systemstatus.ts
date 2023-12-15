@@ -5,7 +5,7 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 
 class SystemStatusCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -17,15 +17,16 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
-            getBotStatistics(client!, version),
-            getPlayerStatistics(client!),
-            getSystemStatus(executionId, false)
+            getBotStatistics(client!, version, translator),
+            getPlayerStatistics(client!, translator),
+            getSystemStatus(executionId, false, translator)
         ]);
-        const discordStatusEmbedString = getDiscordStatus(client!);
+        const discordStatusEmbedString = getDiscordStatus(client!, translator);
         const dependenciesEmbedString = this.getDependencies();
 
         logger.debug('Responding with info embed.');
@@ -35,19 +36,27 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
                     .setDescription(`**${this.embedOptions.icons.bot} Bot status**\n` + botStatisticsEmbedString)
                     .addFields(
                         {
-                            name: `**${this.embedOptions.icons.queue} Queue status**`,
+                            name: translator('statistics.queueStatus.title', {
+                                icon: this.embedOptions.icons.queue
+                            }),
                             value: playerStatisticsEmbedString
                         },
                         {
-                            name: `**${this.embedOptions.icons.server} System status**`,
+                            name: translator('statistics.systemStatus.title', {
+                                icon: this.embedOptions.icons.server
+                            }),
                             value: systemStatusEmbedString
                         },
                         {
-                            name: `**${this.embedOptions.icons.discord} Discord status**`,
+                            name: translator('statistics.discordStatus.title', {
+                                icon: this.embedOptions.icons.discord
+                            }),
                             value: discordStatusEmbedString
                         },
                         {
-                            name: `**${this.embedOptions.icons.bot} Dependencies**`,
+                            name: translator('statistics.dependencies.title', {
+                                icon: this.embedOptions.icons.bot
+                            }),
                             value: dependenciesEmbedString
                         }
                     )

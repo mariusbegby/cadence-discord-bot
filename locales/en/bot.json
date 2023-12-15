@@ -225,5 +225,39 @@
                 }
             }
         }
+    },
+    "statistics": {
+        "botStatus": {
+            "title": "{{icon}} **Bot status**",
+            "joinedServers": "**{{count}}** Joined servers",
+            "joinedServers_one": "**1** Joined server",
+            "totalMembers": "**{{count}}** Total members",
+            "releaseVersion": "**{{version}}** Release version"
+        },
+        "queueStatus": {
+            "title": "{{icon}} **Queue status**",
+            "voiceConnections": "**{{count}}** Voice connections",
+            "voiceConnections_one": "**1** Voice connection",
+            "tracksInQueues": "**{{count}}** Tracks in queues",
+            "tracksInQueues_one": "**1** Track in queues",
+            "usersListening": "**{{count}}** Users listening",
+            "usersListening_one": "**1** User listening"
+        },
+        "systemStatus": {
+            "title": "{{icon}} **System status**",
+            "uptime": "**{{value}}** Uptime",
+            "cpu": "**{{value, number(minimumFractionDigits: 2)}}%** CPU usage",
+            "cpuDetailed": "**{{usage}}% @ {{cores}} cores** CPU usage",
+            "memory": "**{{value, number}} MB** Memory usage",
+            "memoryDetailed": "**{{used, number}} / {{total, number}} MB** Memory usage",
+            "platform": "**{{value}}** Platform"
+        },
+        "discordStatus": {
+            "title": "{{icon}} **Discord status**",
+            "apiLatency": "**{{value, number}} ms** Discord API latency"
+        },
+        "dependencies": {
+            "title": "{{icon}} **Dependencies**"
+        }
     }
 }
