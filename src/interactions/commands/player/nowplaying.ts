@@ -14,12 +14,11 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('nowplaying')
-            .setDescription('Show information about the current track.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('nowplaying'));
         super(data);
     }
 

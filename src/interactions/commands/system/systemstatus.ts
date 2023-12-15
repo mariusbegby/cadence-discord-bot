@@ -5,12 +5,11 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class SystemStatusCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('systemstatus')
-            .setDescription('Show operational status of the bot with additional technical information.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('systemstatus'));
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }

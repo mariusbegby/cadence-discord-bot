@@ -4,12 +4,11 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class GuildsCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('guilds')
-            .setDescription('Show the top 25 guilds by member count.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('guilds'));
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }

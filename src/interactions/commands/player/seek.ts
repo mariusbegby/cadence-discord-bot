@@ -5,15 +5,15 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('seek')
-            .setDescription('Seek to a duration in the current track.')
-            .addStringOption((option) =>
-                option.setName('duration').setDescription('Duration in format 00:00:00 (HH:mm:ss).').setRequired(true)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('seek')
+                .addStringOption((option) => option.setName('duration').setRequired(true))
+        );
         super(data);
     }
 

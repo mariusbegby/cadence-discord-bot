@@ -10,12 +10,11 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('reload')
-            .setDescription('Reload slash command, autocomplete and component interactions across shards.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('reload'));
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }

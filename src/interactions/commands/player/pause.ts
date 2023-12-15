@@ -5,10 +5,11 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('pause'));
         super(data);
     }
 

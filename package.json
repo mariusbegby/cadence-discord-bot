@@ -37,6 +37,13 @@
         "build": "tsc",
         "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts"
     },
+    "nodemonConfig": {
+        "ignore": [
+            "src/**",
+            "logs/**"
+        ],
+        "execMap": {}
+    },
     "dependencies": {
         "@discord-player/extractor": "^4.4.5",
         "@discord-player/opus": "^0.1.2",

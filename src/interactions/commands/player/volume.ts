@@ -5,19 +5,15 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('volume')
-            .setDescription('Show or change the playback volume for tracks.')
-            .addIntegerOption((option) =>
-                option
-                    .setName('percentage')
-                    .setDescription('Volume percentage: From 1% to 100%.')
-                    .setMinValue(0)
-                    .setMaxValue(100)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('volume')
+                .addIntegerOption((option) => option.setName('percentage').setMinValue(0).setMaxValue(100))
+        );
         super(data);
     }
 

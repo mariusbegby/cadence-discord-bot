@@ -6,21 +6,17 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('play')
-            .setDescription('Add a track or playlist to the queue by search query or URL.')
-            .addStringOption((option) =>
-                option
-                    .setName('query')
-                    .setDescription('Search query by text or URL')
-                    .setRequired(true)
-                    .setMinLength(2)
-                    .setMaxLength(500)
-                    .setAutocomplete(true)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('play')
+                .addStringOption((option) =>
+                    option.setName('query').setRequired(true).setMinLength(2).setMaxLength(500).setAutocomplete(true)
+                )
+        );
         super(data);
     }
 

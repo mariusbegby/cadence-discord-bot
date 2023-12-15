@@ -11,24 +11,26 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('loop')
-            .setDescription('Toggle looping a track, the whole queue or autoplay.')
-            .addIntegerOption(() =>
-                new SlashCommandIntegerOption()
-                    .setName('mode')
-                    .setDescription('Loop mode: Track, queue, autoplay or disabled.')
-                    .setRequired(false)
-                    .addChoices(
-                        { name: 'Track', value: QueueRepeatMode.TRACK },
-                        { name: 'Queue', value: QueueRepeatMode.QUEUE },
-                        { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY },
-                        { name: 'Disabled', value: QueueRepeatMode.OFF }
-                    )
-            );
+        // TODO: Add choice localization support
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('loop')
+                .addIntegerOption(() =>
+                    new SlashCommandIntegerOption()
+                        .setName('mode')
+                        .setRequired(false)
+                        .addChoices(
+                            { name: 'Track', value: QueueRepeatMode.TRACK },
+                            { name: 'Queue', value: QueueRepeatMode.QUEUE },
+                            { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY },
+                            { name: 'Disabled', value: QueueRepeatMode.OFF }
+                        )
+                )
+        );
         super(data);
     }
 

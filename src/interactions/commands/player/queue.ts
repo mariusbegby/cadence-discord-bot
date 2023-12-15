@@ -17,15 +17,15 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { formatDuration } from '../../../common/formattingUtils';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('queue')
-            .setDescription('Show tracks that have been added to the queue.')
-            .addIntegerOption((option) =>
-                option.setName('page').setDescription('Page number to display for the queue').setMinValue(1)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('queue')
+                .addIntegerOption((option) => option.setName('page').setMinValue(1))
+        );
         super(data);
     }
 

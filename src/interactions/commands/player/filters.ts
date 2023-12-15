@@ -26,6 +26,7 @@ import {
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -33,21 +34,21 @@ const equalizerFilterOptions: EqualizerFilterOptions = config.get('equalizerFilt
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('filters')
-            .setDescription('Toggle various audio filters.')
-            .addStringOption((option) =>
-                option
-                    .setName('type')
-                    .setDescription('Audio filter type to use.')
-                    .setRequired(false)
-                    .addChoices(
-                        { name: 'FFmpeg', value: 'ffmpeg' },
-                        { name: 'Biquad', value: 'biquad' },
-                        { name: 'Equalizer', value: 'equalizer' },
-                        { name: 'Disable', value: 'disable' }
-                    )
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('filters')
+                .addStringOption((option) =>
+                    option
+                        .setName('type')
+                        .setRequired(false)
+                        .addChoices(
+                            { name: 'FFmpeg', value: 'ffmpeg' },
+                            { name: 'Biquad', value: 'biquad' },
+                            { name: 'Equalizer', value: 'equalizer' },
+                            { name: 'Disable', value: 'disable' }
+                        )
+                )
+        );
         super(data);
     }
 

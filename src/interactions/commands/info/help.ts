@@ -7,22 +7,25 @@ import {
 } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { ExtendedClient } from '../../../types/clientTypes';
+import { TFunction } from 'i18next';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('help').setDescription('Show the list of bot commands.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('help'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, client, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const [commandEmbedString, supportServerString, addBotString] = await Promise.all([
             this.getCommandEmbedString(client!),
-            this.getSupportServerString(),
-            this.getAddBotString()
+            this.getSupportServerString(translator),
+            this.getAddBotString(translator)
         ]);
 
         logger.debug('Responding with info embed.');
@@ -30,7 +33,10 @@ class HelpCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `${this.embedOptions.icons.rule} **List of commands**\n` +
+                        translator('commands.help.listTitle', {
+                            icon: this.embedOptions.icons.rule
+                        }) +
+                            '\n' +
                             commandEmbedString +
                             supportServerString +
                             addBotString
@@ -77,32 +83,27 @@ class HelpCommand extends BaseSlashCommandInteraction {
         return '';
     }
 
-    private async getSupportServerString(): Promise<string> {
+    private async getSupportServerString(translator: TFunction): Promise<string> {
         if (!this.botOptions.serverInviteUrl) {
             return '';
         }
 
-        const embedString = `
-            ${this.embedOptions.icons.support} **Support server**
-            Join the support server for help or to suggest improvements: 
-            **${this.botOptions.serverInviteUrl}**
-        `;
-
-        return embedString;
+        return translator('commands.help.supportServerCallout', {
+            icon: this.embedOptions.icons.support,
+            invite: this.botOptions.serverInviteUrl
+        });
     }
 
-    private async getAddBotString(): Promise<string> {
+    private async getAddBotString(translator: TFunction): Promise<string> {
         if (!this.botOptions.botInviteUrl) {
             return '';
         }
 
-        const embedString = `
-            ${this.embedOptions.icons.bot} **Enjoying ${this.botOptions.name}?**
-            Add me to another server: 
-            **[Click me!](${this.botOptions.botInviteUrl})**
-        `;
-
-        return embedString;
+        return translator('commands.help.addBotCallout', {
+            icon: this.embedOptions.icons.bot,
+            botName: this.botOptions.name,
+            invite: this.botOptions.botInviteUrl
+        });
     }
 }
 

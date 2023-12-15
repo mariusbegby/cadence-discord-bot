@@ -5,26 +5,16 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class MoveCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('move')
-            .setDescription('Move a track to a specified position in queue.')
-            .addIntegerOption((option) =>
-                option
-                    .setName('from')
-                    .setDescription('The position of the track to move')
-                    .setMinValue(1)
-                    .setRequired(true)
-            )
-            .addIntegerOption((option) =>
-                option
-                    .setName('to')
-                    .setDescription('The position to move the track to')
-                    .setMinValue(1)
-                    .setRequired(true)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('move')
+                .addIntegerOption((option) => option.setName('from').setMinValue(1).setRequired(true))
+                .addIntegerOption((option) => option.setName('to').setMinValue(1).setRequired(true))
+        );
         super(data);
     }
 

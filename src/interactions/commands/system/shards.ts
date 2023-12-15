@@ -10,30 +10,30 @@ import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('shards')
-            .setDescription('Show information about all connected shards.')
-            .addStringOption((option) =>
-                option
-                    .setName('sort')
-                    .setDescription('What to sort the shards by.')
-                    .setRequired(false)
-                    .addChoices(
-                        { name: 'None (Shard ID)', value: 'none' },
-                        { name: 'Memory usage', value: 'memory' },
-                        { name: 'Voice Connections', value: 'connections' },
-                        { name: 'Tracks', value: 'tracks' },
-                        { name: 'Listeners', value: 'listeners' },
-                        { name: 'Guilds', value: 'guilds' },
-                        { name: 'Members', value: 'members' }
-                    )
-            )
-            .addIntegerOption((option) =>
-                option.setName('page').setDescription('Page number to display for the shards').setMinValue(1)
-            );
+        // TODO: Localize choices
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('shards')
+                .addStringOption((option) =>
+                    option
+                        .setName('sort')
+                        .setRequired(false)
+                        .addChoices(
+                            { name: 'None (Shard ID)', value: 'none' },
+                            { name: 'Memory usage', value: 'memory' },
+                            { name: 'Voice Connections', value: 'connections' },
+                            { name: 'Tracks', value: 'tracks' },
+                            { name: 'Listeners', value: 'listeners' },
+                            { name: 'Guilds', value: 'guilds' },
+                            { name: 'Members', value: 'members' }
+                        )
+                )
+                .addIntegerOption((option) => option.setName('page').setMinValue(1))
+        );
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }

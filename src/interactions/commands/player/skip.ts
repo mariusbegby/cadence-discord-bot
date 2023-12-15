@@ -5,15 +5,15 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('skip')
-            .setDescription('Skip track to next or specified position in queue.')
-            .addIntegerOption((option) =>
-                option.setName('position').setDescription('The position in queue to skip to.').setMinValue(1)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('skip')
+                .addIntegerOption((option) => option.setName('position').setMinValue(1))
+        );
         super(data);
     }
 

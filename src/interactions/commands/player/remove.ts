@@ -8,6 +8,7 @@ import { Logger } from 'pino';
 
 class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
+        // TODO: Add subcommand localization support
         const data = new SlashCommandBuilder()
             .setName('remove')
             .setDescription('Remove tracks from the queue')

@@ -13,15 +13,8 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('lyrics')
-                // .setDescription('Search Genius lyrics for current or specified track.')
                 .addStringOption((option) =>
-                    option
-                        .setName('query')
-                        // .setDescription('Search query by text or URL.')
-                        .setRequired(false)
-                        .setMinLength(2)
-                        .setMaxLength(500)
-                        .setAutocomplete(true)
+                    option.setName('query').setRequired(false).setMinLength(2).setMaxLength(500).setAutocomplete(true)
                 )
         );
         super(data);

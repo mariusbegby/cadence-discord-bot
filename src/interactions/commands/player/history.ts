@@ -16,15 +16,15 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkHistoryExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class HistoryCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('history')
-            .setDescription('Show history of tracks that have been played.')
-            .addIntegerOption((option) =>
-                option.setName('page').setDescription('Page number to display for the history').setMinValue(1)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('history')
+                .addIntegerOption((option) => option.setName('page').setMinValue(1))
+        );
         super(data);
     }
 

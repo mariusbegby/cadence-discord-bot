@@ -74,7 +74,7 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
     }
 
     // Localizing the command options...
-    if (jsonCommand.options) {
+    if (jsonCommand.options.length > 0) {
         assert(englishData.options, `Command /${command.name} must have option localizations.`);
         for (const unwritableOption of jsonCommand.options) {
             const option = unwritableOption as never as APIApplicationCommandOption;

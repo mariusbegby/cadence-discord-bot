@@ -5,15 +5,15 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkHistoryExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class BackCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('back')
-            .setDescription('Go back to previous track or specified position in history.')
-            .addIntegerOption((option) =>
-                option.setName('position').setDescription('The position in history to go back to.').setMinValue(1)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('back')
+                .addIntegerOption((option) => option.setName('position').setMinValue(1))
+        );
         super(data);
     }
 

@@ -5,12 +5,11 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { Logger } from 'pino';
+import { localizeCommand } from '../../../common/localeUtil';
 
 class JoinCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('join')
-            .setDescription('The bot will join the voice channel if not already in one.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('join'));
         super(data);
     }
 
