@@ -5,7 +5,9 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkHistoryExists, checkQueueCurrentTrack } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class BackCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -20,6 +22,7 @@ class BackCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const history: GuildQueueHistory = useHistory(interaction.guild!.id)!;
 
@@ -33,9 +36,9 @@ class BackCommand extends BaseSlashCommandInteraction {
         const backToTrackInput: number = interaction.options.getInteger('position')!;
 
         if (backToTrackInput) {
-            return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput);
+            return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput, translator);
         } else {
-            return await this.handleBackToPreviousTrack(logger, interaction, history);
+            return await this.handleBackToPreviousTrack(logger, interaction, history, translator);
         }
     }
 
@@ -43,20 +46,22 @@ class BackCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         history: GuildQueueHistory,
-        backtoTrackPosition: number
+        backtoTrackPosition: number,
+        translator: TFunction
     ) {
         if (backtoTrackPosition > history.tracks.data.length) {
             return await this.handleTrackPositionHigherThanQueueLength(
                 backtoTrackPosition,
                 history,
                 logger,
-                interaction
+                interaction,
+                translator
             );
         } else {
             await history.back();
             const recoveredTrack: Track = history.currentTrack! ?? history.tracks.data[backtoTrackPosition - 1];
             logger.debug('Went back to specified track position in history.');
-            return await this.respondWithSuccessEmbed(recoveredTrack, interaction);
+            return await this.respondWithSuccessEmbed(recoveredTrack, interaction, translator);
         }
     }
 
@@ -64,16 +69,20 @@ class BackCommand extends BaseSlashCommandInteraction {
         backToTrackPosition: number,
         history: GuildQueueHistory,
         logger: Logger,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
     ) {
         logger.debug('Specified track position was higher than total tracks.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `There are only **\`${history.tracks.data.length}\`** tracks in the history. You cannot go back to track **\`${backToTrackPosition}\`**.\n\n` +
-                            'View tracks added in the history with **`/history`**.'
+                        translator('commands.back.trackPositionHigherThanQueueLength', {
+                            icon: this.embedOptions.icons.warning,
+                            count: history.tracks.data.length,
+                            backPosition: backToTrackPosition,
+                            historyCommand: formatSlashCommand('history', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -83,40 +92,53 @@ class BackCommand extends BaseSlashCommandInteraction {
     private async handleBackToPreviousTrack(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        history: GuildQueueHistory
+        history: GuildQueueHistory,
+        translator: TFunction
     ) {
         if (history.tracks.data.length === 0) {
-            return await this.handleNoTracksInHistory(logger, interaction);
+            return await this.handleNoTracksInHistory(logger, interaction, translator);
         }
 
         await history.back();
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const currentTrack: Track = queue.currentTrack!;
         logger.debug('Recovered track from history.');
-        return await this.respondWithSuccessEmbed(currentTrack, interaction);
+        return await this.respondWithSuccessEmbed(currentTrack, interaction, translator);
     }
-    private async handleNoTracksInHistory(logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async handleNoTracksInHistory(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         logger.debug('No tracks in history.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'The history is empty, add some tracks with **`/play`**!'
+                        translator('commands.back.trackHistoryEmpty', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
 
-    private async respondWithSuccessEmbed(recoveredTrack: Track, interaction: ChatInputCommandInteraction) {
+    private async respondWithSuccessEmbed(
+        recoveredTrack: Track,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.back} Recovered track**\n` +
-                            `${this.getDisplayTrackDurationAndUrl(recoveredTrack)}`
+                        translator('commands.back.trackRecovered', {
+                            icon: this.embedOptions.icons.back,
+                            track: this.getDisplayTrackDurationAndUrl(recoveredTrack)
+                        })
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(recoveredTrack))
                     .setColor(this.embedOptions.colors.success)

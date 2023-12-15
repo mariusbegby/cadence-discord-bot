@@ -13,7 +13,11 @@
                         "description": "The position in history to go back to."
                     }
                 }
-            }
+            },
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nThere are only **{{count}}** tracks in the history. You cannot go back to track **{{backPosition}}**.\n\nView tracks added in the history with {{historyCommand}}.",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nThere is only **1** track in the history. You cannot go back to track **{{backPosition}}**.\n\nView tracks added in the history with {{historyCommand}}.",
+            "trackHistoryEmpty": "{{icon}} **Oops!**\nThe history is empty, add some tracks with {{playCommand}}!",
+            "trackRecovered": "{{icon}} **Recovered track**\n{{track}}"
         },
         "filters": {
             "metadata": {
