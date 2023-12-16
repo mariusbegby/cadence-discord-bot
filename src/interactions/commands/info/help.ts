@@ -61,7 +61,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
                     .setDescription(`${this.embedOptions.icons.rule} **List of commands**\n` + commandEmbedString)
                     .setColor(this.embedOptions.colors.info)
             ],
-            components: [embedActionRow]
+            components: components.length > 0 ? [embedActionRow] : []
         });
     }
 
