@@ -23,7 +23,7 @@
 ## Core Features 🌟
 Cadence offers an enriching audio experience on Discord with features such as:
 - High-quality music playback from [many supported sources](https://discord-player.js.org/guide/extractors/stream-sources) thanks to [discord-player](https://github.com/androz2091/discord-player).
-- Implements latest Discord features such as slash commands, autocompleting search queries, select menus, buttons and more!
+- Latest Discord features such as slash commands, autocompleting search queries, select menus, buttons and more!
 - Full queue management system to add, remove, skip or move tracks, view queue and history.
 - Audio filters, shuffle mode, repeat track, queue or autoplay similar tracks!
 - Open-source codebase and community based development, open to feedback and improvements.
