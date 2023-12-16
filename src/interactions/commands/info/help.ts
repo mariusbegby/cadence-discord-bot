@@ -1,5 +1,11 @@
 import {
+    APIActionRowComponent,
+    APIButtonComponent,
+    APIMessageActionRowComponent,
+    ButtonBuilder,
+    ButtonStyle,
     Collection,
+    ComponentType,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandNumberOption,
@@ -19,24 +25,43 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const { executionId, client, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
 
-        const [commandEmbedString, supportServerString, addBotString] = await Promise.all([
-            this.getCommandEmbedString(client!),
-            this.getSupportServerString(),
-            this.getAddBotString()
-        ]);
+        const commandEmbedString = await this.getCommandEmbedString(client!);
+
+        const components: APIMessageActionRowComponent[] = [];
+
+        if (this.botOptions.serverInviteUrl && this.botOptions.serverInviteUrl !== '') {
+            const supportServerButton: APIButtonComponent = new ButtonBuilder()
+                .setURL(this.botOptions.serverInviteUrl)
+                .setStyle(ButtonStyle.Link)
+                .setEmoji(this.embedOptions.icons.support)
+                .setLabel('Support server')
+                .toJSON();
+            components.push(supportServerButton);
+        }
+
+        if (this.botOptions.botInviteUrl && this.botOptions.botInviteUrl !== '') {
+            const addBotButton: APIButtonComponent = new ButtonBuilder()
+                .setURL(this.botOptions.botInviteUrl)
+                .setStyle(ButtonStyle.Link)
+                .setEmoji(this.embedOptions.icons.bot)
+                .setLabel('Add bot')
+                .toJSON();
+            components.push(addBotButton);
+        }
+
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components
+        };
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(
-                        `${this.embedOptions.icons.rule} **List of commands**\n` +
-                            commandEmbedString +
-                            supportServerString +
-                            addBotString
-                    )
+                    .setDescription(`${this.embedOptions.icons.rule} **List of commands**\n` + commandEmbedString)
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            components: [embedActionRow]
         });
     }
 
@@ -58,7 +83,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
             return this.getCommandString(command);
         });
 
-        const commandString = commandStringList.join('\n') + '\n';
+        const commandString = commandStringList.join('\n');
         return commandString;
     }
 
@@ -75,34 +100,6 @@ class HelpCommand extends BaseSlashCommandInteraction {
             return `**\`${option.name}\`** `;
         }
         return '';
-    }
-
-    private async getSupportServerString(): Promise<string> {
-        if (!this.botOptions.serverInviteUrl) {
-            return '';
-        }
-
-        const embedString = `
-            ${this.embedOptions.icons.support} **Support server**
-            Join the support server for help or to suggest improvements: 
-            **${this.botOptions.serverInviteUrl}**
-        `;
-
-        return embedString;
-    }
-
-    private async getAddBotString(): Promise<string> {
-        if (!this.botOptions.botInviteUrl) {
-            return '';
-        }
-
-        const embedString = `
-            ${this.embedOptions.icons.bot} **Enjoying ${this.botOptions.name}?**
-            Add me to another server: 
-            **[Click me!](${this.botOptions.botInviteUrl})**
-        `;
-
-        return embedString;
     }
 }
 
