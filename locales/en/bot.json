@@ -31,7 +31,7 @@
                             "ffmpeg": "FFmpeg",
                             "biquad": "Biquad",
                             "equalizer": "Equalizer",
-                            "disable": "Disable"
+                            "disable": "Disabled"
                         }
                     }
                 }
@@ -224,7 +224,7 @@
         "seek": {
             "metadata": {
                 "name": "seek",
-                "description": "Seek to a position in the current track.",
+                "description": "Seek to a time position in the current track.",
                 "options": {
                     "duration": {
                         "name": "duration",
