@@ -174,7 +174,11 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(translator('commands.filters.toggleFilterInstructions'))
+                    .setDescription(
+                        translator('commands.filters.toggleFilterInstructions', {
+                            provider: filterProvider
+                        })
+                    )
                     .setColor(this.embedOptions.colors.info)
             ],
             components: actionRows
