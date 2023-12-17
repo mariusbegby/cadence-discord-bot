@@ -132,9 +132,11 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
                 if (localeOptionData.description) {
                     option.description_localizations[locale] = localeOptionData.description;
                 }
+
                 if (
                     localeOptionData.choices &&
-                    option.type === (ApplicationCommandOptionType.String || ApplicationCommandOptionType.Integer) &&
+                    (option.type === ApplicationCommandOptionType.String ||
+                        option.type === ApplicationCommandOptionType.Integer) &&
                     option.choices
                 ) {
                     for (const choice of option.choices) {
