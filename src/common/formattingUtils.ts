@@ -64,9 +64,12 @@ export function formatRepeatModeDetailed(
             return '';
     }
 
-    return translator('musicPlayerCommon.loopingInfo', {
-        icon,
-        loopMode: formatRepeatMode(repeatMode, translator),
-        loopCommand: formatSlashCommand('loop', translator)
-    });
+    return (
+        '\n' +
+        translator('musicPlayerCommon.loopingInfo', {
+            icon,
+            loopMode: formatRepeatMode(repeatMode, translator),
+            loopCommand: formatSlashCommand('loop', translator)
+        })
+    );
 }

@@ -130,14 +130,13 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `${translator('musicPlayerCommon.nowPlayingTitle', {
-                            icon: this.embedOptions.icons.audioPlaying
-                        })}\n` +
+                        this.getDisplayTrackPlayingStatus(queue, translator) +
+                            '\n' +
                             `${this.getFormattedTrackUrl(currentTrack, translator)}\n` +
                             `${translator('musicPlayerCommon.requestedBy', {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
                             })}\n` +
-                            `${this.getDisplayQueueProgressBar(queue, translator)}\n\n` +
+                            `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
                             `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
                             `${translator('commands.history.tracksInHistoryTitle', {
                                 icon: this.embedOptions.icons.queue
@@ -152,6 +151,12 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         });
         return Promise.resolve();
     }
+
+    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
+        return queue.node.isPaused()
+            ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
+            : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
+    };
 
     private async handleNoCurrentTrack(
         logger: Logger,

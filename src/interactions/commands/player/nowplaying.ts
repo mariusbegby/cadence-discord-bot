@@ -98,7 +98,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
                             `${translator('musicPlayerCommon.requestedBy', {
                                 user: displayTrackRequestedBy
                             })}\n` +
-                            `${displayEmbedProgressBar}\n\n ` +
+                            `${displayEmbedProgressBar}\n` +
                             `${displayQueueRepeatMode}\n\n`
                     )
                     .addFields(this.getEmbedFields(currentTrack, translator))
