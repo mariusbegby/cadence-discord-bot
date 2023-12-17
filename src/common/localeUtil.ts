@@ -122,6 +122,7 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
                 const localeOptionData = (
                     translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined
                 )?.options?.[option.name];
+
                 if (locale.startsWith('en') || !localeOptionData) {
                     continue;
                 }
@@ -131,7 +132,11 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
                 if (localeOptionData.description) {
                     option.description_localizations[locale] = localeOptionData.description;
                 }
-                if (localeOptionData.choices && option.type === ApplicationCommandOptionType.String && option.choices) {
+                if (
+                    localeOptionData.choices &&
+                    option.type === (ApplicationCommandOptionType.String || ApplicationCommandOptionType.Integer) &&
+                    option.choices
+                ) {
                     for (const choice of option.choices) {
                         const localizedChoice = localeOptionData.choices[choice.value];
                         if (!localizedChoice) {
