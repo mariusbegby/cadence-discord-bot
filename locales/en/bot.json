@@ -330,7 +330,7 @@
         },
         "footerPageNumber_one": "Page {{page}} of {{pageCount}} (1 track)",
         "footerPageNumber": "Page {{page}} of {{pageCount}} ({{count}} tracks)",
-        "loopingInfo": "{{icon}} **Looping**\nLoop mode is set to **`{{loopMode}}`**. You can change it with {{loopCommand}}.",
+        "loopingInfo": "{{icon}} **Looping**\nLoop mode is set to **`{{loopMode}}`**. You can change it with {{loopCommand}}.\n",
         "nowPausedTitle": "{{icon}} **Currently paused**",
         "nowPlayingTitle": "{{icon}} **Now playing**",
         "playingLive": "{{icon}} **`LIVE`** - Playing continuously from live source.",
