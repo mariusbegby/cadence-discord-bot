@@ -42,7 +42,7 @@ export function useUserTranslator(interaction: BaseInteraction) {
 
 export const DISCORD_LOCALES = Object.values(Locale);
 
-type CommandMetadata = {
+export type CommandMetadata = {
     name?: string;
     description?: string;
     options?: Record<
@@ -79,7 +79,7 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
             jsonCommand.name_localizations[locale] = localeData.name;
         }
         if (localeData.description) {
-            jsonCommand.description_localizations[locale] = localeData.name;
+            jsonCommand.description_localizations[locale] = localeData.description;
         }
     }
 
