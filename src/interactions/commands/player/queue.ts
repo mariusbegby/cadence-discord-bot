@@ -16,7 +16,7 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { formatDuration, formatRepeatModeDetailed } from '../../../common/formattingUtils';
+import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../../common/formattingUtils';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
 
@@ -47,7 +47,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         const totalPages: number = this.getTotalPages(queue);
 
         if (pageIndex > totalPages - 1) {
-            return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages);
+            return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages, translator);
         }
 
         const queueTracksListString: string = this.getQueueTracksListString(queue, pageIndex, translator);
@@ -181,7 +181,8 @@ class QueueCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         pageIndex: number,
-        totalPages: number
+        totalPages: number,
+        translator: TFunction
     ) {
         logger.debug('Specified page was higher than total pages.');
 
@@ -190,9 +191,11 @@ class QueueCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `Page **\`${pageIndex + 1}\`** is not a valid page number.\n\n` +
-                            `There are only a total of **\`${totalPages}\`** pages in the queue.`
+                        translator('commands.queue.invalidPageNumber', {
+                            icon: this.embedOptions.icons.warning,
+                            page: pageIndex + 1,
+                            count: totalPages
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -210,7 +213,9 @@ class QueueCommand extends BaseSlashCommandInteraction {
 
     private getQueueTracksListString(queue: GuildQueue, pageIndex: number, translator: TFunction): string {
         if (!queue || queue.tracks.data.length === 0) {
-            return 'The queue is empty, add some tracks with **`/play`**!';
+            return translator('commands.queue.emptyQueue', {
+                playCommand: formatSlashCommand('play', translator)
+            });
         }
 
         return queue.tracks.data
@@ -221,9 +226,11 @@ class QueueCommand extends BaseSlashCommandInteraction {
             .join('\n');
     }
 
-    private getDisplayQueueTotalDuration(queue: GuildQueue): string {
+    private getDisplayQueueTotalDuration(queue: GuildQueue, translator: TFunction): string {
         if (queue.tracks.data.length > 1000) {
-            return 'Estimated duration: A really long time';
+            return translator('commands.queue.estimatedReallyLongTime', {
+                playCommand: formatSlashCommand('play', translator)
+            });
         }
 
         let queueDurationMs: number = queue.estimatedDuration;
@@ -232,10 +239,14 @@ class QueueCommand extends BaseSlashCommandInteraction {
         }
 
         if (queueDurationMs < 0) {
-            return 'Estimated duration: A really long time';
+            return translator('commands.queue.estimatedReallyLongTime', {
+                playCommand: formatSlashCommand('play', translator)
+            });
         }
 
-        return `Estimated duration: ${formatDuration(queueDurationMs)}`;
+        return translator('commands.queue.estimatedDuration', {
+            duration: formatDuration(queueDurationMs)
+        });
     }
 
     private getDisplayFullFooterInfo(
@@ -244,7 +255,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ): EmbedFooterData {
         const pagination = this.getFooterDisplayPageInfo(interaction, queue, translator);
-        const totalDuration = this.getDisplayQueueTotalDuration(queue);
+        const totalDuration = this.getDisplayQueueTotalDuration(queue, translator);
 
         const fullFooterData = {
             text: `${pagination.text} - ${totalDuration}`

@@ -72,8 +72,8 @@
                 }
             },
             "emptyHistory": "The history is empty, add some tracks with {{playCommand}}!",
-            "invalidPageNumber_one": "{{icon}} **Oops!**\nPage **{{page}}** is not a valid page number.\n\nThere is only **`1`** page in the history.",
-            "invalidPageNumber": "{{icon}} **Oops!**\nPage **{{page}}** is not a valid page number.\n\nThere are only a total of **`{{count}}`** pages in the history.",
+            "invalidPageNumber_one": "{{icon}} **Oops!**\nPage **`{{page}}`** is not a valid page number.\n\nThere is only **`1`** page in the history.",
+            "invalidPageNumber": "{{icon}} **Oops!**\nPage **`{{page}}`** is not a valid page number.\n\nThere are only a total of **`{{count}}`** pages in the history.",
             "tracksInHistoryTitle": "{{icon}} **Tracks in history**"
         },
         "join": {
@@ -203,7 +203,12 @@
                     }
                 }
             },
-            "tracksInQueueTitle": "{{icon}} **Tracks in queue**"
+            "tracksInQueueTitle": "{{icon}} **Tracks in queue**",
+            "emptyQueue": "The queue is empty, add some tracks with {{playCommand}}!",
+            "estimatedDuration": "Estimated duration: {{duration}}",
+            "estimatedReallyLongTime": "Estimated duration: A really long time",
+            "invalidPageNumber_one": "{{icon}} **Oops!**\nPage **`{{page}}`** is not a valid page number.\n\nThere is only **`1`** page in the queue.",
+            "invalidPageNumber": "{{icon}} **Oops!**\nPage **`{{page}}`** is not a valid page number.\n\nThere are only a total of **`{{count}}`** pages in the queue."
         },
         "reload": {
             "metadata": {

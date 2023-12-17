@@ -72,8 +72,8 @@
                 }
             },
             "emptyHistory": "Historikken er tom, legg til noen låter med {{playCommand}}!",
-            "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **{{page}}** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i historikken.",
-            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **{{page}}** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
+            "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i historikken.",
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
             "tracksInHistoryTitle": "{{icon}} **Låter i historikken**"
         },
         "join": {
@@ -203,7 +203,12 @@
                     }
                 }
             },
-            "tracksInQueueTitle": "{{icon}} **Låter i køen**"
+            "tracksInQueueTitle": "{{icon}} **Låter i køen**",
+            "emptyQueue": "Køen er tom, legg til noen låter med {{playCommand}}!",
+            "estimatedDuration": "Estimert tid igjen: {{duration}}",
+            "estimatedReallyLongTime": "Estimert tid igjen: Veldig lang tid",
+            "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i køen.",
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i køen."
         },
         "reload": {
             "metadata": {
