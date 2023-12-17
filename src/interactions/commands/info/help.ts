@@ -4,6 +4,7 @@ import {
     APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
+    ChatInputCommandInteraction,
     Collection,
     ComponentType,
     EmbedBuilder,
@@ -13,8 +14,12 @@ import {
 } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { CommandMetadata, localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { ExtendedClient } from '../../../types/clientTypes';
+import i18n from 'i18next';
+import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
+import { join } from 'path';
+import { lstatSync, readdirSync } from 'fs';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -27,7 +32,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
 
-        const commandEmbedString = await this.getCommandEmbedString(client!);
+        const commandEmbedString = await this.getCommandEmbedString(client!, interaction);
 
         const components: APIMessageActionRowComponent[] = [];
 
@@ -84,22 +89,57 @@ class HelpCommand extends BaseSlashCommandInteraction {
         return nonSystemCommands;
     }
 
-    private async getCommandEmbedString(client: ExtendedClient): Promise<string> {
+    private async getCommandEmbedString(
+        client: ExtendedClient,
+        interaction: ChatInputCommandInteraction
+    ): Promise<string> {
         const commandCollection = this.getNonSystemCommands(client!);
 
         const commandStringList = commandCollection.map((command: BaseSlashCommandInteraction) => {
-            return this.getCommandString(command);
+            return this.getCommandString(command, interaction);
         });
 
         const commandString = commandStringList.join('\n');
         return commandString;
     }
 
-    private getCommandString(command: BaseSlashCommandInteraction): string {
+    private getCommandString(command: BaseSlashCommandInteraction, interaction: ChatInputCommandInteraction): string {
+        // TODO: Clean up this mess and create a common factory for translator instances.
+        const commandName = command.data.name;
+        const metadataKey = `commands.${commandName}.metadata`;
+        const translatorInstance = i18n.createInstance();
+        const localeDir = join(__dirname, '..', '..', '..', '..', 'locales');
+        translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
+            initImmediate: false,
+            fallbackLng: 'en',
+            preload: readdirSync(localeDir).filter((fileName) => {
+                const joinedPath = join(localeDir, fileName);
+                const isDirectory = lstatSync(joinedPath).isDirectory();
+                return isDirectory;
+            }),
+            ns: 'bot',
+            defaultNS: 'bot',
+            backend: {
+                loadPath: join(localeDir, '{{lng}}', '{{ns}}.json'),
+                addPath: join(localeDir, '{{lng}}', '{{ns}}.missing.json')
+            },
+            interpolation: {
+                escapeValue: false
+            }
+        });
+
+        const locale = interaction.guildLocale ?? 'en';
+        let translatedData: CommandMetadata | undefined = undefined;
+        translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
+
         const commandParams: string = this.getCommandParams(command);
+
         const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
         const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
-        return `- **\`/${command.data.name}\`** ${commandParams}- ${beta}${newCommand}${command.data.description}`;
+
+        return `- **\`/${translatedData?.name ?? command.data.name}\`** ${commandParams}- ${beta}${newCommand}${
+            translatedData?.description ?? command.data.description
+        }`;
     }
 
     private getCommandParams(command: BaseSlashCommandInteraction): string {
