@@ -14,18 +14,20 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatRepeatModeDetailed } from '../../../common/formattingUtils';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('nowplaying')
-            .setDescription('Show information about the current track.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('nowplaying'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -38,11 +40,15 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
         const tracksInQueueCount: number = queue.tracks.data.length;
         const currentTrack: Track = queue.currentTrack!;
-        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack);
-        const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack);
-        const displayTrackPlayingStatus: string = this.getDisplayTrackPlayingStatus(queue);
-        const displayQueueRepeatMode: string = this.getDisplayQueueRepeatMode(queue);
-        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue);
+        const displayTrackUrl: string = this.getFormattedTrackUrl(currentTrack, translator);
+        const displayTrackRequestedBy: string = this.getDisplayTrackRequestedBy(currentTrack, translator);
+        const displayTrackPlayingStatus: string = this.getDisplayTrackPlayingStatus(queue, translator);
+        const displayQueueRepeatMode: string = formatRepeatModeDetailed(
+            queue.repeatMode,
+            this.embedOptions,
+            translator
+        );
+        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue, translator);
 
         const components: APIMessageActionRowComponent[] = [];
 
@@ -69,9 +75,11 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         components.push(skipButton);
 
         if (this.embedOptions.components.showButtonLabels) {
-            previousButton.label = 'Previous';
-            playPauseButton.label = queue.node.isPaused() ? 'Resume' : 'Pause';
-            skipButton.label = 'Skip';
+            previousButton.label = translator('musicPlayerCommon.controls.previous');
+            playPauseButton.label = queue.node.isPaused()
+                ? translator('musicPlayerCommon.controls.resume')
+                : translator('musicPlayerCommon.controls.pause');
+            skipButton.label = translator('musicPlayerCommon.controls.skip');
         }
 
         const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
@@ -83,17 +91,21 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue))
+                    .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
                         `${displayTrackPlayingStatus}\n` +
                             `${displayTrackUrl}\n` +
-                            `**Requested by:** ${displayTrackRequestedBy}\n` +
-                            `${displayEmbedProgressBar}\n\n ` +
+                            `${translator('musicPlayerCommon.requestedBy', {
+                                user: displayTrackRequestedBy
+                            })}\n` +
+                            `${displayEmbedProgressBar}\n` +
                             `${displayQueueRepeatMode}\n\n`
                     )
-                    .addFields(this.getEmbedFields(currentTrack))
+                    .addFields(this.getEmbedFields(currentTrack, translator))
                     .setFooter({
-                        text: tracksInQueueCount ? `${tracksInQueueCount} other tracks in the queue...` : ' '
+                        text: tracksInQueueCount
+                            ? translator('commands.nowplaying.otherTracksInQueue', { count: tracksInQueueCount })
+                            : ' '
                     })
                     .setThumbnail(this.getTrackThumbnailUrl(queue.currentTrack!))
                     .setColor(this.embedOptions.colors.info)
@@ -102,37 +114,34 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private getDisplayPlays(currentTrack: Track | undefined): string {
+    private getDisplayPlays(currentTrack: Track | undefined, translator: TFunction): string {
         const trackMetadata = currentTrack?.metadata as TrackMetadata;
 
-        let displayPlays: string =
-            (currentTrack?.views || trackMetadata?.bridge?.views || 0).toLocaleString('en-US') ?? '0';
-
-        if (displayPlays === '0') {
-            displayPlays = 'Unavailable';
-        }
-
-        return displayPlays;
+        return translator('commands.nowplaying.playCount', {
+            count: currentTrack?.views || trackMetadata?.bridge?.views || 0
+        });
     }
 
-    private getDisplayTrackAuthor(currentTrack: Track | undefined): string {
-        let author: string = currentTrack?.author ? currentTrack.author : 'Unavailable';
-        if (author === 'cdn.discordapp.com') {
-            author = 'Unavailable';
+    private getDisplayTrackAuthor(currentTrack: Track | undefined, translator: TFunction): string {
+        let author = currentTrack?.author;
+        if (!author || author === 'cdn.discordapp.com') {
+            author = translator('musicPlayerCommon.unavailableAuthor');
         }
         return author;
     }
 
-    private getTrackSourceString(currentTrack: Track): string {
+    private getTrackSourceString(currentTrack: Track, translator: TFunction): string {
         const sourceStringsFormatted: Map<string, string> = new Map([
             ['youtube', 'YouTube'],
             ['soundcloud', 'SoundCloud'],
             ['spotify', 'Spotify'],
             ['apple_music', 'Apple Music'],
-            ['arbitrary', 'Direct source']
+            ['arbitrary', translator('commands.pause.directSource')]
         ]);
 
-        return sourceStringsFormatted.get(currentTrack.raw.source!) ?? 'Unavailable';
+        return (
+            sourceStringsFormatted.get(currentTrack.raw.source!) ?? translator('musicPlayerCommon.unavailableSource')
+        );
     }
 
     private getTrackSourceIcon(currentTrack: Track): string {
@@ -147,59 +156,34 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return sourceIcons.get(currentTrack.raw.source!) ?? '';
     }
 
-    private getDisplayTrackSource(currentTrack: Track) {
-        const trackSource: string = this.getTrackSourceString(currentTrack) ?? 'Unavailable';
+    private getDisplayTrackSource(currentTrack: Track, translator: TFunction) {
+        const trackSource: string = this.getTrackSourceString(currentTrack, translator);
         const trackSourceIcon: string = this.getTrackSourceIcon(currentTrack) ?? '';
 
         return `**${trackSourceIcon} [${trackSource}](${currentTrack.raw.url ?? currentTrack.url})**`;
     }
 
-    private getRepeatModeString(repeatMode: number): string {
-        const loopModesFormatted: Map<number, string> = new Map([
-            [0, 'disabled'],
-            [1, 'track'],
-            [2, 'queue'],
-            [3, 'autoplay']
-        ]);
-
-        return loopModesFormatted.get(repeatMode)!;
-    }
-
-    private getDisplayQueueRepeatMode = (queue: GuildQueue): string => {
-        const repeatMode: number = queue.repeatMode;
-        if (repeatMode === 0) {
-            return '';
-        }
-
-        const loopModeUserString: string = this.getRepeatModeString(repeatMode);
-        const icon = repeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
-        return (
-            `**${icon} Looping**\n` +
-            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.`
-        );
-    };
-
-    private getDisplayTrackPlayingStatus = (queue: GuildQueue): string => {
+    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
         return queue.node.isPaused()
-            ? '**Currently Paused**'
-            : `**${this.embedOptions.icons.audioPlaying} Now Playing**`;
+            ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
+            : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
     };
 
-    private getEmbedFields = (currentTrack: Track): EmbedField[] => {
+    private getEmbedFields = (currentTrack: Track, translator: TFunction): EmbedField[] => {
         const fields: EmbedField[] = [
             {
-                name: '**Author**',
-                value: this.getDisplayTrackAuthor(currentTrack),
+                name: translator('commands.nowplaying.embedFields.author'),
+                value: this.getDisplayTrackAuthor(currentTrack, translator),
                 inline: true
             },
             {
-                name: '**Plays**',
-                value: this.getDisplayPlays(currentTrack),
+                name: translator('commands.nowplaying.embedFields.plays'),
+                value: this.getDisplayPlays(currentTrack, translator),
                 inline: true
             },
             {
-                name: '**Track source**',
-                value: this.getDisplayTrackSource(currentTrack),
+                name: translator('commands.nowplaying.embedFields.source'),
+                value: this.getDisplayTrackSource(currentTrack, translator),
                 inline: true
             }
         ];

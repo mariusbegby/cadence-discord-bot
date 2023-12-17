@@ -5,35 +5,37 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
 import { Logger } from 'pino';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { formatSlashCommand } from '../../../common/formattingUtils';
+import { TFunction } from 'i18next';
 
 class JoinCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('join')
-            .setDescription('The bot will join the voice channel if not already in one.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('join'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel, checkVoicePermissionJoinAndTalk]);
 
         const existingQueue = useQueue(interaction.guild!.id);
 
         if (existingQueue) {
-            return await this.handleExisitingQueue(interaction, existingQueue);
+            return await this.handleExisitingQueue(interaction, existingQueue, translator);
         }
 
         const queue = this.createQueue(interaction);
         if (!queue) {
-            return await this.handleCouldNotConnect(interaction);
+            return await this.handleCouldNotConnect(interaction, translator);
         }
 
         await this.connectToVoiceChannel(logger, queue, interaction);
         if (!queue.dispatcher) {
-            return await this.handleCouldNotConnect(interaction);
+            return await this.handleCouldNotConnect(interaction, translator);
         }
 
         logger.debug('Responding with success embed.');
@@ -42,9 +44,11 @@ class JoinCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Joined channel**\n` +
-                            `Connected to voice channel: <#${queue.dispatcher.channel.id}>\n\n` +
-                            'To add tracks, use the **`/play`** command!'
+                        translator('commands.join.joinedChannel', {
+                            icon: this.embedOptions.icons.success,
+                            channel: `<#${queue.dispatcher.channel.id}>`,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ]
@@ -83,32 +87,42 @@ class JoinCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    private async handleCouldNotConnect(interaction: ChatInputCommandInteraction): Promise<Message> {
+    private async handleCouldNotConnect(
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ): Promise<Message> {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'Could not join voice channel, please try again.'
+                        translator('commands.join.couldNotJoin', {
+                            icon: this.embedOptions.icons.warning
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
 
-    private async handleExisitingQueue(interaction: ChatInputCommandInteraction, queue: GuildQueue): Promise<Message> {
+    private async handleExisitingQueue(
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
+        translator: TFunction
+    ): Promise<Message> {
         const connectedChannel = queue.dispatcher?.channel;
-        const channelMention = connectedChannel?.id ? `<#${connectedChannel.id}>` : 'Unknown';
+        const channelMention = connectedChannel?.id ? `<#${connectedChannel.id}>` : '<#0>';
 
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `I am already connected to voice channel ${channelMention}.\n\n` +
-                            'To disconnect me from the channel, use the **`/leave`** command.'
+                        translator('commands.join.alreadyConnected', {
+                            icon: this.embedOptions.icons.warning,
+                            channel: channelMention,
+                            leaveCommand: formatSlashCommand('leave', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]

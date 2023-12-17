@@ -1,4 +1,5 @@
 import { Track } from 'discord-player';
+import { TFunction } from 'i18next';
 
 export function shouldUseLastQuery(query: string, lastQuery?: string, timestamp?: number): boolean {
     return Boolean(
@@ -10,7 +11,10 @@ export function isQueryTooShort(query: string): boolean {
     return query.length < 3;
 }
 
-export function getTrackName(track: Track): string {
-    const name = `${track.title} [Author: ${track.author}]`;
+export function getTrackName(track: Track, translator: TFunction): string {
+    const name = translator('autocomplete.trackName', {
+        title: track.title,
+        author: track.author
+    });
     return name.length > 100 ? name.slice(0, 100) : name;
 }

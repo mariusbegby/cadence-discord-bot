@@ -5,32 +5,25 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class MoveCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('move')
-            .setDescription('Move a track to a specified position in queue.')
-            .addIntegerOption((option) =>
-                option
-                    .setName('from')
-                    .setDescription('The position of the track to move')
-                    .setMinValue(1)
-                    .setRequired(true)
-            )
-            .addIntegerOption((option) =>
-                option
-                    .setName('to')
-                    .setDescription('The position to move the track to')
-                    .setMinValue(1)
-                    .setRequired(true)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('move')
+                .addIntegerOption((option) => option.setName('from').setMinValue(1).setRequired(true))
+                .addIntegerOption((option) => option.setName('to').setMinValue(1).setRequired(true))
+        );
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -43,7 +36,14 @@ class MoveCommand extends BaseSlashCommandInteraction {
 
         const fromPositionInput: number = interaction.options.getInteger('from')!;
         const toPositionInput: number = interaction.options.getInteger('to')!;
-        return await this.handleMoveTrackToPosition(logger, interaction, queue, fromPositionInput, toPositionInput);
+        return await this.handleMoveTrackToPosition(
+            logger,
+            interaction,
+            queue,
+            fromPositionInput,
+            toPositionInput,
+            translator
+        );
     }
 
     private async handleMoveTrackToPosition(
@@ -51,7 +51,8 @@ class MoveCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         fromPosition: number,
-        toPosition: number
+        toPosition: number,
+        translator: TFunction
     ) {
         if (fromPosition > queue.tracks.data.length || toPosition > queue.tracks.data.length) {
             logger.debug('One of the specified track positions was higher than total tracks.');
@@ -60,13 +61,14 @@ class MoveCommand extends BaseSlashCommandInteraction {
                 toPosition,
                 queue,
                 logger,
-                interaction
+                interaction,
+                translator
             );
         } else {
             const trackToMove: Track = queue.tracks.data[fromPosition - 1];
             queue.node.move(trackToMove, toPosition - 1);
             logger.debug(`Moved track from position ${fromPosition} to position ${toPosition} in queue`);
-            return await this.respondWithSuccessEmbed(trackToMove, interaction, fromPosition, toPosition);
+            return await this.respondWithSuccessEmbed(trackToMove, interaction, fromPosition, toPosition, translator);
         }
     }
 
@@ -75,16 +77,21 @@ class MoveCommand extends BaseSlashCommandInteraction {
         toPosition: number,
         queue: GuildQueue,
         logger: Logger,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
     ) {
         logger.debug('One of the specified track positions was higher than total tracks.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `You cannot move track in position **\`${fromPosition}\`** to position **\`${toPosition}\`**. There are only **\`${queue.tracks.data.length}\`** tracks in the queue.\n\n` +
-                            'View tracks added to the queue with **`/queue`**.'
+                        translator('commands.move.trackPositionHigherThanQueueLength', {
+                            icon: this.embedOptions.icons.warning,
+                            fromPosition,
+                            toPosition,
+                            count: queue.tracks.data.length,
+                            queueCommand: formatSlashCommand('queue', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -95,16 +102,20 @@ class MoveCommand extends BaseSlashCommandInteraction {
         movedTrack: Track,
         interaction: ChatInputCommandInteraction,
         fromPosition: number,
-        toPosition: number
+        toPosition: number,
+        translator: TFunction
     ) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.moved} Moved track**\n` +
-                            `${this.getDisplayTrackDurationAndUrl(movedTrack)}\n\n` +
-                            `Track has been moved from position **\`${fromPosition}\`** to position **\`${toPosition}\`**.`
+                        translator('commands.move.trackMoved', {
+                            icon: this.embedOptions.icons.moved,
+                            track: this.getDisplayTrackDurationAndUrl(movedTrack, translator),
+                            fromPosition,
+                            toPosition
+                        })
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(movedTrack))
                     .setColor(this.embedOptions.colors.success)

@@ -10,12 +10,12 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('reload')
-            .setDescription('Reload slash command, autocomplete and component interactions across shards.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('reload'));
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }
@@ -23,16 +23,17 @@ class ReloadCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
         try {
             await this.reloadInteractionsAcrossShards(logger, executionId, client!);
         } catch (error) {
-            return await this.handleReloadError(logger, interaction, executionId, error);
+            return await this.handleReloadError(logger, interaction, executionId, error, translator);
         }
 
-        return await this.respondWithSuccessEmbed(logger, interaction, client!);
+        return await this.respondWithSuccessEmbed(logger, interaction, client!, translator);
     }
 
     private async reloadInteractionsAcrossShards(logger: Logger, executionId: string, client: ExtendedClient) {
@@ -50,7 +51,8 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         executionId: string,
-        error: Error | unknown
+        error: Error | unknown,
+        translator: TFunction
     ) {
         logger.error(error, 'Failed to reload interaction module across shards.');
 
@@ -59,8 +61,9 @@ class ReloadCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Oops!**\n` +
-                            '_Hmm.._ It seems I am unable to reload interaction module across shards.'
+                        translator('commands.reload.unableToReload', {
+                            icon: this.embedOptions.icons.error
+                        })
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -71,10 +74,11 @@ class ReloadCommand extends BaseSlashCommandInteraction {
     private async respondWithSuccessEmbed(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        client: ExtendedClient
+        client: ExtendedClient,
+        translator: TFunction
     ) {
         const commands = this.getCommands(client);
-        const embedDescription = this.buildEmbedDescription(commands);
+        const embedDescription = this.buildEmbedDescription(commands, translator);
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -103,8 +107,14 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         return params;
     }
 
-    private buildEmbedDescription(commands: string[] | undefined): string {
-        return `**${this.embedOptions.icons.bot} Reloaded commands**\n` + commands?.join('\n');
+    private buildEmbedDescription(commands: string[] | undefined, translator: TFunction): string {
+        return (
+            translator('commands.reload.reloadedCommands', {
+                icon: this.embedOptions.icons.bot
+            }) +
+            '\n' +
+            commands?.join('\n')
+        );
     }
 }
 

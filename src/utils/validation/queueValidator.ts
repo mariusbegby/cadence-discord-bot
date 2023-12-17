@@ -5,6 +5,8 @@ import { InteractionValidationError } from '../../classes/interactions';
 import loggerModule from '../../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
+import { useServerTranslator } from '../../common/localeUtil';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkQueueExists = async ({ interaction, queue, executionId }: ValidatorParams) => {
@@ -15,6 +17,7 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -24,7 +27,10 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueDoesNotExist', {
+                            icon: embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
@@ -52,6 +58,7 @@ export const checkHistoryExists = async ({ interaction, history, executionId }: 
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -61,7 +68,10 @@ export const checkHistoryExists = async ({ interaction, history, executionId }: 
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks in the history and nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.historyDoesNotExist', {
+                            icon: embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
@@ -89,6 +99,7 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -98,7 +109,10 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueNoCurrentTrack', {
+                            icon: embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({
@@ -126,6 +140,7 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
         shardId: interaction.guild?.shardId,
         guildId: interaction.guild?.id
     });
+    const translator = useServerTranslator(interaction);
 
     const interactionIdentifier =
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
@@ -135,7 +150,10 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.warning} Oops!**\nThere are no tracks added to the queue. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueIsEmpty', {
+                            icon: embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(embedOptions.colors.warning)
                     .setFooter({

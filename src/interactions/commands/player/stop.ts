@@ -1,21 +1,22 @@
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class StopCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('stop')
-            .setDescription('Clear the queue and stop playing audio.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('stop'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -26,7 +27,7 @@ class StopCommand extends BaseSlashCommandInteraction {
         ]);
 
         if (!queue.deleted) {
-            queue.setRepeatMode(0);
+            queue.setRepeatMode(QueueRepeatMode.OFF);
             queue.clear();
             queue.node.stop();
             logger.debug('Cleared and stopped the queue.');
@@ -38,9 +39,10 @@ class StopCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Stopped playing**\n` +
-                            'Stopped playing audio and cleared the track queue.\n\n' +
-                            'To play more music, use the **`/play`** command!'
+                        translator('commands.stop.stoppedPlaying', {
+                            icon: this.embedOptions.icons.success,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

@@ -5,21 +5,24 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('skip')
-            .setDescription('Skip track to next or specified position in queue.')
-            .addIntegerOption((option) =>
-                option.setName('position').setDescription('The position in queue to skip to.').setMinValue(1)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('skip')
+                .addIntegerOption((option) => option.setName('position').setMinValue(1))
+        );
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -33,9 +36,9 @@ class SkipCommand extends BaseSlashCommandInteraction {
         const trackPositionInput: number = interaction.options.getInteger('position')!;
 
         if (trackPositionInput) {
-            return await this.handleSkipToTrackPosition(logger, interaction, queue, trackPositionInput);
+            return await this.handleSkipToTrackPosition(logger, interaction, queue, trackPositionInput, translator);
         } else {
-            return await this.handleSkipToNextTrack(logger, interaction, queue);
+            return await this.handleSkipToNextTrack(logger, interaction, queue, translator);
         }
     }
 
@@ -43,15 +46,22 @@ class SkipCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        trackPosition: number
+        trackPosition: number,
+        translator: TFunction
     ) {
         if (trackPosition > queue.tracks.data.length) {
-            return await this.handleTrackPositionHigherThanQueueLength(trackPosition, queue, logger, interaction);
+            return await this.handleTrackPositionHigherThanQueueLength(
+                trackPosition,
+                queue,
+                logger,
+                interaction,
+                translator
+            );
         } else {
             const skippedTrack: Track = queue.currentTrack!;
             queue.node.skipTo(trackPosition - 1);
             logger.debug('Skipped to specified track position.');
-            return await this.respondWithSuccessEmbed(skippedTrack, interaction);
+            return await this.respondWithSuccessEmbed(skippedTrack, interaction, translator);
         }
     }
 
@@ -59,55 +69,77 @@ class SkipCommand extends BaseSlashCommandInteraction {
         trackPosition: number,
         queue: GuildQueue,
         logger: Logger,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
     ) {
         logger.debug('Specified track position was higher than total tracks.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `There are only **\`${queue.tracks.data.length}\`** tracks in the queue. You cannot skip to track **\`${trackPosition}\`**.\n\n` +
-                            'View tracks added to the queue with **`/queue`**.'
+                        translator('commands.skip.trackPositionHigherThanQueueLength', {
+                            icon: this.embedOptions.icons.warning,
+                            position: trackPosition,
+                            queueCommand: formatSlashCommand('queue', translator),
+                            count: queue.tracks.data.length
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
 
-    private async handleSkipToNextTrack(logger: Logger, interaction: ChatInputCommandInteraction, queue: GuildQueue) {
+    private async handleSkipToNextTrack(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
+        translator: TFunction
+    ) {
         if (queue.tracks.data.length === 0 && !queue.currentTrack) {
-            return await this.handleNoTracksInQueueAndNoCurrentTrack(logger, interaction);
+            return await this.handleNoTracksInQueueAndNoCurrentTrack(logger, interaction, translator);
         }
 
         const skippedTrack: Track = queue.currentTrack!;
         queue.node.skip();
         logger.debug('Skipped current track.');
-        return await this.respondWithSuccessEmbed(skippedTrack, interaction);
+        return await this.respondWithSuccessEmbed(skippedTrack, interaction, translator);
     }
 
-    private async handleNoTracksInQueueAndNoCurrentTrack(logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async handleNoTracksInQueueAndNoCurrentTrack(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         logger.debug('No tracks in queue and no current track.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'The queue is empty, add some tracks with **`/play`**!'
+                        translator('commands.skip.emptyQueue', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
 
-    private async respondWithSuccessEmbed(skippedTrack: Track, interaction: ChatInputCommandInteraction) {
+    private async respondWithSuccessEmbed(
+        skippedTrack: Track,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                            `${this.getDisplayTrackDurationAndUrl(skippedTrack)}`
+                        translator('commands.skip.skippedTrack', {
+                            icon: this.embedOptions.icons.skipped
+                        }) +
+                            '\n' +
+                            this.getDisplayTrackDurationAndUrl(skippedTrack, translator)
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                     .setColor(this.embedOptions.colors.success)

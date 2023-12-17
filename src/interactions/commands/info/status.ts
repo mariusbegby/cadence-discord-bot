@@ -4,41 +4,53 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 
 class StatusCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('status').setDescription('Show operational status of the bot.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('status'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
-            getBotStatistics(client!, version),
-            getPlayerStatistics(client!),
-            getSystemStatus(executionId, false)
+            getBotStatistics(client!, version, translator),
+            getPlayerStatistics(client!, translator),
+            getSystemStatus(executionId, false, translator)
         ]);
-        const discordStatus = getDiscordStatus(client!);
+        const discordStatusEmbedString = getDiscordStatus(client!, translator);
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**${this.embedOptions.icons.bot} Bot status**\n` + botStatisticsEmbedString)
+                    .setDescription(
+                        translator('statistics.botStatus.title', { icon: this.embedOptions.icons.bot }) +
+                            '\n' +
+                            botStatisticsEmbedString
+                    )
                     .addFields(
                         {
-                            name: `**${this.embedOptions.icons.queue} Queue status**`,
+                            name: translator('statistics.queueStatus.title', {
+                                icon: this.embedOptions.icons.queue
+                            }),
                             value: playerStatisticsEmbedString
                         },
                         {
-                            name: `**${this.embedOptions.icons.server} System status**`,
+                            name: translator('statistics.systemStatus.title', {
+                                icon: this.embedOptions.icons.server
+                            }),
                             value: systemStatusEmbedString
                         },
                         {
-                            name: `**${this.embedOptions.icons.discord} Discord status**`,
-                            value: discordStatus
+                            name: translator('statistics.discordStatus.title', {
+                                icon: this.embedOptions.icons.discord
+                            }),
+                            value: discordStatusEmbedString
                         }
                     )
                     .setColor(this.embedOptions.colors.info)

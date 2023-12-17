@@ -12,6 +12,8 @@ import {
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { useServerTranslator } from '../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -25,6 +27,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction, referenceId } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
         const filterType = referenceId;
 
         logger.debug('Received select menu interaction.');
@@ -41,16 +44,34 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         this.resetFilters(queue, logger);
 
         if (selectMenuInteraction.values.length === 0) {
-            return await this.replyWithDisabledFiltersEmbed(logger, selectMenuInteraction);
+            return await this.replyWithDisabledFiltersEmbed(logger, selectMenuInteraction, translator);
         }
 
         switch (filterType) {
             case 'ffmpeg':
-                return await this.handleFfmpegFilterToggle(logger, selectMenuInteraction, queue, filterType);
+                return await this.handleFfmpegFilterToggle(
+                    logger,
+                    selectMenuInteraction,
+                    queue,
+                    filterType,
+                    translator
+                );
             case 'biquad':
-                return await this.handleBiquadFilterToggle(logger, selectMenuInteraction, queue, filterType);
+                return await this.handleBiquadFilterToggle(
+                    logger,
+                    selectMenuInteraction,
+                    queue,
+                    filterType,
+                    translator
+                );
             case 'equalizer':
-                return await this.handleEqualizerFilterToggle(logger, selectMenuInteraction, queue, filterType);
+                return await this.handleEqualizerFilterToggle(
+                    logger,
+                    selectMenuInteraction,
+                    queue,
+                    filterType,
+                    translator
+                );
             default:
                 logger.warn(`Unknown filter type '${filterType}'.`);
                 return;
@@ -61,37 +82,40 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         logger: Logger,
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
-        filterType: string
+        filterType: string,
+        translator: TFunction
     ): Promise<Message> {
         this.addFfmpegNormalizerIfRequired(selectMenuInteraction);
         this.toggleFfmpegFilters(selectMenuInteraction, queue, logger);
 
         logger.debug('Responding with success embed.');
-        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType);
+        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType, translator);
     }
 
     private async handleBiquadFilterToggle(
         logger: Logger,
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
-        filterType: string
+        filterType: string,
+        translator: TFunction
     ): Promise<Message> {
         this.toggleBiquadFilter(selectMenuInteraction, queue, logger);
 
         logger.debug('Responding with success embed.');
-        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType);
+        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType, translator);
     }
 
     private async handleEqualizerFilterToggle(
         logger: Logger,
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
-        filterType: string
+        filterType: string,
+        translator: TFunction
     ): Promise<Message> {
         this.toggleEqualizerFilter(selectMenuInteraction, queue, logger);
 
         logger.debug('Responding with success embed.');
-        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType);
+        return await this.sendFiltersToggledSuccessEmbed(logger, selectMenuInteraction, filterType, translator);
     }
 
     private toggleFfmpegFilters(
@@ -172,25 +196,33 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     private sendFiltersToggledSuccessEmbed(
         logger: Logger,
         interaction: StringSelectMenuInteraction,
-        filterType: string
+        filterType: string,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Responding with success embed.');
         return interaction.editReply({
-            embeds: [this.buildSuccessEmbed(interaction, filterType)],
+            embeds: [this.buildSuccessEmbed(interaction, filterType, translator)],
             components: []
         });
     }
 
-    private buildSuccessEmbed(selectMenuInteraction: StringSelectMenuInteraction, filterType: string): EmbedBuilder {
+    private buildSuccessEmbed(
+        selectMenuInteraction: StringSelectMenuInteraction,
+        filterType: string,
+        translator: TFunction
+    ): EmbedBuilder {
         const availableFilters: FilterOption[] = this.getAvailableFilters(filterType);
         const enabledFilters: string = this.getEnabledFilters(selectMenuInteraction, availableFilters);
 
         return new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(selectMenuInteraction))
             .setDescription(
-                `**${this.embedOptions.icons.success} Filters toggled**\n` +
-                    `Now using these ${filterType} filters:\n` +
-                    `${enabledFilters}`
+                translator('commands.filters.nowUsingFilters', {
+                    icon: this.embedOptions.icons.success,
+                    mode: filterType
+                }) +
+                    '\n' +
+                    enabledFilters
             )
             .setColor(this.embedOptions.colors.success);
     }
@@ -243,7 +275,8 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
 
     private async replyWithDisabledFiltersEmbed(
         logger: Logger,
-        interaction: StringSelectMenuInteraction
+        interaction: StringSelectMenuInteraction,
+        translator: TFunction
     ): Promise<Message> {
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -251,8 +284,9 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Disabled filters**\n` +
-                            'All audio filters have been disabled.'
+                        translator('commands.filters.allFiltersDisabled', {
+                            icon: this.embedOptions.icons.success
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ],

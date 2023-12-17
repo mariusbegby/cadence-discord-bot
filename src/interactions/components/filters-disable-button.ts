@@ -5,6 +5,7 @@ import { BaseComponentInteraction } from '../../classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { useServerTranslator } from '../../common/localeUtil';
 
 class FiltersDisableButtonComponent extends BaseComponentInteraction {
     constructor() {
@@ -14,6 +15,7 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -31,8 +33,9 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.success} Disabled filters**\n` +
-                            'All audio filters have been disabled.'
+                        translator('commands.filters.allFiltersDisabled', {
+                            icon: this.embedOptions.icons.success
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ],

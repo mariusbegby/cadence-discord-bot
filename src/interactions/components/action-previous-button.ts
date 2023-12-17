@@ -5,6 +5,9 @@ import { BaseComponentParams, BaseComponentReturnType } from '../../types/intera
 import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { TFunction } from 'i18next';
+import { useServerTranslator } from '../../common/localeUtil';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
 class ActionPreviousButton extends BaseComponentInteraction {
     constructor() {
@@ -14,6 +17,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction, referenceId } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const history: GuildQueueHistory = useHistory(interaction.guild!.id)!;
@@ -26,51 +30,61 @@ class ActionPreviousButton extends BaseComponentInteraction {
         ]);
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction);
+            return await this.handleNoQueue(interaction, translator);
         }
 
         if (queue.currentTrack!.id !== referenceId) {
-            return await this.handleAlreadySkipped(interaction);
+            return await this.handleAlreadySkipped(interaction, translator);
         }
 
-        return await this.handleBackToPreviousTrack(logger, interaction, history);
+        return await this.handleBackToPreviousTrack(logger, interaction, history, translator);
     }
 
     private async handleBackToPreviousTrack(
         logger: Logger,
         interaction: MessageComponentInteraction,
-        history: GuildQueueHistory
+        history: GuildQueueHistory,
+        translator: TFunction
     ) {
         if (history.tracks.data.length === 0) {
-            return await this.handleNoTracksInHistory(logger, interaction);
+            return await this.handleNoTracksInHistory(logger, interaction, translator);
         }
 
         await history.back();
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const currentTrack: Track = queue.currentTrack!;
         logger.debug('Recovered track from history.');
-        return await this.handleSuccess(interaction, currentTrack);
+        return await this.handleSuccess(interaction, currentTrack, translator);
     }
-    private async handleNoTracksInHistory(logger: Logger, interaction: MessageComponentInteraction) {
+    private async handleNoTracksInHistory(
+        logger: Logger,
+        interaction: MessageComponentInteraction,
+        translator: TFunction
+    ) {
         logger.debug('No tracks in history.');
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            'The history is empty, add some tracks with **`/play`**!'
+                        translator('commands.back.trackHistoryEmpty', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
 
-    private async handleNoQueue(interaction: MessageComponentInteraction) {
+    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueNoCurrentTrack', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -78,12 +92,14 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleAlreadySkipped(interaction: MessageComponentInteraction) {
+    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                        translator('validation.trackNotPlayingAnymore', {
+                            icon: this.embedOptions.icons.warning
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -91,12 +107,18 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleSuccess(interaction: MessageComponentInteraction, recoveredTrack: Track) {
+    private async handleSuccess(
+        interaction: MessageComponentInteraction,
+        recoveredTrack: Track,
+        translator: TFunction
+    ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                `**${this.embedOptions.icons.back} Recovered track**\n` +
-                    `${this.getDisplayTrackDurationAndUrl(recoveredTrack)}`
+                translator('commands.back.trackRecovered', {
+                    icon: this.embedOptions.icons.back,
+                    track: this.getDisplayTrackDurationAndUrl(recoveredTrack, translator)
+                })
             )
             .setThumbnail(recoveredTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

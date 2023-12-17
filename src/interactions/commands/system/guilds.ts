@@ -4,12 +4,12 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { ExtendedClient } from '../../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class GuildsCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('guilds')
-            .setDescription('Show the top 25 guilds by member count.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('guilds'));
         const isSystemCommand: boolean = true;
         super(data, isSystemCommand);
     }
@@ -17,6 +17,7 @@ class GuildsCommand extends BaseSlashCommandInteraction {
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
@@ -28,7 +29,12 @@ class GuildsCommand extends BaseSlashCommandInteraction {
         const guildListFormatted = this.formatGuildListAsString(shardGuilds);
         const totalMemberCount = this.calculateTotalMemberCount(shardGuilds);
 
-        let embedDescription = this.buildEmbedDescription(totalGuildCount, guildListFormatted, totalMemberCount);
+        let embedDescription = this.buildEmbedDescription(
+            totalGuildCount,
+            guildListFormatted,
+            totalMemberCount,
+            translator
+        );
 
         if (embedDescription.length >= 4000) {
             logger.debug('Embed description is too long, truncating.');
@@ -72,13 +78,23 @@ class GuildsCommand extends BaseSlashCommandInteraction {
     private buildEmbedDescription(
         totalGuildCount: number,
         guildListFormattedString: string,
-        totalMemberCount: number
+        totalMemberCount: number,
+        translator: TFunction
     ): string {
-        const topGuildsString = totalGuildCount < 25 ? `Top ${totalGuildCount} guilds` : 'Top 25 guilds';
+        const guildCount = Math.max(totalGuildCount, 25);
         return (
-            `**${this.embedOptions.icons.bot} ${topGuildsString} by member count (${totalGuildCount} total)**\n` +
-            `${guildListFormattedString}\n\n` +
-            `**Total members:** **\`${totalMemberCount}\`**`
+            translator('commands.guilds.topGuildsByMemberCount', {
+                icon: this.embedOptions.icons.bot,
+                count: guildCount,
+                totalCount: totalGuildCount
+            }) +
+            '\n' +
+            guildListFormattedString +
+            '\n' +
+            '\n' +
+            translator('commands.guilds.totalMembers', {
+                count: totalMemberCount
+            })
         );
     }
 }

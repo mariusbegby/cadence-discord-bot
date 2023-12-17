@@ -1,0 +1,409 @@
+{
+    "autocomplete": {
+        "trackName": "{{title}} [Artist: {{author}}]"
+    },
+    "commands": {
+        "back": {
+            "metadata": {
+                "name": "back",
+                "description": "Gå tilbake til forrige låt eller angitt posisjon i historikken.",
+                "options": {
+                    "position": {
+                        "name": "posisjon",
+                        "description": "Posisjon for låt i historikken å gå tilbake til."
+                    }
+                }
+            },
+            "trackHistoryEmpty": "{{icon}} **Oi sann!**\nHistorikken er tom, legg til noen låter med {{playCommand}}!",
+            "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oi sann!**\nDet er bare **1** låt i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
+            "trackPositionHigherThanHistoryLength": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
+            "trackRecovered": "{{icon}} **Gjenopprettet låt**\n{{track}}"
+        },
+        "filters": {
+            "metadata": {
+                "name": "filters",
+                "description": "Velg mellom ulike lydfiltre.",
+                "options": {
+                    "type": {
+                        "name": "type",
+                        "description": "Type lydfilter å bruke.",
+                        "choices": {
+                            "ffmpeg": "FFmpeg",
+                            "biquad": "Biquad",
+                            "equalizer": "Equalizer",
+                            "disable": "Deaktivert"
+                        }
+                    }
+                }
+            },
+            "allFiltersDisabled": "{{icon}} **Deaktiverte lydfiltre**\nAlle lydfiltre har blitt deaktivert.",
+            "disableAllFiltersButton": "Deaktiver alle lydfiltre",
+            "nowUsingFilters": "{{icon}} **Lydfiltre aktivert**\nBruker nå disse {{mode}} filtrene:",
+            "selectFilterPlaceholder": "Velg et lydfilter fra menyen.",
+            "selectFilterPlaceholderMany": "Velg ett eller flere lydfiltre.",
+            "toggleFilterInstructions": "**Juster filtre ({{provider}})**\nAktiver eller deaktiver lydfiltre fra menyen."
+        },
+        "guilds": {
+            "metadata": {
+                "name": "guilds",
+                "description": "Vis de 25 største serverne etter medlemstall."
+            },
+            "topGuildsByMemberCount": "{{icon}} **Topp {{count}} servere etter medlemstall ({{totalCount}} totalt)**",
+            "totalMembers": "**Totalt antall medlemmer:** **`{{count}`**"
+        },
+        "help": {
+            "metadata": {
+                "name": "help",
+                "description": "Vis listen over bot-kommandoer."
+            },
+            "addBotButton": "Legg til bot",
+            "listTitle": "{{icon}} **Liste over kommandoer**",
+            "supportServerButton": "Støtteserver"
+        },
+        "history": {
+            "metadata": {
+                "name": "history",
+                "description": "Vis historikk over låter som har blitt spilt.",
+                "options": {
+                    "page": {
+                        "name": "side",
+                        "description": "Sidenummer for å vise for historikken."
+                    }
+                }
+            },
+            "emptyHistory": "Historikken er tom, legg til noen låter med {{playCommand}}!",
+            "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i historikken.",
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
+            "tracksInHistoryTitle": "{{icon}} **Låter i historikken**"
+        },
+        "join": {
+            "metadata": {
+                "name": "join",
+                "description": "Botten vil bli med i talekanalen hvis den ikke allerede er i en."
+            },
+            "alreadyConnected": "{{icon}} **Oi sann!**\nJeg er allerede koblet til talekanalen {{channel}}.\n\nFor å koble meg fra kanalen, bruk kommandoen {{leaveCommand}}.",
+            "couldNotJoin": "{{icon}} **Oi sann!**\nKunne ikke bli med i talekanalen, vennligst prøv igjen.",
+            "joinedChannel": "{{icon}} **Ble med i kanal**\nKoblet til talekanalen: {{channel}}\n\nFor å legge til låter, bruk kommandoen {{playCommand}}!"
+        },
+        "leave": {
+            "metadata": {
+                "name": "leave",
+                "description": "Tøm køen og fjern botten fra talekanalen."
+            },
+            "leavingChannel": "{{icon}} **Koblet fra kanal**\nTømte låtkøen og koblet fra talekanalen.\n\nFor å spille mer musikk, bruk kommandoen {{playCommand}}!"
+        },
+        "loop": {
+            "metadata": {
+                "name": "loop",
+                "description": "Velg mellom å spille en låt på reptisjon, hele køen eller autoplay.",
+                "options": {
+                    "mode": {
+                        "name": "modus",
+                        "description": "Loop-modus: Låt, kø, autoplay eller deaktivert.",
+                        "choices": {
+                            "0": "Deaktivert",
+                            "1": "Låt",
+                            "2": "Kø",
+                            "3": "Autoplay"
+                        }
+                    }
+                }
+            },
+            "alreadySet": "{{icon}} **Oi sann!**\nLoop-modus er allerede satt til **`{{mode}}`**.",
+            "loopModeInformation": "{{icon}} **Nåværende loop-modus**\nLoop-modusen er for øyeblikket satt til **`{{mode}}`**.",
+            "modeChanged": "{{icon}} **Endret loop-modus**\nEndrer loop-modus fra **`{{fromName}}`** til **`{{toName}}`**.",
+            "willAutoplay": "Når køen er tom, vil lignende låter begynne å spille!",
+            "willNoLongerPlay": "{{mode}} vil ikke lenger spille på repeat!",
+            "willNowPlay": "{{mode}} vil nå spille på repeat!"
+        },
+        "lyrics": {
+            "metadata": {
+                "name": "lyrics",
+                "description": "Søk etter Genius sangtekster for nåværende eller angitt låt.",
+                "options": {
+                    "query": {
+                        "name": "søk",
+                        "description": "Søkespørring etter tekst eller URL."
+                    }
+                }
+            },
+            "autocompleteSearchResult": "{{title}} [Artist: {{artist}}]",
+            "lyricsEmbed": "{{icon}} **Viser sangtekster**\n**Låt: [{{trackTitle}}]({{trackUrl}})**\n**Artist: [{{artistName}}]({{artistUrl}})**",
+            "noLyricsFound": "{{icon}} **Ingen sangtekster funnet**\nDet ble ikke funnet noen Genius sangtekster for låten **{{query}}**."
+        },
+        "move": {
+            "metadata": {
+                "name": "move",
+                "description": "Flytt en låt til en spesifisert posisjon i køen.",
+                "options": {
+                    "from": {
+                        "name": "fra",
+                        "description": "Posisjonen til låten som skal flyttes."
+                    },
+                    "to": {
+                        "name": "til",
+                        "description": "Posisjonen for å flytte låten til."
+                    }
+                }
+            },
+            "trackMoved": "{{icon}} **Flyttet låten**\n{track}\n\nLåten har blitt flyttet fra posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen.",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`1`** låt i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+        },
+        "nowplaying": {
+            "metadata": {
+                "name": "nowplaying",
+                "description": "Vis informasjon om nåværende låt."
+            },
+            "embedFields": {
+                "author": "**Artist**",
+                "plays": "**Avspillinger**",
+                "source": "**Kilde for låt**"
+            },
+            "otherTracksInQueue_one": "1 annen låt i køen...",
+            "otherTracksInQueue": "{{count}} andre låter i køen...",
+            "playCount_zero": "Ukjent",
+            "playCount": "{{count, number}}"
+        },
+        "pause": {
+            "metadata": {
+                "name": "pause",
+                "description": "Pause eller gjenoppta nåværende låt."
+            },
+            "pauseConfirmation": "{{icon}} **Pauset låten**",
+            "resumeConfirmation": "{{icon}} **Gjenopptok låten**",
+            "directSource": "Direkte kilde"
+        },
+        "play": {
+            "metadata": {
+                "name": "play",
+                "description": "Legg til en låt eller spilleliste i køen ved søkespørring eller URL.",
+                "options": {
+                    "query": {
+                        "name": "spørring",
+                        "description": "Søkespørring ved tekst eller URL."
+                    }
+                }
+            },
+            "addedToQueueTitle": "{{icon}} **Lagt til i køen**",
+            "playlistAddedTitle": "{{icon}} **Lagt til spilleliste i køen**",
+            "playlistAddedTrackCount_one": "Og **1** til låt... Bruk {{queueCommand}} for å se alle.",
+            "playlistAddedTrackCount": "Og **{{count}}** flere låter... Bruk {{queueCommand}} for å se alle.",
+            "playlistTooLarge": "{{icon}} **Spilleliste for stor**\nDenne spillelisten er for stor til å legges til i køen.\n\nMaksimalt antall låter som kan legges til i køen er **{{count}}**.",
+            "trackNotFound": "{{icon}} **Ingen låter funnet**\nIngen resultater funnet for **{{query}}**.\n\nHvis du angav en URL, vær sikker på at den er gyldig og offentlig."
+        },
+        "queue": {
+            "metadata": {
+                "name": "queue",
+                "description": "Vis låter som har blitt lagt til i køen.",
+                "options": {
+                    "page": {
+                        "name": "side",
+                        "description": "Sidenummer for å vise for køen."
+                    }
+                }
+            },
+            "tracksInQueueTitle": "{{icon}} **Låter i køen**",
+            "emptyQueue": "Køen er tom, legg til noen låter med {{playCommand}}!",
+            "estimatedDuration": "Estimert tid igjen: {{duration}}",
+            "estimatedReallyLongTime": "Estimert tid igjen: Veldig lang tid",
+            "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i køen.",
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i køen."
+        },
+        "reload": {
+            "metadata": {
+                "name": "reload",
+                "description": "Last inn bot-kommandoer, autocompletion og component interaksjoner på nytt på tvers av shards."
+            },
+            "reloadedCommands": "{{icon}} **Kommandoer lastet inn på nytt**",
+            "unableToReload": "{{icon}} **Oi sann!**\n_Hmm..._ Det ser ut til at jeg ikke klarer å laste inn interaksjoner og kommandoer på tvers av shards."
+        },
+        "remove": {
+            "noTracksRemoved": "{{icon}} **Ingen låter fjernet**\nDet ble ikke fjernet noen låter fra køen. Vennligst sjekk om alternativet du valgte har låter som kan fjernes.",
+            "removedTrack": "{{icon}} **Fjernet låt**",
+            "removedTracks": "{{icon}} **Fjernet låter**\n**`{{count}}`** låter ble fjernet fra køen.",
+            "startPositionHigherThanEndPosition": "{{icon}} **Oi sann!**\nStartposisjon **`{{start}}`** er høyere enn siste posisjon **`{{end}}`** i køen. Vennligst spesifiser et gyldig område.\n\nVis låter lagt til i køen med {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`1`** låt i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+        },
+        "seek": {
+            "metadata": {
+                "name": "seek",
+                "description": "Spol til tidsposisjon i nåværende låt.",
+                "options": {
+                    "duration": {
+                        "name": "varighet",
+                        "description": "Tidsstempel i format 00:00:00 (TT:mm:ss)."
+                    }
+                }
+            },
+            "correctFormatInstruction": "{{icon}} **Oi sann!**\nDu anga et ugyldig varighetsformat, **`{{wrongDuration}}`**.\nVennligst bruk formatet **`TT:mm:ss`**, **`mm:ss`** eller **`ss`**.\n\n**Eksempler:**\n- **`/seek`** **`1:24:12`** - Spol til 1 time, 24 minutter og 12 sekunder.\n- **`/seek`** **`3:27`** - Spol til 3 minutter og 27 sekunder.\n- **`/seek`** **`42`** - Spol til 42 sekunder.",
+            "durationLongerThanTrackDuration": "{{icon}} **Oi sann!**\nDu anga **`{{wrongDuration}}`**, som er et tidsstempel lengre enn varigheten av nåværende låt.\n\nVennligst prøv et tidsstempel som er mindre enn varigheten til låten (**{{trackDuration}}**).",
+            "seekingToTimestamp": "{{icon}} **Spoler til tidsposisjon**\nSpoler til **`{{duration}}`** i nåværende låt."
+        },
+        "shards": {
+            "metadata": {
+                "name": "shards",
+                "description": "Vis informasjon om alle tilkoblede shards.",
+                "options": {
+                    "sort": {
+                        "name": "sorter",
+                        "description": "Hva shards skal sorteres etter.",
+                        "choices": {
+                            "none": "Ingen (Shard ID)",
+                            "memory": "Minnebruk",
+                            "connections": "Taleforbindelser",
+                            "tracks": "Låter",
+                            "listeners": "Lyttere",
+                            "guilds": "Servere",
+                            "members": "Medlemmer"
+                        }
+                    },
+                    "page": {
+                        "name": "side",
+                        "description": "Sidenummer for å vise for shards."
+                    }
+                }
+            }
+        },
+        "shuffle": {
+            "metadata": {
+                "name": "shuffle",
+                "description": "Tilfeldig stokk om rekkefølgen til alle låter i køen."
+            },
+            "shuffledTracks": "{{icon}} **Stokket om rekkefølge**\n**{{count}}** låter i køen har blitt stokket om.\n\nVis den nye kørekkefølgen med {{queueCommand}}."
+        },
+        "skip": {
+            "metadata": {
+                "name": "skip",
+                "description": "Hopp over låt til neste eller angitt posisjon i køen.",
+                "options": {
+                    "position": {
+                        "name": "posisjon",
+                        "description": "Posisjon i køen for låt som skal hoppes til."
+                    }
+                }
+            },
+            "emptyQueue": "{{icon}} **Oi sann!**\nKøen er tom, legg til noen låter med {{playCommand}}!",
+            "skippedTrack": "{{icon}} **Hoppet over låt**",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nDet er bare **1** låt i køen. Du kan ikke hoppe til posisijon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i køen. Du kan ikke hoppe til posisjon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+        },
+        "status": {
+            "metadata": {
+                "name": "status",
+                "description": "Vis driftsstatus for botten."
+            }
+        },
+        "stop": {
+            "metadata": {
+                "name": "stop",
+                "description": "Tøm køen og slutt å spille lyd."
+            },
+            "stoppedPlaying": "{{icon}} **Stoppet å spille**\nStoppet å spille lyd og tømte køen.\n\nFor å spille mer musikk, bruk kommandoen {{playCommand}}!"
+        },
+        "systemstatus": {
+            "metadata": {
+                "name": "systemstatus",
+                "description": "Vis driftsstatus for botten med ytterligere teknisk informasjon."
+            }
+        },
+        "volume": {
+            "metadata": {
+                "name": "volume",
+                "description": "Vis eller endre avspillingsvolumet for låter.",
+                "options": {
+                    "percentage": {
+                        "name": "prosent",
+                        "description": "Volumprosent: Fra 1% til 100%."
+                    }
+                }
+            },
+            "invalidVolumeRange": "{{icon}} **Oi sann!**\nDu kan ikke sette volumet til **`{{wrongVolume}}%`**, vennligst velg en verdi mellom **`1%`** og **`100%`**.",
+            "volumeChanged": "{{icon}} **Volum endret**\nAvspillingsvolumet er endret til **`{{volume}}%`**.",
+            "volumeInformation": "{{icon}} **Avspillingsvolum**\nAvspillingsvolumet er for øyeblikket satt til **`{{volume}}`**.",
+            "volumeMuted": "{{icon}} **Lyd dempet**\nAvspillingslyden er dempet, fordi volumet ble satt til **`0%`**."
+        }
+    },
+    "components": {
+        "responses": {
+            "paused": "Pauset låt",
+            "resumed": "Gjenopptok låt"
+        }
+    },
+    "musicPlayerCommon": {
+        "controls": {
+            "stop": "Stopp",
+            "previous": "Forrige",
+            "pause": "Pause",
+            "resume": "Gjenoppta",
+            "skip": "Hopp over"
+        },
+        "footerPageNumber_one": "Side {{page}} av {{pageCount}} (1 låt)",
+        "footerPageNumber": "Side {{page}} av {{pageCount}} ({{count}} låter)",
+        "loopingInfo": "{{icon}} **Looping aktivert**\nLoop-modus er satt til **`{{loopMode}}`**. Du kan endre det med {{loopCommand}}.\n",
+        "nowPausedTitle": "{{icon}} **For øyeblikket pauset**",
+        "nowPlayingTitle": "{{icon}} **Spiller nå**",
+        "playingLive": "{{icon}} **`DIREKTE`** - Spiller kontinuerlig fra direktekilde.",
+        "queueRepeatMode": {
+            "off": "Deaktivert",
+            "track": "Låt",
+            "queue": "Kø",
+            "autoplay": "Autoplay"
+        },
+        "requestedBy": "**Forespurt av:** {{user}}",
+        "unavailableAuthor": "Ikke tilgjengelig",
+        "unavailableDuration": "_Ingen varighet tilgjengelig._",
+        "unavailableRequestedBy": "Ikke tilgjengelig",
+        "unavailableTrackTitle": "Tittel ikke tilgjengelig",
+        "unavailableTrackUrl": "**Ikke tilgjengelig**",
+        "unavailableSource": "Ikke tilgjengelig",
+        "voiceChannelInfo": "Kanal: {{channel}} ({{bitrate}}kbps)"
+    },
+    "statistics": {
+        "botStatus": {
+            "title": "{{icon}} **Bot status**",
+            "joinedServers": "**{{count}}** Tilkoblede servere",
+            "joinedServers_one": "**1** Tilkoblet server",
+            "totalMembers": "**{{count}}** Totalt antall medlemmer",
+            "releaseVersion": "**{{version}}** Utgivelsesversjon"
+        },
+        "queueStatus": {
+            "title": "{{icon}} **Køstatus**",
+            "voiceConnections": "**{{count}}** Taleforbindelser",
+            "voiceConnections_one": "**1** Taleforbindelse",
+            "tracksInQueues": "**{{count}}** Låter i køer",
+            "tracksInQueues_one": "**1** Låt i køer",
+            "usersListening": "**{{count}}** Lyttere",
+            "usersListening_one": "**1** Lytter"
+        },
+        "systemStatus": {
+            "title": "{{icon}} **Systemstatus**",
+            "uptime": "**{{value}}** Oppetid",
+            "cpu": "**{{value, number(minimumFractionDigits: 2)}}%** CPU-bruk",
+            "cpuDetailed": "**{{usage}}% @ {{cores}} kjerner** CPU-bruk",
+            "memory": "**{{value, number}} MB** Minnebruk",
+            "memoryDetailed": "**{{used, number}} / {{total, number}} MB** Minnebruk",
+            "platform": "**{{value}}** Plattform"
+        },
+        "discordStatus": {
+            "title": "{{icon}} **Discord-status**",
+            "apiLatency": "**{{value, number}} ms** Discord API forsinkelse"
+        },
+        "dependencies": {
+            "title": "{{icon}} **Avhengigheter**"
+        }
+    },
+    "validation": {
+        "cannotJoinVoiceOrTalk": "{{icon}} **Oi sann!**\nJeg har ikke tillatelse til å spille lyd i talekanalen {{channel}}.\n\nVær sikker på at jeg har **`Koble til`** og **`Snakke`** tillatelsene i denne talekanalen.",
+        "cannotSendMessageInChannel": "{{icon}} **Oi sann!**\nJeg har ikke tillatelse til å sende meldingssvar i kanalen {{channel}}.\n\nVær sikker på at jeg har **`Se Kanal`** tillatelsen i denne tekstkanalen.",
+        "historyDoesNotExist": "{{icon}} **Oi sann!**\nDet er ingen låter i historikken og ingenting spilles av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
+        "notInSameVoiceChannel": "{{icon}} **Ikke i samme talekanal**\nDu må være i samme talekanal som meg for å utføre denne handlingen.\n\n**Talekanal:** {{channel}}",
+        "notInVoiceChannel": "{{icon}} **Ikke i en talekanal**\nDu må være i en talekanal for å utføre denne handlingen.",
+        "notValidGuildId": "{{icon}} **Oi sann!**\nIngen tillatelse til å utføre denne handlingen.\n\nKommandoen {{command}} kan ikke utføres på denne serveren.",
+        "queueDoesNotExist": "{{icon}} **Oi sann!**\nDet er ingen låter i køen og ingenting spilles av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
+        "queueIsEmpty": "{{icon}} **Oi sann!\nDet er ingen låter lagt til i køen. Legg først til noen låter med {{playCommand}}!",
+        "queueNoCurrentTrack": "{{icon}} **Oi sann!**\nDet spilles ingenting av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
+        "trackNotPlayingAnymore": "{{icon}} **Oi sann!**\nDenne låten har blitt hoppet over allerede eller spiller ikke lenger."
+    }
+}

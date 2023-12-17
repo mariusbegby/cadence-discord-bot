@@ -5,7 +5,8 @@ import { Logger } from 'pino';
 import { BaseAutocompleteInteraction } from '../../classes/interactions';
 import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/autocompleteUtils';
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
-
+import { TFunction } from 'i18next';
+import { useUserTranslator } from '../../common/localeUtil';
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
 
@@ -15,6 +16,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
 
     async execute({ executionId, interaction }: BaseAutocompleteParams): BaseAutocompleteReturnType {
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useUserTranslator(interaction);
 
         const query: string = interaction.options.getString('query', true);
         const { lastQuery, result, timestamp } = this.recentQueries.get(interaction.user.id) || {};
@@ -29,7 +31,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
             return interaction.respond([]);
         }
 
-        const autocompleteChoices = await this.getAutocompleteChoices(query, logger);
+        const autocompleteChoices = await this.getAutocompleteChoices(query, logger, translator);
 
         if (!autocompleteChoices || autocompleteChoices.length === 0) {
             logger.debug(`Responding with empty results for query '${query}'`);
@@ -44,21 +46,23 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
 
     private async getAutocompleteChoices(
         query: string,
-        logger: Logger
+        logger: Logger,
+        translator: TFunction
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
         const genius = lyricsExtractor();
         const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
 
         if (!lyricsResult) {
-            return this.getAutocompleteChoicesFallback(query, logger);
+            return this.getAutocompleteChoicesFallback(query, logger, translator);
         } else {
-            return this.getAutocompleteChoicesFromLyricsResult(lyricsResult);
+            return this.getAutocompleteChoicesFromLyricsResult(lyricsResult, translator);
         }
     }
 
     private async getAutocompleteChoicesFallback(
         query: string,
-        logger: Logger
+        logger: Logger,
+        translator: TFunction
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
         logger.debug(`No Genius lyrics found for query '${query}', using player.search() as fallback.`);
 
@@ -66,24 +70,28 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
         const searchResults: SearchResult = await player.search(query);
 
         return searchResults.tracks.slice(0, 1).map((track) => ({
-            name: getTrackName(track),
+            name: getTrackName(track, translator),
             value: track.title.slice(0, 100)
         }));
     }
 
     private getAutocompleteChoicesFromLyricsResult(
-        lyricsResult: LyricsData
+        lyricsResult: LyricsData,
+        translator: TFunction
     ): ApplicationCommandOptionChoiceData<string>[] {
         return [
             {
-                name: this.getLyricsResultName(lyricsResult),
+                name: this.getLyricsResultName(lyricsResult, translator),
                 value: lyricsResult.title.slice(0, 100)
             }
         ];
     }
 
-    private getLyricsResultName(lyricsResult: LyricsData): string {
-        return `${lyricsResult.title} [Artist: ${lyricsResult.artist.name}]`.slice(0, 100);
+    private getLyricsResultName(lyricsResult: LyricsData, translator: TFunction): string {
+        return translator('commands.lyrics.autocompleteSearchResult', {
+            title: lyricsResult.title,
+            artist: lyricsResult.artist.name
+        });
     }
 
     private updateRecentQuery(

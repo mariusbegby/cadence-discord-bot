@@ -4,6 +4,9 @@ import { BaseComponentInteraction } from '../../classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { TFunction } from 'i18next';
+import { useServerTranslator } from '../../common/localeUtil';
+import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/formattingUtils';
 
 class ActionSkipButton extends BaseComponentInteraction {
     constructor() {
@@ -13,6 +16,7 @@ class ActionSkipButton extends BaseComponentInteraction {
     async execute(params: BaseComponentParams): BaseComponentReturnType {
         const { executionId, interaction, referenceId } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -24,11 +28,11 @@ class ActionSkipButton extends BaseComponentInteraction {
         ]);
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction);
+            return await this.handleNoQueue(interaction, translator);
         }
 
         if (queue.currentTrack!.id !== referenceId) {
-            return await this.handleAlreadySkipped(interaction);
+            return await this.handleAlreadySkipped(interaction, translator);
         }
 
         const skippedTrack: Track = queue.currentTrack!;
@@ -36,15 +40,18 @@ class ActionSkipButton extends BaseComponentInteraction {
         logger.debug('Skipped the track.');
 
         logger.debug('Responding with success embed.');
-        return await this.handleSuccess(interaction, skippedTrack, queue);
+        return await this.handleSuccess(interaction, skippedTrack, queue, translator);
     }
 
-    private async handleNoQueue(interaction: MessageComponentInteraction) {
+    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueNoCurrentTrack', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -52,12 +59,14 @@ class ActionSkipButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleAlreadySkipped(interaction: MessageComponentInteraction) {
+    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                        translator('validation.trackNotPlayingAnymore', {
+                            icon: this.embedOptions.icons.warning
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -65,13 +74,21 @@ class ActionSkipButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleSuccess(interaction: MessageComponentInteraction, skippedTrack: Track, queue: GuildQueue) {
+    private async handleSuccess(
+        interaction: MessageComponentInteraction,
+        skippedTrack: Track,
+        queue: GuildQueue,
+        translator: TFunction
+    ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                `**${this.embedOptions.icons.skipped} Skipped track**\n` +
-                    `${this.getDisplayTrackDurationAndUrl(skippedTrack)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode, 'success')}`
+                translator('commands.skip.skippedTrack', {
+                    icon: this.embedOptions.icons.skipped
+                }) +
+                    '\n' +
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n\n` +
+                    `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

@@ -89,6 +89,7 @@ module.exports.embedOptions = {
         nextTrack: '⏭️',
         previousTrack: '⏮️',
         pauseResumeTrack: '⏯️',
+        paused: '⏸',
         shuffleQueue: '🔀',
         loop: '🔁',
         loopAction: '🔁',

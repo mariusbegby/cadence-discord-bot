@@ -1,5 +1,5 @@
 {
-    "ignorePatterns": ["config/**/*.js"],
+    "ignorePatterns": ["config/**/*.js", "locales/**"],
     "env": {
         "node": true,
         "es2021": true

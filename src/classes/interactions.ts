@@ -26,6 +26,7 @@ import {
     BaseSlashCommandReturnType
 } from '../types/interactionTypes';
 import { Validator, ValidatorParams } from '../types/utilTypes';
+import { TFunction } from 'i18next';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
@@ -72,18 +73,18 @@ abstract class BaseInteraction {
         return durationFormat;
     }
 
-    protected getFormattedTrackUrl(track: Track): string {
-        const trackTitle = track.title ?? 'Title unavailable';
+    protected getFormattedTrackUrl(track: Track, translator: TFunction): string {
+        const trackTitle = track.title ?? translator('musicPlayerCommon.unavailableTrackTitle');
         const trackUrl = track.url ?? track.raw.url;
         if (!trackTitle || !trackUrl) {
-            return '**Unavailable**';
+            return translator('musicPlayerCommon.unavailableTrackUrl');
         }
         return `**[${trackTitle}](${trackUrl})**`;
     }
 
-    protected getDisplayTrackDurationAndUrl(track: Track): string {
+    protected getDisplayTrackDurationAndUrl(track: Track, translator: TFunction): string {
         const formattedDuration = this.getFormattedDuration(track);
-        const formattedUrl = this.getFormattedTrackUrl(track);
+        const formattedUrl = this.getFormattedTrackUrl(track, translator);
 
         return `${formattedDuration} ${formattedUrl}`;
     }
@@ -116,24 +117,27 @@ abstract class BaseInteraction {
 
     protected getFooterDisplayPageInfo(
         interaction: ChatInputCommandInteraction,
-        queue: GuildQueue | GuildQueueHistory
+        queue: GuildQueue | GuildQueueHistory,
+        translator: TFunction
     ): EmbedFooterData {
-        if (!queue.tracks.data.length) {
-            return { text: 'Page 1 of 1 (0 tracks)' };
-        }
-
         const pageIndex: number = (interaction.options.getInteger('page') || 1) - 1;
         const totalPages: number = Math.ceil(queue.tracks.data.length / 10) || 1;
         return {
-            text: `Page ${pageIndex + 1} of ${totalPages} (${queue.tracks.data.length} tracks)`
+            text: translator('musicPlayerCommon.footerPageNumber', {
+                page: pageIndex + 1,
+                pageCount: totalPages,
+                count: queue.tracks.data.length
+            })
         };
     }
 
-    protected getDisplayTrackRequestedBy = (track: Track): string => {
-        return track.requestedBy ? `<@${track.requestedBy.id}>` : 'Unavailable';
+    protected getDisplayTrackRequestedBy = (track: Track, translator: TFunction): string => {
+        return track.requestedBy
+            ? `<@${track.requestedBy.id}>`
+            : translator('musicPlayerCommon.unavailableRequestedBy');
     };
 
-    protected getDisplayQueueProgressBar(queue: GuildQueue): string {
+    protected getDisplayQueueProgressBar(queue: GuildQueue, translator: TFunction): string {
         const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
         let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
@@ -145,41 +149,16 @@ abstract class BaseInteraction {
         })} **\`${timestamp.total.label}\`**`;
 
         if (Number(queue.currentTrack?.raw.duration) === 0 || queue.currentTrack?.duration === '0:00') {
-            progressBar = '_No duration available._';
+            progressBar = translator('musicPlayerCommon.unavailableDuration');
         }
 
         if (queue.currentTrack?.raw.live) {
-            progressBar = `${this.embedOptions.icons.liveTrack} **\`LIVE\`** - Playing continuously from live source.`;
+            progressBar = translator('musicPlayerCommon.playingLive', {
+                icon: this.embedOptions.icons.liveTrack
+            });
         }
 
         return progressBar;
-    }
-
-    protected getDisplayRepeatMode(repeatMode: number, state: string = 'info'): string {
-        let loopModeUserString: string;
-        let icon: string;
-
-        switch (repeatMode) {
-            case 1:
-                loopModeUserString = 'track';
-                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
-                break;
-            case 2:
-                loopModeUserString = 'queue';
-                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
-                break;
-            case 3:
-                loopModeUserString = 'autoplay';
-                icon = state === 'info' ? this.embedOptions.icons.autoplay : this.embedOptions.icons.autoplaying;
-                break;
-            default:
-                return '';
-        }
-
-        return (
-            `**${icon} Looping**\n` +
-            `Loop mode is set to **\`${loopModeUserString}\`**. You can change it with **\`/loop\`**.\n\n`
-        );
     }
 
     abstract execute(
@@ -210,11 +189,15 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
 
     protected getEmbedQueueAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction,
-        queue: GuildQueue
+        queue: GuildQueue,
+        translator: TFunction
     ): EmbedAuthorOptions {
         const bitrate = queue.channel ? queue.channel.bitrate / 1000 : 0;
         return {
-            name: `Channel: ${queue.channel!.name} (${bitrate}kbps)`,
+            name: translator('musicPlayerCommon.voiceChannelInfo', {
+                channel: queue.channel!.name,
+                bitrate
+            }),
             iconURL: interaction.guild!.iconURL() || this.embedOptions.info.fallbackIconUrl
         };
     }

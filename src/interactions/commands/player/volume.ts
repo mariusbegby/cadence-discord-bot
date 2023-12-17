@@ -5,25 +5,23 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../typ
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { TFunction } from 'i18next';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder()
-            .setName('volume')
-            .setDescription('Show or change the playback volume for tracks.')
-            .addIntegerOption((option) =>
-                option
-                    .setName('percentage')
-                    .setDescription('Volume percentage: From 1% to 100%.')
-                    .setMinValue(0)
-                    .setMaxValue(100)
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('volume')
+                .addIntegerOption((option) => option.setName('percentage').setMinValue(0).setMaxValue(100))
+        );
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -36,15 +34,20 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         const volume: number = interaction.options.getInteger('percentage')!;
 
         if (!volume && volume !== 0) {
-            return await this.handleShowCurrentVolume(queue, logger, interaction);
+            return await this.handleShowCurrentVolume(queue, logger, interaction, translator);
         } else if (volume > 100 || volume < 0) {
-            return await this.handleInvalidVolumeInput(volume, logger, interaction);
+            return await this.handleInvalidVolumeInput(volume, logger, interaction, translator);
         } else {
-            return await this.handleValidVolumeInput(volume, queue, logger, interaction);
+            return await this.handleValidVolumeInput(volume, queue, logger, interaction, translator);
         }
     }
 
-    private async handleShowCurrentVolume(queue: GuildQueue, logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async handleShowCurrentVolume(
+        queue: GuildQueue,
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         const currentVolume: number = queue.node.volume;
         logger.debug('No volume input was provided, showing current volume.');
 
@@ -56,15 +59,22 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${currentVolumeIcon} Playback volume**\n` +
-                            `The playback volume is currently set to **\`${currentVolume}%\`**.`
+                        translator('commands.volume.volumeInformation', {
+                            icon: currentVolumeIcon,
+                            volume: currentVolume
+                        })
                     )
                     .setColor(this.embedOptions.colors.info)
             ]
         });
     }
 
-    private async handleInvalidVolumeInput(volume: number, logger: Logger, interaction: ChatInputCommandInteraction) {
+    private async handleInvalidVolumeInput(
+        volume: number,
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
+    ) {
         logger.debug('Volume specified was higher than 100% or lower than 0%.');
 
         logger.debug('Responding with warning embed.');
@@ -72,8 +82,10 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\n` +
-                            `You cannot set the volume to **\`${volume}%\`**, please pick a value betwen **\`1%\`** and **\`100%\`**.`
+                        translator('commands.volume.invalidVolumeRange', {
+                            icon: this.embedOptions.icons.warning,
+                            wrongVolume: volume
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ]
@@ -84,7 +96,8 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         volume: number,
         queue: GuildQueue,
         logger: Logger,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
+        translator: TFunction
     ) {
         queue.node.setVolume(volume);
         logger.debug(`Set volume to ${volume}%.`);
@@ -96,8 +109,9 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                     new EmbedBuilder()
                         .setAuthor(this.getEmbedUserAuthor(interaction))
                         .setDescription(
-                            `**${this.embedOptions.icons.volumeMuted} Audio muted**\n` +
-                                `Playback audio has been muted, because volume was set to **\`${volume}%\`**.`
+                            translator('commands.volume.volumeMuted', {
+                                icon: this.embedOptions.icons.volumeMuted
+                            })
                         )
                         .setColor(this.embedOptions.colors.success)
                 ]
@@ -110,8 +124,10 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.volumeChanged} Volume changed**\n` +
-                            `Playback volume has been changed to **\`${volume}%\`**.`
+                        translator('commands.volume.volumeChanged', {
+                            icon: this.embedOptions.icons.volumeChanged,
+                            volume
+                        })
                     )
                     .setColor(this.embedOptions.colors.success)
             ]

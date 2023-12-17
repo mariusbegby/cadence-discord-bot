@@ -5,16 +5,18 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 
 class PauseCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = new SlashCommandBuilder().setName('pause').setDescription('Toggle pause for the current track.');
+        const data = localizeCommand(new SlashCommandBuilder().setName('pause'));
         super(data);
     }
 
     async execute(params: BaseSlashCommandParams): BaseSlashCommandReturnType {
         const { executionId, interaction } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
+        const translator = useServerTranslator(interaction);
 
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
@@ -35,9 +37,16 @@ class PauseCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        `**${this.embedOptions.icons.pauseResumed} ${
-                            queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
-                        }**\n ${this.getDisplayTrackDurationAndUrl(currentTrack)}`
+                        translator(
+                            queue.node.isPaused()
+                                ? 'commands.pause.pauseConfirmation'
+                                : 'commands.pause.resumeConfirmation',
+                            {
+                                icon: this.embedOptions.icons.success
+                            }
+                        ) +
+                            '\n' +
+                            this.getDisplayTrackDurationAndUrl(currentTrack, translator)
                     )
                     .setThumbnail(currentTrack.thumbnail)
                     .setColor(this.embedOptions.colors.success)
