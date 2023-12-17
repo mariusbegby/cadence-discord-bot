@@ -325,6 +325,12 @@
             "volumeMuted": "{{icon}} **Lyd dempet**\nAvspillingslyden er dempet, fordi volumet ble satt til **`0%`**."
         }
     },
+    "components": {
+        "responses": {
+            "paused": "Pauset låt",
+            "resumed": "Gjenopptok låt"
+        }
+    },
     "musicPlayerCommon": {
         "controls": {
             "stop": "Stopp",
@@ -397,6 +403,7 @@
         "notValidGuildId": "{{icon}} **Oi sann!**\nIngen tillatelse til å utføre denne handlingen.\n\nKommandoen {{command}} kan ikke utføres på denne serveren.",
         "queueDoesNotExist": "{{icon}} **Oi sann!**\nDet er ingen låter i køen og ingenting spilles av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
         "queueIsEmpty": "{{icon}} **Oi sann!\nDet er ingen låter lagt til i køen. Legg først til noen låter med {{playCommand}}!",
-        "queueNoCurrentTrack": "{{icon}} **Oi sann!**\nDet spilles ingenting av for øyeblikket. Legg først til noen låter med {{playCommand}}!"
+        "queueNoCurrentTrack": "{{icon}} **Oi sann!**\nDet spilles ingenting av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
+        "trackNotPlayingAnymore": "{{icon}} **Oi sann!**\nDenne låten har blitt hoppet over allerede eller spiller ikke lenger."
     }
 }

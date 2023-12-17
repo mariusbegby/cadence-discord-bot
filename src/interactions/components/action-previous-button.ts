@@ -30,11 +30,11 @@ class ActionPreviousButton extends BaseComponentInteraction {
         ]);
 
         if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction);
+            return await this.handleNoQueue(interaction, translator);
         }
 
         if (queue.currentTrack!.id !== referenceId) {
-            return await this.handleAlreadySkipped(interaction);
+            return await this.handleAlreadySkipped(interaction, translator);
         }
 
         return await this.handleBackToPreviousTrack(logger, interaction, history, translator);
@@ -76,12 +76,15 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleNoQueue(interaction: MessageComponentInteraction) {
+    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThere is nothing currently playing. First add some tracks with **\`/play\`**!`
+                        translator('validation.queueNoCurrentTrack', {
+                            icon: this.embedOptions.icons.warning,
+                            playCommand: formatSlashCommand('play', translator)
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -89,12 +92,14 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleAlreadySkipped(interaction: MessageComponentInteraction) {
+    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Oops!**\nThis track has already been skipped or is no longer playing.`
+                        translator('validation.trackNotPlayingAnymore', {
+                            icon: this.embedOptions.icons.warning
+                        })
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
@@ -110,8 +115,10 @@ class ActionPreviousButton extends BaseComponentInteraction {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                `**${this.embedOptions.icons.back} Recovered track**\n` +
-                    `${this.getDisplayTrackDurationAndUrl(recoveredTrack, translator)}`
+                translator('commands.back.trackRecovered', {
+                    icon: this.embedOptions.icons.back,
+                    track: this.getDisplayTrackDurationAndUrl(recoveredTrack, translator)
+                })
             )
             .setThumbnail(recoveredTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

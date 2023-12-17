@@ -326,6 +326,12 @@ interface Resources {
                 volumeMuted: '{{icon}} **Audio muted**\nPlayback audio has been muted, because the volume was set to **`0%`**.';
             };
         };
+        components: {
+            responses: {
+                paused: 'Paused track';
+                resumed: 'Resumed track';
+            };
+        };
         musicPlayerCommon: {
             controls: {
                 stop: 'Stop';
@@ -399,6 +405,7 @@ interface Resources {
             queueDoesNotExist: '{{icon}} **Oops!**\nThere are no tracks in the queue and nothing currently playing. First add some tracks with {{playCommand}}!';
             queueIsEmpty: '{{icon}} **Oops!\nThere are no tracks added to the queue. First add some tracks with {{playCommand}}!';
             queueNoCurrentTrack: '{{icon}} **Oops!**\nThere is nothing currently playing. First add some tracks with {{playCommand}}!';
+            trackNotPlayingAnymore: '{{icon}} **Oops!**\nThis track has been skipped or is no longer playing.';
         };
     };
 }
