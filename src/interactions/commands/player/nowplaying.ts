@@ -165,12 +165,8 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
 
     private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
         return queue.node.isPaused()
-            ? translator('musicPlayerCommon.nowPausedTitle', {
-                  icon: this.embedOptions.icons.paused
-              })
-            : translator('musicPlayerCommon.nowPlayingTitle', {
-                  icon: this.embedOptions.icons.audioPlaying
-              });
+            ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
+            : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
     };
 
     private getEmbedFields = (currentTrack: Track, translator: TFunction): EmbedField[] => {
