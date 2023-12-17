@@ -14,7 +14,6 @@ import { localizeCommand } from '../../../common/localeUtil';
 
 class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {
-        // TODO: Localize choices
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('shards')
@@ -23,13 +22,13 @@ class ShardsCommand extends BaseSlashCommandInteraction {
                         .setName('sort')
                         .setRequired(false)
                         .addChoices(
-                            { name: 'None (Shard ID)', value: 'none' },
-                            { name: 'Memory usage', value: 'memory' },
-                            { name: 'Voice Connections', value: 'connections' },
-                            { name: 'Tracks', value: 'tracks' },
-                            { name: 'Listeners', value: 'listeners' },
-                            { name: 'Guilds', value: 'guilds' },
-                            { name: 'Members', value: 'members' }
+                            { value: 'none', name: ' ' },
+                            { value: 'memory', name: ' ' },
+                            { value: 'connections', name: ' ' },
+                            { value: 'tracks', name: ' ' },
+                            { value: 'listeners', name: ' ' },
+                            { value: 'guilds', name: ' ' },
+                            { value: 'members', name: ' ' }
                         )
                 )
                 .addIntegerOption((option) => option.setName('page').setMinValue(1))

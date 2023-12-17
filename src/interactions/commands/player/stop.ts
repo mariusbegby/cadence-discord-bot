@@ -1,4 +1,4 @@
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -27,7 +27,7 @@ class StopCommand extends BaseSlashCommandInteraction {
         ]);
 
         if (!queue.deleted) {
-            queue.setRepeatMode(0);
+            queue.setRepeatMode(QueueRepeatMode.OFF);
             queue.clear();
             queue.node.stop();
             logger.debug('Cleared and stopped the queue.');

@@ -6,6 +6,7 @@ import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { TFunction } from 'i18next';
 import { useServerTranslator } from '../../common/localeUtil';
+import { formatRepeatModeDetailed } from '../../common/formattingUtils';
 
 class ActionSkipButton extends BaseComponentInteraction {
     constructor() {
@@ -79,7 +80,7 @@ class ActionSkipButton extends BaseComponentInteraction {
             .setDescription(
                 `**${this.embedOptions.icons.skipped} Skipped track**\n` +
                     `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode, translator, 'success')}`
+                    `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

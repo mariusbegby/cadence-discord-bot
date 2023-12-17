@@ -27,7 +27,13 @@ interface Resources {
           "options": {
             "type": {
               "name": "type",
-              "description": "Audio filter type to use."
+              "description": "Audio filter type to use.",
+              "choices": {
+                "ffmpeg": "FFmpeg",
+                "biquad": "Biquad",
+                "equalizer": "Equalizer",
+                "disable": "Disable"
+              }
             }
           }
         },
@@ -94,7 +100,13 @@ interface Resources {
           "options": {
             "mode": {
               "name": "mode",
-              "description": "Loop mode: Track, queue, autoplay or disabled."
+              "description": "Loop mode: Track, queue, autoplay or disabled.",
+              "choices": {
+                "0": "Off",
+                "1": "Track",
+                "2": "Queue",
+                "3": "Autoplay"
+              }
             }
           }
         },
@@ -103,13 +115,7 @@ interface Resources {
         "modeChanged": "{{icon}} **Loop mode changed**\nChanging loop mode from **`{{fromName}}`** to **`{{toName}}`**.",
         "willAutoplay": "When the queue is empty, similar tracks will start playing!",
         "willNoLongerPlay": "The {{mode}} will no longer play on repeat!",
-        "willNowPlay": "The {{mode}} will now play on repeat!",
-        "repeatMode": {
-          "off": "disabled",
-          "track": "track",
-          "queue": "queue",
-          "autoplay": "autoplay"
-        }
+        "willNowPlay": "The {{mode}} will now play on repeat!"
       },
       "lyrics": {
         "metadata": {
@@ -149,7 +155,16 @@ interface Resources {
         "metadata": {
           "name": "nowplaying",
           "description": "Show information about the current track."
-        }
+        },
+        "embedFields": {
+          "author": "**Artist**",
+          "plays": "**Plays**",
+          "source": "**Track source**"
+        },
+        "otherTracksInQueue_one": "1 other track in the queue...",
+        "otherTracksInQueue": "{{count}} other tracks in the queue...",
+        "playCount_zero": "Unknown",
+        "playCount": "{{count, number}}"
       },
       "pause": {
         "metadata": {
@@ -157,7 +172,8 @@ interface Resources {
           "description": "Toggle pause for the current track."
         },
         "pauseConfirmation": "{{icon}} **Paused track**",
-        "resumeConfirmation": "{{icon}} **Resumed track**"
+        "resumeConfirmation": "{{icon}} **Resumed track**",
+        "directSource": "Direct source"
       },
       "play": {
         "metadata": {
@@ -228,7 +244,16 @@ interface Resources {
           "options": {
             "sort": {
               "name": "sort",
-              "description": "What to sort the shards by."
+              "description": "What to sort the shards by.",
+              "choices": {
+                "none": "None (Shard ID)",
+                "memory": "Memory usage",
+                "connections": "Voice Connections",
+                "tracks": "Tracks",
+                "listeners": "Listeners",
+                "guilds": "Guilds",
+                "members": "Members"
+              }
             },
             "page": {
               "name": "page",
@@ -307,13 +332,22 @@ interface Resources {
       "footerPageNumber_one": "Page {{page}} of {{pageCount}} (1 track)",
       "footerPageNumber": "Page {{page}} of {{pageCount}} ({{count}} tracks)",
       "loopingInfo": "{{icon}} **Looping**\nLoop mode is set to **`{{loopMode}}`**. You can change it with {{loopCommand}}.",
+      "nowPausedTitle": "{{icon}} **Currently paused**",
       "nowPlayingTitle": "{{icon}} **Now playing**",
       "playingLive": "{{icon}} **`LIVE`** - Playing continuously from live source.",
+      "queueRepeatMode": {
+        "off": "Disabled",
+        "track": "Track",
+        "queue": "Queue",
+        "autoplay": "Autoplay"
+      },
       "requestedBy": "**Requested by:** {{user}}",
+      "unavailableAuthor": "Unavailable",
       "unavailableDuration": "_No duration available._",
       "unavailableRequestedBy": "Unavailable",
       "unavailableTrackTitle": "Title unavailable",
       "unavailableTrackUrl": "**Unavailable**",
+      "unavailableSource": "Unavailable",
       "voiceChannelInfo": "Channel: {{channel}} ({{bitrate}}kbps)"
     },
     "statistics": {

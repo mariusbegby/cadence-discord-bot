@@ -35,7 +35,6 @@ const equalizerFilterOptions: EqualizerFilterOptions = config.get('equalizerFilt
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
-        // TODO: Localize choices
         // TODO: Implement system for localized filter names and descriptions
         const data = localizeCommand(
             new SlashCommandBuilder()
@@ -45,10 +44,10 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                         .setName('type')
                         .setRequired(false)
                         .addChoices(
-                            { name: 'FFmpeg', value: 'ffmpeg' },
-                            { name: 'Biquad', value: 'biquad' },
-                            { name: 'Equalizer', value: 'equalizer' },
-                            { name: 'Disable', value: 'disable' }
+                            { value: 'ffmpeg', name: ' ' },
+                            { value: 'biquad', name: ' ' },
+                            { value: 'equalizer', name: ' ' },
+                            { value: 'disable', name: ' ' }
                         )
                 )
         );

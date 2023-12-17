@@ -13,10 +13,10 @@ import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
+import { formatRepeatMode } from '../../../common/formattingUtils';
 
 class LoopCommand extends BaseSlashCommandInteraction {
     constructor() {
-        // TODO: Add choice localization support
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('loop')
@@ -25,10 +25,10 @@ class LoopCommand extends BaseSlashCommandInteraction {
                         .setName('mode')
                         .setRequired(false)
                         .addChoices(
-                            { name: 'Track', value: QueueRepeatMode.TRACK },
-                            { name: 'Queue', value: QueueRepeatMode.QUEUE },
-                            { name: 'Autoplay', value: QueueRepeatMode.AUTOPLAY },
-                            { name: 'Disabled', value: QueueRepeatMode.OFF }
+                            { value: QueueRepeatMode.TRACK, name: ' ' },
+                            { value: QueueRepeatMode.QUEUE, name: ' ' },
+                            { value: QueueRepeatMode.AUTOPLAY, name: ' ' },
+                            { value: QueueRepeatMode.OFF, name: ' ' }
                         )
                 )
         );
@@ -79,7 +79,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
 
         const repeatModeEmbedIcon =
             currentRepeatMode === 3 ? this.embedOptions.icons.autoplay : this.embedOptions.icons.loop;
-        const repeatModeEmbedName = this.getRepeatModeEmbedName(currentRepeatMode, translator);
+        const repeatModeEmbedName = formatRepeatMode(currentRepeatMode, translator);
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -102,7 +102,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         currentRepeatMode: QueueRepeatMode,
         translator: TFunction
     ): Promise<Message> {
-        const repeatModeEmbedName = this.getRepeatModeEmbedName(currentRepeatMode, translator);
+        const repeatModeEmbedName = formatRepeatMode(currentRepeatMode, translator);
         logger.debug(`Loop mode is already set to '${repeatModeEmbedName}'.`);
         logger.debug('Responding with warning embed.');
         return await interaction.editReply({
@@ -127,7 +127,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         toRepeatMode: QueueRepeatMode,
         translator: TFunction
     ): Promise<Message> {
-        const newRepeatModeEmbedName = this.getRepeatModeEmbedName(toRepeatMode, translator);
+        const newRepeatModeEmbedName = formatRepeatMode(toRepeatMode, translator);
         const getChangedRepeatModeEmbedReply = this.getChangedRepeatModeEmbedReply(
             fromRepeatMode,
             toRepeatMode,
@@ -148,24 +148,13 @@ class LoopCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private getRepeatModeEmbedName(repeatMode: QueueRepeatMode, translator: TFunction): string {
-        const repeatModeEmbedString: { [key in QueueRepeatMode]: string } = {
-            [QueueRepeatMode.OFF]: translator('commands.loop.repeatMode.off'),
-            [QueueRepeatMode.TRACK]: translator('commands.loop.repeatMode.track'),
-            [QueueRepeatMode.QUEUE]: translator('commands.loop.repeatMode.queue'),
-            [QueueRepeatMode.AUTOPLAY]: translator('commands.loop.repeatMode.autoplay')
-        };
-
-        return repeatModeEmbedString[repeatMode];
-    }
-
     private getChangedRepeatModeEmbedReply(
         fromRepeatMode: QueueRepeatMode,
         toRepeatMode: QueueRepeatMode,
         translator: TFunction
     ): string {
-        const fromRepeatModeEmbedName = this.getRepeatModeEmbedName(fromRepeatMode, translator);
-        const toRepeatModeEmbedName = this.getRepeatModeEmbedName(toRepeatMode, translator);
+        const fromRepeatModeEmbedName = formatRepeatMode(fromRepeatMode, translator);
+        const toRepeatModeEmbedName = formatRepeatMode(toRepeatMode, translator);
 
         let repeatModeIcon = this.embedOptions.icons.looping;
         let newRepeatModeMessage: string = translator('commands.loop.willNowPlay', {

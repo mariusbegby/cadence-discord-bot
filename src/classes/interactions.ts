@@ -27,7 +27,6 @@ import {
 } from '../types/interactionTypes';
 import { Validator, ValidatorParams } from '../types/utilTypes';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../common/formattingUtils';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
@@ -160,34 +159,6 @@ abstract class BaseInteraction {
         }
 
         return progressBar;
-    }
-
-    protected getDisplayRepeatMode(repeatMode: number, translator: TFunction, state: string = 'info'): string {
-        let loopModeUserString: string;
-        let icon: string;
-
-        switch (repeatMode) {
-            case 1:
-                loopModeUserString = 'track';
-                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
-                break;
-            case 2:
-                loopModeUserString = 'queue';
-                icon = state === 'info' ? this.embedOptions.icons.loop : this.embedOptions.icons.looping;
-                break;
-            case 3:
-                loopModeUserString = 'autoplay';
-                icon = state === 'info' ? this.embedOptions.icons.autoplay : this.embedOptions.icons.autoplaying;
-                break;
-            default:
-                return '';
-        }
-
-        return translator('musicPlayerCommon.loopingInfo', {
-            icon,
-            loopMode: loopModeUserString,
-            loopCommand: formatSlashCommand('loop', translator)
-        });
     }
 
     abstract execute(

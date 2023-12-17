@@ -63,6 +63,7 @@ export type EmbedOptions = {
         nextTrack: string;
         previousTrack: string;
         pauseResumeTrack: string;
+        paused: string;
         shuffleQueue: string;
         loop: string;
         loopAction: string;

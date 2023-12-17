@@ -6,6 +6,7 @@ import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { TFunction } from 'i18next';
 import { useServerTranslator } from '../../common/localeUtil';
+import { formatRepeatModeDetailed } from '../../common/formattingUtils';
 
 class ActionPauseResumeButton extends BaseComponentInteraction {
     constructor() {
@@ -85,7 +86,7 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
                 `**${this.embedOptions.icons.pauseResumed} ${
                     queue.node.isPaused() ? 'Paused Track' : 'Resumed track'
                 }**\n ${this.getDisplayTrackDurationAndUrl(queue.currentTrack!, translator)}\n\n` +
-                    `${this.getDisplayRepeatMode(queue.repeatMode, translator, 'success')}`
+                    `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
             )
             .setThumbnail(track.thumbnail)
             .setColor(this.embedOptions.colors.success);

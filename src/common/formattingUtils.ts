@@ -1,4 +1,6 @@
+import { QueueRepeatMode } from 'discord-player';
 import { TFunction } from 'i18next';
+import { EmbedOptions } from '../types/configTypes';
 
 export function formatDuration(durationMs: number): string {
     const durationDate: Date = new Date(0);
@@ -25,4 +27,46 @@ export function formatSlashCommand(commandName: string, translator: TFunction): 
         defaultValue: commandName
     });
     return `**\`/${translatedName}\`**`;
+}
+
+export function formatRepeatMode(repeatMode: QueueRepeatMode, translator: TFunction): string {
+    switch (repeatMode) {
+        case QueueRepeatMode.AUTOPLAY:
+            return translator('musicPlayerCommon.queueRepeatMode.autoplay');
+        case QueueRepeatMode.OFF:
+            return translator('musicPlayerCommon.queueRepeatMode.off');
+        case QueueRepeatMode.TRACK:
+            return translator('musicPlayerCommon.queueRepeatMode.track');
+        case QueueRepeatMode.QUEUE:
+            return translator('musicPlayerCommon.queueRepeatMode.queue');
+    }
+}
+
+export function formatRepeatModeDetailed(
+    repeatMode: QueueRepeatMode,
+    embedOptions: EmbedOptions,
+    translator: TFunction,
+    state: string = 'info'
+) {
+    let icon: string;
+
+    switch (repeatMode) {
+        case QueueRepeatMode.TRACK:
+            icon = state === 'info' ? embedOptions.icons.loop : embedOptions.icons.looping;
+            break;
+        case QueueRepeatMode.QUEUE:
+            icon = state === 'info' ? embedOptions.icons.loop : embedOptions.icons.looping;
+            break;
+        case QueueRepeatMode.AUTOPLAY:
+            icon = state === 'info' ? embedOptions.icons.autoplay : embedOptions.icons.autoplaying;
+            break;
+        default:
+            return '';
+    }
+
+    return translator('musicPlayerCommon.loopingInfo', {
+        icon,
+        loopMode: formatRepeatMode(repeatMode, translator),
+        loopCommand: formatSlashCommand('loop', translator)
+    });
 }

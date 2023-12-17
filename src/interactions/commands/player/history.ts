@@ -18,7 +18,7 @@ import { checkHistoryExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { formatRepeatModeDetailed, formatSlashCommand } from '../../../common/formattingUtils';
 
 class HistoryCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -130,24 +130,18 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        translator('musicPlayerCommon.nowPlayingTitle', {
+                        `${translator('musicPlayerCommon.nowPlayingTitle', {
                             icon: this.embedOptions.icons.audioPlaying
-                        }) +
-                            '\n' +
-                            this.getFormattedTrackUrl(currentTrack, translator) +
-                            '\n' +
-                            translator('musicPlayerCommon.requestedBy', {
+                        })}\n` +
+                            `${this.getFormattedTrackUrl(currentTrack, translator)}\n` +
+                            `${translator('musicPlayerCommon.requestedBy', {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
-                            }) +
-                            '\n' +
-                            this.getDisplayQueueProgressBar(queue, translator) +
-                            '\n' +
-                            '\n' +
-                            this.getDisplayRepeatMode(queue.repeatMode, translator) +
-                            translator('commands.history.tracksInHistoryTitle', {
+                            })}\n` +
+                            `${this.getDisplayQueueProgressBar(queue, translator)}\n\n` +
+                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
+                            `${translator('commands.history.tracksInHistoryTitle', {
                                 icon: this.embedOptions.icons.queue
-                            }) +
-                            '\n' +
+                            })}\n` +
                             historyTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))

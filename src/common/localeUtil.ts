@@ -1,5 +1,11 @@
 import assert from 'assert';
-import { APIApplicationCommandOption, BaseInteraction, Locale, SlashCommandBuilder } from 'discord.js';
+import {
+    APIApplicationCommandOption,
+    ApplicationCommandOptionType,
+    BaseInteraction,
+    Locale,
+    SlashCommandBuilder
+} from 'discord.js';
 import { lstatSync, readdirSync } from 'fs';
 import i18n from 'i18next';
 import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
@@ -20,6 +26,9 @@ translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
     backend: {
         loadPath: join(localeDir, '{{lng}}', '{{ns}}.json'),
         addPath: join(localeDir, '{{lng}}', '{{ns}}.missing.json')
+    },
+    interpolation: {
+        escapeValue: false
     }
 });
 
@@ -41,6 +50,7 @@ type CommandMetadata = {
         {
             name?: string;
             description?: string;
+            choices?: Record<string, string>;
         }
     >;
 };
@@ -85,6 +95,29 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
 
             option.name_localizations = {};
             option.description_localizations = {};
+            if (
+                (option.type === ApplicationCommandOptionType.String ||
+                    option.type === ApplicationCommandOptionType.Integer) &&
+                option.choices
+            ) {
+                assert(
+                    englishOptionData.choices,
+                    `Option ${option.name} in /${command.name} must have choice localizations.`
+                );
+                for (const choice of option.choices) {
+                    choice.name_localizations = {};
+                    assert(
+                        choice.value !== undefined && choice.value !== null,
+                        `Choice in option ${option.name} in /${command.name} must have a value.`
+                    );
+                    const stringifiedValue = choice.value.toString();
+                    assert(
+                        englishOptionData.choices[stringifiedValue],
+                        `Choice ${choice.value} of option ${option.name} in /${command.name} must have an English localization.`
+                    );
+                    choice.name = englishOptionData.choices[stringifiedValue];
+                }
+            }
             for (const locale of DISCORD_LOCALES) {
                 const localeOptionData = (
                     translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined
@@ -97,6 +130,15 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
                 }
                 if (localeOptionData.description) {
                     option.description_localizations[locale] = localeOptionData.description;
+                }
+                if (localeOptionData.choices && option.type === ApplicationCommandOptionType.String && option.choices) {
+                    for (const choice of option.choices) {
+                        const localizedChoice = localeOptionData.choices[choice.value];
+                        if (!localizedChoice) {
+                            continue;
+                        }
+                        choice.name_localizations![locale] = localizedChoice;
+                    }
                 }
             }
         }

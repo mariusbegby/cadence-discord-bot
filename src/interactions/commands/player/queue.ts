@@ -16,7 +16,7 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { formatDuration } from '../../../common/formattingUtils';
+import { formatDuration, formatRepeatModeDetailed } from '../../../common/formattingUtils';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
 
@@ -123,20 +123,18 @@ class QueueCommand extends BaseSlashCommandInteraction {
                         translator('musicPlayerCommon.nowPlayingTitle', {
                             icon: this.embedOptions.icons.audioPlaying
                         }) +
+                            '\n' +
                             this.getFormattedTrackUrl(currentTrack, translator) +
                             '\n' +
                             translator('musicPlayerCommon.requestedBy', {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
                             }) +
                             '\n' +
-                            this.getDisplayQueueProgressBar(queue, translator) +
-                            '\n' +
-                            '\n' +
-                            this.getDisplayRepeatMode(queue.repeatMode, translator) +
-                            translator('commands.queue.tracksInQueueTitle', {
+                            `${this.getDisplayQueueProgressBar(queue, translator)}\n\n` +
+                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
+                            `${translator('commands.queue.tracksInQueueTitle', {
                                 icon: this.embedOptions.icons.queue
-                            }) +
-                            '\n' +
+                            })}\n` +
                             queueTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
@@ -163,8 +161,10 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `${this.getDisplayRepeatMode(queue.repeatMode, translator)}` +
-                            `**${this.embedOptions.icons.queue} Tracks in queue**\n` +
+                        `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}` +
+                            `${translator('commands.queue.tracksInQueueTitle', {
+                                icon: this.embedOptions.icons.queue
+                            })}\n` +
                             queueTracksListString
                     )
                     .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
