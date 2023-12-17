@@ -21,13 +21,16 @@
 </p>
 
 ## Core Features 🌟
+
 Cadence offers an enriching audio experience on Discord with features such as:
-- High-quality music playback from [many supported sources](https://discord-player.js.org/guide/extractors/stream-sources) thanks to [discord-player](https://github.com/androz2091/discord-player).
-- Slash commands, autocompleting search queries, select menus, buttons and more interactive features!
-- Full queue management system to add, remove, skip or move tracks, view queue and history.
-- Audio filters, shuffle mode, repeat track, queue or autoplay similar tracks!
-- Open-source codebase and community based development, open to feedback and improvements.
-- No locked functionality, no premium tier, no ads; everything's free, always.
+
+-   High-quality music playback from [many supported sources](https://discord-player.js.org/guide/extractors/stream-sources) thanks to [discord-player](https://github.com/androz2091/discord-player).
+-   Slash commands, autocompleting search queries, select menus, buttons and more interactive features!
+-   Full queue management system to add, remove, skip or move tracks, view queue and history.
+-   Audio filters, shuffle mode, repeat track, queue or autoplay similar tracks!
+-   Localization with support for multiple languages both for Slash Commands and embed replies.
+-   Open-source codebase and community based development, open to feedback and improvements.
+-   No locked functionality, no premium tier, no ads; everything's free, always.
 
 <br>
 
@@ -54,10 +57,10 @@ Cadence offers an enriching audio experience on Discord with features such as:
 
 ### Configuration and Logging:
 
-- Override default configuration by creating `/config/local.js`.
-- Use `npm run deploy-pretty` and `npm run start-pretty` for better console output, requires [pino-pretty](https://www.npmjs.com/package/pino-pretty).
-- Logs are stored in `/logs` folder. Configure the logging level in the config file.
-- For production, usage of `pm2` or similar to manage the bot process is recommended.
+-   Override default configuration by creating `/config/local.js`.
+-   Use `npm run deploy-pretty` and `npm run start-pretty` for better console output, requires [pino-pretty](https://www.npmjs.com/package/pino-pretty).
+-   Logs are stored in `/logs` folder. Configure the logging level in the config file.
+-   For production, usage of `pm2` or similar to manage the bot process is recommended.
 
 <br>
 
