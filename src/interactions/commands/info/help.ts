@@ -1,5 +1,11 @@
 import {
+    APIActionRowComponent,
+    APIButtonComponent,
+    APIMessageActionRowComponent,
+    ButtonBuilder,
+    ButtonStyle,
     Collection,
+    ComponentType,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandNumberOption,
@@ -22,11 +28,34 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
 
-        const [commandEmbedString, supportServerString, addBotString] = await Promise.all([
-            this.getCommandEmbedString(client!),
-            this.getSupportServerString(translator),
-            this.getAddBotString(translator)
-        ]);
+        const commandEmbedString = await this.getCommandEmbedString(client!);
+
+        const components: APIMessageActionRowComponent[] = [];
+
+        if (this.botOptions.serverInviteUrl && this.botOptions.serverInviteUrl !== '') {
+            const supportServerButton: APIButtonComponent = new ButtonBuilder()
+                .setURL(this.botOptions.serverInviteUrl)
+                .setStyle(ButtonStyle.Link)
+                .setEmoji(this.embedOptions.icons.support)
+                .setLabel('Support server')
+                .toJSON();
+            components.push(supportServerButton);
+        }
+
+        if (this.botOptions.botInviteUrl && this.botOptions.botInviteUrl !== '') {
+            const addBotButton: APIButtonComponent = new ButtonBuilder()
+                .setURL(this.botOptions.botInviteUrl)
+                .setStyle(ButtonStyle.Link)
+                .setEmoji(this.embedOptions.icons.bot)
+                .setLabel('Add bot')
+                .toJSON();
+            components.push(addBotButton);
+        }
+
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components
+        };
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -37,12 +66,11 @@ class HelpCommand extends BaseSlashCommandInteraction {
                             icon: this.embedOptions.icons.rule
                         }) +
                             '\n' +
-                            commandEmbedString +
-                            supportServerString +
-                            addBotString
+                            commandEmbedString
                     )
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            components: components.length > 0 ? [embedActionRow] : []
         });
     }
 
@@ -64,7 +92,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
             return this.getCommandString(command);
         });
 
-        const commandString = commandStringList.join('\n') + '\n';
+        const commandString = commandStringList.join('\n');
         return commandString;
     }
 
