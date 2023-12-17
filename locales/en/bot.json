@@ -56,9 +56,9 @@
                 "name": "help",
                 "description": "Show the list of bot commands."
             },
-            "addBotCallout": "{{icon}} **Enjoying {{botName}}?**\nAdd me to another server:\n**[Click me!]({{invite}})**",
+            "addBotButton": "Add bot",
             "listTitle": "{{icon}} **List of commands**",
-            "supportServerCallout": "{{icon}} **Support server**\nJoin the support server for help or to suggest improvements:\n{{invite}}"
+            "supportServerButton": "Support server"
         },
         "history": {
             "metadata": {

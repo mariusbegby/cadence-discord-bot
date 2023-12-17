@@ -15,7 +15,6 @@ import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { ExtendedClient } from '../../../types/clientTypes';
-import { TFunction } from 'i18next';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -37,7 +36,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
                 .setURL(this.botOptions.serverInviteUrl)
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.support)
-                .setLabel('Support server')
+                .setLabel(translator('commands.help.supportServerButton'))
                 .toJSON();
             components.push(supportServerButton);
         }
@@ -47,7 +46,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
                 .setURL(this.botOptions.botInviteUrl)
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.bot)
-                .setLabel('Add bot')
+                .setLabel(translator('commands.help.addBotButton'))
                 .toJSON();
             components.push(addBotButton);
         }
@@ -109,29 +108,6 @@ class HelpCommand extends BaseSlashCommandInteraction {
             return `**\`${option.name}\`** `;
         }
         return '';
-    }
-
-    private async getSupportServerString(translator: TFunction): Promise<string> {
-        if (!this.botOptions.serverInviteUrl) {
-            return '';
-        }
-
-        return translator('commands.help.supportServerCallout', {
-            icon: this.embedOptions.icons.support,
-            invite: this.botOptions.serverInviteUrl
-        });
-    }
-
-    private async getAddBotString(translator: TFunction): Promise<string> {
-        if (!this.botOptions.botInviteUrl) {
-            return '';
-        }
-
-        return translator('commands.help.addBotCallout', {
-            icon: this.embedOptions.icons.bot,
-            botName: this.botOptions.name,
-            invite: this.botOptions.botInviteUrl
-        });
     }
 }
 
