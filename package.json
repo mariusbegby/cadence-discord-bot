@@ -35,6 +35,7 @@
         "deploy-pretty": "node ./dist/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,executionTime,shardId,guildId,interactionType",
         "eslint": "eslint ./src",
         "build": "tsc",
+        "prebuild": "npm run toc",
         "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts"
     },
     "nodemonConfig": {
