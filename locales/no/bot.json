@@ -190,7 +190,8 @@
             "playlistAddedTrackCount_one": "Og **1** til låt... Bruk {{queueCommand}} for å se alle.",
             "playlistAddedTrackCount": "Og **{{count}}** flere låter... Bruk {{queueCommand}} for å se alle.",
             "playlistTooLarge": "{{icon}} **Spilleliste for stor**\nDenne spillelisten er for stor til å legges til i køen.\n\nMaksimalt antall låter som kan legges til i køen er **{{count}}**.",
-            "trackNotFound": "{{icon}} **Ingen låter funnet**\nIngen resultater funnet for **{{query}}**.\n\nHvis du angav en URL, vær sikker på at den er gyldig og offentlig."
+            "trackNotFound": "{{icon}} **Ingen låter funnet**\nIngen resultater funnet for **{{query}}**.\n\nHvis du angav en URL, vær sikker på at den er gyldig og offentlig.",
+            "footerAddedPosition": "Lagt til i posisjon {{position}} i køen"
         },
         "queue": {
             "metadata": {

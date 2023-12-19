@@ -190,7 +190,8 @@
             "playlistAddedTrackCount_one": "And **1** more track... Use {{queueCommand}} to view all.",
             "playlistAddedTrackCount": "And **{{count}}** more tracks... Use {{queueCommand}} to view all.",
             "playlistTooLarge": "{{icon}} **Playlist too large**\nThis playlist is too large to be added to the queue.\n\nThe maximum amount of tracks that can be added to the queue is **{{count}}**.",
-            "trackNotFound": "{{icon}} **No track found\nNo results found for **{{query}}**.\n\nIf you specified a URL, please make sure it is valid and public."
+            "trackNotFound": "{{icon}} **No track found\nNo results found for **{{query}}**.\n\nIf you specified a URL, please make sure it is valid and public.",
+            "footerAddedPosition": "Added to queue at position {{position}}"
         },
         "queue": {
             "metadata": {

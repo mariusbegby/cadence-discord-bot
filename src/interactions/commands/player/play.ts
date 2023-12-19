@@ -1,5 +1,12 @@
 import { GuildQueue, Player, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, SlashCommandBuilder } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    EmbedFooterData,
+    GuildMember,
+    Message,
+    SlashCommandBuilder
+} from 'discord.js';
 import { Logger } from 'pino';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -155,6 +162,10 @@ class PlayCommand extends BaseSlashCommandInteraction {
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const trackUrl = this.getDisplayTrackDurationAndUrl(track, translator);
 
+        let embedFooter: EmbedFooterData | undefined = this.getDisplayFooterTrackPosition(
+            queue.tracks.data.length ?? 0,
+            translator
+        );
         let message =
             translator('commands.play.addedToQueueTitle', {
                 icon: this.embedOptions.icons.success
@@ -174,6 +185,10 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     count: searchResult.tracks.length,
                     queueCommand: formatSlashCommand('queue', translator)
                 });
+            if (queue.tracks.data.length != searchResult.tracks.length) {
+                const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
+                embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
+            }
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
             message =
                 translator('musicPlayerCommon.nowPlayingTitle', {
@@ -181,18 +196,34 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 }) +
                 '\n' +
                 trackUrl;
+            embedFooter = undefined;
+        }
+
+        const embed = new EmbedBuilder()
+            .setAuthor(this.getEmbedUserAuthor(interaction))
+            .setDescription(message)
+            .setThumbnail(this.getTrackThumbnailUrl(track))
+            .setColor(this.embedOptions.colors.success);
+
+        if (embedFooter) {
+            embed.setFooter(embedFooter);
         }
 
         logger.debug('Responding with success embed.');
+
         return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setAuthor(this.getEmbedUserAuthor(interaction))
-                    .setDescription(message)
-                    .setThumbnail(this.getTrackThumbnailUrl(track))
-                    .setColor(this.embedOptions.colors.success)
-            ]
+            embeds: [embed]
         });
+    }
+
+    private getDisplayFooterTrackPosition(position: number, translator: TFunction): EmbedFooterData {
+        const fullFooterData = {
+            text: translator('commands.play.footerAddedPosition', {
+                position: position
+            })
+        };
+
+        return fullFooterData;
     }
 
     private async handleNoResultsFound(
