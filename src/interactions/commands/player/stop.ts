@@ -28,7 +28,6 @@ class StopCommand extends BaseSlashCommandInteraction {
 
         if (!queue.deleted) {
             queue.setRepeatMode(QueueRepeatMode.OFF);
-            queue.clear();
             queue.node.stop();
             logger.debug('Cleared and stopped the queue.');
         }
