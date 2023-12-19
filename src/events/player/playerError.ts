@@ -9,9 +9,10 @@ import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');
+
 // Emitted when the player encounters an error while streaming audio track
 module.exports = {
-    name: 'error',
+    name: 'playerError',
     isDebug: false,
     isPlayerEvent: true,
     execute: async (queue: ExtendedGuildQueuePlayerNode, error: Error) => {
@@ -23,6 +24,11 @@ module.exports = {
             shardId: queue.metadata?.client.shard?.ids[0],
             guildId: queue.metadata?.channel.guild.id
         });
+
+        if (error.message.includes('Could not extract stream for this track')) {
+            // handled in playerSkip event where we have access to track object
+            return;
+        }
 
         logger.error(error, "player.events.on('playerError'): Player error while streaming track");
 

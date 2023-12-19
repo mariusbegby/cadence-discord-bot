@@ -34,7 +34,22 @@ module.exports = {
         logger.debug(`Track [${track.url}] skipped with reason: ${reason}\n${description}`);
 
         if (reason === TrackSkipReason.NoStream) {
-            logger.error(`player.events.on('playerSkip'): Failed to play '${track.url}'.\n${description}`);
+            logger.warn(`player.events.on('playerSkip'): Failed to play '${track.url}'.\n${description}`);
+
+            if (description.includes('Could not extract stream for this track')) {
+                return await queue.metadata?.channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(
+                                `**${embedOptions.icons.warning} Oops!**\n` +
+                                    `Unable to retrieve audio for the track **[${track.title}](${track.url})**.\n\n` +
+                                    'It seems that the source is not available publicly, or the source is not supported.'
+                            )
+                            .setColor(embedOptions.colors.warning)
+                    ]
+                });
+            }
+
             await queue.metadata?.channel.send({
                 embeds: [
                     new EmbedBuilder()
