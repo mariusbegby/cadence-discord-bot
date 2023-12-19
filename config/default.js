@@ -7,7 +7,8 @@ const { ActivityType, PresenceUpdateStatus } = require('discord.js');
 module.exports.botOptions = {
     name: 'Cadence',
     botInviteUrl: '',
-    serverInviteUrl: ''
+    serverInviteUrl: '',
+    openSourceUrl: ''
 };
 
 // Configuration for bot sharding. Refers to splitting a Discord bot into multiple processes.
@@ -75,6 +76,7 @@ module.exports.embedOptions = {
         rule: '📒',
         support: '❓',
         bot: '🤖',
+        openSource: '🔓',
         server: '🖥️',
         discord: '🌐',
         audioPlaying: '🎶',
