@@ -293,7 +293,8 @@
             "metadata": {
                 "name": "status",
                 "description": "Vis driftsstatus for botten."
-            }
+            },
+            "openSourceButtonLabel": "GitHub"
         },
         "stop": {
             "metadata": {

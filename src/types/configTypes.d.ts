@@ -5,6 +5,7 @@ export type BotOptions = {
     name: string;
     botInviteUrl: string;
     serverInviteUrl: string;
+    openSourceUrl: string;
 };
 
 export type CustomLoggerOptions = {
@@ -49,6 +50,7 @@ export type EmbedOptions = {
         rule: string;
         support: string;
         bot: string;
+        openSource: string;
         server: string;
         discord: string;
         audioPlaying: string;

@@ -295,6 +295,7 @@ interface Resources {
                     name: 'status';
                     description: 'Show operational status of the bot.';
                 };
+                openSourceButtonLabel: 'GitHub';
             };
             stop: {
                 metadata: {

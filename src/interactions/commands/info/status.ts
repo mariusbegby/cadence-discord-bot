@@ -1,6 +1,15 @@
 // @ts-ignore
 import { version } from '../../../../package.json';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+    APIActionRowComponent,
+    APIButtonComponent,
+    APIMessageActionRowComponent,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
+    EmbedBuilder,
+    SlashCommandBuilder
+} from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../../classes/interactions';
 import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
@@ -23,6 +32,22 @@ class StatusCommand extends BaseSlashCommandInteraction {
             getSystemStatus(executionId, false, translator)
         ]);
         const discordStatusEmbedString = getDiscordStatus(client!, translator);
+
+        const components: APIMessageActionRowComponent[] = [];
+        if (this.botOptions.openSourceUrl && this.botOptions.openSourceUrl !== '') {
+            const openSourceButton: APIButtonComponent = new ButtonBuilder()
+                .setURL(this.botOptions.openSourceUrl)
+                .setStyle(ButtonStyle.Link)
+                .setEmoji(this.embedOptions.icons.openSource)
+                .setLabel(translator('commands.status.openSourceButtonLabel'))
+                .toJSON();
+            components.push(openSourceButton);
+        }
+
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components
+        };
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -54,7 +79,8 @@ class StatusCommand extends BaseSlashCommandInteraction {
                         }
                     )
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            components: components.length > 0 ? [embedActionRow] : []
         });
     }
 }
