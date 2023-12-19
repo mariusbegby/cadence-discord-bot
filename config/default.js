@@ -152,6 +152,7 @@ module.exports.ipRotationConfig = {
 module.exports.ffmpegFilterOptions = {
     threadAmount: '2',
     forceNormalizerByBassBoost: true,
+    maxFilters: 10,
     availableFilters: [
         {
             label: 'Bass boost',

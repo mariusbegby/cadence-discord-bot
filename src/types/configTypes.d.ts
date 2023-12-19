@@ -124,6 +124,7 @@ export type FilterOption = {
 export type FFmpegFilterOptions = {
     threadAmount: string;
     forceNormalizerByBassBoost: boolean;
+    maxFilters: number;
     availableFilters: FFmpegFilterOption[];
 };
 

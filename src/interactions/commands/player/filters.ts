@@ -198,7 +198,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     : translator('commands.filters.selectFilterPlaceholder')
             )
             .setMinValues(0)
-            .setMaxValues(1)
+            .setMaxValues(filterProvider === 'ffmpeg' ? ffmpegFilterOptions.maxFilters : 1)
             .addOptions(filterOptions)
             .toJSON();
 
