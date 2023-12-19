@@ -7,7 +7,7 @@ import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/valid
 import { Logger } from 'pino';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { formatRepeatModeDetailed, formatSlashCommand } from '../../../common/formattingUtils';
 
 class SkipCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -61,7 +61,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
             const skippedTrack: Track = queue.currentTrack!;
             queue.node.skipTo(trackPosition - 1);
             logger.debug('Skipped to specified track position.');
-            return await this.respondWithSuccessEmbed(skippedTrack, interaction, translator);
+            return await this.respondWithSuccessEmbed(skippedTrack, interaction, queue, translator);
         }
     }
 
@@ -102,7 +102,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         const skippedTrack: Track = queue.currentTrack!;
         queue.node.skip();
         logger.debug('Skipped current track.');
-        return await this.respondWithSuccessEmbed(skippedTrack, interaction, translator);
+        return await this.respondWithSuccessEmbed(skippedTrack, interaction, queue, translator);
     }
 
     private async handleNoTracksInQueueAndNoCurrentTrack(
@@ -128,6 +128,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
     private async respondWithSuccessEmbed(
         skippedTrack: Track,
         interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
         translator: TFunction
     ) {
         return await interaction.editReply({
@@ -139,7 +140,8 @@ class SkipCommand extends BaseSlashCommandInteraction {
                             icon: this.embedOptions.icons.skipped
                         }) +
                             '\n' +
-                            this.getDisplayTrackDurationAndUrl(skippedTrack, translator)
+                            `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n` +
+                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                     .setColor(this.embedOptions.colors.success)

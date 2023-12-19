@@ -87,7 +87,7 @@ class ActionSkipButton extends BaseComponentInteraction {
                     icon: this.embedOptions.icons.skipped
                 }) +
                     '\n' +
-                    `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n\n` +
+                    `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n` +
                     `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
