@@ -6,60 +6,31 @@ import { checkQueueExists } from '../../../utils/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
 import { TFunction } from 'i18next';
-import { useServerTranslator } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
-        // TODO: Add subcommand localization support
-        const data = new SlashCommandBuilder()
-            .setName('remove')
-            .setDescription('Remove tracks from the queue')
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('track')
-                    .setDescription('Remove a track from the queue by position')
-                    .addIntegerOption((option) =>
-                        option
-                            .setName('position')
-                            .setDescription('The position in queue for track to remove.')
-                            .setMinValue(1)
-                            .setRequired(true)
-                    )
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('range')
-                    .setDescription('Remove a range of tracks from the queue')
-                    .addIntegerOption((option) =>
-                        option
-                            .setName('start')
-                            .setDescription('The starting position of the range to remove')
-                            .setMinValue(1)
-                            .setRequired(true)
-                    )
-                    .addIntegerOption((option) =>
-                        option
-                            .setName('end')
-                            .setDescription('The ending position of the range to remove')
-                            .setMinValue(1)
-                            .setRequired(true)
-                    )
-            )
-            .addSubcommand((subcommand) =>
-                subcommand.setName('queue').setDescription('Remove all tracks from the queue')
-            )
-            .addSubcommand((subcommand) =>
-                subcommand
-                    .setName('user')
-                    .setDescription('Remove all tracks from a specific user')
-                    .addUserOption((option) =>
-                        option.setName('target').setDescription('User to remove tracks for').setRequired(true)
-                    )
-            )
-            .addSubcommand((subcommand) =>
-                subcommand.setName('duplicates').setDescription('Remove all duplicate tracks from the queue')
-            );
+        const data = localizeCommand(
+            new SlashCommandBuilder()
+                .setName('remove')
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName('track')
+                        .addIntegerOption((option) => option.setName('position').setMinValue(1).setRequired(true))
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName('range')
+                        .addIntegerOption((option) => option.setName('start').setMinValue(1).setRequired(true))
+                        .addIntegerOption((option) => option.setName('end').setMinValue(1).setRequired(true))
+                )
+                .addSubcommand((subcommand) => subcommand.setName('queue'))
+                .addSubcommand((subcommand) =>
+                    subcommand.setName('user').addUserOption((option) => option.setName('target').setRequired(true))
+                )
+                .addSubcommand((subcommand) => subcommand.setName('duplicates'))
+        );
         super(data);
     }
 
