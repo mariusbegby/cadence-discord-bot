@@ -4,13 +4,14 @@ import {
     ApplicationCommandOptionType,
     BaseInteraction,
     Locale,
-    SlashCommandBuilder
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
 import { lstatSync, readdirSync } from 'fs';
 import i18n from 'i18next';
 import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import { join } from 'path';
-
 export const translatorInstance = i18n.createInstance();
 const localeDir = join(__dirname, '..', '..', 'locales');
 translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
@@ -42,7 +43,7 @@ export function useUserTranslator(interaction: BaseInteraction) {
 
 export const DISCORD_LOCALES = Object.values(Locale);
 
-export type CommandMetadata = {
+export type SubcommandMetadata = {
     name?: string;
     description?: string;
     options?: Record<
@@ -55,17 +56,31 @@ export type CommandMetadata = {
     >;
 };
 
-type DeepMutable<T> = { -readonly [P in keyof T]: DeepMutable<T[P]> };
-export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>) {
-    const jsonCommand = command as DeepMutable<typeof command>;
+export type CommandMetadata =
+    | SubcommandMetadata
+    | (SubcommandMetadata & {
+          options?: Record<string, SubcommandMetadata>;
+      });
 
-    assert(jsonCommand.name, `Command /${command.name} must have a name using setName.`);
-    const metadataKey = `commands.${jsonCommand.name}.metadata`;
+type DeepMutable<T> = { -readonly [P in keyof T]: DeepMutable<T[P]> };
+export function localizeCommand(
+    command:
+        | SlashCommandSubcommandBuilder
+        | SlashCommandSubcommandsOnlyBuilder
+        | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
+    resourcePath?: string
+) {
+    const jsonCommand = command as DeepMutable<typeof command>;
+    const logCommandName = resourcePath ?? `/${command.name}`;
+
+    assert(jsonCommand.name, `Command ${logCommandName} must have a name using setName.`);
+    const metadataKey = resourcePath ?? `commands.${jsonCommand.name}.metadata`;
     const englishData = translatorInstance.getResource('en', 'bot', metadataKey) as CommandMetadata | undefined;
-    assert(englishData, `Command /${command.name} must have English localization data.`);
+    assert(englishData, `Command ${logCommandName} must have English localization data.`);
 
     // Localizing the top-level command...
-    jsonCommand.description = englishData.description ?? '!MISSING DESCRIPTION!';
+    assert(englishData.description, `Command ${logCommandName} is missing an English description.`);
+    jsonCommand.description = englishData.description;
     /* eslint-disable camelcase */
     jsonCommand.name_localizations = {};
     /* eslint-disable camelcase */
@@ -85,13 +100,27 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
 
     // Localizing the command options...
     if (jsonCommand.options.length > 0) {
-        assert(englishData.options, `Command /${command.name} must have option localizations.`);
+        assert(englishData.options, `Command ${logCommandName} must have option localizations.`);
         for (const unwritableOption of jsonCommand.options) {
             const option = unwritableOption as never as APIApplicationCommandOption;
-            assert(option.name, `Option in /${command.name} must have a name using setName.`);
+            // Subcommands are stored in options - they have an 'options' field that always exists (even if empty) on subcommands
+            if ('options' in option && Array.isArray(option.options)) {
+                localizeCommand(
+                    unwritableOption as SlashCommandSubcommandBuilder,
+                    `commands.${command.name}.metadata.options.${option.name}`
+                );
+                continue;
+            }
+
+            assert(option.name, `Option in ${logCommandName} must have a name using setName.`);
 
             const englishOptionData = englishData.options[option.name];
-            option.description = englishOptionData.description ?? '!MISSING DESCRIPTION!';
+
+            assert(
+                englishOptionData.description,
+                `Option ${option.name} in command ${logCommandName} is missing an English description.`
+            );
+            option.description = englishOptionData.description;
 
             option.name_localizations = {};
             option.description_localizations = {};
@@ -102,18 +131,18 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
             ) {
                 assert(
                     englishOptionData.choices,
-                    `Option ${option.name} in /${command.name} must have choice localizations.`
+                    `Option ${option.name} in ${logCommandName} must have choice localizations.`
                 );
                 for (const choice of option.choices) {
                     choice.name_localizations = {};
                     assert(
                         choice.value !== undefined && choice.value !== null,
-                        `Choice in option ${option.name} in /${command.name} must have a value.`
+                        `Choice in option ${option.name} in ${logCommandName} must have a value.`
                     );
                     const stringifiedValue = choice.value.toString();
                     assert(
                         englishOptionData.choices[stringifiedValue],
-                        `Choice ${choice.value} of option ${option.name} in /${command.name} must have an English localization.`
+                        `Choice ${choice.value} of option ${option.name} in ${logCommandName} must have an English localization.`
                     );
                     choice.name = englishOptionData.choices[stringifiedValue];
                 }
@@ -150,6 +179,8 @@ export function localizeCommand(command: Omit<SlashCommandBuilder, 'addSubcomman
             }
         }
     }
+
+    // if ((jsonCommand  as ReturnType<SlashCommandSubcommandsOnlyBuilder["toJSON"]>).options.)
 
     return jsonCommand as SlashCommandBuilder;
 }

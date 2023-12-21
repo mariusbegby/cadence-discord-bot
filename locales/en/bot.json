@@ -220,6 +220,54 @@
             "unableToReload": "{{icon}} **Oops!**\n_Hmm..._ It seems I am unable to reload the interaction module across shards."
         },
         "remove": {
+            "metadata": {
+                "name": "remove",
+                "description": "Remove tracks from the queue using certain filters.",
+                "options": {
+                    "track": {
+                        "name": "track",
+                        "description": "Remove a track from the queue by position.",
+                        "options": {
+                            "position": {
+                                "name": "position",
+                                "description": "The position in queue for the track to remove."
+                            }
+                        }
+                    },
+                    "range": {
+                        "name": "range",
+                        "description": "Remove a range of tracks from the queue.",
+                        "options": {
+                            "start": {
+                                "name": "start",
+                                "description": "The starting position of the range to remove."
+                            },
+                            "end": {
+                                "name": "end",
+                                "description": "The ending position of the range to remove."
+                            }
+                        }
+                    },
+                    "queue": {
+                        "name": "queue",
+                        "description": "Remove all tracks from the queue."
+                    },
+                    "user": {
+                        "name": "user",
+                        "description": "Remove all tracks added by a specific user.",
+                        "options": {
+                            "target": {
+                                "name": "target",
+                                "description": "User whose tracks to remove."
+                            }
+                        }
+                    },
+                    "duplicates": {
+                        "name": "duplicates",
+                        "description": "Remove all duplicate tracks from the queue."
+                    }
+                }
+            },
             "noTracksRemoved": "{{icon}} **No tracks removed**\nThere were no tracks removed from the queue. Please check if the option you selected has tracks to remove.",
             "removedTrack": "{{icon}} **Removed track**",
             "removedTracks": "{{icon}} **Removed tracks**\n**`{{count}}`** tracks were removed from the queue.",
