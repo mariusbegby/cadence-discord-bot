@@ -180,7 +180,5 @@ export function localizeCommand(
         }
     }
 
-    // if ((jsonCommand  as ReturnType<SlashCommandSubcommandsOnlyBuilder["toJSON"]>).options.)
-
     return jsonCommand as SlashCommandBuilder;
 }
