@@ -238,7 +238,7 @@
                     }
                 }
             },
-            "correctFormatInstruction": "{{icon}} **Oi sann!**\nDu anga et ugyldig varighetsformat, **`{{wrongDuration}}`**.\nVennligst bruk formatet **`TT:mm:ss`**, **`mm:ss`** eller **`ss`**.\n\n**Eksempler:**\n- **`/seek`** **`1:24:12`** - Spol til 1 time, 24 minutter og 12 sekunder.\n- **`/seek`** **`3:27`** - Spol til 3 minutter og 27 sekunder.\n- **`/seek`** **`42`** - Spol til 42 sekunder.",
+            "correctFormatInstruction": "{{icon}} **Oi sann!**\nDu anga et ugyldig varighetsformat, **`{{wrongDuration}}`**.\nVennligst bruk formatet **`TT:mm:ss`**, **`mm:ss`** eller **`ss`**.\n\n**Eksempler:**\n- {{seekCommand}} **`1:24:12`** - Spol til 1 time, 24 minutter og 12 sekunder.\n- {{seekCommand}} **`3:27`** - Spol til 3 minutter og 27 sekunder.\n- {{seekCommand}} **`42`** - Spol til 42 sekunder.",
             "durationLongerThanTrackDuration": "{{icon}} **Oi sann!**\nDu anga **`{{wrongDuration}}`**, som er et tidsstempel lengre enn varigheten av nåværende låt.\n\nVennligst prøv et tidsstempel som er mindre enn varigheten til låten (**{{trackDuration}}**).",
             "seekingToTimestamp": "{{icon}} **Spoler til tidsposisjon**\nSpoler til **`{{duration}}`** i nåværende låt."
         },

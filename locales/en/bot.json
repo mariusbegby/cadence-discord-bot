@@ -190,7 +190,7 @@
             "playlistAddedTrackCount_one": "And **1** more track... Use {{queueCommand}} to view all.",
             "playlistAddedTrackCount": "And **{{count}}** more tracks... Use {{queueCommand}} to view all.",
             "playlistTooLarge": "{{icon}} **Playlist too large**\nThis playlist is too large to be added to the queue.\n\nThe maximum amount of tracks that can be added to the queue is **{{count}}**.",
-            "trackNotFound": "{{icon}} **No track found\nNo results found for **{{query}}**.\n\nIf you specified a URL, please make sure it is valid and public.",
+            "trackNotFound": "{{icon}} **No track found**\nNo results found for **{{query}}**.\n\nIf you specified a URL, please make sure it is valid and public.",
             "footerAddedPosition": "Added to queue at position {{position}}"
         },
         "queue": {
@@ -286,7 +286,7 @@
                     }
                 }
             },
-            "correctFormatInstruction": "{{icon}} **Oops!**\nYou entered an invalid duration format, **`{{wrongDuration}}`**.\nPlease use the format **`HH:mm:ss`**, **`mm:ss`** or **`ss`**.\n\n**Examples:**\n- **`/seek`** **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n- **`/seek`** **`3:27`** - Seek to 3 minutes and 27 seconds.\n- **`/seek`** **`42`** - Seek to 42 seconds.",
+            "correctFormatInstruction": "{{icon}} **Oops!**\nYou entered an invalid duration format, **`{{wrongDuration}}`**.\nPlease use the format **`HH:mm:ss`**, **`mm:ss`** or **`ss`**.\n\n**Examples:**\n- {{seekCommand}} **`1:24:12`** - Seek to 1 hour, 24 minutes and 12 seconds.\n- {{seekCommand}} **`3:27`** - Seek to 3 minutes and 27 seconds.\n- {{seekCommand}} **`42`** - Seek to 42 seconds.",
             "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nYou entered **`{{wrongDuration}}`**, which is a timestamp longer than the duration of the current track.\n\nPlease try a timestamp that is less than the duration of the track (**{{trackDuration}}**).",
             "seekingToTimestamp": "{{icon}} **Seeking to timestamp**\nSeeking to **`{{duration}}`** in current track."
         },

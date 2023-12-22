@@ -7,6 +7,7 @@ import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/valid
 import { Logger } from 'pino';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
+import { formatSlashCommand } from '../../../common/formattingUtils';
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -77,7 +78,8 @@ class SeekCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         translator('commands.seek.correctFormatInstruction', {
                             icon: this.embedOptions.icons.warning,
-                            wrongDuration: formattedDurationString
+                            wrongDuration: formattedDurationString,
+                            seekCommand: formatSlashCommand('seek', translator)
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
