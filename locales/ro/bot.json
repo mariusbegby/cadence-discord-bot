@@ -81,11 +81,11 @@
         "join": {
             "metadata": {
                 "name": "join",
-                "description": "The bot will join the voice channel if not already in one."
+                "description": "Botul se va alătura canalului de voce dacă nu se află deja pe unul."
             },
-            "alreadyConnected": "{{icon}} **Oops!**\nI am already connected to the {{channel}} voice channel.\n\nTo disconnect me from the channel, use the {{leaveCommand}} command.",
-            "couldNotJoin": "{{icon}} **Oops!**\nCould not join voice channel, please try again.",
-            "joinedChannel": "{{icon}} **Joined channel**\nConnected to voice channel: {{channel}}\n\nTo add tracks, use the {{playCommand}} command!"
+            "alreadyConnected": "{{icon}} **Ups!**\nSunt deja conectat la canalul de voce {{channel}}.\n\n Pentru a mă deconecta din canal, folosește comanda {{leaveCommand}}.",
+            "couldNotJoin": "{{icon}} **Ups!**\nNu s-a putut alătura canalului de voce, te rog încearcă din nou.",
+            "joinedChannel": "{{icon}} **S-a alăturat canalului**\nS-a conectat la canalul de voce: {{channel}}\n\nPentru a adăuga piese, folosește comanda {{playCommand}}!"
         },
         "leave": {
             "metadata": {
@@ -372,7 +372,7 @@
                 "options": {
                     "percentage": {
                         "name": "procent",
-                        "description": "Volume percentage: From 1% to 100%."
+                        "description": "Procent de volum: De la 1% la 100%."
                     }
                 }
             },
@@ -407,7 +407,7 @@
             "off": "Dezactivat",
             "track": "Piesă",
             "queue": "Coadă",
-            "autoplay": "Autoplay"
+            "autoplay": "Redare automată"
         },
         "requestedBy": "**Solicitată de:** {{user}}",
         "unavailableAuthor": "Indisponibil",
