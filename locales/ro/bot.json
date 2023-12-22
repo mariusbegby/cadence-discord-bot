@@ -1,6 +1,6 @@
 {
     "autocomplete": {
-        "trackName": "{{title}} [Author: {{author}}]"
+        "trackName": "{{title}} [Autor: {{author}}]"
     },
     "commands": {
         "back": {
