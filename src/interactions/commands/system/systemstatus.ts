@@ -33,7 +33,11 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
         return await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
-                    .setDescription(`**${this.embedOptions.icons.bot} Bot status**\n` + botStatisticsEmbedString)
+                    .setDescription(
+                        translator('statistics.botStatus.title', { icon: this.embedOptions.icons.bot }) +
+                            '\n' +
+                            botStatisticsEmbedString
+                    )
                     .addFields(
                         {
                             name: translator('statistics.queueStatus.title', {
