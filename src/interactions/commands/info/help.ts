@@ -102,7 +102,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
     private getCommandString(command: BaseSlashCommandInteraction, interaction: ChatInputCommandInteraction): string {
         const commandName = command.data.name;
         const metadataKey = `commands.${commandName}.metadata`;
-        const locale = interaction.guildLocale ?? 'en';
+        const locale = interaction.guildLocale ?? 'en-US';
         let translatedData: CommandMetadata | undefined = undefined;
         translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
 
@@ -122,7 +122,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
 
         if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
             const metadataKey = `commands.${commandName}.metadata.options.${option.name}`;
-            const locale = interaction.guildLocale ?? 'en';
+            const locale = interaction.guildLocale ?? 'en-US';
             let translatedData: CommandMetadata | undefined = undefined;
             translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
             return `**\`${translatedData?.name ?? option.name}\`** `;

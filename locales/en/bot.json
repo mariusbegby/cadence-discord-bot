@@ -458,6 +458,15 @@
     },
     "errors": {
         "unexpectedError": "**{{icon}} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
-        "footerExecutionId": "Execution ID: {{executionId}}"
+        "footerExecutionId": "Execution ID: {{executionId}}",
+        "cannotExtractAudioStream": "**{{icon}} Oops!**\nUnable to retrieve audio for the track **[{{trackTitle}}]({{trackUrl}})**.\n\nIt seems that the source is not available publicly, or the source is not supported.",
+        "cannotLoadAudioStream": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while loading stream for the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
+        "cannotPlayAudioStream": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while streaming the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
+        "generalPlayerError": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue related to the queue or current track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._"
+    },
+    "systemMessages": {
+        "playerSkipError": "{{icon}} **player.events.on('playerSkip')**\nTrack URL: {{trackUrl}}\n\n<@{{userId}}>",
+        "playerError": "{{icon}} **player.events.on('playerError')**\nMessage: {{message}}\n\n<@{{userId}}>",
+        "generalPlayerError": "{{icon}} **player.events.on('error')**\nMessage: {{message}}\n\n<@{{userId}}>"
     }
 }

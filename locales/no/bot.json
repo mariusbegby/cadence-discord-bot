@@ -458,6 +458,15 @@
     },
     "errors": {
         "unexpectedError": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet oppstod en uventet feil under denne handlingen. Du kan forsøke igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
-        "footerExecutionId": "Referanse ID: {{executionId}}"
+        "footerExecutionId": "Referanse ID: {{executionId}}",
+        "cannotExtractAudioStream": "**{{icon}} Oi sann!**\nKan ikke hente lyd for låten **[{{trackTitle}}]({{trackUrl}})**.\n\nDet ser ut til at kilden ikke er offentlig tilgjengelig, eller at kilden ikke støttes.",
+        "cannotLoadAudioStream": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem med å laste lyd for låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "cannotPlayAudioStream": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem med å spille av lyd for låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "generalPlayerError": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem relatert til køen eller den nåværende låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._"
+    },
+    "systemMessages": {
+        "playerSkipError": "{{icon}} **player.events.on('playerSkip')**\nURL til låt: {{trackUrl}}\n\n<@{{userId}}>",
+        "playerError": "{{icon}} **player.events.on('playerError')**\nMelding: {{message}}\n\n<@{{userId}}>",
+        "generalPlayerError": "{{icon}} **player.events.on('error')**\nMelding: {{message}}\n\n<@{{userId}}>"
     }
 }

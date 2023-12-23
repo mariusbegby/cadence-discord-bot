@@ -5,6 +5,7 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import { useLanguageTranslator } from '../../common/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
@@ -25,6 +26,10 @@ module.exports = {
             guildId: queue.metadata?.channel.guild.id
         });
 
+        const language =
+            queue.metadata?.client.guilds.cache.get(queue.metadata?.channel.guild.id)?.preferredLocale ?? 'en-US';
+        const translator = useLanguageTranslator(language);
+
         if (error.message.includes('Could not extract stream for this track')) {
             // handled in playerSkip event where we have access to track object
             return;
@@ -36,27 +41,33 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while streaming the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                        translator('errors.cannotPlayAudioStream', {
+                            icon: embedOptions.icons.error,
+                            serverInviteUrl: botOptions.serverInviteUrl
+                        })
                     )
                     .setColor(embedOptions.colors.error)
-                    .setFooter({ text: `Execution ID: ${executionId}` })
+                    .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
             ]
         });
 
         if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-            const channel: BaseGuildTextChannel = (await queue.metadata?.client.channels.cache.get(
+            const channel: BaseGuildTextChannel = queue.metadata?.client.channels.cache.get(
                 systemOptions.systemMessageChannelId
-            )) as BaseGuildTextChannel;
+            ) as BaseGuildTextChannel;
             if (channel) {
                 await channel.send({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${embedOptions.icons.error} **player.events.on('playerError')**\nExecution id: ${executionId}\n${error.message}` +
-                                    `\n\n<@${systemOptions.systemUserId}>`
+                                translator('systemMessages.playerError', {
+                                    icon: embedOptions.icons.error,
+                                    message: error.message,
+                                    userId: systemOptions.systemUserId
+                                })
                             )
                             .setColor(embedOptions.colors.error)
-                            .setFooter({ text: `Execution ID: ${executionId}` })
+                            .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
                     ]
                 });
             }
