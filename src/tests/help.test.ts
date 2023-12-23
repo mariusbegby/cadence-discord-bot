@@ -16,7 +16,8 @@ describe('HelpCommand', () => {
                 }
             } as unknown as BaseSlashCommandInteraction;
 
-            const commandParams = helpCommand['getCommandParams'](command);
+            const locale = 'en-US';
+            const commandParams = helpCommand['getCommandParams'](command, locale);
 
             expect(commandParams).toBe('**`optionname`** ');
         });
@@ -28,7 +29,8 @@ describe('HelpCommand', () => {
                 }
             } as unknown as BaseSlashCommandInteraction;
 
-            const commandParams = helpCommand['getCommandParams'](command);
+            const locale = 'en-US';
+            const commandParams = helpCommand['getCommandParams'](command, locale);
 
             expect(commandParams).toBe('');
         });

@@ -7,6 +7,7 @@ import {
     ChatInputCommandInteraction,
     Collection,
     ComponentType,
+    LocaleString,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandNumberOption,
@@ -91,22 +92,22 @@ class HelpCommand extends BaseSlashCommandInteraction {
     ): Promise<string> {
         const commandCollection = this.getNonSystemCommands(client!);
 
+        const locale = interaction.guildLocale ?? 'en-US';
         const commandStringList = commandCollection.map((command: BaseSlashCommandInteraction) => {
-            return this.getCommandString(command, interaction);
+            return this.getCommandString(command, locale);
         });
 
         const commandString = commandStringList.join('\n');
         return commandString;
     }
 
-    private getCommandString(command: BaseSlashCommandInteraction, interaction: ChatInputCommandInteraction): string {
+    private getCommandString(command: BaseSlashCommandInteraction, locale: LocaleString): string {
         const commandName = command.data.name;
         const metadataKey = `commands.${commandName}.metadata`;
-        const locale = interaction.guildLocale ?? 'en-US';
         let translatedData: CommandMetadata | undefined = undefined;
         translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
 
-        const commandParams: string = this.getCommandParams(command, interaction);
+        const commandParams: string = this.getCommandParams(command, locale);
 
         const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
         const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
@@ -116,13 +117,12 @@ class HelpCommand extends BaseSlashCommandInteraction {
         }`;
     }
 
-    private getCommandParams(command: BaseSlashCommandInteraction, interaction: ChatInputCommandInteraction): string {
+    private getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {
         const commandName = command.data.name;
         const option = command.data.options[0];
 
         if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
             const metadataKey = `commands.${commandName}.metadata.options.${option.name}`;
-            const locale = interaction.guildLocale ?? 'en-US';
             let translatedData: CommandMetadata | undefined = undefined;
             translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
             return `**\`${translatedData?.name ?? option.name}\`** `;
