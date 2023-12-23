@@ -49,7 +49,7 @@ module.exports = {
                                 translator('errors.cannotExtractAudioStream', {
                                     icon: embedOptions.icons.warning,
                                     trackTitle: track.title,
-                                    trackurl: track.url
+                                    trackUrl: track.url
                                 })
                             )
                             .setColor(embedOptions.colors.warning)
