@@ -6,6 +6,7 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import { useLanguageTranslator } from '../../common/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
@@ -31,6 +32,10 @@ module.exports = {
             guildId: queue.metadata?.channel.guild.id
         });
 
+        const language =
+            queue.metadata?.client.guilds.cache.get(queue.metadata?.channel.guild.id)?.preferredLocale ?? 'en-US';
+        const translator = useLanguageTranslator(language);
+
         logger.debug(`Track [${track.url}] skipped with reason: ${reason}\n${description}`);
 
         if (reason === TrackSkipReason.NoStream) {
@@ -41,9 +46,11 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `**${embedOptions.icons.warning} Oops!**\n` +
-                                    `Unable to retrieve audio for the track **[${track.title}](${track.url})**.\n\n` +
-                                    'It seems that the source is not available publicly, or the source is not supported.'
+                                translator('errors.cannotExtractAudioStream', {
+                                    icon: embedOptions.icons.warning,
+                                    trackTitle: track.title,
+                                    trackUrl: track.url
+                                })
                             )
                             .setColor(embedOptions.colors.warning)
                     ]
@@ -54,26 +61,34 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
-                            `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while loading stream for the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                            translator('errors.cannotLoadAudioStream', {
+                                icon: embedOptions.icons.error,
+                                serverInviteUrl: botOptions.serverInviteUrl
+                            })
                         )
                         .setColor(embedOptions.colors.error)
-                        .setFooter({ text: `Execution ID: ${executionId}` })
+                        .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
                 ]
             });
             if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
-                const channel: BaseGuildTextChannel = (await queue.metadata?.client.channels.cache.get(
+                const channel: BaseGuildTextChannel = queue.metadata?.client.channels.cache.get(
                     systemOptions.systemMessageChannelId
-                )) as BaseGuildTextChannel;
+                ) as BaseGuildTextChannel;
                 if (channel) {
                     await channel.send({
                         embeds: [
                             new EmbedBuilder()
                                 .setDescription(
-                                    `${embedOptions.icons.error} **player.events.on('playerSkip')**\nExecution id: ${executionId}\n${track.url}` +
-                                        `\n\n<@${systemOptions.systemUserId}>`
+                                    translator('systemMessages.playerSkipError', {
+                                        icon: embedOptions.icons.error,
+                                        trackUrl: track.url,
+                                        userId: systemOptions.systemUserId
+                                    })
                                 )
                                 .setColor(embedOptions.colors.error)
-                                .setFooter({ text: `Execution ID: ${executionId}` })
+                                .setFooter({
+                                    text: translator('errors.footerExecutionId', { executionId: executionId })
+                                })
                         ]
                     });
                 }

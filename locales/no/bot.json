@@ -5,7 +5,7 @@
     "commands": {
         "back": {
             "metadata": {
-                "name": "back",
+                "name": "tilbake",
                 "description": "Gå tilbake til forrige låt eller angitt posisjon i historikken.",
                 "options": {
                     "position": {
@@ -21,7 +21,7 @@
         },
         "filters": {
             "metadata": {
-                "name": "filters",
+                "name": "filtre",
                 "description": "Velg mellom ulike lydfiltre.",
                 "options": {
                     "type": {
@@ -45,7 +45,7 @@
         },
         "guilds": {
             "metadata": {
-                "name": "guilds",
+                "name": "servere",
                 "description": "Vis de 25 største serverne etter medlemstall."
             },
             "topGuildsByMemberCount": "{{icon}} **Topp {{count}} servere etter medlemstall ({{totalCount}} totalt)**",
@@ -53,7 +53,7 @@
         },
         "help": {
             "metadata": {
-                "name": "help",
+                "name": "hjelp",
                 "description": "Vis listen over bot-kommandoer."
             },
             "addBotButton": "Legg til bot",
@@ -62,7 +62,7 @@
         },
         "history": {
             "metadata": {
-                "name": "history",
+                "name": "historikk",
                 "description": "Vis historikk over låter som har blitt spilt.",
                 "options": {
                     "page": {
@@ -78,7 +78,7 @@
         },
         "join": {
             "metadata": {
-                "name": "join",
+                "name": "bli-med",
                 "description": "Botten vil bli med i talekanalen hvis den ikke allerede er i en."
             },
             "alreadyConnected": "{{icon}} **Oi sann!**\nJeg er allerede koblet til talekanalen {{channel}}.\n\nFor å koble meg fra kanalen, bruk kommandoen {{leaveCommand}}.",
@@ -87,14 +87,14 @@
         },
         "leave": {
             "metadata": {
-                "name": "leave",
+                "name": "forlat",
                 "description": "Tøm køen og fjern botten fra talekanalen."
             },
             "leavingChannel": "{{icon}} **Koblet fra kanal**\nTømte låtkøen og koblet fra talekanalen.\n\nFor å spille mer musikk, bruk kommandoen {{playCommand}}!"
         },
         "loop": {
             "metadata": {
-                "name": "loop",
+                "name": "repeter",
                 "description": "Velg mellom å spille en låt på reptisjon, hele køen eller autoplay.",
                 "options": {
                     "mode": {
@@ -118,7 +118,7 @@
         },
         "lyrics": {
             "metadata": {
-                "name": "lyrics",
+                "name": "sangtekst",
                 "description": "Søk etter Genius sangtekster for nåværende eller angitt låt.",
                 "options": {
                     "query": {
@@ -133,7 +133,7 @@
         },
         "move": {
             "metadata": {
-                "name": "move",
+                "name": "flytt",
                 "description": "Flytt en låt til en spesifisert posisjon i køen.",
                 "options": {
                     "from": {
@@ -152,7 +152,7 @@
         },
         "nowplaying": {
             "metadata": {
-                "name": "nowplaying",
+                "name": "spiller-nå",
                 "description": "Vis informasjon om nåværende låt."
             },
             "embedFields": {
@@ -176,11 +176,11 @@
         },
         "play": {
             "metadata": {
-                "name": "play",
-                "description": "Legg til en låt eller spilleliste i køen ved søkespørring eller URL.",
+                "name": "spill-av",
+                "description": "Legg til en låt eller spilleliste i køen ved søk eller URL.",
                 "options": {
                     "query": {
-                        "name": "spørring",
+                        "name": "søk",
                         "description": "Søkespørring ved tekst eller URL."
                     }
                 }
@@ -195,7 +195,7 @@
         },
         "queue": {
             "metadata": {
-                "name": "queue",
+                "name": "kø",
                 "description": "Vis låter som har blitt lagt til i køen.",
                 "options": {
                     "page": {
@@ -213,13 +213,61 @@
         },
         "reload": {
             "metadata": {
-                "name": "reload",
+                "name": "oppdater",
                 "description": "Last inn bot-kommandoer, autocompletion og component interaksjoner på nytt på tvers av shards."
             },
             "reloadedCommands": "{{icon}} **Kommandoer lastet inn på nytt**",
             "unableToReload": "{{icon}} **Oi sann!**\n_Hmm..._ Det ser ut til at jeg ikke klarer å laste inn interaksjoner og kommandoer på tvers av shards."
         },
         "remove": {
+            "metadata": {
+                "name": "fjern",
+                "description": "Fjern låter fra køen med bruk av forskjellige filtre.",
+                "options": {
+                    "track": {
+                        "name": "låt",
+                        "description": "Fjern en låt fra køen med å angi posisjon.",
+                        "options": {
+                            "position": {
+                                "name": "posisjon",
+                                "description": "Posisjonen i køen for låten som skal fjernes."
+                            }
+                        }
+                    },
+                    "range": {
+                        "name": "område",
+                        "description": "Fjern et utvalg av låter fra køen med å angi et område av posisjoner.",
+                        "options": {
+                            "start": {
+                                "name": "start",
+                                "description": "Startposisjonen for låtene som skal fjernes."
+                            },
+                            "end": {
+                                "name": "slutt",
+                                "description": "Sluttposisjonen for låtene som skal fjernes."
+                            }
+                        }
+                    },
+                    "queue": {
+                        "name": "kø",
+                        "description": "Fjern alle låtene fra køen."
+                    },
+                    "user": {
+                        "name": "user",
+                        "description": "Fjern alle låtene lagt til av en spesifikk bruker.",
+                        "options": {
+                            "target": {
+                                "name": "bruker",
+                                "description": "Brukeren å fjerne låter for."
+                            }
+                        }
+                    },
+                    "duplicates": {
+                        "name": "duplikater",
+                        "description": "Fjern alle duplikate låter fra køen."
+                    }
+                }
+            },
             "noTracksRemoved": "{{icon}} **Ingen låter fjernet**\nDet ble ikke fjernet noen låter fra køen. Vennligst sjekk om alternativet du valgte har låter som kan fjernes.",
             "removedTrack": "{{icon}} **Fjernet låt**",
             "removedTracks": "{{icon}} **Fjernet låter**\n**`{{count}}`** låter ble fjernet fra køen.",
@@ -229,7 +277,7 @@
         },
         "seek": {
             "metadata": {
-                "name": "seek",
+                "name": "spol",
                 "description": "Spol til tidsposisjon i nåværende låt.",
                 "options": {
                     "duration": {
@@ -269,14 +317,14 @@
         },
         "shuffle": {
             "metadata": {
-                "name": "shuffle",
-                "description": "Tilfeldig stokk om rekkefølgen til alle låter i køen."
+                "name": "stokk-om",
+                "description": "Tilfeldig stokk om rekkefølgen til låter i køen."
             },
             "shuffledTracks": "{{icon}} **Stokket om rekkefølge**\n**{{count}}** låter i køen har blitt stokket om.\n\nVis den nye kørekkefølgen med {{queueCommand}}."
         },
         "skip": {
             "metadata": {
-                "name": "skip",
+                "name": "hopp",
                 "description": "Hopp over låt til neste eller angitt posisjon i køen.",
                 "options": {
                     "position": {
@@ -299,7 +347,7 @@
         },
         "stop": {
             "metadata": {
-                "name": "stop",
+                "name": "stopp",
                 "description": "Tøm køen og slutt å spille lyd."
             },
             "stoppedPlaying": "{{icon}} **Stoppet å spille**\nStoppet å spille lyd og tømte køen.\n\nFor å spille mer musikk, bruk kommandoen {{playCommand}}!"
@@ -312,7 +360,7 @@
         },
         "volume": {
             "metadata": {
-                "name": "volume",
+                "name": "volum",
                 "description": "Vis eller endre avspillingsvolumet for låter.",
                 "options": {
                     "percentage": {
@@ -407,5 +455,18 @@
         "queueIsEmpty": "{{icon}} **Oi sann!\nDet er ingen låter lagt til i køen. Legg først til noen låter med {{playCommand}}!",
         "queueNoCurrentTrack": "{{icon}} **Oi sann!**\nDet spilles ingenting av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
         "trackNotPlayingAnymore": "{{icon}} **Oi sann!**\nDenne låten har blitt hoppet over allerede eller spiller ikke lenger."
+    },
+    "errors": {
+        "unexpectedError": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet oppstod en uventet feil under denne handlingen. Du kan forsøke igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "footerExecutionId": "Referanse ID: {{executionId}}",
+        "cannotExtractAudioStream": "**{{icon}} Oi sann!**\nKan ikke hente lyd for låten **[{{trackTitle}}]({{trackUrl}})**.\n\nDet ser ut til at kilden ikke er offentlig tilgjengelig, eller at kilden ikke støttes.",
+        "cannotLoadAudioStream": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem med å laste lyd for låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "cannotPlayAudioStream": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem med å spille av lyd for låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "generalPlayerError": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet ser ut til at det var et problem relatert til køen eller den nåværende låten.\n\nHvis du utførte en kommando, kan du prøve igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._"
+    },
+    "systemMessages": {
+        "playerSkipError": "{{icon}} **player.events.on('playerSkip')**\nURL til låt: {{trackUrl}}\n\n<@{{userId}}>",
+        "playerError": "{{icon}} **player.events.on('playerError')**\nMelding: {{message}}\n\n<@{{userId}}>",
+        "generalPlayerError": "{{icon}} **player.events.on('error')**\nMelding: {{message}}\n\n<@{{userId}}>"
     }
 }

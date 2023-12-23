@@ -4,6 +4,7 @@ import {
     ApplicationCommandOptionType,
     BaseInteraction,
     Locale,
+    LocaleString,
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandsOnlyBuilder
@@ -34,11 +35,15 @@ translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
 });
 
 export function useServerTranslator(interaction: BaseInteraction) {
-    return translatorInstance.getFixedT(interaction.guildLocale ?? 'en');
+    return translatorInstance.getFixedT(interaction.guildLocale ?? 'en-US');
 }
 
 export function useUserTranslator(interaction: BaseInteraction) {
-    return translatorInstance.getFixedT(interaction.locale ?? 'en');
+    return translatorInstance.getFixedT(interaction.locale ?? 'en-US');
+}
+
+export function useLanguageTranslator(language: LocaleString) {
+    return translatorInstance.getFixedT(language ?? 'en-US');
 }
 
 export const DISCORD_LOCALES = Object.values(Locale);

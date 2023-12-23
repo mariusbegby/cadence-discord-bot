@@ -5,6 +5,7 @@ import { Logger } from 'pino';
 import loggerModule from '../../services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import { useLanguageTranslator } from '../../common/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');
@@ -24,6 +25,10 @@ module.exports = {
             guildId: queue.metadata?.channel.guild.id
         });
 
+        const language =
+            queue.metadata?.client.guilds.cache.get(queue.metadata?.channel.guild.id)?.preferredLocale ?? 'en-US';
+        const translator = useLanguageTranslator(language);
+
         logger.error(error, "player.events.on('error'): Player queue encountered error event");
 
         // TODO: check for access to send message to channel to avoid possible DiscordAPIError - Missing Access
@@ -31,10 +36,13 @@ module.exports = {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${embedOptions.icons.error} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue related to the queue or current track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server](${botOptions.serverInviteUrl})**._`
+                        translator('errors.generalPlayerError', {
+                            icon: embedOptions.icons.error,
+                            serverInviteUrl: botOptions.serverInviteUrl
+                        })
                     )
                     .setColor(embedOptions.colors.error)
-                    .setFooter({ text: `Execution ID: ${executionId}` })
+                    .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
             ]
         });
 
@@ -47,11 +55,14 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                `${embedOptions.icons.error} **player.events.on('error')**\nExecution id: ${executionId}\n${error.message}` +
-                                    `\n\n<@${systemOptions.systemUserId}>`
+                                translator('systemMessages.generalPlayerError', {
+                                    icon: embedOptions.icons.error,
+                                    message: error.message,
+                                    userId: systemOptions.systemUserId
+                                })
                             )
                             .setColor(embedOptions.colors.error)
-                            .setFooter({ text: `Execution ID: ${executionId}` })
+                            .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
                     ]
                 });
             }
