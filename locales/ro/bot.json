@@ -16,8 +16,7 @@
             },
             "trackHistoryEmpty": "{{icon}} **Ups!**\nIstoricul e gol, dar poți adăuga niște piese folosind {{playCommand}}!",
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Ups!**\nMai este doar **o** piesă în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
-            "trackPositionHigherThanHistoryLength_few": "{{icon}} **Ups!**\nMai sunt doar **{{count}}** piese în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
-            "trackPositionHigherThanHistoryLength_many": "{{icon}} **Ups!**\nMai sunt doar **{{count}}** de piese în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
+            "trackPositionHigherThanHistoryLength": "",
             "trackRecovered": "{{icon}} **Piesă recuperată**\n{{track}}"
         },
         "filters": {
@@ -74,13 +73,12 @@
             },
             "emptyHistory": "Istoricul e gol, adaugă niște piese cu {{playCommand}}!",
             "invalidPageNumber_one": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nIstoricul conține numai **o** pagină.",
-            "invalidPageNumber_few": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nIstoricul conține numai **`{{count}}`** pagini.",
-            "invalidPageNumber_many": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nIstoricul conține numai **`{{count}}`** de pagini.",
+            "invalidPageNumber": "",
             "tracksInHistoryTitle": "{{icon}} **Piese în istoric**"
         },
         "join": {
             "metadata": {
-                "name": "join",
+                "name": "",
                 "description": "Botul se va alătura canalului de voce dacă nu se află deja pe unul."
             },
             "alreadyConnected": "{{icon}} **Ups!**\nSunt deja conectat la canalul de voce {{channel}}.\n\n Pentru a mă deconecta din canal, folosește comanda {{leaveCommand}}.",
@@ -106,7 +104,7 @@
                             "0": "Dezactivat",
                             "1": "Piesă",
                             "2": "Coadă",
-                            "3": "Autoplay"
+                            "3": ""
                         }
                     }
                 }
@@ -129,7 +127,7 @@
                     }
                 }
             },
-            "autocompleteSearchResult": "{{title}} [Artist: {{artist}}]",
+            "autocompleteSearchResult": "",
             "lyricsEmbed": "{{icon}} **Afișând versuri**\n**Track: [{{trackTitle}}]({{trackUrl}})**\n**Artist: [{{artistName}}]({{artistUrl}})**",
             "noLyricsFound": "{{icon}} **Nu au fost găsite versuri**\nNu s-au putut găsi versuri Genius pentru piesa **{{query}}**."
         },
@@ -150,8 +148,7 @@
             },
             "trackMoved": "{{icon}} **Piesă mutată**\n{track}\n\nPiesa a fost mutată din poziția **`{{fromPosition}}`** la poziția **`{{toPosition}}`**.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Ups!**\nNu poți muta piesa din poziția **`{{fromPosition}}`** spre poziția **`{{toPosition}}`**. Coada conține doar **o** singură piesă.\n\nVezi piese adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Ups!**\nNu poți muta piesa din poziția **`{{fromPosition}}`** spre poziția **`{{toPosition}}`**. Coada conține doar **`{{count}}`** piese.\n\nVezi piese adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Ups!**\nNu poți muta piesa din poziția **`{{fromPosition}}`** spre poziția **`{{toPosition}}`**. Coada conține doar **`{{count}}`** de piese.\n\nVezi piese adăugate în coadă folosind {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": ""
         },
         "nowplaying": {
             "metadata": {
@@ -159,13 +156,12 @@
                 "description": "Afișează informații despre piesa în curs de redare."
             },
             "embedFields": {
-                "author": "**Artist**",
+                "author": "",
                 "plays": "**Ascultări**",
                 "source": "**Sursa piesei**"
             },
             "otherTracksInQueue_one": "O altă piesă în coadă...",
-            "otherTracksInQueue_few": "{{count}} alte piese în coadă...",
-            "otherTracksInQueue_many": "{{count}} de alte piese în coadă...",
+            "otherTracksInQueue": "",
             "playCount_zero": "Necunoscut",
             "playCount": "{{count, number}}"
         },
@@ -192,8 +188,7 @@
             "addedToQueueTitle": "{{icon}} **Adăugat în coadă**",
             "playlistAddedTitle": "{{icon}} **Playlist adăugat în coadă**",
             "playlistAddedTrackCount_one": "Și **o** altă piesă... Folosește {{queueCommand}} pentru a le afișa pe toate.",
-            "playlistAddedTrackCount_few": "Și **{{count}}** alte piese... Folosește {{queueCommand}} pentru a le afișa pe toate.",
-            "playlistAddedTrackCount_many": "Și **{{count}}** de alte piese... Folosește {{queueCommand}} pentru a le afișa pe toate.",
+            "playlistAddedTrackCount": "",
             "playlistTooLarge": "{{icon}} **Playlist prea mare**\nAcest playlist este prea mare, și nu poate fi adăugat în coadă.\n\nNumărul maxim de piese care pot fi adăugate în coadă este **{{count}}**.",
             "trackNotFound": "{{icon}} **Nicio piesă găsită**\nNu a fost găsit niciun rezultat pentru **{{query}}**.\n\nDacă ai specificat un URL, asigură-te că este corect și public.",
             "footerAddedPosition": "Adăugată în coadă în poziția {{position}}"
@@ -214,8 +209,7 @@
             "estimatedDuration": "Durată estimată: {{duration}}",
             "estimatedReallyLongTime": "Durată estimată: Foarte mult timp",
             "invalidPageNumber_one": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nCoada conține numai **o** pagină.",
-            "invalidPageNumber_few": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nCoada conține numai **`{{count}}`** pagini.",
-            "invalidPageNumber_many": "{{icon}} **Ups!**\nPagina **`{{page}}`** nu este o pagină validă.\n\nCoada conține numai **`{{count}}`** de pagini."
+            "invalidPageNumber": ""
         },
         "reload": {
             "metadata": {
@@ -276,15 +270,14 @@
             },
             "noTracksRemoved": "{{icon}} **Nicio piesă eliminată**\nNicio piesă nu a fost eliminată din coadă. Verifică dacă filtrul selectat are piese de eliminat.",
             "removedTrack": "{{icon}} **Piesă eliminată**",
-            "removedTracks_few": "{{icon}} **Piese eliminate**\n**`{{count}}`** piese au fost eliminate din coadă.",
-            "removedTracks_many": "{{icon}} **Piese eliminate**\n**`{{count}}`** de piese au fost eliminate din coadă.",
+            "removedTracks": "",
             "startPositionHigherThanEndPosition": "{{icon}} **Ups!**\nPoziția de început **`{{start}}`** e mai mare decât poziția de sfârșit **`{{end}}`**. Te rog să specifici un interval valid.\n\nView tracks added to the queue with {{queueCommand}}.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Ups!**\nPoziția **`{{position}}`** nu este o poziția validă în coada de piese. Coada conține numai **o** piesă.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Ups!**\nPoziția **`{{position}}`** nu este o poziție validă în coada de piese. Coada conține numai **`{{count}}`** piese.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Ups!**\nPoziția **`{{position}}`** nu este o poziție validă în coada de piese. Coada conține numai **`{{count}}`** de piese.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": ""
         },
         "seek": {
             "metadata": {
+                "name": "",
                 "description": "Navighează la o anumită durată în piesa în curs de redare.",
                 "options": {
                     "duration": {
@@ -299,6 +292,7 @@
         },
         "shards": {
             "metadata": {
+                "name": "",
                 "description": "Afișează informații despre toate shardurile conectate.",
                 "options": {
                     "sort": {
@@ -342,8 +336,7 @@
             "emptyQueue": "{{icon}} **Ups!**\nCoada este goală, adaugă niște piese folosind {{playCommand}}!",
             "skippedTrack": "{{icon}} **Înaintat**",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Ups!**\nCoada conține numai **o** piesă. Nu poți înainta la piesa **{{position}}**.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Ups!**\nCoada conține numai **{{count}}** piese. Nu poți înainta la piesa **{{position}}**.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Ups!**\nCoada conține numai **{{count}}** de piese. Nu poți înainta la piesa **{{position}}**.\n\nVezi piesele adăugate în coadă folosind {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": ""
         },
         "status": {
             "metadata": {
@@ -354,7 +347,7 @@
         },
         "stop": {
             "metadata": {
-                "name": "stop",
+                "name": "",
                 "description": "Golește coada și oprește difuzarea sonorului."
             },
             "stoppedPlaying": "{{icon}} **Difuzare oprită**\nCoada a fost golită și difuzarea sonorului a fost oprită.\n\nPentru a reda mai multă muzică, folosește comanda {{playCommand}}!"
@@ -397,8 +390,7 @@
             "skip": "Înainte"
         },
         "footerPageNumber_one": "Pagina {{page}} din {{pageCount}} (o piesă)",
-        "footerPageNumber_few": "Page {{page}} din {{pageCount}} ({{count}} piese)",
-        "footerPageNumber_many": "Page {{page}} din {{pageCount}} ({{count}} de piese)",
+        "footerPageNumber": "",
         "loopingInfo": "{{icon}} **Repetiție**\nModul de repetiție este setat la **`{{loopMode}}`**. Se poate schimba folosind {{loopCommand}}.\n",
         "nowPausedTitle": "{{icon}} **În pauză**",
         "nowPlayingTitle": "{{icon}} **În redare**",
@@ -428,8 +420,8 @@
         },
         "queueStatus": {
             "title": "{{icon}} **Starea cozii**",
-            "voiceConnections_one": "**1** Conexiune de voce",
             "voiceConnections": "**{{count}}** Conexiuni de voce",
+            "voiceConnections_one": "**1** Conexiune de voce",
             "tracksInQueues": "**{{count}}** Piese în cozi",
             "tracksInQueues_one": "**1** Piesă în cozi",
             "usersListening": "**{{count}}** Ascultători",
@@ -463,5 +455,18 @@
         "queueIsEmpty": "{{icon}} **Ups!\nNu sunt piese în coadă. Mai întâi adaugă câteva piese folosind {{playCommand}}!",
         "queueNoCurrentTrack": "{{icon}} **Ups!**\nNimic nu este în curs de redare. Mai întâi adaugă câteva piese folosind {{playCommand}}!",
         "trackNotPlayingAnymore": "{{icon}} **Ups!**\nS-a trecut peste această piesă, sau nu mai este în curs de redare."
+    },
+    "errors": {
+        "unexpectedError": "",
+        "footerExecutionId": "",
+        "cannotExtractAudioStream": "",
+        "cannotLoadAudioStream": "",
+        "cannotPlayAudioStream": "",
+        "generalPlayerError": ""
+    },
+    "systemMessages": {
+        "playerSkipError": "",
+        "playerError": "",
+        "generalPlayerError": ""
     }
 }

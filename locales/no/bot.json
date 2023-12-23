@@ -253,7 +253,7 @@
                         "description": "Fjern alle låtene fra køen."
                     },
                     "user": {
-                        "name": "user",
+                        "name": "bruker",
                         "description": "Fjern alle låtene lagt til av en spesifikk bruker.",
                         "options": {
                             "target": {
