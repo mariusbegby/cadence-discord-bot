@@ -455,5 +455,9 @@
         "queueIsEmpty": "{{icon}} **Oi sann!\nDet er ingen låter lagt til i køen. Legg først til noen låter med {{playCommand}}!",
         "queueNoCurrentTrack": "{{icon}} **Oi sann!**\nDet spilles ingenting av for øyeblikket. Legg først til noen låter med {{playCommand}}!",
         "trackNotPlayingAnymore": "{{icon}} **Oi sann!**\nDenne låten har blitt hoppet over allerede eller spiller ikke lenger."
+    },
+    "errors": {
+        "unexpectedError": "**{{icon}} Å nei... _Noe_ gikk galt!**\nDet oppstod en uventet feil under denne handlingen. Du kan forsøke igjen.\n\n_Hvis dette problemet vedvarer, vennligst send inn en feilrapport i **[støtteserveren]({{serverInviteUrl}})**._",
+        "footerExecutionId": "Referanse ID: {{executionId}}"
     }
 }

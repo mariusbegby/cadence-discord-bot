@@ -455,5 +455,9 @@
         "queueIsEmpty": "{{icon}} **Oops!\nThere are no tracks added to the queue. First add some tracks with {{playCommand}}!",
         "queueNoCurrentTrack": "{{icon}} **Oops!**\nThere is nothing currently playing. First add some tracks with {{playCommand}}!",
         "trackNotPlayingAnymore": "{{icon}} **Oops!**\nThis track has been skipped or is no longer playing."
+    },
+    "errors": {
+        "unexpectedError": "**{{icon}} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
+        "footerExecutionId": "Execution ID: {{executionId}}"
     }
 }
