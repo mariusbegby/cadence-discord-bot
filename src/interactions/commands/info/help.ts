@@ -106,7 +106,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         let translatedData: CommandMetadata | undefined = undefined;
         translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
 
-        const commandParams: string = this.getCommandParams(command);
+        const commandParams: string = this.getCommandParams(command, interaction);
 
         const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
         const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
@@ -116,11 +116,18 @@ class HelpCommand extends BaseSlashCommandInteraction {
         }`;
     }
 
-    private getCommandParams(command: BaseSlashCommandInteraction): string {
+    private getCommandParams(command: BaseSlashCommandInteraction, interaction: ChatInputCommandInteraction): string {
+        const commandName = command.data.name;
         const option = command.data.options[0];
+
         if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
-            return `**\`${option.name}\`** `;
+            const metadataKey = `commands.${commandName}.metadata.options.${option.name}`;
+            const locale = interaction.guildLocale ?? 'en';
+            let translatedData: CommandMetadata | undefined = undefined;
+            translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
+            return `**\`${translatedData?.name ?? option.name}\`** `;
         }
+
         return '';
     }
 }
