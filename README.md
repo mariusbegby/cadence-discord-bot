@@ -58,7 +58,7 @@ Cadence offers an enriching audio experience on Discord with features such as:
 ### Configuration and Logging:
 
 -   Override default configuration by creating `/config/local.js`.
--   Use `npm run deploy-pretty` and `npm run start-pretty` for better console output, requires [pino-pretty](https://www.npmjs.com/package/pino-pretty).
+-   Install [pino-pretty](https://www.npmjs.com/package/pino-pretty) for formatted, colorized console output, this is included in optional dependencies.
 -   Logs are stored in `/logs` folder. Configure the logging level in the config file.
 -   For production, usage of `pm2` or similar to manage the bot process is recommended.
 
