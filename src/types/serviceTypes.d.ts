@@ -16,5 +16,6 @@ export type TargetOptions = {
             username: string;
             password: string;
         };
+        ignore?: string;
     };
 };

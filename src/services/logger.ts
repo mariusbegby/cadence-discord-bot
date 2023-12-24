@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import config from 'config';
 import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
 import { CustomLoggerOptions } from '../types/configTypes';
@@ -26,8 +27,39 @@ const targets: TargetOptions[] = [
             mkdir: true,
             sync: false
         }
-    },
-    {
+    }
+];
+
+// Add console logging with pino-pretty if available
+let pinoPrettyAvailable = false;
+let pinoLokiAvailable = false;
+
+try {
+    require.resolve('pino-pretty');
+    pinoPrettyAvailable = true;
+} catch (e) {
+    console.log('pino-pretty not available. Falling back to default console logging.');
+    console.log('install pino-pretty for better console logging: npm i pino-pretty');
+}
+
+try {
+    require.resolve('pino-loki');
+    pinoLokiAvailable = true;
+} catch (e) {
+    console.log('pino-loki not available. Sending logs to Grafana Loki will be skipped.');
+}
+
+if (pinoPrettyAvailable) {
+    targets.push({
+        target: 'pino-pretty',
+        level: loggerOptions.minimumLogLevelConsole,
+        options: {
+            colorize: true,
+            ignore: 'environment,source,module,action,name,context,executionId,executionTime,shardId,guildId,interactionType'
+        }
+    });
+} else {
+    targets.push({
         // This target is used for logging to the console
         target: 'pino/file',
         level: loggerOptions.minimumLogLevelConsole,
@@ -35,11 +67,11 @@ const targets: TargetOptions[] = [
             colorize: true,
             sync: false
         }
-    }
-];
+    });
+}
 
-// Check for Loki credentials and add Loki as a target if present
-if (process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
+// Check for Loki credentials and add Loki as a target if present and pino-loki is installed
+if (pinoLokiAvailable && process.env.LOKI_AUTH_PASSWORD && process.env.LOKI_AUTH_USERNAME) {
     targets.push({
         target: 'pino-loki',
         level: loggerOptions.minimumLogLevel,
