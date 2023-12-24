@@ -26,17 +26,16 @@
         ]
     },
     "scripts": {
+        "start": "node .",
+        "deploy": "node ./dist/utils/deploySlashCommands.js",
+        "dev": "concurrently --names \"TSC,TOC,BOT\" --prefix-colors \"yellow,blue,green\" \"npx tsc -w\" \"nodemon -w locales/en -x npm run toc\" \"nodemon -x npm run start\"",
+        "eslint": "eslint ./src",
+        "prebuild": "npm run toc",
+        "build": "tsc",
+        "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts",
         "test": "jest",
         "test:watch": "jest --watch",
-        "coverage": "jest --coverage",
-        "start": "node .",
-        "start-pretty": "node . | pino-pretty --ignore environment,source,module,action,name,context,executionId,executionTime,shardId,guildId,interactionType",
-        "deploy": "node ./dist/utils/deploySlashCommands.js",
-        "deploy-pretty": "node ./dist/utils/deploySlashCommands.js | pino-pretty --ignore environment,source,module,action,name,context,executionId,executionTime,shardId,guildId,interactionType",
-        "eslint": "eslint ./src",
-        "build": "tsc",
-        "prebuild": "npm run toc",
-        "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts"
+        "coverage": "jest --coverage"
     },
     "nodemonConfig": {
         "ignore": [
@@ -59,7 +58,6 @@
         "mediaplex": "^0.0.9",
         "node-os-utils": "^1.3.7",
         "pino": "^8.17.1",
-        "pino-loki": "^2.1.3",
         "youtube-ext": "^1.1.16"
     },
     "devDependencies": {
@@ -67,9 +65,9 @@
         "@types/jest": "^29.5.11",
         "@types/node": "^20.10.5",
         "@types/node-os-utils": "^1.3.4",
-        "@types/pino": "^7.0.5",
         "@typescript-eslint/eslint-plugin": "^6.15.0",
         "@typescript-eslint/parser": "^6.15.0",
+        "concurrently": "^8.2.2",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.1.1",
@@ -78,5 +76,9 @@
         "prettier": "^3.1.1",
         "ts-jest": "^29.1.1",
         "typescript": "^5.3.3"
+    },
+    "optionalDependencies": {
+        "pino-loki": "^2.1.3",
+        "pino-pretty": "^10.3.0"
     }
 }
