@@ -1,0 +1,482 @@
+{
+    "autocomplete": {
+        "trackName": "{{title}} [Autor: {{author}}]"
+    },
+    "commands": {
+        "back": {
+            "metadata": {
+                "name": "anterior",
+                "description": "Vuelve a la canción anterior o a la posición especificada en el historial de canciones.",
+                "options": {
+                    "position": {
+                        "name": "posición",
+                        "description": "La posición en el historial de canciones a la cual retroceder."
+                    }
+                }
+            },
+            "trackHistoryEmpty": "{{icon}} **Oops!**\nParece que el historial de canciones está vacío, agrega algunas canciones usando el comando {{playCommand}}!",
+            "trackPositionHigherThanHistoryLength_one": "",
+            "trackPositionHigherThanHistoryLength_few": "",
+            "trackPositionHigherThanHistoryLength_many": "",
+            "trackRecovered": ""
+        },
+        "filters": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "type": {
+                        "name": "",
+                        "description": "",
+                        "choices": {
+                            "ffmpeg": "",
+                            "biquad": "",
+                            "equalizer": "",
+                            "disable": ""
+                        }
+                    }
+                }
+            },
+            "allFiltersDisabled": "",
+            "disableAllFiltersButton": "",
+            "nowUsingFilters": "",
+            "selectFilterPlaceholder": "",
+            "selectFilterPlaceholderMany": "",
+            "toggleFilterInstructions": ""
+        },
+        "guilds": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "topGuildsByMemberCount": "",
+            "totalMembers": ""
+        },
+        "help": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "addBotButton": "",
+            "listTitle": "",
+            "supportServerButton": ""
+        },
+        "history": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "page": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "emptyHistory": "",
+            "invalidPageNumber_one": "",
+            "invalidPageNumber_few": "",
+            "invalidPageNumber_many": "",
+            "tracksInHistoryTitle": ""
+        },
+        "join": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "alreadyConnected": "",
+            "couldNotJoin": "",
+            "joinedChannel": ""
+        },
+        "leave": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "leavingChannel": ""
+        },
+        "loop": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "mode": {
+                        "name": "",
+                        "description": "",
+                        "choices": {
+                            "0": "",
+                            "1": "",
+                            "2": "",
+                            "3": ""
+                        }
+                    }
+                }
+            },
+            "alreadySet": "",
+            "loopModeInformation": "",
+            "modeChanged": "",
+            "willAutoplay": "",
+            "willNoLongerPlay": "",
+            "willNowPlay": ""
+        },
+        "lyrics": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "query": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "autocompleteSearchResult": "",
+            "lyricsEmbed": "",
+            "noLyricsFound": ""
+        },
+        "move": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "from": {
+                        "name": "",
+                        "description": ""
+                    },
+                    "to": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "trackMoved": "",
+            "trackPositionHigherThanQueueLength_one": "",
+            "trackPositionHigherThanQueueLength_few": "",
+            "trackPositionHigherThanQueueLength_many": ""
+        },
+        "nowplaying": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "embedFields": {
+                "author": "",
+                "plays": "",
+                "source": ""
+            },
+            "otherTracksInQueue_one": "",
+            "otherTracksInQueue_few": "",
+            "otherTracksInQueue_many": "",
+            "playCount_zero": "",
+            "playCount": ""
+        },
+        "pause": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "pauseConfirmation": "",
+            "resumeConfirmation": "",
+            "directSource": ""
+        },
+        "play": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "query": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "addedToQueueTitle": "",
+            "playlistAddedTitle": "",
+            "playlistAddedTrackCount_one": "",
+            "playlistAddedTrackCount_few": "",
+            "playlistAddedTrackCount_many": "",
+            "playlistTooLarge": "",
+            "trackNotFound": "",
+            "footerAddedPosition": ""
+        },
+        "queue": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "page": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "tracksInQueueTitle": "",
+            "emptyQueue": "",
+            "estimatedDuration": "",
+            "estimatedReallyLongTime": "",
+            "invalidPageNumber_one": "",
+            "invalidPageNumber_few": "",
+            "invalidPageNumber_many": ""
+        },
+        "reload": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "reloadedCommands": "",
+            "unableToReload": ""
+        },
+        "remove": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "track": {
+                        "name": "",
+                        "description": "",
+                        "options": {
+                            "position": {
+                                "name": "",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "range": {
+                        "name": "",
+                        "description": "",
+                        "options": {
+                            "start": {
+                                "name": "",
+                                "description": ""
+                            },
+                            "end": {
+                                "name": "",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "queue": {
+                        "name": "",
+                        "description": ""
+                    },
+                    "user": {
+                        "name": "",
+                        "description": "",
+                        "options": {
+                            "target": {
+                                "name": "",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "duplicates": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "noTracksRemoved": "",
+            "removedTrack": "",
+            "removedTracks_few": "",
+            "removedTracks_many": "",
+            "startPositionHigherThanEndPosition": "",
+            "trackPositionHigherThanQueueLength_one": "",
+            "trackPositionHigherThanQueueLength_few": "",
+            "trackPositionHigherThanQueueLength_many": ""
+        },
+        "seek": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "duration": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "correctFormatInstruction": "",
+            "durationLongerThanTrackDuration": "",
+            "seekingToTimestamp": ""
+        },
+        "shards": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "sort": {
+                        "name": "",
+                        "description": "",
+                        "choices": {
+                            "none": "",
+                            "memory": "",
+                            "connections": "",
+                            "tracks": "",
+                            "listeners": "",
+                            "guilds": "",
+                            "members": ""
+                        }
+                    },
+                    "page": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "shuffle": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "shuffledTracks": ""
+        },
+        "skip": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "position": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "emptyQueue": "",
+            "skippedTrack": "",
+            "trackPositionHigherThanQueueLength_one": "",
+            "trackPositionHigherThanQueueLength_few": "",
+            "trackPositionHigherThanQueueLength_many": ""
+        },
+        "status": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "openSourceButtonLabel": ""
+        },
+        "stop": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            },
+            "stoppedPlaying": ""
+        },
+        "systemstatus": {
+            "metadata": {
+                "name": "",
+                "description": ""
+            }
+        },
+        "volume": {
+            "metadata": {
+                "name": "",
+                "description": "",
+                "options": {
+                    "percentage": {
+                        "name": "",
+                        "description": ""
+                    }
+                }
+            },
+            "invalidVolumeRange": "",
+            "volumeChanged": "",
+            "volumeInformation": "",
+            "volumeMuted": ""
+        }
+    },
+    "components": {
+        "responses": {
+            "paused": "",
+            "resumed": ""
+        }
+    },
+    "musicPlayerCommon": {
+        "controls": {
+            "stop": "",
+            "previous": "",
+            "pause": "",
+            "resume": "",
+            "skip": ""
+        },
+        "footerPageNumber_one": "",
+        "footerPageNumber_few": "",
+        "footerPageNumber_many": "",
+        "loopingInfo": "",
+        "nowPausedTitle": "",
+        "nowPlayingTitle": "",
+        "playingLive": "",
+        "queueRepeatMode": {
+            "off": "",
+            "track": "",
+            "queue": "",
+            "autoplay": ""
+        },
+        "requestedBy": "",
+        "unavailableAuthor": "",
+        "unavailableDuration": "",
+        "unavailableRequestedBy": "",
+        "unavailableTrackTitle": "",
+        "unavailableTrackUrl": "",
+        "unavailableSource": "",
+        "voiceChannelInfo": ""
+    },
+    "statistics": {
+        "botStatus": {
+            "title": "",
+            "joinedServers": "",
+            "joinedServers_one": "",
+            "totalMembers": "",
+            "releaseVersion": ""
+        },
+        "queueStatus": {
+            "title": "",
+            "voiceConnections": "",
+            "voiceConnections_one": "",
+            "tracksInQueues": "",
+            "tracksInQueues_one": "",
+            "usersListening": "",
+            "usersListening_one": ""
+        },
+        "systemStatus": {
+            "title": "",
+            "uptime": "",
+            "cpu": "",
+            "cpuDetailed": "",
+            "memory": "",
+            "memoryDetailed": "",
+            "platform": ""
+        },
+        "discordStatus": {
+            "title": "",
+            "apiLatency": ""
+        },
+        "dependencies": {
+            "title": ""
+        }
+    },
+    "validation": {
+        "cannotJoinVoiceOrTalk": "",
+        "cannotSendMessageInChannel": "",
+        "historyDoesNotExist": "",
+        "notInSameVoiceChannel": "",
+        "notInVoiceChannel": "",
+        "notValidGuildId": "",
+        "queueDoesNotExist": "",
+        "queueIsEmpty": "",
+        "queueNoCurrentTrack": "",
+        "trackNotPlayingAnymore": ""
+    },
+    "errors": {
+        "unexpectedError": "",
+        "footerExecutionId": "",
+        "cannotExtractAudioStream": "",
+        "cannotLoadAudioStream": "",
+        "cannotPlayAudioStream": "",
+        "generalPlayerError": ""
+    },
+    "systemMessages": {
+        "playerSkipError": "",
+        "playerError": "",
+        "generalPlayerError": ""
+    }
+}
