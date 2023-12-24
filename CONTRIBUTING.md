@@ -14,11 +14,13 @@ Thank you for your interest in contributing to [Cadence Discord bot](https://git
 
 ### Development instructions
 
-Installing [nodemon](https://www.npmjs.com/package/nodemon) is recommended as it makes the development experience much easier.
+[nodemon](https://www.npmjs.com/package/nodemon) and [concurrently](https://www.npmjs.com/package/concurrently) is installed along with dev dependencies.
 
 > nodemon is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
 
-These three processes should be run in parallel:
+> concurrently allows us to run multiple scripts concurrently, in parallell and get one output.
+
+The script `npm run dev` will run these three processes in parallel through `concurrently` and `nodemon`:
 
 1. `npx tsc -w`
 
@@ -28,7 +30,7 @@ These three processes should be run in parallel:
 
     Generates TS definitions for translation keys in `locales/resources.d.ts` every time the English translation is modified.
 
-3. `nodemon -x npm run start-pretty`
+3. `nodemon -x npm run start`
 
     Restarts the bot every time code is built in places like `dist` (`src` is automatically ignored).
 
