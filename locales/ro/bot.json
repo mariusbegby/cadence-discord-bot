@@ -18,7 +18,7 @@
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Ups!**\nMai este doar **o** piesă în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
             "trackPositionHigherThanHistoryLength_few": "{{icon}} **Ups!**\nMai sunt doar **{{count}}** piese în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
             "trackPositionHigherThanHistoryLength_many": "{{icon}} **Ups!**\nMai sunt doar **{{count}}** de piese în istoric. Nu te poți întoarce la poziția **{{backPosition}}**.\n\nPiesele adăugate în istoric pot fi văzute folosind {{historyCommand}}.",
-            "trackRecovered": "{{icon}} **Piesă recuperată**\n{{track}}"
+            "trackReplayed": "{{icon}} **Piesă recuperată**\n{{track}}"
         },
         "filters": {
             "metadata": {

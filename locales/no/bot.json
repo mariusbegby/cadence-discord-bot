@@ -18,7 +18,7 @@
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oi sann!**\nDet er bare **1** låt i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
             "trackPositionHigherThanHistoryLength_few": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
             "trackPositionHigherThanHistoryLength_many": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
-            "trackRecovered": "{{icon}} **Gjenopprettet låt**\n{{track}}"
+            "trackReplayed": "{{icon}} **Spiller låt på nytt**\n{{track}}"
         },
         "filters": {
             "metadata": {
