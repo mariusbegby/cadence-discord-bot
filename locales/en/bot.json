@@ -290,6 +290,12 @@
             "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nYou entered **`{{wrongDuration}}`**, which is a timestamp longer than the duration of the current track.\n\nPlease try a timestamp that is less than the duration of the track (**{{trackDuration}}**).",
             "seekingToTimestamp": "{{icon}} **Seeking to timestamp**\nSeeking to **`{{duration}}`** in current track."
         },
+        "settings": {
+            "metadata": {
+                "name": "settings",
+                "description": "Configure various options for bot behavior in this server."
+            }
+        },
         "shards": {
             "metadata": {
                 "name": "shards",
