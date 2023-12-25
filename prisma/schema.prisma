@@ -7,27 +7,12 @@ datasource db {
     url      = "file:./dev.db"
 }
 
-model Guild {
-    guildId String @id
+model GuildSetting {
+    defaultVolume     Int     @default(50)
+    locale            String  @default("en-US")
+    actionPermissions String?
 
-    settings   GuildSettings @relation(fields: [settingsId], references: [id])
-    settingsId String        @unique
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("guilds")
-}
-
-model GuildSettings {
-    id String @id @default(cuid())
-
-    defaultVolume   Int     @default(50)
-    locale          String  @default("en-US")
-    privilegedRoles String?
-
-    guild   Guild? @relation()
-    guildId String @unique
+    guildId String @id @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

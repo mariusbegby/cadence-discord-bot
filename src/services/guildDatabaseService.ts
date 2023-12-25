@@ -17,16 +17,10 @@ function getLogger(executionId: string, interaction?: Interaction | MessageCompo
 export type GuildSettings = {
     defaultVolume?: number;
     locale?: string;
-    privilegedRoles?: string[];
+    actionPermissions?: Record<string, string[]>;
 };
 
 const guildDatabaseService = {
-    async getAllGuilds(executionId: string, interaction?: Interaction | MessageComponentInteraction) {
-        const logger = getLogger(executionId, interaction);
-        logger.debug('Getting all guilds from database.');
-        return await prisma.guild.findMany();
-    },
-
     async getGuildSettings(
         guildId: string,
         executionId: string,
@@ -34,7 +28,7 @@ const guildDatabaseService = {
     ) {
         const logger = getLogger(executionId, interaction);
         logger.debug(`Getting settings for guild ${guildId} from database.`);
-        const settings = await prisma.guildSettings.findUnique({
+        const settings = await prisma.guildSetting.findUnique({
             where: { guildId: guildId }
         });
 
@@ -45,59 +39,35 @@ const guildDatabaseService = {
 
         const response = {
             ...settings,
-            privilegedRoles: deserializeRoleIds(settings.privilegedRoles ?? '')
+            actionPermissions: deserializeActionPermissions(settings.actionPermissions ?? '')
         };
 
         return response;
     },
 
-    async createOrUpdateGuild(
+    async createOrUpdateGuildSettings(
         executionId: string,
         guildId: string,
         settingsData: GuildSettings,
         interaction?: Interaction | MessageComponentInteraction
     ) {
         const logger = getLogger(executionId, interaction);
-        logger.debug(`Creating or updating guild ${guildId} in database.`);
+        logger.debug(`Creating or updating guild settings for guild ${guildId} in database.`);
 
         const validSettings = validateGuildSettings(logger, settingsData);
-        return await prisma.guild.upsert({
+        return await prisma.guildSetting.upsert({
             where: { guildId: guildId },
             update: {
-                settings: {
-                    update: validSettings
-                }
+                ...validSettings
             },
             create: {
                 guildId: guildId,
-                settings: {
-                    create: {
-                        ...validSettings,
-                        guildId: guildId
-                    }
-                }
+                ...validSettings
             }
         });
     },
 
-    async updateGuildSettings(
-        executionId: string,
-        guildId: string,
-        settingsData: GuildSettings,
-        interaction?: Interaction | MessageComponentInteraction
-    ) {
-        const logger = getLogger(executionId, interaction);
-        logger.debug(`Updating settings for guild ${guildId} in database.`);
-        const validSettings = validateGuildSettings(logger, settingsData);
-        return await prisma.guildSettings.update({
-            where: {
-                guildId: guildId
-            },
-            data: validSettings
-        });
-    },
-
-    async deleteGuildAndSettings(
+    async deleteGuildSettings(
         executionId: string,
         guildId: string,
         interaction?: Interaction | MessageComponentInteraction
@@ -105,14 +75,8 @@ const guildDatabaseService = {
         const logger = getLogger(executionId, interaction);
         logger.debug(`Deleting guild ${guildId} and settings from database.`);
 
-        return await prisma.$transaction(async (prisma) => {
-            await prisma.guildSettings.delete({
-                where: { guildId: guildId }
-            });
-
-            await prisma.guild.delete({
-                where: { guildId: guildId }
-            });
+        return await prisma.guildSetting.delete({
+            where: { guildId: guildId }
         });
     }
 };
@@ -129,26 +93,23 @@ export function validateGuildSettings(logger: Logger, settingsData: GuildSetting
         throw new Error(`locale ${settingsData.locale} is not in list of available locales`);
     }
 
-    if (settingsData.privilegedRoles && !settingsData.privilegedRoles.every((role) => role.match(/\d{18}/))) {
-        logger.debug('privilegedRoles contains invalid Discord role IDs');
-        throw new Error('privilegedRoles contains invalid Discord role IDs');
-    }
+    // TODO: validate actionPermissions
 
     const validSettings = {
         defaultVolume: settingsData.defaultVolume,
         locale: settingsData.locale,
-        privilegedRoles: serializeRoleIds(settingsData.privilegedRoles ?? [])
+        actionPermissions: serializeActionPermissions(settingsData.actionPermissions ?? {})
     };
 
     return validSettings;
 }
 
-function serializeRoleIds(roleIds: string[]): string {
-    return roleIds.join(',');
+function serializeActionPermissions(permissions: Record<string, string[]>): string {
+    return JSON.stringify(permissions);
 }
 
-function deserializeRoleIds(serializedRoles: string): string[] {
-    return serializedRoles.split(',').filter((role) => role.trim() !== '');
+function deserializeActionPermissions(serializedPermissions: string): Record<string, string[]> {
+    return JSON.parse(serializedPermissions);
 }
 
 export default guildDatabaseService;
