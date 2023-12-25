@@ -10,3 +10,4 @@
 /dist
 /coverage
 /locales/resources.d.ts
+/prisma/dev.db
