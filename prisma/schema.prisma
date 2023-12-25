@@ -1,19 +1,36 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+    provider = "sqlite"
+    url      = "file:./dev.db"
 }
 
 model Guild {
-  id            String   @id @default(cuid())
-  guildId       String   @unique
+    guildId String @id
 
-  locale        String   @default("en-US")
-  defaultVolume Int      @default(50)
+    settings   GuildSettings @relation(fields: [settingsId], references: [id])
+    settingsId String        @unique
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("guilds")
+}
+
+model GuildSettings {
+    id String @id @default(cuid())
+
+    defaultVolume   Int     @default(50)
+    locale          String  @default("en-US")
+    privilegedRoles String?
+
+    guild   Guild? @relation()
+    guildId String @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("guild_settings")
 }
