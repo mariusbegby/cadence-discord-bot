@@ -135,7 +135,7 @@ class BackCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        translator('commands.back.trackRecovered', {
+                        translator('commands.back.trackReplayed', {
                             icon: this.embedOptions.icons.back,
                             track: this.getDisplayTrackDurationAndUrl(recoveredTrack, translator)
                         })

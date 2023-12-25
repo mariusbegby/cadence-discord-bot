@@ -17,7 +17,7 @@
             "trackHistoryEmpty": "{{icon}} **Oops!**\nThe history is empty, add some tracks with {{playCommand}}!",
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oops!**\nThere is only **1** track in the history. You cannot go back to track **{{backPosition}}**.\n\nView tracks added in the history with {{historyCommand}}.",
             "trackPositionHigherThanHistoryLength": "{{icon}} **Oops!**\nThere are only **{{count}}** tracks in the history. You cannot go back to track **{{backPosition}}**.\n\nView tracks added in the history with {{historyCommand}}.",
-            "trackRecovered": "{{icon}} **Recovered track**\n{{track}}"
+            "trackReplayed": "{{icon}} **Replaying track**\n{{track}}"
         },
         "filters": {
             "metadata": {
