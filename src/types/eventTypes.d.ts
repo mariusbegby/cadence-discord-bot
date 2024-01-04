@@ -12,6 +12,5 @@ export type ExtendedGuildQueuePlayerNode = {
         | {
               client: ExtendedClient;
               channel: BaseGuildTextChannel;
-              interaction?: BaseInteraction;
           };
 } & GuildQueuePlayerNode<unknown>;

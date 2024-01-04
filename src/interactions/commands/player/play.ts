@@ -47,7 +47,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     channel: interaction.channel,
                     client: interaction.client,
                     requestedBy: interaction.user,
-                    interaction: interaction
                 }
             });
         if (queue) {
