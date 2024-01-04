@@ -10,31 +10,36 @@ export const handleComponent = async (
     client: ExtendedClient,
     executionId: string,
     interactionIdentifier: string
-) => {
+): Promise<void> => {
     const logger: Logger = loggerModule.child({
         module: 'handler',
         name: 'interactionComponentHandler',
         executionId: executionId
     });
 
-    await interaction.deferReply();
-    logger.debug('Interaction deferred.');
+    try {
+        // Defer the interaction to provide more time for processing
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
-    const componentId: string = interactionIdentifier.split('_')[0];
-    const referenceId: string = interactionIdentifier.split('_')[1];
+        // Extract componentId and referenceId from the interactionIdentifier
+        const [componentId, referenceId] = interactionIdentifier.split('_');
 
-    logger.debug(`Parsed componentId '${componentId}' from identifier '${interactionIdentifier}'.`);
+        logger.debug(`Parsed componentId '${componentId}' from identifier '${interactionIdentifier}'.`);
 
-    await checkChannelPermissionViewable({ interaction, executionId });
+        // Check if the bot has permission to view the channel
+        await checkChannelPermissionViewable({ interaction, executionId });
 
-    const component: BaseComponentInteraction = client.componentInteractions!.get(
-        componentId
-    ) as BaseComponentInteraction;
-    if (!component) {
-        logger.warn(`Interaction created but component '${componentId}' was not found.`);
-        return;
+        const component: BaseComponentInteraction | undefined = client.componentInteractions?.get(componentId);
+
+        if (!component) {
+            logger.warn(`Component '${componentId}' not found.`);
+            return;
+        }
+
+        logger.debug(`Executing component '${componentId}' interaction.`);
+        await component.execute({ interaction, referenceId, executionId });
+    } catch (error) {
+        logger.error(error, 'Error handling component interaction.');
     }
-
-    logger.debug(`Executing component interaction '${componentId}'.`);
-    await component.execute({ interaction, referenceId, executionId });
 };

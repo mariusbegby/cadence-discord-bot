@@ -7,6 +7,7 @@ import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
 import { TFunction } from 'i18next';
 import { useUserTranslator } from '../../common/localeUtil';
+
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
 
@@ -49,13 +50,22 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
         logger: Logger,
         translator: TFunction
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
-        const genius = lyricsExtractor();
-        const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
+        const lyricsResult: LyricsData | null = await this.searchLyrics(query, logger);
 
         if (!lyricsResult) {
             return this.getAutocompleteChoicesFallback(query, logger, translator);
         } else {
             return this.getAutocompleteChoicesFromLyricsResult(lyricsResult, translator);
+        }
+    }
+
+    private async searchLyrics(query: string, logger: Logger): Promise<LyricsData | null> {
+        try {
+            const genius = lyricsExtractor();
+            return (await genius.search(query)) as LyricsData;
+        } catch (error) {
+            logger.warn(`Failed to fetch lyrics from Genius for query '${query}': ${error}`);
+            return null;
         }
     }
 
@@ -101,7 +111,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
     ): void {
         this.recentQueries.set(userId, {
             lastQuery: query,
-            result: result,
+            result,
             timestamp: Date.now()
         });
     }
