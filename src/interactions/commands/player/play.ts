@@ -11,8 +11,8 @@ import { Logger } from 'pino';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
-import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
 import { formatSlashCommand } from '../../../common/formattingUtils';
@@ -83,15 +83,15 @@ class PlayCommand extends BaseSlashCommandInteraction {
         logger: Logger
     ): Promise<SearchResult | undefined> {
         logger.debug(`Searching for track with query: '${transformedQuery}'.`);
-        let searchResult: SearchResult | undefined;
         try {
-            searchResult = await player.search(transformedQuery, {
-                requestedBy: interaction.user
+            return await player.search(transformedQuery, {
+                requestedBy: interaction.user,
+                searchEngine: 'youtubeSearch'
             });
         } catch (error) {
             logger.error(error, `Failed to search for track with player.search() with query: ${transformedQuery}.`);
+            return undefined;
         }
-        return searchResult;
     }
 
     private async addResultsToPlayer(
@@ -115,7 +115,8 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     metadata: {
                         channel: interaction.channel,
                         client: interaction.client,
-                        requestedBy: interaction.user
+                        requestedBy: interaction.user,
+                        interaction: interaction
                     }
                 }
             }));
@@ -189,14 +190,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
                 embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
             }
-        } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            message =
-                translator('musicPlayerCommon.nowPlayingTitle', {
-                    icon: this.embedOptions.icons.audioStartedPlaying
-                }) +
-                '\n' +
-                trackUrl;
-            embedFooter = undefined;
         }
 
         const embed = new EmbedBuilder()
@@ -307,7 +300,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setDescription(
                         `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
+                            'This audio source cannot be played as the video source has a warning for graphic or sensitive topics. It requires a manual confirmation to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
                             `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.warning)
