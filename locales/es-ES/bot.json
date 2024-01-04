@@ -16,13 +16,13 @@
             },
             "trackHistoryEmpty": "{{icon}} **Oops!**\nParece que el historial de canciones está vacío, agrega algunas canciones usando el comando {{playCommand}}!",
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oops!**\nSolo hay **1** canción en el historial de canciones. No puedes volver a la posición número **{{backPosition}}**\n\nPuedes ver el historial de canciones con el comando {{historyCommand}}.",
-            "trackPositionHigherThanHistoryLength": "{{icon}} **Oops!**\nSolo hay **{{count}}** cancion(es) en el historial. No puedes retroceder a la canción **{{backPosition}}**.\n\nConsulta las canciones añadidas al historial con {{historyCommand}}.",
+            "trackPositionHigherThanHistoryLength": "{{icon}} **Oops!**\nSolo hay **{{count}}** canciones en el historial. No puedes retroceder a la canción **{{backPosition}}**.\n\nConsulta las canciones añadidas al historial con {{historyCommand}}.",
             "trackReplayed": "{{icon}} **Reproduciendo de nuevo la canción**\n{{track}}"
         },
         "filters": {
             "metadata": {
                 "name": "filtros",
-                "description": "Alterna varios filtros de audio.",
+                "description": "Alterna entre varios filtros de audio.",
                 "options": {
                     "type": {
                         "name": "tipo",
@@ -45,16 +45,16 @@
         },
         "guilds": {
             "metadata": {
-                "name": "gremios",
-                "description": "Muestra el top 25 de gremios por número de miembros."
+                "name": "servidores",
+                "description": "Muestra los 25 servidores principales por número de miembros."
             },
             "topGuildsByMemberCount": "{{icon}} **Principales {{count}} servidores por cantidad de miembros ({{totalCount}} en total)**",
-            "totalMembers": "**Total de miembros:** **`{{count}`**"
+            "totalMembers": "**Miembros en total:** **`{{count}`**"
         },
         "help": {
             "metadata": {
                 "name": "ayuda",
-                "description": "Mostrar la lista de comandos del bot."
+                "description": "Muestra la lista de comandos del bot."
             },
             "addBotButton": "Añadir bot",
             "listTitle": "{{icon}} **Lista de comandos**",
@@ -62,12 +62,12 @@
         },
         "history": {
             "metadata": {
-                "name": "historia",
-                "description": "Mostrar historial de canciones que se han reproducido.",
+                "name": "historial",
+                "description": "Muestra el historial de canciones que se han reproducido.",
                 "options": {
                     "page": {
                         "name": "página",
-                        "description": "Número de página a mostrar para el historial."
+                        "description": "Número de página a mostrar del historial."
                     }
                 }
             },
@@ -78,7 +78,7 @@
         },
         "join": {
             "metadata": {
-                "name": "unirse",
+                "name": "conectar",
                 "description": "El bot se unirá al canal de voz si no está ya en uno."
             },
             "alreadyConnected": "{{icon}} **Oops!**\nYa estoy conectado al canal de voz {{channel}}.\n\nPara desconectarme del canal, utiliza el comando {{leaveCommand}}.",
@@ -87,21 +87,21 @@
         },
         "leave": {
             "metadata": {
-                "name": "salir",
-                "description": "Elimina la cola y quita el bot del canal de voz."
+                "name": "desconectar",
+                "description": "Elimina la cola y desconecta al bot del canal de voz."
             },
             "leavingChannel": "{{icon}} Saliendo del canal\nSe ha limpiado la cola de reproducción y se ha abandonado el canal de voz.\n\n¡Para reproducir más música, utiliza el comando {{playCommand}}!"
         },
         "loop": {
             "metadata": {
-                "name": "bucle",
+                "name": "repetición",
                 "description": "Cambia el bucle de una pista, la cola entera o la reproducción automática.",
                 "options": {
                     "mode": {
                         "name": "modo",
-                        "description": "Modo bucle: Rastreo, cola, reproducción automática o deshabilitado.",
+                        "description": "Modo de repetición: canción, cola, autoreproducción o deshabilitado.",
                         "choices": {
-                            "0": "Apagado",
+                            "0": "Deshabilitado",
                             "1": "Canción",
                             "2": "Cola",
                             "3": "Autoreproducción"
@@ -112,14 +112,14 @@
             "alreadySet": "{{icon}} **Oops!**\nEl modo de repetición ya está configurado como **`{{mode}}`**.",
             "loopModeInformation": "{{icon}} **Modo actual de repetición**\nEl modo de repetición está actualmente configurado como **`{{mode}}`**.",
             "modeChanged": "{{icon}} **Modo de repetición cambiado**\nCambiando el modo de repetición de **`{{fromName}}`** a **`{{toName}}`**.",
-            "willAutoplay": "Cuando la cola está vacía, ¡las pistas similares comenzarán a sonar!",
-            "willNoLongerPlay": "¡El {{mode}} ya no jugará en repetir!",
-            "willNowPlay": "¡El {{mode}} ahora se reproducirá en repetir!"
+            "willAutoplay": "Cuando la cola este vacía, canciones similares comenzarán a reproducirse",
+            "willNoLongerPlay": "La {{mode}} ya no se reproducirá en bucle!",
+            "willNowPlay": "La {{mode}} ahora se reproducirá en bucle!"
         },
         "lyrics": {
             "metadata": {
-                "name": "letras",
-                "description": "Busca las letras de Genius en la pista actual o especificada.",
+                "name": "letra",
+                "description": "Busca la letra de la canción actual o especificada en Genius.",
                 "options": {
                     "query": {
                         "name": "búsqueda",
@@ -167,8 +167,8 @@
         },
         "pause": {
             "metadata": {
-                "name": "pausar",
-                "description": "Alterna la pausa para la canción actual."
+                "name": "pausa",
+                "description": "Alterna la pausa de la canción actual."
             },
             "pauseConfirmation": "{{icon}} **Canción pausada**",
             "resumeConfirmation": "{{icon}} **Canción reanudada**",
@@ -204,7 +204,7 @@
                     }
                 }
             },
-            "tracksInQueueTitle": "{{icon}} **Canciones en la cola**",
+            "tracksInQueueTitle": "{{icon}} **Canciones en cola**",
             "emptyQueue": "La cola está vacía, agrega algunas canciones con {{playCommand}}!",
             "estimatedDuration": "Duración estimada: {{duration}}",
             "estimatedReallyLongTime": "Duración estimada: Un tiempo realmente largo",
@@ -282,13 +282,13 @@
                 "options": {
                     "duration": {
                         "name": "duración",
-                        "description": "Marca de tiempo en formato 00:00:00 (HH:mm:ss)."
+                        "description": "Posición de tiempo en formato 00:00:00 (HH:mm:ss)."
                     }
                 }
             },
             "correctFormatInstruction": "{{icon}} **Oops!**\nIngresaste un formato de duración no válido, **`{{wrongDuration}}`**.\nPor favor, utiliza el formato **`HH:mm:ss`**, **`mm:ss`** o **`ss`**.\n\n**Ejemplos:**\n- {{seekCommand}} **`1:24:12`** - Ir a 1 hora, 24 minutos y 12 segundos.\n- {{seekCommand}} **`3:27`** - Ir a 3 minutos y 27 segundos.\n- {{seekCommand}} **`42`** - Ir a 42 segundos.",
-            "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nIngresaste **`{{wrongDuration}}`**, que es una marca de tiempo más larga que la duración de la canción actual.\n\nPor favor, intenta con una marca de tiempo que sea menor que la duración de la canción (**{{trackDuration}}**).",
-            "seekingToTimestamp": "{{icon}} **Adelantando a la marca de tiempo**\nAdelantando a **`{{duration}}`** en la pista actual."
+            "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nIngresaste **`{{wrongDuration}}`**, que es una marca de tiempo más larga que la duración de la canción actual.\n\nPor favor, intenta con una posición de tiempo que sea menor que la duración de la canción (**{{trackDuration}}**).",
+            "seekingToTimestamp": "{{icon}} **Adelantando a la posición de tiempo**\nAdelantando a **`{{duration}}`** en la pista actual."
         },
         "shards": {
             "metadata": {
@@ -297,7 +297,7 @@
                 "options": {
                     "sort": {
                         "name": "ordenar",
-                        "description": "Por qué clasificar los shards.",
+                        "description": "Como clasificar los shards.",
                         "choices": {
                             "none": "Ninguno (Shard ID)",
                             "memory": "Uso de memoria",
@@ -320,12 +320,12 @@
                 "name": "mezclar",
                 "description": "Mezcla aleatoriamente todas las canciones en la cola."
             },
-            "shuffledTracks": "{{icon}} **Canciones de la cola mezcladas**\nLas **{{count}}** canciones en la cola han sido mezcladas.\n\nConsulta el nuevo orden de la cola con {{queueCommand}}."
+            "shuffledTracks": "{{icon}} **Canciones mezcladas**\nLas **{{count}}** canciones en la cola han sido mezcladas.\n\nConsulta el nuevo orden de la cola con {{queueCommand}}."
         },
         "skip": {
             "metadata": {
                 "name": "omitir",
-                "description": "Salta la canción a la posición siguiente o específica en la cola.",
+                "description": "Salta a la siguiente canción o a una posición específica en la cola.",
                 "options": {
                     "position": {
                         "name": "posición",
@@ -385,7 +385,7 @@
         "controls": {
             "stop": "Detener",
             "previous": "Anterior",
-            "pause": "Pausa",
+            "pause": "Pausar",
             "resume": "Reanudar",
             "skip": "Omitir"
         },
@@ -397,7 +397,7 @@
         "playingLive": "{{icon}} **`EN VIVO`** - Reproduciendo continuamente desde la fuente en vivo.",
         "queueRepeatMode": {
             "off": "Deshabilitado",
-            "track": "Pista",
+            "track": "Canción",
             "queue": "Cola",
             "autoplay": "Autoreproducción"
         },
@@ -407,16 +407,16 @@
         "unavailableRequestedBy": "No disponible",
         "unavailableTrackTitle": "Título no disponible",
         "unavailableTrackUrl": "**No disponible**",
-        "unavailableSource": "Unavailable",
+        "unavailableSource": "No disponible",
         "voiceChannelInfo": "Canal: {{channel}} ({{bitrate}}kbps)"
     },
     "statistics": {
         "botStatus": {
             "title": "{{icon}} **Estado del bot**",
-            "joinedServers": "**{{count}}** Servidores unidos",
-            "joinedServers_one": "**1** Servidor unido",
-            "totalMembers": "**{{count}}** Miembros totales",
-            "releaseVersion": "**{{version}}** Versión de lanzamiento"
+            "joinedServers": "**{{count}}** Servidores en total",
+            "joinedServers_one": "**1** Servidor en total",
+            "totalMembers": "**{{count}}** Miembros en total",
+            "releaseVersion": "**{{version}}** Versión del bot"
         },
         "queueStatus": {
             "title": "{{icon}} **Estado de la cola**",
@@ -446,7 +446,7 @@
     },
     "validation": {
         "cannotJoinVoiceOrTalk": "{{icon}} **Oops!**\nNo tengo permiso para reproducir audio en el canal de voz {{channel}}.\n\nAsegúrate que tenga los permisos para **`Conectar`** y **`Hablar`** en este canal de voz.",
-        "cannotSendMessageInChannel": "{{icon}} **Oops!**\nNo tengo permiso para enviar respuestas de mensajes en el canal {{channel}}.\n\nAsegúrate que tenga el permiso **`Ver Canal`** en este canal de texto.",
+        "cannotSendMessageInChannel": "{{icon}} **Oops!**\nNo tengo permiso para enviar mensajes en el canal {{channel}}.\n\nAsegúrate que tenga el permiso **`Ver Canal`** en ese canal de texto.",
         "historyDoesNotExist": "{{icon}} **Oops!**\nNo hay canciones en el historial y nada reproduciéndose actualmente. ¡Primero agrega algunas canciones con {{playCommand}}!",
         "notInSameVoiceChannel": "{{icon}} **No estás en el mismo canal de voz**\nNecesitas estar en el mismo canal de voz que yo para realizar esta acción.\n\n**Canal de voz:** {{channel}}",
         "notInVoiceChannel": "{{icon}} **No estás en un canal de voz**\nNecesitas estar en un canal de voz para realizar esta acción.",
@@ -462,7 +462,7 @@
         "cannotExtractAudioStream": "**{{icon}} Oops!**\nNo se pudo acceder al audio de la canción **[{{trackTitle}}]({{trackUrl}})**.\n\nParece que la fuente no está disponible públicamente o no es compatible.",
         "cannotLoadAudioStream": "**{{icon}} ¡Uh-oh.!. _Algo salió mal!**\nParece que hubo un problema al cargar la canción.\n\nSi ejecutaste un comando, puedes intentarlo nuevamente.\n\n_Si este problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**!_",
         "cannotPlayAudioStream": "**{{icon}} ¡Uh-oh.!. _Algo_ salió mal!**\nParece que hubo un problema al reproducir la canción.\n\nSi ejecutaste un comando, puedes intentarlo de nuevo.\n\n_Si el problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**!_",
-        "generalPlayerError": "**{{icon}} ¡Uh-oh... _Algo_ salió mal!**\nParece que hubo un problema relacionado con la cola o la canción actual.\n\nSi ejecutaste un comando, puedes intentarlo de nuevo.\n\n_Si el problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**._"
+        "generalPlayerError": "**{{icon}} ¡Uh-oh... _Algo_ salió mal!**\nParece que hubo un problema relacionado con la cola de canciones o la canción actual.\n\nSi ejecutaste un comando, puedes intentarlo de nuevo.\n\n_Si el problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**._"
     },
     "systemMessages": {
         "playerSkipError": "{{icon}} **player.events.on('playerSkip')**\nURL de la canción: {{trackUrl}}\n\n<@{{userId}}>",

@@ -1,18 +1,18 @@
 import config from 'config';
-import { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
     EmbedAuthorOptions,
     EmbedFooterData,
-    GuildMember,
     Interaction,
     Message,
     MessageComponentInteraction,
     SlashCommandBuilder,
-    SlashCommandSubcommandsOnlyBuilder
+    SlashCommandSubcommandsOnlyBuilder,
+    GuildMember
 } from 'discord.js';
+import { Track, GuildQueue, GuildQueueHistory, PlayerTimestamp } from 'discord-player';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
 import { BotOptions, EmbedOptions, PlayerOptions } from '../types/configTypes';
@@ -32,6 +32,7 @@ abstract class BaseInteraction {
     embedOptions: EmbedOptions;
     botOptions: BotOptions;
     playerOptions: PlayerOptions;
+    protected validators: Validator[] = [];
 
     constructor() {
         this.embedOptions = config.get('embedOptions');
@@ -46,39 +47,40 @@ abstract class BaseInteraction {
         interaction: Interaction | MessageComponentInteraction
     ): Logger {
         return loggerModule.child({
-            module: module,
-            name: name,
-            executionId: executionId,
+            module,
+            name,
+            executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
     }
 
-    protected validators: Validator[] = [];
-
     protected async runValidators(args: ValidatorParams, validators?: Validator[]): Promise<void> {
-        for (const validator of validators ? validators : this.validators) {
+        for (const validator of validators ?? this.validators) {
             await validator(args);
         }
     }
 
     protected getFormattedDuration(track: Track): string {
-        let durationFormat =
-            Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `**\`${track.duration}\`**`;
+        const { raw, duration } = track;
+        const durationFormat = Number(raw.duration) === 0 || duration === '0:00' ? '' : `**\`${duration}\`**`;
 
-        if (track.raw.live) {
-            durationFormat = `**${this.embedOptions.icons.liveTrack} \`LIVE\`**`;
+        if (raw.live) {
+            return `**${this.embedOptions.icons.liveTrack} \`LIVE\`**`;
         }
 
         return durationFormat;
     }
 
     protected getFormattedTrackUrl(track: Track, translator: TFunction): string {
-        const trackTitle = track.title ?? translator('musicPlayerCommon.unavailableTrackTitle');
-        const trackUrl = track.url ?? track.raw.url;
+        const { title, url, raw } = track;
+        const trackTitle = title ?? translator('musicPlayerCommon.unavailableTrackTitle');
+        const trackUrl = url ?? raw.url;
+
         if (!trackTitle || !trackUrl) {
             return translator('musicPlayerCommon.unavailableTrackUrl');
         }
+
         return `**[${trackTitle}](${trackUrl})**`;
     }
 
@@ -90,26 +92,18 @@ abstract class BaseInteraction {
     }
 
     protected getTrackThumbnailUrl(track: Track): string {
+        const { source, raw, thumbnail } = track;
         let thumbnailUrl = '';
 
-        if (track.source === 'youtube') {
-            if (track.raw.thumbnail) {
-                // @ts-ignore -- discord-player bug with thumbnail for youtube?
-                thumbnailUrl = track.raw.thumbnail.url;
-            } else if (track.thumbnail && !track.thumbnail.endsWith('maxresdefault.jpg')) {
-                // @ts-ignore -- discord-player bug with thumbnail for youtube?
-                thumbnailUrl = track.thumbnail.url;
+        if (source === 'youtube') {
+            if (raw.thumbnail || (thumbnail && !thumbnail.endsWith('maxresdefault.jpg'))) {
+                // @ts-ignore
+                thumbnailUrl = raw.thumbnail?.url || thumbnail?.url;
             } else {
                 thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
             }
         } else {
-            if (track.raw.thumbnail) {
-                thumbnailUrl = track.raw.thumbnail;
-            } else if (track.thumbnail) {
-                thumbnailUrl = track.thumbnail;
-            } else {
-                thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
-            }
+            thumbnailUrl = raw.thumbnail || thumbnail || this.embedOptions.info.fallbackThumbnailUrl;
         }
 
         return thumbnailUrl;
@@ -122,6 +116,7 @@ abstract class BaseInteraction {
     ): EmbedFooterData {
         const pageIndex: number = (interaction.options.getInteger('page') || 1) - 1;
         const totalPages: number = Math.ceil(queue.tracks.data.length / 10) || 1;
+
         return {
             text: translator('musicPlayerCommon.footerPageNumber', {
                 page: pageIndex + 1,
@@ -131,15 +126,12 @@ abstract class BaseInteraction {
         };
     }
 
-    protected getDisplayTrackRequestedBy = (track: Track, translator: TFunction): string => {
-        return track.requestedBy
-            ? `<@${track.requestedBy.id}>`
-            : translator('musicPlayerCommon.unavailableRequestedBy');
-    };
+    protected getDisplayTrackRequestedBy = (track: Track, translator: TFunction): string =>
+        track.requestedBy ? `<@${track.requestedBy.id}>` : translator('musicPlayerCommon.unavailableRequestedBy');
 
     protected getDisplayQueueProgressBar(queue: GuildQueue, translator: TFunction): string {
         const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
-        let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
+        const progressBar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
             length: this.playerOptions.progressBar.length ?? 12,
             timecodes: this.playerOptions.progressBar.timecodes ?? false,
@@ -149,11 +141,11 @@ abstract class BaseInteraction {
         })} **\`${timestamp.total.label}\`**`;
 
         if (Number(queue.currentTrack?.raw.duration) === 0 || queue.currentTrack?.duration === '0:00') {
-            progressBar = translator('musicPlayerCommon.unavailableDuration');
+            return translator('musicPlayerCommon.unavailableDuration');
         }
 
         if (queue.currentTrack?.raw.live) {
-            progressBar = translator('musicPlayerCommon.playingLive', {
+            return translator('musicPlayerCommon.playingLive', {
                 icon: this.embedOptions.icons.liveTrack
             });
         }
@@ -174,12 +166,10 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
     protected getEmbedUserAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction
     ): EmbedAuthorOptions {
-        let authorName: string = '';
-        if (interaction.member instanceof GuildMember) {
-            authorName = interaction.member.nickname || interaction.user.username;
-        } else {
-            authorName = interaction.user.username;
-        }
+        const authorName =
+            interaction.member instanceof GuildMember
+                ? interaction.member.nickname || interaction.user.username
+                : interaction.user.username;
 
         return {
             name: authorName,
@@ -193,6 +183,7 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
         translator: TFunction
     ): EmbedAuthorOptions {
         const bitrate = queue.channel ? queue.channel.bitrate / 1000 : 0;
+
         return {
             name: translator('musicPlayerCommon.voiceChannelInfo', {
                 channel: queue.channel!.name,
@@ -212,9 +203,9 @@ export abstract class BaseSlashCommandInteraction extends BaseInteractionWithEmb
 
     constructor(
         data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder,
-        isSystemCommand: boolean = false,
-        isNew: boolean = false,
-        isBeta: boolean = false
+        isSystemCommand = false,
+        isNew = false,
+        isBeta = false
     ) {
         super();
         this.data = data.setDMPermission(false).setNSFW(false);

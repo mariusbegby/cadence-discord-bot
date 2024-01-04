@@ -1,4 +1,4 @@
-import { GuildQueue, Player, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
+import { GuildQueue, Player, SearchResult, Track, useMainPlayer } from 'discord-player';
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
@@ -11,8 +11,8 @@ import { Logger } from 'pino';
 import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
 import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
-import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { transformQuery } from '../../../utils/validation/searchQueryValidator';
 import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
 import { TFunction } from 'i18next';
 import { formatSlashCommand } from '../../../common/formattingUtils';
@@ -36,14 +36,25 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel]);
 
-        let queue: GuildQueue = useQueue(interaction.guild!.id)!;
+        const player = useMainPlayer()!;
+        const queue: GuildQueue =
+            player.nodes.resolve(interaction.guild!.id) ||
+            player.nodes.create(interaction.guild!.id, {
+                ...this.playerOptions,
+                maxSize: this.playerOptions.maxQueueSize,
+                volume: this.playerOptions.defaultVolume,
+                metadata: {
+                    channel: interaction.channel,
+                    client: interaction.client,
+                    requestedBy: interaction.user,
+                }
+            });
         if (queue) {
             await this.runValidators({ interaction, queue, executionId }, [checkSameVoiceChannel]);
         } else {
             await this.runValidators({ interaction, executionId }, [checkVoicePermissionJoinAndTalk]);
         }
 
-        const player = useMainPlayer()!;
         const searchQuery = interaction.options.getString('query')!;
         const transformedQuery = transformQuery({ query: searchQuery, executionId });
 
@@ -52,7 +63,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
             return await this.handleNoResultsFound(transformedQuery, interaction, logger, translator);
         }
 
-        queue = useQueue(interaction.guild!.id)!;
         const queueSize = queue?.size ?? 0;
 
         if ((searchResult.playlist! && searchResult.tracks.length) > this.playerOptions.maxQueueSize - queueSize) {
@@ -60,9 +70,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
         }
 
         const track: Track | void = await this.addResultsToPlayer(
-            player,
             searchResult,
             interaction,
+            queue,
             logger,
             executionId,
             searchQuery
@@ -73,7 +83,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             throw new Error('Failed to add track to player.');
         }
 
-        return await this.handleResultAddedToQueue(track, searchResult, interaction, logger, translator);
+        return await this.handleResultAddedToQueue(track, searchResult, interaction, queue, logger, translator);
     }
 
     private async searchTrack(
@@ -83,42 +93,54 @@ class PlayCommand extends BaseSlashCommandInteraction {
         logger: Logger
     ): Promise<SearchResult | undefined> {
         logger.debug(`Searching for track with query: '${transformedQuery}'.`);
-        let searchResult: SearchResult | undefined;
         try {
-            searchResult = await player.search(transformedQuery, {
+            return await player.search(transformedQuery, {
                 requestedBy: interaction.user
             });
         } catch (error) {
             logger.error(error, `Failed to search for track with player.search() with query: ${transformedQuery}.`);
+            return undefined;
         }
-        return searchResult;
     }
 
     private async addResultsToPlayer(
-        player: Player,
         searchResult: SearchResult,
         interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
         logger: Logger,
         executionId: string,
         query: string
     ): Promise<Track | void> {
-        let track;
         try {
             logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
 
-            ({ track } = await player.play((interaction.member as GuildMember).voice.channel!, searchResult, {
-                requestedBy: interaction.user,
-                nodeOptions: {
-                    ...this.playerOptions,
-                    maxSize: this.playerOptions.maxQueueSize,
-                    volume: this.playerOptions.defaultVolume,
-                    metadata: {
-                        channel: interaction.channel,
-                        client: interaction.client,
-                        requestedBy: interaction.user
-                    }
+            const voiceChannel = (interaction.member as GuildMember).voice.channel!;
+            if (!queue.channel) {
+                await queue.connect(voiceChannel);
+            }
+
+            const track = searchResult.tracks[0];
+            const playlist = searchResult.playlist;
+
+            try {
+                if (searchResult.hasPlaylist()) {
+                    playlist?.tracks.forEach((track) => {
+                        queue.addTrack(track);
+                    });
+                } else { 
+                    queue.addTrack(track);
                 }
-            }));
+
+                if (!queue.isPlaying()) {
+                    await queue.node.play();
+                }
+            } catch (error) {
+                logger.error(error, 'Failed to add track to player.');
+            }
+
+            logger.debug('Successfully added track to player.');
+
+            return track;
         } catch (error) {
             if (error instanceof CustomError) {
                 if (error.message.includes('Sign in to confirm your age')) {
@@ -148,18 +170,17 @@ class PlayCommand extends BaseSlashCommandInteraction {
 
             return Promise.resolve();
         }
-        return track;
     }
 
     private async handleResultAddedToQueue(
         track: Track,
         searchResult: SearchResult,
         interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
         logger: Logger,
         translator: TFunction
     ): Promise<Message> {
         logger.debug('Result found and added with player.play(), added to queue.');
-        const queue: GuildQueue = useQueue(interaction.guild!.id)!;
         const trackUrl = this.getDisplayTrackDurationAndUrl(track, translator);
 
         let embedFooter: EmbedFooterData | undefined = this.getDisplayFooterTrackPosition(
@@ -307,7 +328,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setDescription(
                         `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
+                            'This audio source cannot be played as the video source has a warning for graphic or sensitive topics. It requires a manual confirmation to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
                             `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.warning)
