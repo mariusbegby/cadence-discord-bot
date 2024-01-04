@@ -10,26 +10,32 @@ export const handleCommand = async (
     client: ExtendedClient,
     executionId: string,
     interactionIdentifier: string
-) => {
+): Promise<void> => {
     const logger: Logger = loggerModule.child({
         module: 'handler',
         name: 'interactionCommandHandler',
         executionId: executionId
     });
 
-    await interaction.deferReply();
-    logger.debug('Interaction deferred.');
+    try {
+        // Defer the interaction to provide more time for processing
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
-    await checkChannelPermissionViewable({ interaction, executionId });
+        // Check if the bot has permission to view the channel
+        await checkChannelPermissionViewable({ interaction, executionId });
 
-    const slashCommand: BaseSlashCommandInteraction = client.slashCommandInteractions!.get(
-        interactionIdentifier
-    ) as BaseSlashCommandInteraction;
-    if (!slashCommand) {
-        logger.warn(`Interaction created but slash command '${interactionIdentifier}' was not found.`);
-        return;
+        const slashCommand: BaseSlashCommandInteraction | undefined =
+            client.slashCommandInteractions?.get(interactionIdentifier);
+
+        if (!slashCommand) {
+            logger.warn(`Slash command '${interactionIdentifier}' not found.`);
+            return;
+        }
+
+        logger.debug(`Executing slash command '${interactionIdentifier}'.`);
+        await slashCommand.execute({ interaction, client, executionId });
+    } catch (error) {
+        logger.error(error, 'Error handling slash command interaction.');
     }
-
-    logger.debug(`Executing slash command interaction '${interactionIdentifier}'.`);
-    await slashCommand.execute({ interaction, client, executionId });
 };

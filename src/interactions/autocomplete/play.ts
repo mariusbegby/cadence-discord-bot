@@ -24,28 +24,25 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
 
         if (shouldUseLastQuery(query, lastQuery, timestamp)) {
             logger.debug(`Responding with results from lastQuery for query '${query}'`);
-            return interaction.respond(result as ApplicationCommandOptionChoiceData<string | number>[]);
+            return await interaction.respond(result as ApplicationCommandOptionChoiceData<string | number>[]);
         }
 
         if (isQueryTooShort(query)) {
             logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
-            return interaction.respond([]);
+            return await interaction.respond([]) ;
         }
 
-        const autocompleteChoices: ApplicationCommandOptionChoiceData<string>[] = await this.getAutocompleteChoices(
-            query,
-            translator
-        );
+        const autocompleteChoices = await this.getAutocompleteChoices(query, translator);
 
         if (!autocompleteChoices || autocompleteChoices.length === 0) {
             logger.debug(`Responding with empty results for query '${query}'`);
-            return interaction.respond([]);
+            return await interaction.respond([]);
         }
 
         this.updateRecentQuery(interaction.user.id, query, autocompleteChoices);
 
         logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
-        return interaction.respond(autocompleteChoices);
+        return await interaction.respond(autocompleteChoices);
     }
 
     private async getAutocompleteChoices(
@@ -67,7 +64,7 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
     ): void {
         this.recentQueries.set(userId, {
             lastQuery: query,
-            result: result,
+            result,
             timestamp: Date.now()
         });
     }

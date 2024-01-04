@@ -31,11 +31,11 @@ module.exports.loggerOptions = {
 // Options for identifying specific system command.
 module.exports.systemOptions = {
     // List of guild IDs where system commands can be executed. e.g. ['123456789012345678', '123456789012345678']
-    systemGuildIds: ['980712742191255592'],
+    systemGuildIds: [],
     // Channel for sending system messages, such as bot errors and disconnect events. e.g. '123456789012345678'
-    systemMessageChannelId: '1192320841455763466',
+    systemMessageChannelId: '',
     // Bot administrator user ID for specific notifications through mentions in system channel. e.g. '123456789012345678'
-    systemUserId: '828431402105307167'
+    systemUserId: ''
 };
 
 // Configuration for the bot's presence and activity status.

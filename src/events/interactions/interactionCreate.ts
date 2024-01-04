@@ -7,7 +7,6 @@ import {
     MessageComponentInteraction
 } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
 import { CustomError } from '../../classes/interactions';
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
@@ -20,19 +19,19 @@ module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction: Interaction, { client }: { client: ExtendedClient }) => {
-        const inputTime: number = new Date().getTime();
-        const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const inputTime = new Date().getTime();
+        const executionId = uuidv4();
+        const logger = loggerModule.child({
             module: 'event',
             name: 'interactionCreate',
-            executionId: executionId,
+            executionId,
             shardId: interaction.guild?.shardId,
             guildId: interaction.guild?.id
         });
 
         logger.debug('Interaction received.');
 
-        const interactionIdentifier: string = getInteractionIdentifier(interaction);
+        const interactionIdentifier = getInteractionIdentifier(interaction);
 
         try {
             logger.debug('Started handling interaction.');
@@ -42,13 +41,13 @@ module.exports = {
             await handleError(interaction, error as CustomError, executionId, interactionIdentifier);
         }
 
-        const executionTime: number = new Date().getTime() - inputTime;
-        const interactionType: string = InteractionType[interaction.type];
+        const executionTime = new Date().getTime() - inputTime;
+        const interactionType = InteractionType[interaction.type];
 
         logger.info(
             {
-                executionTime: executionTime,
-                interactionType: interactionType
+                executionTime,
+                interactionType
             },
             `${interactionType} interaction '${interactionIdentifier}' successfully handled in ${executionTime} ms.`
         );
@@ -98,13 +97,15 @@ async function handleInteraction(
 }
 
 function getInteractionIdentifier(interaction: Interaction): string {
-    if (
-        interaction.type === InteractionType.ApplicationCommand ||
-        interaction.type === InteractionType.ApplicationCommandAutocomplete
-    ) {
-        return (interaction as ChatInputCommandInteraction).commandName;
-    } else if (interaction.type === InteractionType.MessageComponent) {
-        return (interaction as MessageComponentInteraction).customId;
+    switch (interaction.type) {
+        case InteractionType.ApplicationCommand:
+        case InteractionType.ApplicationCommandAutocomplete:
+            return (interaction as ChatInputCommandInteraction).commandName;
+
+        case InteractionType.MessageComponent:
+            return (interaction as MessageComponentInteraction).customId;
+
+        default:
+            return 'Unknown';
     }
-    return 'Unknown';
 }

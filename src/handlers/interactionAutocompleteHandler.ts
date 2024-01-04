@@ -9,22 +9,26 @@ export const handleAutocomplete = async (
     client: ExtendedClient,
     executionId: string,
     interactionIdentifier: string
-) => {
-    // TODO: Define TS Type for handlers, and require logger constant?
+): Promise<void> => {
     const logger: Logger = loggerModule.child({
         module: 'handler',
         name: 'interactionAutocompleteHandler',
         executionId: executionId
     });
 
-    const autocomplete: BaseAutocompleteInteraction = client.autocompleteInteractions!.get(
-        interactionIdentifier
-    ) as BaseAutocompleteInteraction;
-    if (!autocomplete) {
-        logger.warn(`Interaction created but autocomplete '${interactionIdentifier}' was not found.`);
-        return;
-    }
+    try {
+        const autocomplete: BaseAutocompleteInteraction | undefined =
+            client.autocompleteInteractions?.get(interactionIdentifier);
 
-    logger.debug(`Executing autocomplete interaction '${interactionIdentifier}'.`);
-    await autocomplete.execute({ interaction, executionId });
+        if (!autocomplete) {
+            logger.warn(`Autocomplete interaction '${interactionIdentifier}' not found.`);
+            return;
+        }
+
+        logger.debug(`Executing autocomplete interaction '${interactionIdentifier}'.`);
+        await autocomplete.execute({ interaction, executionId });
+    } catch (error) {
+        logger.error(error, 'Error handling autocomplete interaction.');
+        // Handle errors or log them as needed
+    }
 };
