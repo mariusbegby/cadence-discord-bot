@@ -32,6 +32,7 @@ export const transformQuery = ({ query, executionId }: TransformQueryParams) => 
             const trackIdRegex: RegExp = new RegExp('https://open.spotify.com/track/([a-zA-Z0-9]+)');
             const trackIdMatches: RegExpMatchArray | null = query.match(trackIdRegex);
             if (trackIdMatches) {
+                logger.debug(`Transforming Spotify url to remove duplicate track id from query '${query}'.`);
                 const trackId: string = trackIdMatches[1];
                 query = `https://open.spotify.com/track/${trackId}`;
             }
