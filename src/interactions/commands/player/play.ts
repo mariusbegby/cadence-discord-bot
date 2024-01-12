@@ -46,7 +46,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 metadata: {
                     channel: interaction.channel,
                     client: interaction.client,
-                    requestedBy: interaction.user,
+                    requestedBy: interaction.user
                 }
             });
         if (queue) {
@@ -127,7 +127,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     playlist?.tracks.forEach((track) => {
                         queue.addTrack(track);
                     });
-                } else { 
+                } else {
                     queue.addTrack(track);
                 }
 
@@ -210,14 +210,6 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
                 embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
             }
-        } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            message =
-                translator('musicPlayerCommon.nowPlayingTitle', {
-                    icon: this.embedOptions.icons.audioStartedPlaying
-                }) +
-                '\n' +
-                trackUrl;
-            embedFooter = undefined;
         }
 
         const embed = new EmbedBuilder()
