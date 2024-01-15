@@ -1,5 +1,5 @@
+import { BaseGuildTextChannel, Message } from 'discord.js';
 import { GuildQueuePlayerNode } from 'discord-player';
-import { BaseGuildTextChannel } from 'discord.js';
 import { ExtendedClient } from './clientTypes';
 
 export type ClientEventArguments = unknown[];
@@ -12,5 +12,6 @@ export type ExtendedGuildQueuePlayerNode = {
         | {
               client: ExtendedClient;
               channel: BaseGuildTextChannel;
+              lastMessage: Message;
           };
 } & GuildQueuePlayerNode<unknown>;
