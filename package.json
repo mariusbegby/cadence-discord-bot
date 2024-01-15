@@ -50,7 +50,7 @@
         "execMap": {}
     },
     "dependencies": {
-        "@discord-player/extractor": "^4.4.5",
+        "@discord-player/extractor": "^4.4.6",
         "@discord-player/opus": "^0.1.2",
         "@discordjs/rest": "^2.2.0",
         "@prisma/client": "^5.7.1",
