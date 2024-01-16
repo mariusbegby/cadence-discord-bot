@@ -63,7 +63,7 @@ module.exports = {
                 queue.metadata.lastMessage = announceMessage;
             }
         } catch (error) {
-            logger.error(error, `playerStart event: Error trying to send now-playing message.`);
+            logger.error(error, 'playerStart event: Error trying to send now-playing message.');
             return;
         }
 

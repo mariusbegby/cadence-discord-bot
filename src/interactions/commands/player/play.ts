@@ -190,7 +190,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
             }
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            if (!this.embedOptions.behavior.enablePlayerStartMessages) { 
+            if (!this.embedOptions.behavior.enablePlayerStartMessages) {
                 message =
                     translator('musicPlayerCommon.nowPlayingTitle', {
                         icon: this.embedOptions.icons.audioStartedPlaying

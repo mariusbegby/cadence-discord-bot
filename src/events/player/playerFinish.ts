@@ -1,11 +1,9 @@
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-import { EmbedOptions } from '../../types/configTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import loggerModule from '../../services/logger';
 import { Track } from 'discord-player';
 import { Snowflake } from 'discord.js';
 import { Logger } from 'pino';
-import config from 'config';
 
 // Emitted when the audio player finish playing a track.
 module.exports = {
