@@ -27,6 +27,11 @@ module.exports = {
         const { channel, client } = queue.metadata || {};
         const embedOptions: EmbedOptions = config.get('embedOptions');
 
+        if (!embedOptions.behavior.enablePlayerStartMessages) {
+            logger.debug('playerStart event: Player start messages are disabled, skipping now-playing message.');
+            return;
+        }
+
         if (channel && !client?.channels.cache.get(channel.id)) {
             logger.warn(
                 `playerStart event: No channel found for guild ${queue.metadata?.channel.guild.id}, cannot send now-playing message.`

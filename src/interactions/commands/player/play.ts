@@ -189,6 +189,16 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
                 embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
             }
+        } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
+            if (!this.embedOptions.behavior.enablePlayerStartMessages) { 
+                message =
+                    translator('musicPlayerCommon.nowPlayingTitle', {
+                        icon: this.embedOptions.icons.audioStartedPlaying
+                    }) +
+                    '\n' +
+                    trackUrl;
+                embedFooter = undefined;
+            }
         }
 
         const embed = new EmbedBuilder()
