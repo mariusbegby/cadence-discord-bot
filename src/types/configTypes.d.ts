@@ -43,6 +43,9 @@ export type EmbedOptions = {
     components: {
         showButtonLabels: boolean;
     };
+    behavior: {
+        enablePlayerStartMessages: boolean;
+    };
     icons: {
         logo: string;
         beta: string;

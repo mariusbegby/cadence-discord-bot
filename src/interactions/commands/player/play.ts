@@ -190,13 +190,15 @@ class PlayCommand extends BaseSlashCommandInteraction {
                 embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
             }
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
-            message =
-                translator('musicPlayerCommon.nowPlayingTitle', {
-                    icon: this.embedOptions.icons.audioStartedPlaying
-                }) +
-                '\n' +
-                trackUrl;
-            embedFooter = undefined;
+            if (!this.embedOptions.behavior.enablePlayerStartMessages) {
+                message =
+                    translator('musicPlayerCommon.nowPlayingTitle', {
+                        icon: this.embedOptions.icons.audioStartedPlaying
+                    }) +
+                    '\n' +
+                    trackUrl;
+                embedFooter = undefined;
+            }
         }
 
         const embed = new EmbedBuilder()

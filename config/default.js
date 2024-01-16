@@ -52,6 +52,7 @@ module.exports.presenceStatusOptions = {
 
 // Configurations for visual embed messages.
 // Includes design elements like colors and custom emojis/symbols.
+// Also includes behavior options like button labels and player start messages.
 module.exports.embedOptions = {
     info: {
         fallbackThumbnailUrl:
@@ -68,6 +69,9 @@ module.exports.embedOptions = {
     },
     components: {
         showButtonLabels: true
+    },
+    behavior: {
+        enablePlayerStartMessages: false,
     },
     icons: {
         logo: '🤖',
