@@ -15,468 +15,458 @@
                 }
             },
             "trackHistoryEmpty": "{{icon}} **Oops!**\nParece que el historial de canciones está vacío, agrega algunas canciones usando el comando {{playCommand}}!",
-            "trackPositionHigherThanHistoryLength_one": "",
-            "trackPositionHigherThanHistoryLength_few": "",
-            "trackPositionHigherThanHistoryLength_many": "",
-            "trackReplayed": ""
+            "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oops!**\nSolo hay **1** canción en el historial de canciones. No puedes volver a la posición número **{{backPosition}}**\n\nPuedes ver el historial de canciones con el comando {{historyCommand}}.",
+            "trackPositionHigherThanHistoryLength": "{{icon}} **Oops!**\nSolo hay **{{count}}** cancion(es) en el historial. No puedes retroceder a la canción **{{backPosition}}**.\n\nConsulta las canciones añadidas al historial con {{historyCommand}}.",
+            "trackReplayed": "{{icon}} **Reproduciendo de nuevo la canción**\n{{track}}"
         },
         "filters": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "filtros",
+                "description": "Alterna varios filtros de audio.",
                 "options": {
                     "type": {
-                        "name": "",
-                        "description": "",
+                        "name": "tipo",
+                        "description": "Tipo de filtro de audio a utilizar.",
                         "choices": {
-                            "ffmpeg": "",
-                            "biquad": "",
-                            "equalizer": "",
-                            "disable": ""
+                            "ffmpeg": "FFmpeg",
+                            "biquad": "Biquad",
+                            "equalizer": "Equalizador",
+                            "disable": "Deshabilitado"
                         }
                     }
                 }
             },
-            "allFiltersDisabled": "",
-            "disableAllFiltersButton": "",
-            "nowUsingFilters": "",
-            "selectFilterPlaceholder": "",
-            "selectFilterPlaceholderMany": "",
-            "toggleFilterInstructions": ""
+            "allFiltersDisabled": "{{icon}} **Filtros desactivados**\nTodos los filtros han sido desactivados.",
+            "disableAllFiltersButton": "Desactivar todos los filtros",
+            "nowUsingFilters": "{{icon}} **Filtros activados**\nAhora usando estos filtros {{mode}}:",
+            "selectFilterPlaceholder": "Seleccione un filtro del menú.",
+            "selectFilterPlaceholderMany": "Seleccione uno o varios filtros.",
+            "toggleFilterInstructions": "**Activa los filtros ({{provider}})**\nActiva o desactiva los filtros de audio para reproducir desde el menú."
         },
         "guilds": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "gremios",
+                "description": "Mostrar el top 25 de gremios por número de miembros."
             },
-            "topGuildsByMemberCount": "",
-            "totalMembers": ""
+            "topGuildsByMemberCount": "{{icon}} **Principales {{count}} servidores por cantidad de miembros ({{totalCount}} en total)**",
+            "totalMembers": "**Total de miembros:** **`{{count}`**"
         },
         "help": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "ayuda",
+                "description": "Mostrar la lista de comandos del bot."
             },
-            "addBotButton": "",
-            "listTitle": "",
-            "supportServerButton": ""
+            "addBotButton": "Añadir bot",
+            "listTitle": "{{icon}} **Lista de comandos**",
+            "supportServerButton": "Servidor de soporte"
         },
         "history": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "historial",
+                "description": "Mostrar historial de canciones que se han reproducido.",
                 "options": {
                     "page": {
-                        "name": "",
-                        "description": ""
+                        "name": "página",
+                        "description": "Número de página a mostrar para el historial."
                     }
                 }
             },
-            "emptyHistory": "",
-            "invalidPageNumber_one": "",
-            "invalidPageNumber_few": "",
-            "invalidPageNumber_many": "",
-            "tracksInHistoryTitle": ""
+            "emptyHistory": "El historial está vacío, ¡añade algunas pistas con {{playCommand}}!",
+            "invalidPageNumber_one": "{{icon}} **Oops!**\nLa página **`{{page}}`** no es un número de página válido.\n\nSolo hay **`1`** página en el historial.",
+            "invalidPageNumber": "{{icon}} **Oops!**\nLa página **`{{page}}`** no es un número de página válido.\n\nSolo hay un total de **`{{count}}`** página(s) en el historial.",
+            "tracksInHistoryTitle": "{{icon}} **Canciones en el historial**"
         },
         "join": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "unirse",
+                "description": "El bot se unirá al canal de voz si no está ya en uno."
             },
-            "alreadyConnected": "",
-            "couldNotJoin": "",
-            "joinedChannel": ""
+            "alreadyConnected": "{{icon}} **Oops!**\nYa estoy conectado al canal de voz {{channel}}.\n\nPara desconectarme del canal, utiliza el comando {{leaveCommand}}.",
+            "couldNotJoin": "{{icon}} **Oops!**\nNo pude unirme al canal de voz, por favor, inténtalo de nuevo.",
+            "joinedChannel": "{{icon}} **Conectado!**\nMe he conectado al canal de voz: {{channel}}\n\n¡Para agregar canciones, utiliza el comando {{playCommand}}!"
         },
         "leave": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "salir",
+                "description": "Elimina la cola y quita el bot del canal de voz."
             },
-            "leavingChannel": ""
+            "leavingChannel": "{{icon}} Saliendo del canal\nSe ha limpiado la cola de reproducción y se ha abandonado el canal de voz.\n\n¡Para reproducir más música, utiliza el comando {{playCommand}}!"
         },
         "loop": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "bucle",
+                "description": "Cambia el bucle de una pista, la cola entera o la reproducción automática.",
                 "options": {
                     "mode": {
-                        "name": "",
-                        "description": "",
+                        "name": "modo",
+                        "description": "Modo bucle: Rastreo, cola, reproducción automática o deshabilitado.",
                         "choices": {
-                            "0": "",
-                            "1": "",
-                            "2": "",
-                            "3": ""
+                            "0": "Apagado",
+                            "1": "Canción",
+                            "2": "Cola",
+                            "3": "Autoreproducción"
                         }
                     }
                 }
             },
-            "alreadySet": "",
-            "loopModeInformation": "",
-            "modeChanged": "",
-            "willAutoplay": "",
-            "willNoLongerPlay": "",
-            "willNowPlay": ""
+            "alreadySet": "{{icon}} **Oops!**\nEl modo de repetición ya está configurado como **`{{mode}}`**.",
+            "loopModeInformation": "{{icon}} **Modo actual de repetición**\nEl modo de repetición está actualmente configurado como **`{{mode}}`**.",
+            "modeChanged": "{{icon}} **Modo de repetición cambiado**\nCambiando el modo de repetición de **`{{fromName}}`** a **`{{toName}}`**.",
+            "willAutoplay": "Cuando la cola está vacía, ¡las pistas similares comenzarán a sonar!",
+            "willNoLongerPlay": "¡El {{mode}} ya no jugará en repetir!",
+            "willNowPlay": "¡El {{mode}} ahora se reproducirá en repetir!"
         },
         "lyrics": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "letras",
+                "description": "Busca las letras de Genius en la pista actual o especificada.",
                 "options": {
                     "query": {
-                        "name": "",
-                        "description": ""
+                        "name": "búsqueda",
+                        "description": "Búsqueda por texto o enlace."
                     }
                 }
             },
-            "autocompleteSearchResult": "",
-            "lyricsEmbed": "",
-            "noLyricsFound": ""
+            "autocompleteSearchResult": "{{title}} [Artista: {{artist}}]",
+            "lyricsEmbed": "{{icon}} **Mostrando letra**\n**Canción: [{{trackTitle}}]({{trackUrl}})**\n**Artista: [{{artistName}}]({{artistUrl}})**",
+            "noLyricsFound": "{{icon}} **No se encontró la letra**\nNo se encontró la letra en Genius para la cancion**{{query}}**."
         },
         "move": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "mover",
+                "description": "Mueve una canción a una posición específica en la cola.",
                 "options": {
                     "from": {
-                        "name": "",
-                        "description": ""
+                        "name": "de",
+                        "description": "La posición de la canción que deseas mover."
                     },
                     "to": {
-                        "name": "",
-                        "description": ""
+                        "name": "a",
+                        "description": "La posición a la que deseas mover la canción."
                     }
                 }
             },
-            "trackMoved": "",
-            "trackPositionHigherThanQueueLength_one": "",
-            "trackPositionHigherThanQueueLength_few": "",
-            "trackPositionHigherThanQueueLength_many": ""
+            "trackMoved": "{{icon}} **Canción movida**\n{track}\n\nLa canción ha sido movida desde la posición **`{{fromPosition}}`** hasta la posición **`{{toPosition}}`**.",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nNo puedes mover la canción en la posición **`{{fromPosition}}`** a la posición **`{{toPosition}}`**. Solo hay **`1`** canción en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nNo puedes mover la canción en la posición **`{{fromPosition}}`** a la posición **`{{toPosition}}`**. Solo hay **`{{count}}`** canciones en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}."
         },
         "nowplaying": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "reproduciendo",
+                "description": "Mostrar información sobre la canción actual."
             },
             "embedFields": {
-                "author": "",
-                "plays": "",
-                "source": ""
+                "author": "**Artista**",
+                "plays": "**Reproducciones**",
+                "source": "**Fuente de la canción**"
             },
-            "otherTracksInQueue_one": "",
-            "otherTracksInQueue_few": "",
-            "otherTracksInQueue_many": "",
-            "playCount_zero": "",
-            "playCount": ""
+            "otherTracksInQueue_one": "1 pista más en la cola...",
+            "otherTracksInQueue": "{{count}} Canciones más en la cola...",
+            "playCount_zero": "Desconocido",
+            "playCount": "{{count, number}}"
         },
         "pause": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "pausar",
+                "description": "Alterna la pausa para la canción actual."
             },
-            "pauseConfirmation": "",
-            "resumeConfirmation": "",
-            "directSource": ""
+            "pauseConfirmation": "{{icon}} **Canción pausada**",
+            "resumeConfirmation": "{{icon}} **Canción reanudada**",
+            "directSource": "Fuente directa"
         },
         "play": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "reproducir",
+                "description": "Agrega una canción o lista de reproducción a la cola mediante una búsqueda o URL.",
                 "options": {
                     "query": {
-                        "name": "",
-                        "description": ""
+                        "name": "búsqueda",
+                        "description": "Búsqueda por texto o URL."
                     }
                 }
             },
-            "addedToQueueTitle": "",
-            "playlistAddedTitle": "",
-            "playlistAddedTrackCount_one": "",
-            "playlistAddedTrackCount_few": "",
-            "playlistAddedTrackCount_many": "",
-            "playlistTooLarge": "",
-            "trackNotFound": "",
-            "footerAddedPosition": ""
+            "addedToQueueTitle": "{{icon}} **Añadido a la cola**",
+            "playlistAddedTitle": "{{icon}} **Lista de reproducción añadida a la cola**",
+            "playlistAddedTrackCount_one": "Y **1** canción más... Utiliza {{queueCommand}} para ver todas.",
+            "playlistAddedTrackCount": "Y **{{count}}** canciones más... Usa {{queueCommand}} para ver todas.",
+            "playlistTooLarge": "{{icon}} **Lista de reproducción demasiado grande**\nEsta lista de reproducción es demasiado grande para ser añadida a la cola.\n\nEl máximo de canciones que se pueden añadir a la cola es **{{count}}**.",
+            "trackNotFound": "{{icon}} **No se encontró ninguna canción**\nNo se encontraron resultados para **{{query}}**.\n\nSi especificaste una URL, asegúrate de que sea válida y pública.",
+            "footerAddedPosition": "Añadido a la cola en la posición {{position}}"
         },
         "queue": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "cola",
+                "description": "Mostrar las canciones que se han añadido a la cola.",
                 "options": {
                     "page": {
-                        "name": "",
-                        "description": ""
+                        "name": "página",
+                        "description": "Número de página para mostrar en la cola."
                     }
                 }
             },
-            "tracksInQueueTitle": "",
-            "emptyQueue": "",
-            "estimatedDuration": "",
-            "estimatedReallyLongTime": "",
-            "invalidPageNumber_one": "",
-            "invalidPageNumber_few": "",
-            "invalidPageNumber_many": ""
+            "tracksInQueueTitle": "{{icon}} **Canciones en la cola**",
+            "emptyQueue": "La cola está vacía, agrega algunas canciones con {{playCommand}}!",
+            "estimatedDuration": "Duración estimada: {{duration}}",
+            "estimatedReallyLongTime": "Duración estimada: Un tiempo realmente largo",
+            "invalidPageNumber_one": "{{icon}} **Oops!**\nLa página **`{{page}}`** no es un número de página válido.\n\nSolo hay **`1`** página en la cola.",
+            "invalidPageNumber": "{{icon}} **Oops!**\nLa página **`{{page}}`** no es un número de página válido.\n\nSolo hay un total de **`{{count}}`** páginas en la cola."
         },
         "reload": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "recargar",
+                "description": "Recarga los comandos slash, autocompletado e interacciones de componentes en todos los shards."
             },
-            "reloadedCommands": "",
-            "unableToReload": ""
+            "reloadedCommands": "{{icon}} **Comandos recargados**",
+            "unableToReload": "{{icon}} **Oops!**\n_Hmm..._ Parece que no puedo recargar el módulo de interacción en todos los shards."
         },
         "remove": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "eliminar",
+                "description": "Elimina canciones de la cola usando ciertos filtros.",
                 "options": {
                     "track": {
-                        "name": "",
-                        "description": "",
+                        "name": "canción",
+                        "description": "Elimina una canción por su posición en la cola.",
                         "options": {
                             "position": {
-                                "name": "",
-                                "description": ""
+                                "name": "posición",
+                                "description": "La posición en la cola de la canción que deseas eliminar."
                             }
                         }
                     },
                     "range": {
-                        "name": "",
-                        "description": "",
+                        "name": "rango",
+                        "description": "Elimina un rango de canciones en la cola.",
                         "options": {
                             "start": {
-                                "name": "",
-                                "description": ""
+                                "name": "inicio",
+                                "description": "La posición inicial del rango a eliminar."
                             },
                             "end": {
-                                "name": "",
-                                "description": ""
+                                "name": "fin",
+                                "description": "La posición final del rango a eliminar."
                             }
                         }
                     },
                     "queue": {
-                        "name": "",
-                        "description": ""
+                        "name": "cola",
+                        "description": "Elimina todas las canciones de la cola."
                     },
                     "user": {
-                        "name": "",
-                        "description": "",
+                        "name": "usuario",
+                        "description": "Elimina las canciones añadidas por un usuario en específico.",
                         "options": {
                             "target": {
-                                "name": "",
-                                "description": ""
+                                "name": "objetivo",
+                                "description": "Usuario cuyas pistas a eliminar."
                             }
                         }
                     },
                     "duplicates": {
-                        "name": "",
-                        "description": ""
+                        "name": "duplicados",
+                        "description": "Elimina todas las canciones duplicadas en la cola."
                     }
                 }
             },
-            "noTracksRemoved": "",
-            "removedTrack": "",
-            "removedTracks_few": "",
-            "removedTracks_many": "",
-            "startPositionHigherThanEndPosition": "",
-            "trackPositionHigherThanQueueLength_one": "",
-            "trackPositionHigherThanQueueLength_few": "",
-            "trackPositionHigherThanQueueLength_many": ""
+            "noTracksRemoved": "{{icon}} **No se eliminaron canciones**\nNo se eliminaron canciones de la cola. Por favor, verifica si la opción que seleccionaste tiene canciones para eliminar.",
+            "removedTrack": "{{icon}} **Canción eliminada**",
+            "removedTracks": "{{icon}} **Canciones eliminadas**\nSe eliminaron **`{{count}}`** canciones de la cola.",
+            "startPositionHigherThanEndPosition": "{{icon}} **Oops!**\nLa posición inicial **`{{start}}`** es mayor que la posición final **`{{end}}`**. Por favor, especifica un rango válido.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nLa posición **`{{position}}`** no es una posición de canción válida. Solo hay un total de **`1`** canción en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nLa posición **`{{position}}`** no es una posición de canción válida. Solo hay un total de **`{{count}}`** canciones en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}."
         },
         "seek": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "adelantar",
+                "description": "Adelanta a una posición de tiempo en la canción actual.",
                 "options": {
                     "duration": {
-                        "name": "",
-                        "description": ""
+                        "name": "duración",
+                        "description": "Marca de tiempo en formato 00:00:00 (HH:mm:ss)."
                     }
                 }
             },
-            "correctFormatInstruction": "",
-            "durationLongerThanTrackDuration": "",
-            "seekingToTimestamp": ""
+            "correctFormatInstruction": "{{icon}} **Oops!**\nIngresaste un formato de duración no válido, **`{{wrongDuration}}`**.\nPor favor, utiliza el formato **`HH:mm:ss`**, **`mm:ss`** o **`ss`**.\n\n**Ejemplos:**\n- {{seekCommand}} **`1:24:12`** - Ir a 1 hora, 24 minutos y 12 segundos.\n- {{seekCommand}} **`3:27`** - Ir a 3 minutos y 27 segundos.\n- {{seekCommand}} **`42`** - Ir a 42 segundos.",
+            "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nIngresaste **`{{wrongDuration}}`**, que es una marca de tiempo más larga que la duración de la canción actual.\n\nPor favor, intenta con una marca de tiempo que sea menor que la duración de la canción (**{{trackDuration}}**).",
+            "seekingToTimestamp": "{{icon}} **Adelantando a la marca de tiempo**\nAdelantando a **`{{duration}}`** en la pista actual."
         },
         "shards": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "shards",
+                "description": "Mostrar información sobre todos los fragmentos conectados.",
                 "options": {
                     "sort": {
-                        "name": "",
-                        "description": "",
+                        "name": "ordenar",
+                        "description": "Por qué clasificar los shards.",
                         "choices": {
-                            "none": "",
-                            "memory": "",
-                            "connections": "",
-                            "tracks": "",
-                            "listeners": "",
-                            "guilds": "",
-                            "members": ""
+                            "none": "Ninguno (Shard ID)",
+                            "memory": "Uso de memoria",
+                            "connections": "Conexiones de voz",
+                            "tracks": "Canciones",
+                            "listeners": "Oyentes",
+                            "guilds": "Servidores",
+                            "members": "Miembros"
                         }
                     },
                     "page": {
-                        "name": "",
-                        "description": ""
+                        "name": "página",
+                        "description": "Número de página a mostrar para los shards."
                     }
                 }
             }
         },
         "shuffle": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "mezclar",
+                "description": "Mezcla aleatoriamente todas las canciones en la cola."
             },
-            "shuffledTracks": ""
+            "shuffledTracks": "{{icon}} **Canciones de la cola mezcladas**\nLas **{{count}}** canciones en la cola han sido mezcladas.\n\nConsulta el nuevo orden de la cola con {{queueCommand}}."
         },
         "skip": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "omitir",
+                "description": "Salta la canción a la posición siguiente o específica en la cola.",
                 "options": {
                     "position": {
-                        "name": "",
-                        "description": ""
+                        "name": "posición",
+                        "description": "La posición en la cola a la que saltar."
                     }
                 }
             },
-            "emptyQueue": "",
-            "skippedTrack": "",
-            "trackPositionHigherThanQueueLength_one": "",
-            "trackPositionHigherThanQueueLength_few": "",
-            "trackPositionHigherThanQueueLength_many": ""
+            "emptyQueue": "{{icon}} **Oops!**\nLa cola está vacía, ¡Agrega algunas canciones con {{playCommand}}!",
+            "skippedTrack": "{{icon}} **Canción omitida**",
+            "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nSolo hay **1** canción en la cola. No puedes saltar a la canción **{{position}}**.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}.",
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nSolo hay **{{count}}** canciones en la cola. No puedes saltar a la canción **{{position}}**.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}."
         },
         "status": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "estado",
+                "description": "Mostrar el estado operativo del bot."
             },
-            "openSourceButtonLabel": ""
+            "openSourceButtonLabel": "GitHub"
         },
         "stop": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "detener",
+                "description": "Elimina la cola y deja de reproducir audio."
             },
-            "stoppedPlaying": ""
+            "stoppedPlaying": "{{icon}} **Reproducción detenida**\nSe detuvo la reproducción del audio y se eliminó la cola de canciones.\n\n¡Para reproducir más música, utiliza el comando {{playCommand}}!"
         },
         "systemstatus": {
             "metadata": {
-                "name": "",
-                "description": ""
+                "name": "estado-sistema",
+                "description": "Mostrar el estado operativo del bot con información técnica adicional."
             }
         },
         "volume": {
             "metadata": {
-                "name": "",
-                "description": "",
+                "name": "volumen",
+                "description": "Mostrar o cambia el volumen de reproducción.",
                 "options": {
                     "percentage": {
-                        "name": "",
-                        "description": ""
+                        "name": "porcentaje",
+                        "description": "Porcentaje de volumen: Del 1% al 100%."
                     }
                 }
             },
-            "invalidVolumeRange": "",
-            "volumeChanged": "",
-            "volumeInformation": "",
-            "volumeMuted": ""
+            "invalidVolumeRange": "{{icon}} **Oops!**\nNo puedes ajustar el volumen a **`{{wrongVolume}}%`**, por favor elige un valor entre **`1%`** y **`100%`**.",
+            "volumeChanged": "{{icon}} **Volumen cambiado**\nEl volumen de reproducción ha sido cambiado a **`{{volume}}%`**.",
+            "volumeInformation": "{{icon}} **Volumen de reproducción**\nEl volumen de reproducción está actualmente configurado en **`{{volume}}`**.",
+            "volumeMuted": "{{icon}} **Audio silenciado**\nLa reproducción de audio ha sido silenciada porque el volumen se estableció en **`0%`**."
         }
     },
     "components": {
         "responses": {
-            "paused": "",
-            "resumed": ""
+            "paused": "Canción pausada",
+            "resumed": "Canción reanudada"
         }
     },
     "musicPlayerCommon": {
         "controls": {
-            "stop": "",
-            "previous": "",
-            "pause": "",
-            "resume": "",
-            "skip": ""
+            "stop": "Detener",
+            "previous": "Anterior",
+            "pause": "Pausa",
+            "resume": "Reanudar",
+            "skip": "Omitir"
         },
-        "footerPageNumber_one": "",
-        "footerPageNumber_few": "",
-        "footerPageNumber_many": "",
-        "loopingInfo": "",
-        "nowPausedTitle": "",
-        "nowPlayingTitle": "",
-        "playingLive": "",
+        "footerPageNumber_one": "Página {{page}} de {{pageCount}} (1 canción)",
+        "footerPageNumber": "Página {{page}} de {{pageCount}} ({{count}} canciones)",
+        "loopingInfo": "{{icon}} **Repetición**\nEl modo de repetición está configurado en **`{{loopMode}}`**. Puedes cambiarlo con {{loopCommand}}.\n",
+        "nowPausedTitle": "{{icon}} **Actualmente en pausa**",
+        "nowPlayingTitle": "{{icon}} **Reproduciendo ahora**",
+        "playingLive": "{{icon}} **`EN VIVO`** - Reproduciendo continuamente desde la fuente en vivo.",
         "queueRepeatMode": {
-            "off": "",
-            "track": "",
-            "queue": "",
-            "autoplay": ""
+            "off": "Deshabilitado",
+            "track": "Pista",
+            "queue": "Cola",
+            "autoplay": "Autoreproducción"
         },
-        "requestedBy": "",
-        "unavailableAuthor": "",
-        "unavailableDuration": "",
-        "unavailableRequestedBy": "",
-        "unavailableTrackTitle": "",
-        "unavailableTrackUrl": "",
-        "unavailableSource": "",
-        "voiceChannelInfo": ""
+        "requestedBy": "**Solicitado por:** {{user}}",
+        "unavailableAuthor": "No disponible",
+        "unavailableDuration": "_No hay duración disponible._",
+        "unavailableRequestedBy": "No disponible",
+        "unavailableTrackTitle": "Título no disponible",
+        "unavailableTrackUrl": "**No disponible**",
+        "unavailableSource": "Unavailable",
+        "voiceChannelInfo": "Canal: {{channel}} ({{bitrate}}kbps)"
     },
     "statistics": {
         "botStatus": {
-            "title": "",
-            "joinedServers": "",
-            "joinedServers_one": "",
-            "totalMembers": "",
-            "releaseVersion": ""
+            "title": "{{icon}} **Estado del bot**",
+            "joinedServers": "**{{count}}** Servidores unidos",
+            "joinedServers_one": "**1** Servidor unido",
+            "totalMembers": "**{{count}}** Miembros totales",
+            "releaseVersion": "**{{version}}** Versión de lanzamiento"
         },
         "queueStatus": {
-            "title": "",
-            "voiceConnections": "",
-            "voiceConnections_one": "",
-            "tracksInQueues": "",
-            "tracksInQueues_one": "",
-            "usersListening": "",
-            "usersListening_one": ""
+            "title": "{{icon}} **Estado de la cola**",
+            "voiceConnections": "**{{count}}** Conexiones de voz",
+            "voiceConnections_one": "**1** Conexión de voz",
+            "tracksInQueues": "**{{count}}** Canciones en cola",
+            "tracksInQueues_one": "**1** Canción en cola",
+            "usersListening": "**{{count}}** Usuarios escuchando",
+            "usersListening_one": "**1** Usuario escuchando"
         },
         "systemStatus": {
-            "title": "",
-            "uptime": "",
-            "cpu": "",
-            "cpuDetailed": "",
-            "memory": "",
-            "memoryDetailed": "",
-            "platform": ""
+            "title": "{{icon}} **Estado del sistema**",
+            "uptime": "**{{value}}** Tiempo de actividad",
+            "cpu": "**{{value, number(minimumFractionDigits: 2)}}%** uso de CPU",
+            "cpuDetailed": "**{{usage}}% @ {{cores}} núcleos** uso de CPU",
+            "memory": "**{{value, number}} MB** Uso de memoria",
+            "memoryDetailed": "**{{used, number}} / {{total, number}} MB** Uso de memoria",
+            "platform": "**{{value}}** Plataforma"
         },
         "discordStatus": {
-            "title": "",
-            "apiLatency": ""
+            "title": "{{icon}} **Estado de Discord**",
+            "apiLatency": "**{{value, number}} ms** latencia de la API de Discord"
         },
         "dependencies": {
-            "title": ""
+            "title": "{{icon}} **Dependencias**"
         }
     },
     "validation": {
-        "cannotJoinVoiceOrTalk": "",
-        "cannotSendMessageInChannel": "",
-        "historyDoesNotExist": "",
-        "notInSameVoiceChannel": "",
-        "notInVoiceChannel": "",
-        "notValidGuildId": "",
-        "queueDoesNotExist": "",
-        "queueIsEmpty": "",
-        "queueNoCurrentTrack": "",
-        "trackNotPlayingAnymore": ""
+        "cannotJoinVoiceOrTalk": "{{icon}} **Oops!**\nNo tengo permiso para reproducir audio en el canal de voz {{channel}}.\n\nAsegúrate que tenga los permisos para **`Conectar`** y **`Hablar`** en este canal de voz.",
+        "cannotSendMessageInChannel": "{{icon}} **Oops!**\nNo tengo permiso para enviar respuestas de mensajes en el canal {{channel}}.\n\nAsegúrate que tenga el permiso **`Ver Canal`** en este canal de texto.",
+        "historyDoesNotExist": "{{icon}} **Oops!**\nNo hay canciones en el historial y nada reproduciéndose actualmente. ¡Primero agrega algunas canciones con {{playCommand}}!",
+        "notInSameVoiceChannel": "{{icon}} **No estás en el mismo canal de voz**\nNecesitas estar en el mismo canal de voz que yo para realizar esta acción.\n\n**Canal de voz:** {{channel}}",
+        "notInVoiceChannel": "{{icon}} **No estás en un canal de voz**\nNecesitas estar en un canal de voz para realizar esta acción.",
+        "notValidGuildId": "{{icon}} **Oops!**\nNo tienes permisos para realizar esta acción.\n\nEl comando {{command}} no puede ejecutarse en este servidor.",
+        "queueDoesNotExist": "{{icon}} **Oops!**\nNo hay canciones en la cola y nada reproduciéndose actualmente. ¡Primero agrega algunas canciones con {{playCommand}}!",
+        "queueIsEmpty": "{{icon}} **Oops!**\nNo se han añadido canciones a la cola. ¡Primero agrega algunas canciones con {{playCommand}}!",
+        "queueNoCurrentTrack": "{{icon}} **Oops!**\nNo hay nada reproduciéndose actualmente. ¡Primero agrega algunas canciones con {{playCommand}}!",
+        "trackNotPlayingAnymore": "{{icon}} **Oops!**\nEsta canción ha sido omitida o ya no se está reproduciendo."
     },
     "errors": {
-        "unexpectedError": "",
-        "footerExecutionId": "",
-        "cannotExtractAudioStream": "",
-        "cannotLoadAudioStream": "",
-        "cannotPlayAudioStream": "",
-        "generalPlayerError": ""
+        "unexpectedError": "**{{icon}} Oh-oh... _Algo ha salido mal!**\nHubo un error inesperado mientras se intentaba realizar esta acción. Puedes intentarlo de nuevo.\n\n_Si este problema persiste, por favor envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**._",
+        "footerExecutionId": "ID de ejecución: {{executionId}}",
+        "cannotExtractAudioStream": "**{{icon}} Oops!**\nNo se pudo acceder al audio de la canción **[{{trackTitle}}]({{trackUrl}})**.\n\nParece que la fuente no está disponible públicamente o no es compatible.",
+        "cannotLoadAudioStream": "**{{icon}} ¡Uh-oh.!. _Algo salió mal!**\nParece que hubo un problema al cargar la canción.\n\nSi ejecutaste un comando, puedes intentarlo nuevamente.\n\n_Si este problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**!_",
+        "cannotPlayAudioStream": "**{{icon}} ¡Uh-oh.!. _Algo_ salió mal!**\nParece que hubo un problema al reproducir la canción.\n\nSi ejecutaste un comando, puedes intentarlo de nuevo.\n\n_Si el problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**!_",
+        "generalPlayerError": "**{{icon}} ¡Uh-oh... _Algo_ salió mal!**\nParece que hubo un problema relacionado con la cola o la canción actual.\n\nSi ejecutaste un comando, puedes intentarlo de nuevo.\n\n_Si el problema persiste, por favor, envía un informe de error en el **[servidor de soporte]({{serverInviteUrl}})**._"
     },
     "systemMessages": {
-        "playerSkipError": "",
-        "playerError": "",
-        "generalPlayerError": ""
+        "playerSkipError": "{{icon}} **player.events.on('playerSkip')**\nURL de la canción: {{trackUrl}}\n\n<@{{userId}}>",
+        "playerError": "{{icon}} **player.events.on('playerError')**\nMensaje: {{message}}\n\n<@{{userId}}>",
+        "generalPlayerError": "{{icon}} **player.events.on('error')**\nMensaje: {{message}}\n\n<@{{userId}}>"
     }
 }

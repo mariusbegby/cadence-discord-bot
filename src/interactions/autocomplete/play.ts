@@ -5,6 +5,7 @@ import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
 import { TFunction } from 'i18next';
 import { useUserTranslator } from '../../common/localeUtil';
+import { transformQuery } from '../../utils/validation/searchQueryValidator';
 
 class PlayAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
@@ -18,33 +19,35 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useUserTranslator(interaction);
 
-        const query: string = interaction.options.getString('query', true);
+        const searchQuery: string = interaction.options.getString('query', true);
+
+        const transformedQuery = transformQuery({ query: searchQuery, executionId });
 
         const { lastQuery, result, timestamp } = this.recentQueries.get(interaction.user.id) || {};
 
-        if (shouldUseLastQuery(query, lastQuery, timestamp)) {
-            logger.debug(`Responding with results from lastQuery for query '${query}'`);
+        if (shouldUseLastQuery(transformedQuery, lastQuery, timestamp)) {
+            logger.debug(`Responding with results from lastQuery for query '${transformedQuery}'`);
             return interaction.respond(result as ApplicationCommandOptionChoiceData<string | number>[]);
         }
 
-        if (isQueryTooShort(query)) {
-            logger.debug(`Responding with empty results due to < 3 length for query '${query}'`);
+        if (isQueryTooShort(transformedQuery)) {
+            logger.debug(`Responding with empty results due to < 3 length for query '${transformedQuery}'`);
             return interaction.respond([]);
         }
 
         const autocompleteChoices: ApplicationCommandOptionChoiceData<string>[] = await this.getAutocompleteChoices(
-            query,
+            transformedQuery,
             translator
         );
 
         if (!autocompleteChoices || autocompleteChoices.length === 0) {
-            logger.debug(`Responding with empty results for query '${query}'`);
+            logger.debug(`Responding with empty results for query '${transformedQuery}'`);
             return interaction.respond([]);
         }
 
-        this.updateRecentQuery(interaction.user.id, query, autocompleteChoices);
+        this.updateRecentQuery(interaction.user.id, transformedQuery, autocompleteChoices);
 
-        logger.debug(`Responding to autocomplete with results for query: '${query}'.`);
+        logger.debug(`Responding to autocomplete with results for query: '${transformedQuery}'.`);
         return interaction.respond(autocompleteChoices);
     }
 

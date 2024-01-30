@@ -20,7 +20,6 @@ const logger: Logger = loggerModule.child({
 
 const userSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const systemSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
-const commandFolders: string[] = fs.readdirSync(path.resolve('./dist/interactions/commands'));
 
 if (!process.env.DISCORD_BOT_TOKEN) {
     throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
@@ -40,18 +39,16 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
         process.exit(1);
     }
 
-    for (const folder of commandFolders) {
-        const commandFiles: string[] = fs
-            .readdirSync(path.resolve(`./dist/interactions/commands/${folder}`))
-            .filter((file) => file.endsWith('.js'));
+    const commandFiles: string[] = fs
+        .readdirSync(path.resolve('./dist/interactions/slashcommands'))
+        .filter((file) => file.endsWith('.js'));
 
-        for (const file of commandFiles) {
-            const { default: command } = await import(`../interactions/commands/${folder}/${file}`);
-            const slashCommand = command as BaseSlashCommandInteraction;
-            slashCommand.isSystemCommand
-                ? systemSlashCommands.push(slashCommand.data.toJSON())
-                : userSlashCommands.push(slashCommand.data.toJSON());
-        }
+    for (const file of commandFiles) {
+        const { default: command } = await import(`../interactions/slashcommands/${file}`);
+        const slashCommand = command as BaseSlashCommandInteraction;
+        slashCommand.isSystemCommand
+            ? systemSlashCommands.push(slashCommand.data.toJSON())
+            : userSlashCommands.push(slashCommand.data.toJSON());
     }
 
     try {

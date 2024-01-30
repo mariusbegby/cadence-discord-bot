@@ -1,12 +1,12 @@
 import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkInVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkVoicePermissionJoinAndTalk } from '../../utils/validation/permissionValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { formatSlashCommand } from '../../common/formattingUtils';
 import { TFunction } from 'i18next';
 
 class JoinCommand extends BaseSlashCommandInteraction {

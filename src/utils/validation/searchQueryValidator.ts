@@ -27,6 +27,15 @@ export const transformQuery = ({ query, executionId }: TransformQueryParams) => 
                     query = `https://open.spotify.com/${type}/${trackId}`;
                 }
             }
+
+            // if /track/id is in url TWICE, remove the second one, e.g. https://open.spotify.com/track/123/track/123
+            const trackIdRegex: RegExp = new RegExp('https://open.spotify.com/track/([a-zA-Z0-9]+)');
+            const trackIdMatches: RegExpMatchArray | null = query.match(trackIdRegex);
+            if (trackIdMatches) {
+                logger.debug(`Transforming Spotify url to remove duplicate track id from query '${query}'.`);
+                const trackId: string = trackIdMatches[1];
+                query = `https://open.spotify.com/track/${trackId}`;
+            }
         } catch (error) {
             logger.error(error, 'Error while validating or transforming Spotify url.');
         }

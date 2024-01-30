@@ -16,9 +16,8 @@
             },
             "trackHistoryEmpty": "{{icon}} **Oi sann!**\nHistorikken er tom, legg til noen låter med {{playCommand}}!",
             "trackPositionHigherThanHistoryLength_one": "{{icon}} **Oi sann!**\nDet er bare **1** låt i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
-            "trackPositionHigherThanHistoryLength_few": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
-            "trackPositionHigherThanHistoryLength_many": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
-            "trackReplayed": "{{icon}} **Spiller låt på nytt**\n{{track}}"
+            "trackPositionHigherThanHistoryLength": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i historikken. Du kan ikke gå tilbake til posisjon **{{backPosition}}**.\n\nVis låter lagt til i historikken med {{historyCommand}}.",
+            "trackReplayed": "{{icon}} **Spiller om låt**\n{{track}}"
         },
         "filters": {
             "metadata": {
@@ -74,8 +73,7 @@
             },
             "emptyHistory": "Historikken er tom, legg til noen låter med {{playCommand}}!",
             "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i historikken.",
-            "invalidPageNumber_few": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
-            "invalidPageNumber_many": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i historikken.",
             "tracksInHistoryTitle": "{{icon}} **Låter i historikken**"
         },
         "join": {
@@ -150,8 +148,7 @@
             },
             "trackMoved": "{{icon}} **Flyttet låten**\n{track}\n\nLåten har blitt flyttet fra posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`1`** låt i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
         },
         "nowplaying": {
             "metadata": {
@@ -164,8 +161,7 @@
                 "source": "**Kilde for låt**"
             },
             "otherTracksInQueue_one": "1 annen låt i køen...",
-            "otherTracksInQueue_few": "{{count}} andre låter i køen...",
-            "otherTracksInQueue_many": "{{count}} andre låter i køen...",
+            "otherTracksInQueue": "{{count}} andre låter i køen...",
             "playCount_zero": "Ukjent",
             "playCount": "{{count, number}}"
         },
@@ -192,8 +188,7 @@
             "addedToQueueTitle": "{{icon}} **Lagt til i køen**",
             "playlistAddedTitle": "{{icon}} **Lagt til spilleliste i køen**",
             "playlistAddedTrackCount_one": "Og **1** til låt... Bruk {{queueCommand}} for å se alle.",
-            "playlistAddedTrackCount_few": "Og **{{count}}** flere låter... Bruk {{queueCommand}} for å se alle.",
-            "playlistAddedTrackCount_many": "Og **{{count}}** flere låter... Bruk {{queueCommand}} for å se alle.",
+            "playlistAddedTrackCount": "Og **{{count}}** flere låter... Bruk {{queueCommand}} for å se alle.",
             "playlistTooLarge": "{{icon}} **Spilleliste for stor**\nDenne spillelisten er for stor til å legges til i køen.\n\nMaksimalt antall låter som kan legges til i køen er **{{count}}**.",
             "trackNotFound": "{{icon}} **Ingen låter funnet**\nIngen resultater funnet for **{{query}}**.\n\nHvis du angav en URL, vær sikker på at den er gyldig og offentlig.",
             "footerAddedPosition": "Lagt til i posisjon {{position}} i køen"
@@ -214,8 +209,7 @@
             "estimatedDuration": "Estimert tid igjen: {{duration}}",
             "estimatedReallyLongTime": "Estimert tid igjen: Veldig lang tid",
             "invalidPageNumber_one": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er bare **`1`** side i køen.",
-            "invalidPageNumber_few": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i køen.",
-            "invalidPageNumber_many": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i køen."
+            "invalidPageNumber": "{{icon}} **Oi sann!**\nSide **`{{page}}`** er ikke et gyldig sidenummer.\n\nDet er totalt bare **`{{count}}`** sider i køen."
         },
         "reload": {
             "metadata": {
@@ -276,12 +270,10 @@
             },
             "noTracksRemoved": "{{icon}} **Ingen låter fjernet**\nDet ble ikke fjernet noen låter fra køen. Vennligst sjekk om alternativet du valgte har låter som kan fjernes.",
             "removedTrack": "{{icon}} **Fjernet låt**",
-            "removedTracks_few": "{{icon}} **Fjernet låter**\n**`{{count}}`** låter ble fjernet fra køen.",
-            "removedTracks_many": "{{icon}} **Fjernet låter**\n**`{{count}}`** låter ble fjernet fra køen.",
+            "removedTracks": "{{icon}} **Fjernet låter**\n**`{{count}}`** låter ble fjernet fra køen.",
             "startPositionHigherThanEndPosition": "{{icon}} **Oi sann!**\nStartposisjon **`{{start}}`** er høyere enn siste posisjon **`{{end}}`** i køen. Vennligst spesifiser et gyldig område.\n\nVis låter lagt til i køen med {{queueCommand}}.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`1`** låt i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nPosisjon **`{{position}}`** er ikke en gyldig køposisjon. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
         },
         "seek": {
             "metadata": {
@@ -344,8 +336,7 @@
             "emptyQueue": "{{icon}} **Oi sann!**\nKøen er tom, legg til noen låter med {{playCommand}}!",
             "skippedTrack": "{{icon}} **Hoppet over låt**",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nDet er bare **1** låt i køen. Du kan ikke hoppe til posisijon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_few": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i køen. Du kan ikke hoppe til posisjon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
-            "trackPositionHigherThanQueueLength_many": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i køen. Du kan ikke hoppe til posisjon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
+            "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nDet er bare **{{count}}** låter i køen. Du kan ikke hoppe til posisjon **{{position}}** i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
         },
         "status": {
             "metadata": {
@@ -399,8 +390,7 @@
             "skip": "Hopp over"
         },
         "footerPageNumber_one": "Side {{page}} av {{pageCount}} (1 låt)",
-        "footerPageNumber_few": "Side {{page}} av {{pageCount}} ({{count}} låter)",
-        "footerPageNumber_many": "Side {{page}} av {{pageCount}} ({{count}} låter)",
+        "footerPageNumber": "Side {{page}} av {{pageCount}} ({{count}} låter)",
         "loopingInfo": "{{icon}} **Looping aktivert**\nLoop-modus er satt til **`{{loopMode}}`**. Du kan endre det med {{loopCommand}}.\n",
         "nowPausedTitle": "{{icon}} **For øyeblikket pauset**",
         "nowPlayingTitle": "{{icon}} **Spiller nå**",
