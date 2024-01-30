@@ -2,7 +2,7 @@ import config from 'config';
 import { BiquadFilters, EqualizerConfigurationPreset, GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, Message, StringSelectMenuInteraction } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseComponentInteraction } from '../../classes/interactions';
+import { BaseComponentInteraction } from '../../common/classes/interactions';
 import {
     EqualizerFilterOptions,
     BiquadFilterOptions,
@@ -10,9 +10,9 @@ import {
     FilterOption
 } from '../../types/configTypes';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { useServerTranslator } from '../../common/localeUtil';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');

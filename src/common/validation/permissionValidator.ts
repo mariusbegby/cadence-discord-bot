@@ -9,11 +9,11 @@ import {
     VoiceChannel
 } from 'discord.js';
 import { Logger } from 'pino';
-import { InteractionValidationError } from '../../classes/interactions';
-import loggerModule from '../../services/logger';
+import { InteractionValidationError } from '../classes/interactions';
+import loggerModule from '../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
-import { useServerTranslator } from '../../common/localeUtil';
+import { useServerTranslator } from '../utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId }: ValidatorParams) => {

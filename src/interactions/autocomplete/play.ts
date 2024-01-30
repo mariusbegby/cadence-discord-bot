@@ -1,11 +1,11 @@
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import { BaseAutocompleteInteraction } from '../../classes/interactions';
-import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/autocompleteUtils';
+import { BaseAutocompleteInteraction } from '../../common/classes/interactions';
+import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/utils/autocompleteUtils';
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
 import { TFunction } from 'i18next';
-import { useUserTranslator } from '../../common/localeUtil';
-import { transformQuery } from '../../utils/validation/searchQueryValidator';
+import { useUserTranslator } from '../../common/utils/localeUtil';
+import { transformQuery } from '../../common/validation/searchQueryValidator';
 
 class PlayAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();

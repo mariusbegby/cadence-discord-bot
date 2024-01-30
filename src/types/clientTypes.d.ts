@@ -3,7 +3,7 @@ import {
     BaseAutocompleteInteraction,
     BaseComponentInteraction,
     BaseSlashCommandInteraction
-} from '../classes/interactions';
+} from '../common/classes/interactions';
 
 type RegisterClientInteractionsFunction = (params: { client: Client; executionId: string }) => void;
 

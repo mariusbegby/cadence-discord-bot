@@ -1,6 +1,6 @@
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import loggerModule from '../../services/logger';
+import loggerModule from '../../common/services/logger';
 import { Track } from 'discord-player';
 import { Snowflake } from 'discord.js';
 import { Logger } from 'pino';

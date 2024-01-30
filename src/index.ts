@@ -6,8 +6,8 @@ import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } f
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { exec } from 'child_process';
 import { Logger } from 'pino';
-import loggerModule from './services/logger';
-import { getPrismaClient } from './services/prismaClient';
+import loggerModule from './common/services/logger';
+import { usePrismaClient } from './common/services/prismaClient';
 const shardingOptions: ShardingManagerOptions = config.get('shardingOptions');
 
 const manager: ShardingManager = new ShardingManager('./dist/bot.js', {
@@ -27,7 +27,7 @@ manager.on('shardCreate', (shard: Shard) => {
         shardId: 'manager'
     });
 
-    const prisma = getPrismaClient();
+    const prisma = usePrismaClient();
 
     process.on('SIGINT', async () => {
         await prisma.$disconnect();

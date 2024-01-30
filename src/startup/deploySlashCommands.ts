@@ -5,8 +5,8 @@ import { randomUUID as uuidv4 } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../classes/interactions';
-import loggerModule from '../services/logger';
+import { BaseSlashCommandInteraction } from '../common/classes/interactions';
+import loggerModule from '../common/services/logger';
 import { SystemOptions } from '../types/configTypes';
 
 const systemOptions: SystemOptions = config.get('systemOptions');

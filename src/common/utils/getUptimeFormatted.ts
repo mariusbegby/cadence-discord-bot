@@ -1,7 +1,7 @@
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../services/logger';
 import { GetUptimeFormattedParams } from '../../types/utilTypes';
-import { formatDuration } from '../../common/formattingUtils';
+import { formatDuration } from './formattingUtils';
 
 export const getUptimeFormatted = ({ executionId }: GetUptimeFormattedParams): string => {
     const logger: Logger = loggerModule.child({

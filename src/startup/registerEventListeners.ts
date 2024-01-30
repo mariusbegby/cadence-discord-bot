@@ -4,7 +4,7 @@ import { Client } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Logger } from 'pino';
-import loggerModule from '../services/logger';
+import loggerModule from '../common/services/logger';
 import { CustomLoggerOptions } from '../types/configTypes';
 import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
 import { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';

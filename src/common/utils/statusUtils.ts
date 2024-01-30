@@ -1,7 +1,7 @@
 import osu from 'node-os-utils';
-import { ExtendedClient } from '../types/clientTypes';
-import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from '../utils/shardUtils';
-import { getUptimeFormatted } from '../utils/system/getUptimeFormatted';
+import { ExtendedClient } from '../../types/clientTypes';
+import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from './shardUtils';
+import { getUptimeFormatted } from './getUptimeFormatted';
 import { TFunction } from 'i18next';
 
 export async function getBotStatistics(

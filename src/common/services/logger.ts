@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import config from 'config';
 import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
-import { CustomLoggerOptions } from '../types/configTypes';
-import { TargetOptions } from '../types/serviceTypes';
+import { CustomLoggerOptions } from '../../types/configTypes';
+import { TargetOptions } from '../../types/serviceTypes';
 
 // Retrieve logger options from config
 const loggerOptions: CustomLoggerOptions = config.get('loggerOptions');

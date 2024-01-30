@@ -1,12 +1,12 @@
 import config from 'config';
 import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
 import { Logger } from 'pino';
-import { InteractionValidationError } from '../../classes/interactions';
-import loggerModule from '../../services/logger';
+import { InteractionValidationError } from '../classes/interactions';
+import loggerModule from '../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
-import { useServerTranslator } from '../../common/localeUtil';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { useServerTranslator } from '../utils/localeUtil';
+import { formatSlashCommand } from '../utils/formattingUtils';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkQueueExists = async ({ interaction, queue, executionId }: ValidatorParams) => {

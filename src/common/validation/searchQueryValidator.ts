@@ -1,5 +1,5 @@
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../services/logger';
 import { TransformQueryParams } from '../../types/utilTypes';
 
 export const transformQuery = ({ query, executionId }: TransformQueryParams) => {

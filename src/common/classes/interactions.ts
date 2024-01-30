@@ -15,7 +15,7 @@ import {
 } from 'discord.js';
 import { Logger } from 'pino';
 import loggerModule from '../services/logger';
-import { BotOptions, EmbedOptions, PlayerOptions } from '../types/configTypes';
+import { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
 import {
     BaseAutocompleteParams,
     BaseAutocompleteReturnType,
@@ -24,8 +24,8 @@ import {
     BaseInteractionParams,
     BaseSlashCommandParams,
     BaseSlashCommandReturnType
-} from '../types/interactionTypes';
-import { Validator, ValidatorParams } from '../types/utilTypes';
+} from '../../types/interactionTypes';
+import { Validator, ValidatorParams } from '../../types/utilTypes';
 import { TFunction } from 'i18next';
 
 abstract class BaseInteraction {

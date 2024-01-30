@@ -1,6 +1,6 @@
 import { QueueRepeatMode } from 'discord-player';
 import { TFunction } from 'i18next';
-import { EmbedOptions } from '../types/configTypes';
+import { EmbedOptions } from '../../types/configTypes';
 
 export function formatDuration(durationMs: number): string {
     const durationDate: Date = new Date(0);

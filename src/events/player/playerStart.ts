@@ -1,9 +1,9 @@
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-import { useLanguageTranslator } from '../../common/localeUtil';
+import { useLanguageTranslator } from '../../common/utils/localeUtil';
 import { EmbedBuilder, LocaleString } from 'discord.js';
 import { EmbedOptions } from '../../types/configTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import loggerModule from '../../services/logger';
+import loggerModule from '../../common/services/logger';
 import { Track } from 'discord-player';
 import { Logger } from 'pino';
 import config from 'config';

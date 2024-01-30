@@ -2,7 +2,7 @@ import { Collection } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Logger } from 'pino';
-import loggerModule from '../services/logger';
+import loggerModule from '../common/services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 import { RegisterClientInteractionsParams } from '../types/utilTypes';
 

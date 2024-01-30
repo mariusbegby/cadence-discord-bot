@@ -1,10 +1,10 @@
 import { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { Logger } from 'pino';
 import { TFunction } from 'i18next';
-import guildDatabaseClient from '../../services/guildDatabaseClient';
+import guildDatabaseClient from '../../common/services/guildDatabaseClient';
 
 class SettingsCommand extends BaseSlashCommandInteraction {
     constructor() {

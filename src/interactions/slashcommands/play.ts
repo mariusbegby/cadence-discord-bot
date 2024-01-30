@@ -8,14 +8,14 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction, CustomError } from '../../classes/interactions';
+import { BaseSlashCommandInteraction, CustomError } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkVoicePermissionJoinAndTalk } from '../../utils/validation/permissionValidator';
-import { transformQuery } from '../../utils/validation/searchQueryValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
+import { transformQuery } from '../../common/validation/searchQueryValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {

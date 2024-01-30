@@ -1,7 +1,7 @@
 import config from 'config';
 import { IPRotationConfig, Player } from 'discord-player';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
 
 export const createPlayer = async ({ client, executionId }: CreatePlayerParams): Promise<Player> => {

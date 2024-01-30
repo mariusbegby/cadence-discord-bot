@@ -1,12 +1,12 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { EmbedBuilder, MessageComponentInteraction } from 'discord.js';
-import { BaseComponentInteraction } from '../../classes/interactions';
+import { BaseComponentInteraction } from '../../common/classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { TFunction } from 'i18next';
-import { useServerTranslator } from '../../common/localeUtil';
-import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/formattingUtils';
+import { useServerTranslator } from '../../common/utils/localeUtil';
+import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class ActionSkipButton extends BaseComponentInteraction {
     constructor() {

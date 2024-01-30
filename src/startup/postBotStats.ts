@@ -2,9 +2,9 @@ import { Client } from 'discord.js';
 import { ClientRequest, ClientRequestArgs, IncomingMessage } from 'node:http';
 import https from 'node:https';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { PostBotStatsParams, PostBotStatsSite } from '../../types/utilTypes';
-import { fetchTotalGuildStatistics } from '../shardUtils';
+import loggerModule from '../common/services/logger';
+import { PostBotStatsParams, PostBotStatsSite } from '../types/utilTypes';
+import { fetchTotalGuildStatistics } from '../common/utils/shardUtils';
 
 export const postBotStats = async ({ client, executionId }: PostBotStatsParams) => {
     const logger: Logger = loggerModule.child({

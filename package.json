@@ -27,7 +27,7 @@
     },
     "scripts": {
         "start": "node .",
-        "deploy": "node ./dist/utils/deploySlashCommands.js",
+        "deploy": "node ./dist/startup/deploySlashCommands.js",
         "predev": "npx prisma generate && npx prisma db push",
         "dev": "concurrently --names \"TSC,TOC,BOT\" --prefix-colors \"yellow,blue,green\" \"npx tsc -w\" \"nodemon -w locales/en -x npm run toc\" \"nodemon -x npm run start\"",
         "eslint": "eslint ./src --fix",

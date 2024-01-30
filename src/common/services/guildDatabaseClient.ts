@@ -1,9 +1,9 @@
-import { getPrismaClient } from './prismaClient';
+import { usePrismaClient } from './prismaClient';
 import loggerModule from './logger';
 import { Logger } from 'pino';
 import { Interaction, MessageComponentInteraction } from 'discord.js';
 
-const prisma = getPrismaClient();
+const prisma = usePrismaClient();
 
 function getLogger(executionId: string, interaction?: Interaction | MessageComponentInteraction): Logger {
     return loggerModule.child({

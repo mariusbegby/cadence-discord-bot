@@ -8,10 +8,10 @@ import {
     MessageComponentInteraction
 } from 'discord.js';
 import { Logger } from 'pino';
-import { CustomError, InteractionValidationError } from '../classes/interactions';
-import loggerModule from '../services/logger';
+import { CustomError, InteractionValidationError } from '../common/classes/interactions';
+import loggerModule from '../common/services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
-import { useServerTranslator } from '../common/localeUtil';
+import { useServerTranslator } from '../common/utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

@@ -1,9 +1,9 @@
 import config from 'config';
 import { Channel, Client } from 'discord.js';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
-import { LoadTestOptions } from '../../types/configTypes';
-import { StartLoadTestParams } from '../../types/utilTypes';
+import loggerModule from '../common/services/logger';
+import { LoadTestOptions } from '../types/configTypes';
+import { StartLoadTestParams } from '../types/utilTypes';
 
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
