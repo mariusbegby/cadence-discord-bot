@@ -188,10 +188,8 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     count: searchResult.tracks.length,
                     queueCommand: formatSlashCommand('queue', translator)
                 });
-            if (queue.tracks.data.length != searchResult.tracks.length) {
-                const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
-                embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
-            }
+            const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
+            embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
             if (!this.embedOptions.behavior.enablePlayerStartMessages) {
                 message =
