@@ -354,7 +354,7 @@
         },
         "systemstatus": {
             "metadata": {
-                "name": "Información del sistema",
+                "name": "estado-sistema",
                 "description": "Mostrar el estado operativo del bot con información técnica adicional."
             }
         },
