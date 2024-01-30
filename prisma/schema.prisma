@@ -7,7 +7,7 @@ datasource db {
     url      = "file:./dev.db"
 }
 
-model GuildSetting {
+model GuildConfig {
     defaultVolume     Int     @default(50)
     locale            String  @default("en-US")
     actionPermissions String?

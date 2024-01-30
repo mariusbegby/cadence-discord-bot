@@ -1,10 +1,10 @@
 import { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { Logger } from 'pino';
 import { TFunction } from 'i18next';
-import guildDatabaseService from '../../../services/guildDatabaseService';
+import guildDatabaseClient from '../../services/guildDatabaseClient';
 
 class SettingsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -63,7 +63,7 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         logger.debug('Showing settings');
 
         // get settings from database
-        const settings = await guildDatabaseService.getGuildSettings(interaction.guild!.id, executionId, interaction);
+        const settings = await guildDatabaseClient.getGuildConfig(interaction.guild!.id, executionId, interaction);
 
         console.log(settings);
 
@@ -99,7 +99,7 @@ class SettingsCommand extends BaseSlashCommandInteraction {
 
         const volume = interaction.options.getInteger('percentage');
 
-        const settings = await guildDatabaseService.getGuildSettings(interaction.guild!.id, executionId, interaction);
+        const settings = await guildDatabaseClient.getGuildConfig(interaction.guild!.id, executionId, interaction);
 
         if (!volume) {
             if (!settings) {
@@ -136,7 +136,7 @@ class SettingsCommand extends BaseSlashCommandInteraction {
             defaultVolume: volume
         };
 
-        await guildDatabaseService.createOrUpdateGuildSettings(
+        await guildDatabaseClient.createOrUpdateGuildConfig(
             executionId,
             interaction.guild!.id,
             updatedSettings,

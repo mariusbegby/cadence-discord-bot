@@ -14,94 +14,94 @@ function getLogger(executionId: string, interaction?: Interaction | MessageCompo
     });
 }
 
-export type GuildSettings = {
+export type GuildConfig = {
     defaultVolume?: number;
     locale?: string;
     actionPermissions?: Record<string, string[]>;
 };
 
-const guildDatabaseService = {
-    async getGuildSettings(
+const guildDatabaseClient = {
+    async getGuildConfig(
         guildId: string,
         executionId: string,
         interaction?: Interaction | MessageComponentInteraction
     ) {
         const logger = getLogger(executionId, interaction);
-        logger.debug(`Getting settings for guild ${guildId} from database.`);
-        const settings = await prisma.guildSetting.findUnique({
+        logger.debug(`Getting config for guild ${guildId} from database.`);
+        const config = await prisma.guildConfig.findUnique({
             where: { guildId: guildId }
         });
 
-        if (!settings) {
-            logger.debug(`No settings found for guild ${guildId}.`);
+        if (!config) {
+            logger.debug(`No config found for guild ${guildId}.`);
             return null;
         }
 
         const response = {
-            ...settings,
-            actionPermissions: deserializeActionPermissions(settings.actionPermissions ?? '')
+            ...config,
+            actionPermissions: deserializeActionPermissions(config.actionPermissions ?? '')
         };
 
         return response;
     },
 
-    async createOrUpdateGuildSettings(
+    async createOrUpdateGuildConfig(
         executionId: string,
         guildId: string,
-        settingsData: GuildSettings,
+        configData: GuildConfig,
         interaction?: Interaction | MessageComponentInteraction
     ) {
         const logger = getLogger(executionId, interaction);
-        logger.debug(`Creating or updating guild settings for guild ${guildId} in database.`);
+        logger.debug(`Creating or updating guild config for guild ${guildId} in database.`);
 
-        const validSettings = validateGuildSettings(logger, settingsData);
-        return await prisma.guildSetting.upsert({
+        const validConfig = validateGuildConfig(logger, configData);
+        return await prisma.guildConfig.upsert({
             where: { guildId: guildId },
             update: {
-                ...validSettings
+                ...validConfig
             },
             create: {
                 guildId: guildId,
-                ...validSettings
+                ...validConfig
             }
         });
     },
 
-    async deleteGuildSettings(
+    async deleteGuildConfig(
         executionId: string,
         guildId: string,
         interaction?: Interaction | MessageComponentInteraction
     ) {
         const logger = getLogger(executionId, interaction);
-        logger.debug(`Deleting guild ${guildId} and settings from database.`);
+        logger.debug(`Deleting guild ${guildId} and config from database.`);
 
-        return await prisma.guildSetting.delete({
+        return await prisma.guildConfig.delete({
             where: { guildId: guildId }
         });
     }
 };
 
-export function validateGuildSettings(logger: Logger, settingsData: GuildSettings) {
-    if (settingsData.defaultVolume && (settingsData.defaultVolume < 0 || settingsData.defaultVolume > 100)) {
-        logger.debug(`defaultVolume ${settingsData.defaultVolume} is not between 0 and 100`);
+export function validateGuildConfig(logger: Logger, configData: GuildConfig) {
+    if (configData.defaultVolume && (configData.defaultVolume < 0 || configData.defaultVolume > 100)) {
+        logger.debug(`defaultVolume ${configData.defaultVolume} is not between 0 and 100`);
         throw new Error('defaultVolume must be between 0 and 100');
     }
 
     // get available locale from i18next?
-    if (settingsData.locale && !['en-US', 'no', 'ro', 'en-ES'].includes(settingsData.locale)) {
-        logger.debug(`locale ${settingsData.locale} is not in list of available locales`);
-        throw new Error(`locale ${settingsData.locale} is not in list of available locales`);
+    if (configData.locale && !['en-US', 'no', 'ro', 'en-ES'].includes(configData.locale)) {
+        logger.debug(`locale ${configData.locale} is not in list of available locales`);
+        throw new Error(`locale ${configData.locale} is not in list of available locales`);
     }
 
     // TODO: validate actionPermissions
 
-    const validSettings = {
-        defaultVolume: settingsData.defaultVolume,
-        locale: settingsData.locale,
-        actionPermissions: serializeActionPermissions(settingsData.actionPermissions ?? {})
+    const validConfig = {
+        defaultVolume: configData.defaultVolume,
+        locale: configData.locale,
+        actionPermissions: serializeActionPermissions(configData.actionPermissions ?? {})
     };
 
-    return validSettings;
+    return validConfig;
 }
 
 function serializeActionPermissions(permissions: Record<string, string[]>): string {
@@ -112,4 +112,4 @@ function deserializeActionPermissions(serializedPermissions: string): Record<str
     return JSON.parse(serializedPermissions);
 }
 
-export default guildDatabaseService;
+export default guildDatabaseClient;
