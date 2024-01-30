@@ -17,5 +17,5 @@ model GuildConfig {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("guild_settings")
+    @@map("guild_config")
 }
