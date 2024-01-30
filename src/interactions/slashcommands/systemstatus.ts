@@ -1,11 +1,11 @@
 // @ts-ignore
-import { dependencies, version } from '../../../../package.json';
+import { dependencies, version } from '../../../package.json';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../common/statusUtils';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkValidGuildId } from '../../utils/validation/systemCommandValidator';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 
 class SystemStatusCommand extends BaseSlashCommandInteraction {
     constructor() {

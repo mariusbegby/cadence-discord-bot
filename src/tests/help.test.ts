@@ -1,4 +1,4 @@
-import helpCommand from '../interactions/commands/info/help';
+import helpCommand from '../interactions/slashcommands/help';
 import { SlashCommandNumberOption } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../classes/interactions';
 

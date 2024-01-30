@@ -8,14 +8,14 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction, CustomError } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkVoicePermissionJoinAndTalk } from '../../../utils/validation/permissionValidator';
-import { transformQuery } from '../../../utils/validation/searchQueryValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction, CustomError } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkVoicePermissionJoinAndTalk } from '../../utils/validation/permissionValidator';
+import { transformQuery } from '../../utils/validation/searchQueryValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {

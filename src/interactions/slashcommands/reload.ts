@@ -6,11 +6,11 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { ExtendedClient } from '../../../types/clientTypes';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { ExtendedClient } from '../../types/clientTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkValidGuildId } from '../../utils/validation/systemCommandValidator';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { TFunction } from 'i18next';
 
 class ReloadCommand extends BaseSlashCommandInteraction {

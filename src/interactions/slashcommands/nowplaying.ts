@@ -10,13 +10,13 @@ import {
     EmbedField,
     SlashCommandBuilder
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatRepeatModeDetailed } from '../../../common/formattingUtils';
+import { formatRepeatModeDetailed } from '../../common/formattingUtils';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
     constructor() {

@@ -13,10 +13,10 @@ import {
     SlashCommandNumberOption,
     SlashCommandStringOption
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { CommandMetadata, localizeCommand, translatorInstance, useServerTranslator } from '../../../common/localeUtil';
-import { ExtendedClient } from '../../../types/clientTypes';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { CommandMetadata, localizeCommand, translatorInstance, useServerTranslator } from '../../common/localeUtil';
+import { ExtendedClient } from '../../types/clientTypes';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {

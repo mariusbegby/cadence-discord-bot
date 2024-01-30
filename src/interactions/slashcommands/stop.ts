@@ -1,15 +1,15 @@
-import { GuildQueue, useQueue } from 'discord-player';
+import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
-class LeaveCommand extends BaseSlashCommandInteraction {
+class StopCommand extends BaseSlashCommandInteraction {
     constructor() {
-        const data = localizeCommand(new SlashCommandBuilder().setName('leave'));
+        const data = localizeCommand(new SlashCommandBuilder().setName('stop'));
         super(data);
     }
 
@@ -26,8 +26,11 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
-        logger.debug('Deleting queue.');
-        this.deleteQueue(queue);
+        if (!queue.deleted) {
+            queue.setRepeatMode(QueueRepeatMode.OFF);
+            queue.node.stop();
+            logger.debug('Cleared and stopped the queue.');
+        }
 
         logger.debug('Responding with success embed.');
         return await interaction.editReply({
@@ -35,7 +38,7 @@ class LeaveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        translator('commands.leave.leavingChannel', {
+                        translator('commands.stop.stoppedPlaying', {
                             icon: this.embedOptions.icons.success,
                             playCommand: formatSlashCommand('play', translator)
                         })
@@ -44,12 +47,6 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             ]
         });
     }
-
-    private deleteQueue(queue: GuildQueue): void {
-        if (!queue.deleted) {
-            queue.delete();
-        }
-    }
 }
 
-export default new LeaveCommand();
+export default new StopCommand();
