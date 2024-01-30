@@ -1,5 +1,5 @@
 // @ts-ignore
-import { version } from '../../../../package.json';
+import { version } from '../../../package.json';
 import {
     APIActionRowComponent,
     APIButtonComponent,
@@ -10,10 +10,10 @@ import {
     EmbedBuilder,
     SlashCommandBuilder
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../../common/statusUtils';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../common/statusUtils';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 
 class StatusCommand extends BaseSlashCommandInteraction {
     constructor() {

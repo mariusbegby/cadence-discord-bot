@@ -46,7 +46,7 @@
         "guilds": {
             "metadata": {
                 "name": "gremios",
-                "description": "Muestra el top 25 de gremios por número de miembros."
+                "description": "Mostrar el top 25 de gremios por número de miembros."
             },
             "topGuildsByMemberCount": "{{icon}} **Principales {{count}} servidores por cantidad de miembros ({{totalCount}} en total)**",
             "totalMembers": "**Total de miembros:** **`{{count}`**"
@@ -62,7 +62,7 @@
         },
         "history": {
             "metadata": {
-                "name": "historia",
+                "name": "historial",
                 "description": "Mostrar historial de canciones que se han reproducido.",
                 "options": {
                     "page": {
@@ -153,7 +153,7 @@
         "nowplaying": {
             "metadata": {
                 "name": "reproduciendo",
-                "description": "Muestra información sobre la canción actual."
+                "description": "Mostrar información sobre la canción actual."
             },
             "embedFields": {
                 "author": "**Artista**",
@@ -196,7 +196,7 @@
         "queue": {
             "metadata": {
                 "name": "cola",
-                "description": "Muestra las canciones que se han añadido a la cola.",
+                "description": "Mostrar las canciones que se han añadido a la cola.",
                 "options": {
                     "page": {
                         "name": "página",
@@ -293,7 +293,7 @@
         "shards": {
             "metadata": {
                 "name": "shards",
-                "description": "Muestra información sobre todos los shards conectados.",
+                "description": "Mostrar información sobre todos los fragmentos conectados.",
                 "options": {
                     "sort": {
                         "name": "ordenar",
@@ -341,7 +341,7 @@
         "status": {
             "metadata": {
                 "name": "estado",
-                "description": "Muestra el estado operativo del bot."
+                "description": "Mostrar el estado operativo del bot."
             },
             "openSourceButtonLabel": "GitHub"
         },
@@ -354,14 +354,14 @@
         },
         "systemstatus": {
             "metadata": {
-                "name": "Información del sistema",
-                "description": "Muestra el estado operativo del bot con información técnica adicional."
+                "name": "estado-sistema",
+                "description": "Mostrar el estado operativo del bot con información técnica adicional."
             }
         },
         "volume": {
             "metadata": {
                 "name": "volumen",
-                "description": "Muestra o cambia el volumen de reproducción.",
+                "description": "Mostrar o cambia el volumen de reproducción.",
                 "options": {
                     "percentage": {
                         "name": "porcentaje",

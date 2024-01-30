@@ -5,12 +5,12 @@ import {
     EmbedFooterData,
     SlashCommandBuilder
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { ExtendedClient } from '../../../types/clientTypes';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../../types/interactionTypes';
-import { checkValidGuildId } from '../../../utils/validation/systemCommandValidator';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { ExtendedClient } from '../../types/clientTypes';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../types/interactionTypes';
+import { checkValidGuildId } from '../../utils/validation/systemCommandValidator';
 import { Logger } from 'pino';
-import { localizeCommand } from '../../../common/localeUtil';
+import { localizeCommand } from '../../common/localeUtil';
 
 class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {

@@ -1,4 +1,4 @@
-import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
+import { GuildQueue, Track, useQueue } from 'discord-player';
 import {
     APIActionRowComponent,
     APIButtonComponent,
@@ -12,19 +12,19 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkHistoryExists } from '../../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/formattingUtils';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatRepeatModeDetailed, formatSlashCommand } from '../../../common/formattingUtils';
 
-class HistoryCommand extends BaseSlashCommandInteraction {
+class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
         const data = localizeCommand(
             new SlashCommandBuilder()
-                .setName('history')
+                .setName('queue')
                 .addIntegerOption((option) => option.setName('page').setMinValue(1))
         );
         super(data);
@@ -35,57 +35,47 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
 
-        const history: GuildQueueHistory = useHistory(interaction.guild!.id)!;
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
 
-        await this.runValidators({ interaction, history, executionId }, [
+        await this.runValidators({ interaction, queue, executionId }, [
             checkInVoiceChannel,
             checkSameVoiceChannel,
-            checkHistoryExists
+            checkQueueExists
         ]);
 
         const pageIndex: number = this.getPageIndex(interaction);
-        const totalPages: number = this.getTotalPages(history);
+        const totalPages: number = this.getTotalPages(queue);
 
         if (pageIndex > totalPages - 1) {
             return await this.handleInvalidPage(logger, interaction, pageIndex, totalPages, translator);
         }
 
-        const historyTracksListString: string = this.getHistoryTracksListString(history, pageIndex, translator);
+        const queueTracksListString: string = this.getQueueTracksListString(queue, pageIndex, translator);
 
-        const currentTrack: Track = history.currentTrack!;
+        const currentTrack: Track = queue.currentTrack!;
         if (currentTrack) {
             return await this.handleCurrentTrack(
                 logger,
                 interaction,
                 queue,
-                history,
                 currentTrack,
-                historyTracksListString,
+                queueTracksListString,
                 translator
             );
         }
 
-        return await this.handleNoCurrentTrack(
-            logger,
-            interaction,
-            queue,
-            history,
-            historyTracksListString,
-            translator
-        );
+        return await this.handleNoCurrentTrack(logger, interaction, queue, queueTracksListString, translator);
     }
 
     private async handleCurrentTrack(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        history: GuildQueueHistory,
         currentTrack: Track,
-        historyTracksListString: string,
+        queueTracksListString: string,
         translator: TFunction
     ) {
-        logger.debug('History exists with current track, gathering information.');
+        logger.debug('Queue exists with current track, gathering information.');
 
         const components: APIMessageActionRowComponent[] = [];
 
@@ -132,19 +122,21 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                     .setDescription(
                         this.getDisplayTrackPlayingStatus(queue, translator) +
                             '\n' +
-                            `${this.getFormattedTrackUrl(currentTrack, translator)}\n` +
-                            `${translator('musicPlayerCommon.requestedBy', {
+                            this.getFormattedTrackUrl(currentTrack, translator) +
+                            '\n' +
+                            translator('musicPlayerCommon.requestedBy', {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
-                            })}\n` +
+                            }) +
+                            '\n' +
                             `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
                             `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
-                            `${translator('commands.history.tracksInHistoryTitle', {
+                            `${translator('commands.queue.tracksInQueueTitle', {
                                 icon: this.embedOptions.icons.queue
                             })}\n` +
-                            historyTracksListString
+                            queueTracksListString
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
             ],
             components: [embedActionRow]
@@ -162,11 +154,10 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        history: GuildQueueHistory,
-        historyTracksListString: string,
+        queueTracksListString: string,
         translator: TFunction
     ) {
-        logger.debug('History exists but there is no current track.');
+        logger.debug('Queue exists but there is no current track.');
 
         logger.debug('Responding with info embed.');
         return await interaction.editReply({
@@ -174,13 +165,13 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        translator('commands.history.tracksInHistoryTitle', {
-                            icon: this.embedOptions.icons.queue
-                        }) +
-                            '\n' +
-                            historyTracksListString
+                        `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}` +
+                            `${translator('commands.queue.tracksInQueueTitle', {
+                                icon: this.embedOptions.icons.queue
+                            })}\n` +
+                            queueTracksListString
                     )
-                    .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
+                    .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
             ]
         });
@@ -200,7 +191,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        translator('commands.history.invalidPageNumber', {
+                        translator('commands.queue.invalidPageNumber', {
                             icon: this.embedOptions.icons.warning,
                             page: pageIndex + 1,
                             count: totalPages
@@ -216,18 +207,18 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         return (interaction.options.getInteger('page') || 1) - 1;
     }
 
-    private getTotalPages(history: GuildQueueHistory): number {
-        return Math.ceil(history.tracks.data.length / 10) || 1;
+    private getTotalPages(queue: GuildQueue): number {
+        return Math.ceil(queue.tracks.data.length / 10) || 1;
     }
 
-    private getHistoryTracksListString(history: GuildQueueHistory, pageIndex: number, translator: TFunction): string {
-        if (!history || history.tracks.data.length === 0) {
-            return translator('commands.history.emptyHistory', {
+    private getQueueTracksListString(queue: GuildQueue, pageIndex: number, translator: TFunction): string {
+        if (!queue || queue.tracks.data.length === 0) {
+            return translator('commands.queue.emptyQueue', {
                 playCommand: formatSlashCommand('play', translator)
             });
         }
 
-        return history.tracks.data
+        return queue.tracks.data
             .slice(pageIndex * 10, pageIndex * 10 + 10)
             .map((track, index) => {
                 return `**${pageIndex * 10 + index + 1}.** ${this.getDisplayTrackDurationAndUrl(track, translator)}`;
@@ -235,19 +226,43 @@ class HistoryCommand extends BaseSlashCommandInteraction {
             .join('\n');
     }
 
+    private getDisplayQueueTotalDuration(queue: GuildQueue, translator: TFunction): string {
+        if (queue.tracks.data.length > 1000) {
+            return translator('commands.queue.estimatedReallyLongTime', {
+                playCommand: formatSlashCommand('play', translator)
+            });
+        }
+
+        let queueDurationMs: number = queue.estimatedDuration;
+        if (queue.currentTrack) {
+            queueDurationMs += queue.currentTrack.durationMS;
+        }
+
+        if (queueDurationMs < 0) {
+            return translator('commands.queue.estimatedReallyLongTime', {
+                playCommand: formatSlashCommand('play', translator)
+            });
+        }
+
+        return translator('commands.queue.estimatedDuration', {
+            duration: formatDuration(queueDurationMs)
+        });
+    }
+
     private getDisplayFullFooterInfo(
         interaction: ChatInputCommandInteraction,
-        history: GuildQueueHistory,
+        queue: GuildQueue,
         translator: TFunction
     ): EmbedFooterData {
-        const pagination = this.getFooterDisplayPageInfo(interaction, history, translator);
+        const pagination = this.getFooterDisplayPageInfo(interaction, queue, translator);
+        const totalDuration = this.getDisplayQueueTotalDuration(queue, translator);
 
         const fullFooterData = {
-            text: `${pagination.text}`
+            text: `${pagination.text} - ${totalDuration}`
         };
 
         return fullFooterData;
     }
 }
 
-export default new HistoryCommand();
+export default new QueueCommand();

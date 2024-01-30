@@ -25,35 +25,28 @@ async function registerSlashCommandInteractions(logger: Logger, client: Extended
     logger.debug('Registering client slash command interactions...');
     client.slashCommandInteractions = new Collection();
 
-    const baseFolderPath = './dist/interactions/commands';
-    const slashCommandInteractionFolders: string[] = fs.readdirSync(path.resolve(baseFolderPath));
+    const basePath = './dist/interactions/slashcommands';
 
-    for (const categoryFolder of slashCommandInteractionFolders) {
-        logger.trace(`Registering client commands for folder '${categoryFolder}'...`);
+    logger.trace('Registering client commands...');
 
-        const files: string[] = fs
-            .readdirSync(path.resolve(`${baseFolderPath}/${categoryFolder}`))
-            .filter((file) => file.endsWith('.js'));
+    const files: string[] = fs.readdirSync(path.resolve(`${basePath}`)).filter((file) => file.endsWith('.js'));
 
-        for (const file of files) {
-            try {
-                const filePath = path.resolve(`${baseFolderPath}/${categoryFolder}/${file}`);
+    for (const file of files) {
+        try {
+            const filePath = path.resolve(`${basePath}/${file}`);
 
-                // delete require cache for file
-                delete require.cache[filePath];
+            // delete require cache for file
+            delete require.cache[filePath];
 
-                // import and register to client collection
-                const { default: slashCommandInteraction } = await import(filePath);
-                client.slashCommandInteractions.delete(slashCommandInteraction.name);
-                client.slashCommandInteractions.set(slashCommandInteraction.name, slashCommandInteraction);
-            } catch (error) {
-                if (error instanceof Error) {
-                    logger.error(
-                        `Error registering slash command interaction '${categoryFolder}/${file}': ${error.message}`
-                    );
-                } else {
-                    throw error;
-                }
+            // import and register to client collection
+            const { default: slashCommandInteraction } = await import(filePath);
+            client.slashCommandInteractions.delete(slashCommandInteraction.name);
+            client.slashCommandInteractions.set(slashCommandInteraction.name, slashCommandInteraction);
+        } catch (error) {
+            if (error instanceof Error) {
+                logger.error(`Error registering slash command interaction '${file}': ${error.message}`);
+            } else {
+                throw error;
             }
         }
     }

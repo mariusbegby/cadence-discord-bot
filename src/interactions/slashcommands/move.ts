@@ -1,13 +1,13 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../../classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../../utils/validation/voiceChannelValidator';
+import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/formattingUtils';
 
 class MoveCommand extends BaseSlashCommandInteraction {
     constructor() {
