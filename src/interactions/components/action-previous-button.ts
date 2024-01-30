@@ -58,7 +58,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
         translator: TFunction
     ) {
         logger.debug('No tracks in history.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -68,7 +68,8 @@ class ActionPreviousButton extends BaseComponentInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
