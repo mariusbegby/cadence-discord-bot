@@ -1,4 +1,4 @@
-import { transformQuery } from '../common/validation/searchQueryValidator';
+import { transformQuery } from '../../../common/validation/searchQueryValidator';
 
 describe('searchQueryValidator', () => {
     it.each(['us', 'nb', 'intl', 'en-us', 'long-code'])(

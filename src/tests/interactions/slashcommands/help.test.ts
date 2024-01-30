@@ -1,6 +1,6 @@
-import helpCommand from '../interactions/slashcommands/help';
+import helpCommand from '../../../interactions/slashcommands/help';
 import { SlashCommandNumberOption } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../common/classes/interactions';
+import { BaseSlashCommandInteraction } from '../../../common/classes/interactions';
 
 describe('HelpCommand', () => {
     describe('getCommandParams', () => {
