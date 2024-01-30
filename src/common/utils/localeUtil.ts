@@ -15,7 +15,7 @@ import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import { join } from 'path';
 
 export const translatorInstance = i18n.createInstance();
-const localeDir = join(__dirname, '..', '..', 'locales');
+const localeDir = join(__dirname, '..', '..', '..', 'locales');
 
 translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
     initImmediate: false,
