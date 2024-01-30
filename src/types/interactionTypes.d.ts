@@ -47,11 +47,11 @@ export type BaseComponentParams = {
     referenceId?: string;
 } & BaseInteractionParams;
 
-export type BaseSlashCommandReturnType = Promise<Message<boolean> | void>;
+export type BaseSlashCommandReturnType = Promise<Message<boolean> | InteractionResponse<boolean> | void>;
 
 export type BaseAutocompleteReturnType = Promise<ApplicationCommandOptionChoiceData | void>;
 
-export type BaseComponentReturnType = Promise<Message<boolean> | void>;
+export type BaseComponentReturnType = Promise<Message<boolean> | InteractionResponse<boolean> | void>;
 
 export enum FilterType {
     FFmpeg = 'ffmpeg',

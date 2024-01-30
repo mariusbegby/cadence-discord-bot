@@ -33,6 +33,9 @@ class SeekCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const durationInputSplit: string[] = interaction.options.getString('duration')!.split(':');
         const formattedDurationString: string = this.parseDurationArray(durationInputSplit);
 

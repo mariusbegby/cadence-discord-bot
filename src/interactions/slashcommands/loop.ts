@@ -2,7 +2,7 @@ import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
-    Message,
+    InteractionResponse,
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from 'discord.js';
@@ -74,7 +74,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         currentRepeatMode: QueueRepeatMode,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         logger.debug('No repeat mode was provided, responding with current repeat mode.');
 
         const repeatModeEmbedIcon =
@@ -82,7 +82,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         const repeatModeEmbedName = formatRepeatMode(currentRepeatMode, translator);
 
         logger.debug('Responding with info embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -101,11 +101,11 @@ class LoopCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         currentRepeatMode: QueueRepeatMode,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         const repeatModeEmbedName = formatRepeatMode(currentRepeatMode, translator);
         logger.debug(`Loop mode is already set to '${repeatModeEmbedName}'.`);
         logger.debug('Responding with warning embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -115,7 +115,8 @@ class LoopCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -126,7 +127,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         fromRepeatMode: QueueRepeatMode,
         toRepeatMode: QueueRepeatMode,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         const newRepeatModeEmbedName = formatRepeatMode(toRepeatMode, translator);
         const getChangedRepeatModeEmbedReply = this.getChangedRepeatModeEmbedReply(
             fromRepeatMode,
@@ -138,7 +139,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         logger.debug(`Loop mode changed to '${newRepeatModeEmbedName}'.`);
 
         logger.debug('Responding with success embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

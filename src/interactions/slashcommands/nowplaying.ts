@@ -88,7 +88,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         };
 
         logger.debug('Sending info embed with action row components.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))

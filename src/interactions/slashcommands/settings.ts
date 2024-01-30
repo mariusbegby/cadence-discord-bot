@@ -42,6 +42,9 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const subcommand = interaction.options.getSubcommand();
 
         switch (subcommand) {

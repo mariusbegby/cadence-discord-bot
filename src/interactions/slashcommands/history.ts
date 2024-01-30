@@ -125,7 +125,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         };
 
         logger.debug('Responding with info embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
@@ -169,7 +169,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         logger.debug('History exists but there is no current track.');
 
         logger.debug('Responding with info embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
@@ -182,7 +182,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                     )
                     .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -196,7 +197,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         logger.debug('Specified page was higher than total pages.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -207,7 +208,8 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
         return Promise.resolve();
     }

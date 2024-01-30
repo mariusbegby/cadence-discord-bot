@@ -73,7 +73,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('Specified track position was higher than total tracks.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -85,7 +85,8 @@ class BackCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -111,7 +112,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('No tracks in history.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -121,7 +122,8 @@ class BackCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -130,7 +132,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         translator: TFunction
     ) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

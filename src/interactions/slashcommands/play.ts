@@ -43,6 +43,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
             await this.runValidators({ interaction, executionId }, [checkVoicePermissionJoinAndTalk]);
         }
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const player = useMainPlayer()!;
         const searchQuery = interaction.options.getString('query')!;
         const transformedQuery = transformQuery({ query: searchQuery, executionId });

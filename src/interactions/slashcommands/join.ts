@@ -22,6 +22,9 @@ class JoinCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel, checkVoicePermissionJoinAndTalk]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const existingQueue = useQueue(interaction.guild!.id);
 
         if (existingQueue) {

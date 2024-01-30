@@ -73,7 +73,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('Specified track position was higher than total tracks.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -85,7 +85,8 @@ class SkipCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -111,7 +112,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('No tracks in queue and no current track.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -121,7 +122,8 @@ class SkipCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -131,7 +133,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         translator: TFunction
     ) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

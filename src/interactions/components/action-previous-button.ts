@@ -29,10 +29,6 @@ class ActionPreviousButton extends BaseComponentInteraction {
             checkQueueCurrentTrack
         ]);
 
-        if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction, translator);
-        }
-
         if (queue.currentTrack!.id !== referenceId) {
             return await this.handleAlreadySkipped(interaction, translator);
         }
@@ -76,24 +72,8 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        translator('validation.queueNoCurrentTrack', {
-                            icon: this.embedOptions.icons.warning,
-                            playCommand: formatSlashCommand('play', translator)
-                        })
-                    )
-                    .setColor(this.embedOptions.colors.warning)
-            ],
-            components: []
-        });
-    }
-
     private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -103,7 +83,8 @@ class ActionPreviousButton extends BaseComponentInteraction {
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
-            components: []
+            components: [],
+            ephemeral: true
         });
     }
 
@@ -123,7 +104,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
             .setThumbnail(recoveredTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);
 
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [successEmbed],
             components: []
         });

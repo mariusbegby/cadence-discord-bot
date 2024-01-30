@@ -6,7 +6,7 @@ import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validatio
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { TFunction } from 'i18next';
 import { useServerTranslator } from '../../common/utils/localeUtil';
-import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
+import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class ActionPauseResumeButton extends BaseComponentInteraction {
     constructor() {
@@ -27,10 +27,6 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
             checkQueueCurrentTrack
         ]);
 
-        if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction, translator);
-        }
-
         if (queue.currentTrack!.id !== referenceId) {
             return await this.handleAlreadySkipped(interaction, translator);
         }
@@ -48,24 +44,8 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
         return await this.handleSuccess(interaction, currentTrack, queue, translator);
     }
 
-    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        translator('validation.queueNoCurrentTrack', {
-                            icon: this.embedOptions.icons.warning,
-                            playCommand: formatSlashCommand('play', translator)
-                        })
-                    )
-                    .setColor(this.embedOptions.colors.warning)
-            ],
-            components: []
-        });
-    }
-
     private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -75,7 +55,8 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
-            components: []
+            components: [],
+            ephemeral: true
         });
     }
 
@@ -98,7 +79,7 @@ class ActionPauseResumeButton extends BaseComponentInteraction {
             .setThumbnail(track.thumbnail)
             .setColor(this.embedOptions.colors.success);
 
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [successEmbed],
             components: []
         });

@@ -28,7 +28,7 @@ class FiltersDisableButtonComponent extends BaseComponentInteraction {
         this.resetFilters(queue, logger);
 
         logger.debug('Responding with success embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

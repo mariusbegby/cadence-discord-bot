@@ -17,9 +17,6 @@ export const handleCommand = async (
         executionId: executionId
     });
 
-    await interaction.deferReply();
-    logger.debug('Interaction deferred.');
-
     await checkChannelPermissionViewable({ interaction, executionId });
 
     const slashCommand: BaseSlashCommandInteraction = client.slashCommandInteractions!.get(

@@ -64,7 +64,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         };
 
         logger.debug('Responding with info embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(

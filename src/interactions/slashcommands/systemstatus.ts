@@ -26,6 +26,9 @@ class SystemStatusCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
             getBotStatistics(client!, version, translator),
             getPlayerStatistics(client!, translator),

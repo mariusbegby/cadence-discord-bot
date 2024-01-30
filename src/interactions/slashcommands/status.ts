@@ -31,6 +31,9 @@ class StatusCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
             getBotStatistics(client!, version, translator),
             getPlayerStatistics(client!, translator),

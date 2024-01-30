@@ -17,9 +17,6 @@ export const handleComponent = async (
         executionId: executionId
     });
 
-    await interaction.deferReply();
-    logger.debug('Interaction deferred.');
-
     const componentId: string = interactionIdentifier.split('_')[0];
     const referenceId: string = interactionIdentifier.split('_')[1];
 

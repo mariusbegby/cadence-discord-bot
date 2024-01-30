@@ -81,7 +81,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('One of the specified track positions was higher than total tracks.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -94,7 +94,8 @@ class MoveCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -105,7 +106,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         toPosition: number,
         translator: TFunction
     ) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

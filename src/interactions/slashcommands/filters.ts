@@ -68,6 +68,9 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             checkQueueCurrentTrack
         ]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const filterProvider: string = interaction.options.getString('type') || 'ffmpeg';
 
         switch (filterProvider) {

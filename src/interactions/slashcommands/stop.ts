@@ -33,7 +33,7 @@ class StopCommand extends BaseSlashCommandInteraction {
         }
 
         logger.debug('Responding with success embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

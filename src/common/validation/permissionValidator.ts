@@ -32,7 +32,7 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (channel instanceof VoiceChannel && (!channel.joinable || !channel.speakable)) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -49,7 +49,8 @@ export const checkVoicePermissionJoinAndTalk = async ({ interaction, executionId
                                 : interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(
@@ -83,34 +84,29 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
         );
 
         try {
-            // we can still send ephemeral replies in channels we can't view, so sending message to user instead
-            if (!interaction.deferred && !interaction.replied) {
-                logger.debug('Interaction was not deferred or replied to yet. Deferring reply as ephemeral.');
-                await interaction.deferReply({ ephemeral: true });
-
-                logger.debug(
-                    'Sending ephemeral message in channel about insufficient permissions to send message in channel.'
-                );
-                await interaction.editReply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setDescription(
-                                translator('validation.cannotSendMessageInChannel', {
-                                    icon: embedOptions.icons.warning,
-                                    channel: `<#${channel.id}>`
-                                })
-                            )
-                            .setColor(embedOptions.colors.warning)
-                            .setFooter({
-                                text:
-                                    interaction.member instanceof GuildMember
-                                        ? interaction.member.nickname || interaction.user.username
-                                        : interaction.user.username,
-                                iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+            logger.debug(
+                'Sending ephemeral message in channel about insufficient permissions to send message in channel.'
+            );
+            await interaction.reply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            translator('validation.cannotSendMessageInChannel', {
+                                icon: embedOptions.icons.warning,
+                                channel: `<#${channel.id}>`
                             })
-                    ]
-                });
-            }
+                        )
+                        .setColor(embedOptions.colors.warning)
+                        .setFooter({
+                            text:
+                                interaction.member instanceof GuildMember
+                                    ? interaction.member.nickname || interaction.user.username
+                                    : interaction.user.username,
+                            iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
+                        })
+                ],
+                ephemeral: true
+            });
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message == 'The reply to this interaction has already been sent or deferred.') {

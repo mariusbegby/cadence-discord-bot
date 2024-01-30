@@ -43,6 +43,9 @@ class ShardsCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const shardInfoList: ShardInfo[] = await this.fetchShardInfo(
             client!,
             logger,

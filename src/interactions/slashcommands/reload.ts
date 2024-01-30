@@ -27,6 +27,9 @@ class ReloadCommand extends BaseSlashCommandInteraction {
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         try {
             await this.reloadInteractionsAcrossShards(logger, executionId, client!);
         } catch (error) {

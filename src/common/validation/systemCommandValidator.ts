@@ -24,7 +24,7 @@ export const checkValidGuildId = async ({ interaction, executionId }: ValidatorP
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (interaction.guildId && !systemOptions.systemGuildIds.includes(interaction.guildId)) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -34,7 +34,8 @@ export const checkValidGuildId = async ({ interaction, executionId }: ValidatorP
                         })
                     )
                     .setColor(embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(

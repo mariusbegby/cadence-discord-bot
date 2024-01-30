@@ -38,6 +38,9 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             ]);
         }
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const geniusSearchQuery: string = this.getGeniusSearchQuery(logger, query, queue);
         const [playerSearchResult, geniusLyricsResult] = await Promise.all([
             this.getPlayerSearchResult(logger, query),

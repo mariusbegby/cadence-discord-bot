@@ -22,7 +22,7 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (interaction.member instanceof GuildMember && !interaction.member.voice.channel) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -35,7 +35,8 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
                         text: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but was not in a voice channel.`);
@@ -67,7 +68,7 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
         interaction.member instanceof GuildMember &&
         interaction.member.voice.channel?.id !== queue.dispatcher.channel.id
     ) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -81,7 +82,8 @@ export const checkSameVoiceChannel = async ({ interaction, queue, executionId }:
                         text: interaction.member.nickname || interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but was not in the same voice channel.`);

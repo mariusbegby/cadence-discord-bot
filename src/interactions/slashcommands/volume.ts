@@ -31,6 +31,9 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         const volume: number = interaction.options.getInteger('percentage')!;
 
         if (!volume && volume !== 0) {

@@ -23,7 +23,7 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (!queue) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -40,7 +40,8 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
                                 : interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no queue.`);
@@ -64,7 +65,7 @@ export const checkHistoryExists = async ({ interaction, history, executionId }: 
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (!history) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -81,7 +82,8 @@ export const checkHistoryExists = async ({ interaction, history, executionId }: 
                                 : interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no history.`);
@@ -105,7 +107,7 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (queue && !queue.currentTrack) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -122,7 +124,8 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
                                 : interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no current track.`);
@@ -146,7 +149,7 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
         interaction.type === InteractionType.ApplicationCommand ? interaction.commandName : interaction.customId;
 
     if (queue && queue.tracks.data.length === 0) {
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -163,7 +166,8 @@ export const checkQueueEmpty = async ({ interaction, queue, executionId }: Valid
                                 : interaction.user.username,
                         iconURL: interaction.user.avatarURL() || embedOptions.info.fallbackIconUrl
                     })
-            ]
+            ],
+            ephemeral: true
         });
 
         logger.debug(`User tried to use command '${interactionIdentifier}' but there was no tracks in the queue.`);

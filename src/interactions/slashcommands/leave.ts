@@ -26,6 +26,9 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             checkQueueExists
         ]);
 
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
+
         logger.debug('Deleting queue.');
         this.deleteQueue(queue);
 
