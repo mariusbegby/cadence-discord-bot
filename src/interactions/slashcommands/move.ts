@@ -1,13 +1,13 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class MoveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -81,7 +81,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('One of the specified track positions was higher than total tracks.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -94,7 +94,8 @@ class MoveCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -105,7 +106,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         toPosition: number,
         translator: TFunction
     ) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

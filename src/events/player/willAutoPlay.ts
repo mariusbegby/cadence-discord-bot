@@ -1,7 +1,7 @@
 import { Track } from 'discord-player';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../../common/services/logger';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { User } from 'discord.js';
 

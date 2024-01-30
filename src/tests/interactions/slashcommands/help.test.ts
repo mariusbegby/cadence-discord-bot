@@ -1,0 +1,38 @@
+import helpCommand from '../../../interactions/slashcommands/help';
+import { SlashCommandNumberOption } from 'discord.js';
+import { BaseSlashCommandInteraction } from '../../../common/classes/interactions';
+
+describe('HelpCommand', () => {
+    describe('getCommandParams', () => {
+        it('should return the correct command params', () => {
+            const command = {
+                data: {
+                    options: [
+                        new SlashCommandNumberOption()
+                            .setName('optionname')
+                            .setDescription('optionDescription')
+                            .setRequired(true)
+                    ]
+                }
+            } as unknown as BaseSlashCommandInteraction;
+
+            const locale = 'en-US';
+            const commandParams = helpCommand['getCommandParams'](command, locale);
+
+            expect(commandParams).toBe('**`optionname`** ');
+        });
+
+        it('should return an empty string when no options are present', () => {
+            const command = {
+                data: {
+                    options: []
+                }
+            } as unknown as BaseSlashCommandInteraction;
+
+            const locale = 'en-US';
+            const commandParams = helpCommand['getCommandParams'](command, locale);
+
+            expect(commandParams).toBe('');
+        });
+    });
+});

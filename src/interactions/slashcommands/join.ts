@@ -1,12 +1,12 @@
 import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkInVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { checkVoicePermissionJoinAndTalk } from '../../utils/validation/permissionValidator';
+import { checkInVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 import { TFunction } from 'i18next';
 
 class JoinCommand extends BaseSlashCommandInteraction {
@@ -21,6 +21,9 @@ class JoinCommand extends BaseSlashCommandInteraction {
         const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkInVoiceChannel, checkVoicePermissionJoinAndTalk]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const existingQueue = useQueue(interaction.guild!.id);
 

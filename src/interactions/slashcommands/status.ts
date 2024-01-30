@@ -10,10 +10,15 @@ import {
     EmbedBuilder,
     SlashCommandBuilder
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
-import { getBotStatistics, getDiscordStatus, getPlayerStatistics, getSystemStatus } from '../../common/statusUtils';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
+import {
+    getBotStatistics,
+    getDiscordStatus,
+    getPlayerStatistics,
+    getSystemStatus
+} from '../../common/utils/statusUtils';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 
 class StatusCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -25,6 +30,9 @@ class StatusCommand extends BaseSlashCommandInteraction {
         const { executionId, interaction, client } = params;
         const logger = this.getLogger(this.name, executionId, interaction);
         const translator = useServerTranslator(interaction);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
             getBotStatistics(client!, version, translator),

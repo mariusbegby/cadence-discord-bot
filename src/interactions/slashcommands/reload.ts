@@ -6,11 +6,11 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { ExtendedClient } from '../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkValidGuildId } from '../../utils/validation/systemCommandValidator';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { checkValidGuildId } from '../../common/validation/systemCommandValidator';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 class ReloadCommand extends BaseSlashCommandInteraction {
@@ -26,6 +26,9 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         const translator = useServerTranslator(interaction);
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         try {
             await this.reloadInteractionsAcrossShards(logger, executionId, client!);

@@ -1,13 +1,13 @@
 import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkHistoryExists, checkQueueCurrentTrack } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkHistoryExists, checkQueueCurrentTrack } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class BackCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -73,7 +73,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('Specified track position was higher than total tracks.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -85,7 +85,8 @@ class BackCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -111,7 +112,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('No tracks in history.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -121,7 +122,8 @@ class BackCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -130,7 +132,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         translator: TFunction
     ) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

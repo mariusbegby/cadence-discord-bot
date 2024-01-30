@@ -2,11 +2,11 @@ import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { Player, SearchResult, useMainPlayer } from 'discord-player';
 import { ApplicationCommandOptionChoiceData } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseAutocompleteInteraction } from '../../classes/interactions';
-import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/autocompleteUtils';
+import { BaseAutocompleteInteraction } from '../../common/classes/interactions';
+import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/utils/autocompleteUtils';
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
 import { TFunction } from 'i18next';
-import { useUserTranslator } from '../../common/localeUtil';
+import { useUserTranslator } from '../../common/utils/localeUtil';
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
 

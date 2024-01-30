@@ -12,12 +12,12 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/formattingUtils';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 class QueueCommand extends BaseSlashCommandInteraction {
@@ -115,7 +115,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         };
 
         logger.debug('Responding with info embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
@@ -160,7 +160,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         logger.debug('Queue exists but there is no current track.');
 
         logger.debug('Responding with info embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
@@ -173,7 +173,8 @@ class QueueCommand extends BaseSlashCommandInteraction {
                     )
                     .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
-            ]
+            ],
+            ephemeral: true
         });
     }
 
@@ -187,7 +188,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         logger.debug('Specified page was higher than total pages.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -198,7 +199,8 @@ class QueueCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
         return Promise.resolve();
     }

@@ -1,9 +1,9 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../classes/interactions';
-import loggerModule from '../services/logger';
+import { BaseSlashCommandInteraction } from '../common/classes/interactions';
+import loggerModule from '../common/services/logger';
 import { ExtendedClient } from '../types/clientTypes';
-import { checkChannelPermissionViewable } from '../utils/validation/permissionValidator';
+import { checkChannelPermissionViewable } from '../common/validation/permissionValidator';
 
 export const handleCommand = async (
     interaction: ChatInputCommandInteraction,
@@ -16,9 +16,6 @@ export const handleCommand = async (
         name: 'interactionCommandHandler',
         executionId: executionId
     });
-
-    await interaction.deferReply();
-    logger.debug('Interaction deferred.');
 
     await checkChannelPermissionViewable({ interaction, executionId });
 

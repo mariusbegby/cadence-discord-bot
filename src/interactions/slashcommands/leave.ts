@@ -1,11 +1,11 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class LeaveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -25,6 +25,9 @@ class LeaveCommand extends BaseSlashCommandInteraction {
             checkSameVoiceChannel,
             checkQueueExists
         ]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         logger.debug('Deleting queue.');
         this.deleteQueue(queue);

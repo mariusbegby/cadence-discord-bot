@@ -2,11 +2,11 @@ import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
 import { GuildQueue, Player, QueryType, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
@@ -37,6 +37,9 @@ class LyricsCommand extends BaseSlashCommandInteraction {
                 checkQueueCurrentTrack
             ]);
         }
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const geniusSearchQuery: string = this.getGeniusSearchQuery(logger, query, queue);
         const [playerSearchResult, geniusLyricsResult] = await Promise.all([
