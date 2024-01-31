@@ -13,7 +13,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('volume')
-                .addIntegerOption((option) => option.setName('percentage').setMinValue(0).setMaxValue(100))
+                .addIntegerOption((option) => option.setName('percentage').setMinValue(1).setMaxValue(100))
         );
         super(data);
     }
@@ -35,8 +35,6 @@ class VolumeCommand extends BaseSlashCommandInteraction {
 
         if (!volume && volume !== 0) {
             return await this.handleShowCurrentVolume(queue, logger, interaction, translator);
-        } else if (volume > 100 || volume < 0) {
-            return await this.handleInvalidVolumeInput(volume, logger, interaction, translator);
         } else {
             return await this.handleValidVolumeInput(volume, queue, logger, interaction, translator);
         }
@@ -65,29 +63,6 @@ class VolumeCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.info)
-            ]
-        });
-    }
-
-    private async handleInvalidVolumeInput(
-        volume: number,
-        logger: Logger,
-        interaction: ChatInputCommandInteraction,
-        translator: TFunction
-    ) {
-        logger.debug('Volume specified was higher than 100% or lower than 0%.');
-
-        logger.debug('Responding with warning embed.');
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        translator('commands.volume.invalidVolumeRange', {
-                            icon: this.embedOptions.icons.warning,
-                            wrongVolume: volume
-                        })
-                    )
-                    .setColor(this.embedOptions.colors.warning)
             ]
         });
     }
