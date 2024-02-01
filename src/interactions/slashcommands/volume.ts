@@ -13,7 +13,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('volume')
-                .addIntegerOption((option) => option.setName('percentage').setMinValue(1).setMaxValue(100))
+                .addIntegerOption((option) => option.setName('percentage').setMinValue(0).setMaxValue(100))
         );
         super(data);
     }
