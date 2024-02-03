@@ -122,7 +122,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         }`;
     }
 
-    private getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {
+    public getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {
         const commandName = command.data.name;
         const option = command.data.options[0];
 
