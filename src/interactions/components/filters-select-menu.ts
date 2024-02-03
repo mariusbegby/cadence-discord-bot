@@ -1,8 +1,8 @@
 import config from 'config';
 import { BiquadFilters, EqualizerConfigurationPreset, GuildQueue, QueueFilters, useQueue } from 'discord-player';
-import { EmbedBuilder, Message, StringSelectMenuInteraction } from 'discord.js';
+import { EmbedBuilder, InteractionResponse, StringSelectMenuInteraction } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseComponentInteraction } from '../../classes/interactions';
+import { BaseComponentInteraction } from '../../common/classes/interactions';
 import {
     EqualizerFilterOptions,
     BiquadFilterOptions,
@@ -10,9 +10,9 @@ import {
     FilterOption
 } from '../../types/configTypes';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { useServerTranslator } from '../../common/localeUtil';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
@@ -84,7 +84,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         queue: GuildQueue,
         filterType: string,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         this.addFfmpegNormalizerIfRequired(selectMenuInteraction);
         this.toggleFfmpegFilters(selectMenuInteraction, queue, logger);
 
@@ -98,7 +98,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         queue: GuildQueue,
         filterType: string,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         this.toggleBiquadFilter(selectMenuInteraction, queue, logger);
 
         logger.debug('Responding with success embed.');
@@ -111,7 +111,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         queue: GuildQueue,
         filterType: string,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         this.toggleEqualizerFilter(selectMenuInteraction, queue, logger);
 
         logger.debug('Responding with success embed.');
@@ -198,9 +198,9 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         interaction: StringSelectMenuInteraction,
         filterType: string,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         logger.debug('Responding with success embed.');
-        return interaction.editReply({
+        return interaction.reply({
             embeds: [this.buildSuccessEmbed(interaction, filterType, translator)],
             components: []
         });
@@ -277,9 +277,9 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         logger: Logger,
         interaction: StringSelectMenuInteraction,
         translator: TFunction
-    ): Promise<Message> {
+    ): Promise<InteractionResponse<boolean>> {
         logger.debug('Responding with success embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))

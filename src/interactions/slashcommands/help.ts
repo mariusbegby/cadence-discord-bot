@@ -13,9 +13,14 @@ import {
     SlashCommandNumberOption,
     SlashCommandStringOption
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { CommandMetadata, localizeCommand, translatorInstance, useServerTranslator } from '../../common/localeUtil';
+import {
+    CommandMetadata,
+    localizeCommand,
+    translatorInstance,
+    useServerTranslator
+} from '../../common/utils/localeUtil';
 import { ExtendedClient } from '../../types/clientTypes';
 
 class HelpCommand extends BaseSlashCommandInteraction {
@@ -59,7 +64,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         };
 
         logger.debug('Responding with info embed.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -117,7 +122,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
         }`;
     }
 
-    private getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {
+    public getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {
         const commandName = command.data.name;
         const option = command.data.options[0];
 

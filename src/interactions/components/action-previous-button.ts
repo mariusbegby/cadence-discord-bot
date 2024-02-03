@@ -1,13 +1,13 @@
 import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
 import { EmbedBuilder, MessageComponentInteraction } from 'discord.js';
-import { BaseComponentInteraction } from '../../classes/interactions';
+import { BaseComponentInteraction } from '../../common/classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
 import { TFunction } from 'i18next';
-import { useServerTranslator } from '../../common/localeUtil';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { useServerTranslator } from '../../common/utils/localeUtil';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class ActionPreviousButton extends BaseComponentInteraction {
     constructor() {
@@ -28,10 +28,6 @@ class ActionPreviousButton extends BaseComponentInteraction {
             checkQueueExists,
             checkQueueCurrentTrack
         ]);
-
-        if (!queue || (queue.tracks.data.length === 0 && !queue.currentTrack)) {
-            return await this.handleNoQueue(interaction, translator);
-        }
 
         if (queue.currentTrack!.id !== referenceId) {
             return await this.handleAlreadySkipped(interaction, translator);
@@ -62,7 +58,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
         translator: TFunction
     ) {
         logger.debug('No tracks in history.');
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -72,28 +68,13 @@ class ActionPreviousButton extends BaseComponentInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
-        });
-    }
-
-    private async handleNoQueue(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        translator('validation.queueNoCurrentTrack', {
-                            icon: this.embedOptions.icons.warning,
-                            playCommand: formatSlashCommand('play', translator)
-                        })
-                    )
-                    .setColor(this.embedOptions.colors.warning)
             ],
-            components: []
+            ephemeral: true
         });
     }
 
     private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -103,7 +84,8 @@ class ActionPreviousButton extends BaseComponentInteraction {
                     )
                     .setColor(this.embedOptions.colors.warning)
             ],
-            components: []
+            components: [],
+            ephemeral: true
         });
     }
 
@@ -123,7 +105,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
             .setThumbnail(recoveredTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);
 
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [successEmbed],
             components: []
         });

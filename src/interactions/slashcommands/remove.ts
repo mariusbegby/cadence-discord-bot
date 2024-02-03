@@ -1,13 +1,13 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
 import { TFunction } from 'i18next';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class RemoveCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -134,7 +134,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             logger.debug('Start position is higher than end position.');
 
             logger.debug('Responding with warning embed.');
-            await interaction.editReply({
+            await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -146,7 +146,8 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                             })
                         )
                         .setColor(this.embedOptions.colors.warning)
-                ]
+                ],
+                ephemeral: true
             });
             return Promise.resolve();
         }
@@ -208,7 +209,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger.debug(`Removed track '${removedTrack.url}' from queue.`);
 
         logger.debug('Responding with success embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
@@ -232,7 +233,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
@@ -242,7 +243,8 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
         return Promise.resolve();
     }
@@ -254,7 +256,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         translator: TFunction
     ) {
         logger.debug('Responding with success embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
@@ -280,7 +282,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger.debug('Specified track position is higher than total tracks.');
 
         logger.debug('Responding with warning embed.');
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -292,7 +294,8 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                         })
                     )
                     .setColor(this.embedOptions.colors.warning)
-            ]
+            ],
+            ephemeral: true
         });
         return Promise.resolve();
     }

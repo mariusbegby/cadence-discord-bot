@@ -290,6 +290,48 @@
             "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nYou entered **`{{wrongDuration}}`**, which is a timestamp longer than the duration of the current track.\n\nPlease try a timestamp that is less than the duration of the track (**{{trackDuration}}**).",
             "seekingToTimestamp": "{{icon}} **Seeking to timestamp**\nSeeking to **`{{duration}}`** in current track."
         },
+        "settings": {
+            "metadata": {
+                "name": "settings",
+                "description": "Configure various options for bot behavior in this server.",
+                "options": {
+                    "bot-language": {
+                        "name": "bot-language",
+                        "description": "Set the language for the bot.",
+                        "options": {
+                            "language": {
+                                "name": "language",
+                                "description": "Language to use for the bot in messages.",
+                                "choices": {
+                                    "en-US": "English",
+                                    "no": "Norwegian",
+                                    "ro": "Romanian",
+                                    "en-ES": "Spanish"
+                                }
+                            }
+                        }
+                    },
+                    "default-volume": {
+                        "name": "default-volume",
+                        "description": "Set the default volume for the bot.",
+                        "options": {
+                            "percentage": {
+                                "name": "percentage",
+                                "description": "Volume percentage: From 0% to 100%."
+                            }
+                        }
+                    },
+                    "action-permissions": {
+                        "name": "action-permissions",
+                        "description": "Set the roles required to perform certain actions."
+                    },
+                    "view": {
+                        "name": "view",
+                        "description": "View the current settings for the bot."
+                    }
+                }
+            }
+        },
         "shards": {
             "metadata": {
                 "name": "shards",

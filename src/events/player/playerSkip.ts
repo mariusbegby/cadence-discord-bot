@@ -3,10 +3,10 @@ import { Track, TrackSkipReason } from 'discord-player';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../../common/services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-import { useLanguageTranslator } from '../../common/localeUtil';
+import { useLanguageTranslator } from '../../common/utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const botOptions: BotOptions = config.get('botOptions');

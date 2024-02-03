@@ -8,14 +8,14 @@ import {
     SlashCommandBuilder
 } from 'discord.js';
 import { Logger } from 'pino';
-import { BaseSlashCommandInteraction, CustomError } from '../../classes/interactions';
+import { BaseSlashCommandInteraction, CustomError } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkVoicePermissionJoinAndTalk } from '../../utils/validation/permissionValidator';
-import { transformQuery } from '../../utils/validation/searchQueryValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
+import { transformQuery } from '../../common/validation/searchQueryValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -42,6 +42,9 @@ class PlayCommand extends BaseSlashCommandInteraction {
         } else {
             await this.runValidators({ interaction, executionId }, [checkVoicePermissionJoinAndTalk]);
         }
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const player = useMainPlayer()!;
         const searchQuery = interaction.options.getString('query')!;
@@ -185,10 +188,8 @@ class PlayCommand extends BaseSlashCommandInteraction {
                     count: searchResult.tracks.length,
                     queueCommand: formatSlashCommand('queue', translator)
                 });
-            if (queue.tracks.data.length != searchResult.tracks.length) {
-                const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
-                embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
-            }
+            const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
+            embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
             if (!this.embedOptions.behavior.enablePlayerStartMessages) {
                 message =

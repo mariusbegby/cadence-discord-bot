@@ -1,11 +1,11 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
@@ -30,6 +30,9 @@ class VolumeCommand extends BaseSlashCommandInteraction {
             checkSameVoiceChannel,
             checkQueueExists
         ]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const volume: number = interaction.options.getInteger('percentage')!;
 

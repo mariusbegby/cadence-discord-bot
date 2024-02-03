@@ -1,13 +1,13 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { checkQueueCurrentTrack, checkQueueExists } from '../../utils/validation/queueValidator';
-import { checkInVoiceChannel, checkSameVoiceChannel } from '../../utils/validation/voiceChannelValidator';
+import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
+import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from 'pino';
-import { localizeCommand, useServerTranslator } from '../../common/localeUtil';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { TFunction } from 'i18next';
-import { formatSlashCommand } from '../../common/formattingUtils';
+import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -32,6 +32,9 @@ class SeekCommand extends BaseSlashCommandInteraction {
             checkQueueExists,
             checkQueueCurrentTrack
         ]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const durationInputSplit: string[] = interaction.options.getString('duration')!.split(':');
         const formattedDurationString: string = this.parseDurationArray(durationInputSplit);

@@ -1,7 +1,7 @@
 import { Events, Guild } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { Logger } from 'pino';
-import loggerModule from '../../services/logger';
+import loggerModule from '../../common/services/logger';
 
 module.exports = {
     name: Events.GuildCreate,

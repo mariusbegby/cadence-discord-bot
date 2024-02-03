@@ -5,12 +5,12 @@ import {
     EmbedFooterData,
     SlashCommandBuilder
 } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../../classes/interactions';
+import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { ExtendedClient } from '../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../types/interactionTypes';
-import { checkValidGuildId } from '../../utils/validation/systemCommandValidator';
+import { checkValidGuildId } from '../../common/validation/systemCommandValidator';
 import { Logger } from 'pino';
-import { localizeCommand } from '../../common/localeUtil';
+import { localizeCommand } from '../../common/utils/localeUtil';
 
 class ShardsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -42,6 +42,9 @@ class ShardsCommand extends BaseSlashCommandInteraction {
         const logger = this.getLogger(this.name, executionId, interaction);
 
         await this.runValidators({ interaction, executionId }, [checkValidGuildId]);
+
+        await interaction.deferReply();
+        logger.debug('Interaction deferred.');
 
         const shardInfoList: ShardInfo[] = await this.fetchShardInfo(
             client!,
