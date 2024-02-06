@@ -8,11 +8,11 @@ datasource db {
 }
 
 model GuildConfig {
+    guildId String @id @map("_id")
+
     defaultVolume     Int     @default(50)
     locale            String  @default("en-US")
     actionPermissions String?
-
-    guildId String @id @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
