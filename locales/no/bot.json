@@ -146,7 +146,7 @@
                     }
                 }
             },
-            "trackMoved": "{{icon}} **Flyttet låten**\n{track}\n\nLåten har blitt flyttet fra posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen.",
+            "trackMoved": "{{icon}} **Flyttet låten**\n{{track}}\n\nLåten har blitt flyttet fra posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`1`** låt i køen.\n\nVis låter lagt til i køen med {{queueCommand}}.",
             "trackPositionHigherThanQueueLength": "{{icon}} **Oi sann!**\nDu kan ikke flytte låten i posisjon **`{{fromPosition}}`** til posisjon **`{{toPosition}}`** i køen. Det er bare **`{{count}}`** låter i køen.\n\nVis låter lagt til i køen med {{queueCommand}}."
         },
