@@ -146,7 +146,7 @@
                     }
                 }
             },
-            "trackMoved": "{{icon}} **Canción movida**\n{track}\n\nLa canción ha sido movida desde la posición **`{{fromPosition}}`** hasta la posición **`{{toPosition}}`**.",
+            "trackMoved": "{{icon}} **Canción movida**\n{{track}}\n\nLa canción ha sido movida desde la posición **`{{fromPosition}}`** hasta la posición **`{{toPosition}}`**.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nNo puedes mover la canción en la posición **`{{fromPosition}}`** a la posición **`{{toPosition}}`**. Solo hay **`1`** canción en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}.",
             "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nNo puedes mover la canción en la posición **`{{fromPosition}}`** a la posición **`{{toPosition}}`**. Solo hay **`{{count}}`** canciones en la cola.\n\nConsulta las canciones añadidas a la cola con {{queueCommand}}."
         },
