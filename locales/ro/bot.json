@@ -146,7 +146,7 @@
                     }
                 }
             },
-            "trackMoved": "{{icon}} **Piesă mutată**\n{track}\n\nPiesa a fost mutată din poziția **`{{fromPosition}}`** la poziția **`{{toPosition}}`**.",
+            "trackMoved": "{{icon}} **Piesă mutată**\n{{track}}\n\nPiesa a fost mutată din poziția **`{{fromPosition}}`** la poziția **`{{toPosition}}`**.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Ups!**\nNu poți muta piesa din poziția **`{{fromPosition}}`** spre poziția **`{{toPosition}}`**. Coada conține doar **o** singură piesă.\n\nVezi piese adăugate în coadă folosind {{queueCommand}}.",
             "trackPositionHigherThanQueueLength": "{{icon}} **Ups!**\nNu puteți muta melodia în poziția **`{{fromPosition}}`** la poziția **`{{toPosition}}`**. Sunt doar **`{{count}}`** piese în coadă.\n\nVezi melodiile adăugate la coada de redare cu {{queueCommand}}."
         },

@@ -146,7 +146,7 @@
                     }
                 }
             },
-            "trackMoved": "{{icon}} **Moved track**\n{track}\n\nTrack has been moved from position **`{{fromPosition}}`** to position **`{{toPosition}}`**.",
+            "trackMoved": "{{icon}} **Moved track**\n{{track}}\n\nTrack has been moved from position **`{{fromPosition}}`** to position **`{{toPosition}}`**.",
             "trackPositionHigherThanQueueLength_one": "{{icon}} **Oops!**\nYou cannot move the track in position **`{{fromPosition}}`** to position **`{{toPosition}}`**. There is only **`1`** track in the queue.\n\nView tracks added to the queue with {{queueCommand}}.",
             "trackPositionHigherThanQueueLength": "{{icon}} **Oops!**\nYou cannot move the track in position **`{{fromPosition}}`** to position **`{{toPosition}}`**. There are only **`{{count}}`** tracks in the queue.\n\nView tracks added to the queue with {{queueCommand}}."
         },
