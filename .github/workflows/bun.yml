@@ -11,7 +11,7 @@ jobs:
 
         strategy:
             matrix:
-                bun-version: [latest, canary]
+                bun-version: [latest]
                 os: ['ubuntu-latest']
 
         steps:
