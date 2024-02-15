@@ -1,15 +1,14 @@
 import config from 'config';
 import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
-import { Logger } from 'pino';
 import { InteractionValidationError } from '../classes/interactions';
-import loggerModule from '../services/logger';
+import { loggerService, Logger } from '../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
 import { useServerTranslator } from '../utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkInVoiceChannel = async ({ interaction, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'validator',
         name: 'notInVoiceChannel',
         executionId: executionId,
@@ -47,7 +46,7 @@ export const checkInVoiceChannel = async ({ interaction, executionId }: Validato
 };
 
 export const checkSameVoiceChannel = async ({ interaction, queue, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'notInSameVoiceChannel',
         executionId: executionId,

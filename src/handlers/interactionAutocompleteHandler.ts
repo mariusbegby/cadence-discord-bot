@@ -1,7 +1,6 @@
 import { AutocompleteInteraction } from 'discord.js';
-import { Logger } from 'pino';
 import { BaseAutocompleteInteraction } from '../common/classes/interactions';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 
 export const handleAutocomplete = async (
@@ -11,7 +10,7 @@ export const handleAutocomplete = async (
     interactionIdentifier: string
 ) => {
     // TODO: Define TS Type for handlers, and require logger constant?
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'handler',
         name: 'interactionAutocompleteHandler',
         executionId: executionId

@@ -9,7 +9,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { ExtendedClient } from '../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, ShardInfo } from '../../types/interactionTypes';
 import { checkValidGuildId } from '../../common/validation/systemCommandValidator';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { localizeCommand } from '../../common/utils/localeUtil';
 
 class ShardsCommand extends BaseSlashCommandInteraction {

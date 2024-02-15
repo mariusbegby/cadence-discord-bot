@@ -1,8 +1,7 @@
 import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder, Events, PresenceData } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
 import { postBotStats } from '../../startup/postBotStats';
@@ -18,7 +17,7 @@ module.exports = {
     once: false,
     execute: async (client: ExtendedClient) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'clientReady',
             executionId: executionId,
@@ -26,7 +25,7 @@ module.exports = {
         });
 
         logger.debug("Client 'ready' event received after 'allShardsReady' event.");
-        await client.user?.setPresence(presenceStatusOptions);
+        client.user?.setPresence(presenceStatusOptions);
 
         if (loadTestOptions.enabled) {
             // Only call function from shard with id 0

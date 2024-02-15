@@ -11,7 +11,7 @@ import {
     EmbedFooterData,
     SlashCommandBuilder
 } from 'discord.js';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';

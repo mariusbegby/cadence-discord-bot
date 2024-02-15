@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction } from 'discord.js';
-import { Logger } from 'pino';
 import { BaseSlashCommandInteraction } from '../common/classes/interactions';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 import { checkChannelPermissionViewable } from '../common/validation/permissionValidator';
 
@@ -11,7 +10,7 @@ export const handleCommand = async (
     executionId: string,
     interactionIdentifier: string
 ) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'handler',
         name: 'interactionCommandHandler',
         executionId: executionId

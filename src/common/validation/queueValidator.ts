@@ -1,8 +1,7 @@
 import config from 'config';
 import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
-import { Logger } from 'pino';
 import { InteractionValidationError } from '../classes/interactions';
-import loggerModule from '../services/logger';
+import { loggerService, Logger } from '../services/logger';
 import { EmbedOptions } from '../../types/configTypes';
 import { ValidatorParams } from '../../types/utilTypes';
 import { useServerTranslator } from '../utils/localeUtil';
@@ -10,7 +9,7 @@ import { formatSlashCommand } from '../utils/formattingUtils';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 export const checkQueueExists = async ({ interaction, queue, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'queueDoesNotExist',
         executionId: executionId,
@@ -52,7 +51,7 @@ export const checkQueueExists = async ({ interaction, queue, executionId }: Vali
 };
 
 export const checkHistoryExists = async ({ interaction, history, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'historyDoesNotExist',
         executionId: executionId,
@@ -94,7 +93,7 @@ export const checkHistoryExists = async ({ interaction, history, executionId }: 
 };
 
 export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'queueNoCurrentTrack',
         executionId: executionId,
@@ -136,7 +135,7 @@ export const checkQueueCurrentTrack = async ({ interaction, queue, executionId }
 };
 
 export const checkQueueEmpty = async ({ interaction, queue, executionId }: ValidatorParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'queueIsEmpty',
         executionId: executionId,

@@ -7,9 +7,8 @@ import {
     InteractionType,
     MessageComponentInteraction
 } from 'discord.js';
-import { Logger } from 'pino';
 import { CustomError, InteractionValidationError } from '../common/classes/interactions';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { BotOptions, EmbedOptions } from '../types/configTypes';
 import { useServerTranslator } from '../common/utils/localeUtil';
 
@@ -22,7 +21,7 @@ export const handleError = async (
     executionId: string,
     interactionIdentifier: string
 ) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'handler',
         name: 'interactionErrorHandler',
         executionId: executionId

@@ -13,8 +13,7 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../services/logger';
+import { loggerService, Logger } from '../services/logger';
 import { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
 import {
     BaseAutocompleteParams,
@@ -45,7 +44,7 @@ abstract class BaseInteraction {
         executionId: string,
         interaction: Interaction | MessageComponentInteraction
     ): Logger {
-        return loggerModule.child({
+        return loggerService.child({
             module: module,
             name: name,
             executionId: executionId,

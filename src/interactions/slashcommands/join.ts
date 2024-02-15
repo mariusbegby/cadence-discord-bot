@@ -4,7 +4,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkInVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 import { TFunction } from 'i18next';

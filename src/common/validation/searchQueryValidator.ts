@@ -1,9 +1,8 @@
-import { Logger } from 'pino';
-import loggerModule from '../services/logger';
+import { loggerService, Logger } from '../services/logger';
 import { TransformQueryParams } from '../../types/utilTypes';
 
 export const transformQuery = ({ query, executionId }: TransformQueryParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilValidation',
         name: 'transformQuery',
         executionId: executionId

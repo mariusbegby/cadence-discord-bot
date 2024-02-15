@@ -1,14 +1,13 @@
 import config from 'config';
 import { Channel, Client } from 'discord.js';
-import { Logger } from 'pino';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { LoadTestOptions } from '../types/configTypes';
 import { StartLoadTestParams } from '../types/utilTypes';
 
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
 export const startLoadTest = async ({ client, executionId }: StartLoadTestParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilOther',
         name: 'startLoadTest',
         executionId: executionId,

@@ -7,13 +7,12 @@ import {
     MessageComponentInteraction
 } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
 import { CustomError } from '../../common/classes/interactions';
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
 import { handleComponent } from '../../handlers/interactionComponentHandler';
 import { handleError } from '../../handlers/interactionErrorHandler';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 
 module.exports = {
@@ -22,7 +21,7 @@ module.exports = {
     execute: async (interaction: Interaction, { client }: { client: ExtendedClient }) => {
         const inputTime: number = new Date().getTime();
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'interactionCreate',
             executionId: executionId,

@@ -1,6 +1,6 @@
 import { GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder } from 'discord.js';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';

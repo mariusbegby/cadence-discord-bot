@@ -2,8 +2,7 @@ import config from 'config';
 import { Track, TrackSkipReason } from 'discord-player';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { useLanguageTranslator } from '../../common/utils/localeUtil';
@@ -24,7 +23,7 @@ module.exports = {
         description: string
     ) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'playerSkip',
             executionId: executionId,

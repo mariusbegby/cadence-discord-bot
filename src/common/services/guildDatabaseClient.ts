@@ -1,12 +1,11 @@
 import { usePrismaClient } from './prismaClient';
-import loggerModule from './logger';
-import { Logger } from 'pino';
+import { loggerService, Logger } from './logger';
 import { Interaction, MessageComponentInteraction } from 'discord.js';
 
 const prisma = usePrismaClient();
 
 function getLogger(executionId: string, interaction?: Interaction | MessageComponentInteraction): Logger {
-    return loggerModule.child({
+    return loggerService.child({
         module: 'databaseService',
         name: 'guildDatabaseService',
         executionId: executionId,

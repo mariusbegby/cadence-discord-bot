@@ -1,8 +1,7 @@
 import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { useLanguageTranslator } from '../../common/utils/localeUtil';
@@ -17,7 +16,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (queue: ExtendedGuildQueuePlayerNode, error: Error) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'playerGeneralError',
             executionId: executionId,

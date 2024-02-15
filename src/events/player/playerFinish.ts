@@ -1,9 +1,8 @@
 import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { Track } from 'discord-player';
 import { Snowflake } from 'discord.js';
-import { Logger } from 'pino';
 
 // Emitted when the audio player finish playing a track.
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (queue: ExtendedGuildQueuePlayerNode, track: Track) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'playerFinish',
             executionId: executionId,

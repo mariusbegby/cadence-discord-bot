@@ -1,7 +1,6 @@
 import { MessageComponentInteraction } from 'discord.js';
-import { Logger } from 'pino';
 import { BaseComponentInteraction } from '../common/classes/interactions';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { ExtendedClient } from '../types/clientTypes';
 import { checkChannelPermissionViewable } from '../common/validation/permissionValidator';
 
@@ -11,7 +10,7 @@ export const handleComponent = async (
     executionId: string,
     interactionIdentifier: string
 ) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'handler',
         name: 'interactionComponentHandler',
         executionId: executionId

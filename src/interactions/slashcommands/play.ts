@@ -7,7 +7,7 @@ import {
     Message,
     SlashCommandBuilder
 } from 'discord.js';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction, CustomError } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';

@@ -1,7 +1,7 @@
 import config from 'config';
 import { BiquadFilters, EqualizerConfigurationPreset, GuildQueue, QueueFilters, useQueue } from 'discord-player';
 import { EmbedBuilder, InteractionResponse, StringSelectMenuInteraction } from 'discord.js';
-import { Logger } from 'pino';
+import { Logger } from '../../common/services/logger';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
 import {
     EqualizerFilterOptions,

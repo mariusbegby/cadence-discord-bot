@@ -5,8 +5,7 @@ import config from 'config';
 import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { exec } from 'child_process';
-import { Logger } from 'pino';
-import loggerModule from './common/services/logger';
+import { loggerService, Logger } from './common/services/logger';
 import { usePrismaClient } from './common/services/prismaClient';
 const shardingOptions: ShardingManagerOptions = config.get('shardingOptions');
 
@@ -20,7 +19,7 @@ const readyShards: Set<number> = new Set();
 manager.on('shardCreate', (shard: Shard) => {
     const executionId: string = uuidv4();
 
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'shardingManager',
         name: 'shardingManager',
         executionId: executionId,
@@ -64,7 +63,7 @@ manager.on('shardCreate', (shard: Shard) => {
 
 exec('ffmpeg -version', (error) => {
     if (error) {
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'shardingManager',
             name: 'shardingManager',
             shardId: 'manager'

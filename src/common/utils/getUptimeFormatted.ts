@@ -1,10 +1,9 @@
-import { Logger } from 'pino';
-import loggerModule from '../services/logger';
+import { loggerService, Logger } from '../services/logger';
 import { GetUptimeFormattedParams } from '../../types/utilTypes';
 import { formatDuration } from './formattingUtils';
 
 export const getUptimeFormatted = ({ executionId }: GetUptimeFormattedParams): string => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'utilSystem',
         name: 'getUptimeFormatted',
         executionId: executionId

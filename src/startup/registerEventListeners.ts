@@ -3,8 +3,7 @@ import { GuildQueueEvents, Player, PlayerEvents } from 'discord-player';
 import { Client } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Logger } from 'pino';
-import loggerModule from '../common/services/logger';
+import { loggerService, Logger } from '../common/services/logger';
 import { CustomLoggerOptions } from '../types/configTypes';
 import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
 import { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';
@@ -42,7 +41,7 @@ const registerPlayerEventListeners = (player: Player, event: CustomEvent, logger
 };
 
 export const registerEventListeners = async ({ client, player, executionId }: RegisterEventListenersParams) => {
-    const logger: Logger = loggerModule.child({
+    const logger: Logger = loggerService.child({
         module: 'register',
         name: 'registerEventListeners',
         executionId: executionId,

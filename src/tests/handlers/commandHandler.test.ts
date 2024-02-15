@@ -3,7 +3,7 @@ import { ChatInputCommandInteraction } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { ExtendedClient } from '../../types/clientTypes';
 import { checkChannelPermissionViewable } from '../../common/validation/permissionValidator';
-import loggerModule from '../../common/services/logger';
+import { loggerService } from '../../common/services/logger';
 
 jest.mock('../../common/validation/permissionValidator');
 jest.mock('../../common/services/logger', () => ({
@@ -47,7 +47,7 @@ describe('interactionCommandHandler', () => {
 
     it('should handle command correctly when slash command is not found', async () => {
         const loggerSpy = jest.spyOn(
-            loggerModule.child({ module: 'handler', name: 'interactionCommandHandler', executionId: executionId }),
+            loggerService.child({ module: 'handler', name: 'interactionCommandHandler', executionId: executionId }),
             'warn'
         );
 

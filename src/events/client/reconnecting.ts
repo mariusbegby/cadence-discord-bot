@@ -1,8 +1,7 @@
 import config from 'config';
 import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 import { ExtendedClient } from '../../types/clientTypes';
 import { EmbedOptions, SystemOptions } from '../../types/configTypes';
 
@@ -14,7 +13,7 @@ module.exports = {
     once: false,
     execute: async (client: ExtendedClient) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'clientReconnecting',
             executionId: executionId,

@@ -1,6 +1,5 @@
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { Logger } from 'pino';
-import loggerModule from '../../common/services/logger';
+import { loggerService, Logger } from '../../common/services/logger';
 
 module.exports = {
     name: 'error',
@@ -8,7 +7,7 @@ module.exports = {
     isPlayerEvent: true,
     execute: async (message: string) => {
         const executionId: string = uuidv4();
-        const logger: Logger = loggerModule.child({
+        const logger: Logger = loggerService.child({
             module: 'event',
             name: 'playerDebug',
             executionId: executionId

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import config from 'config';
-import pino, { DestinationStream, Logger, LoggerOptions } from 'pino';
+import pino, { DestinationStream, Logger as PinoLogger, LoggerOptions } from 'pino';
 import { CustomLoggerOptions } from '../../types/configTypes';
 import { TargetOptions } from '../../types/serviceTypes';
 
@@ -103,5 +103,6 @@ const logLevelConfig: LoggerOptions = {
     base: defaultProperties
 };
 
-const logger: Logger = pino(logLevelConfig, transport);
-export default logger;
+export type Logger = PinoLogger;
+export const loggerService: Logger = pino(logLevelConfig, transport);
+export default loggerService;
