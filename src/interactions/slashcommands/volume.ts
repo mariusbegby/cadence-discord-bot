@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -47,7 +46,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         const currentVolume: number = queue.node.volume;
         logger.debug('No volume input was provided, showing current volume.');
@@ -75,7 +74,7 @@ class VolumeCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         queue.node.setVolume(volume);
         logger.debug(`Set volume to ${volume}%.`);

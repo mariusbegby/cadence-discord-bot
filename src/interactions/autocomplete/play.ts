@@ -3,8 +3,7 @@ import { ApplicationCommandOptionChoiceData } from 'discord.js';
 import { BaseAutocompleteInteraction } from '../../common/classes/interactions';
 import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/utils/autocompleteUtils';
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
-import { TFunction } from 'i18next';
-import { useUserTranslator } from '../../common/utils/localeUtil';
+import { useUserTranslator, Translator } from '../../common/utils/localeUtil';
 import { transformQuery } from '../../common/validation/searchQueryValidator';
 
 class PlayAutocomplete extends BaseAutocompleteInteraction {
@@ -53,7 +52,7 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
 
     private async getAutocompleteChoices(
         query: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
         const player: Player = useMainPlayer()!;
         const searchResults: SearchResult = await player.search(query);

@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class MoveCommand extends BaseSlashCommandInteraction {
@@ -52,7 +51,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         fromPosition: number,
         toPosition: number,
-        translator: TFunction
+        translator: Translator
     ) {
         if (fromPosition > queue.tracks.data.length || toPosition > queue.tracks.data.length) {
             logger.debug('One of the specified track positions was higher than total tracks.');
@@ -78,7 +77,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('One of the specified track positions was higher than total tracks.');
         return await interaction.reply({
@@ -104,7 +103,7 @@ class MoveCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         fromPosition: number,
         toPosition: number,
-        translator: TFunction
+        translator: Translator
     ) {
         return await interaction.reply({
             embeds: [

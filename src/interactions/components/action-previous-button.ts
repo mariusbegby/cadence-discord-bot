@@ -5,8 +5,7 @@ import { BaseComponentParams, BaseComponentReturnType } from '../../types/intera
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { TFunction } from 'i18next';
-import { useServerTranslator } from '../../common/utils/localeUtil';
+import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class ActionPreviousButton extends BaseComponentInteraction {
@@ -40,7 +39,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
         logger: Logger,
         interaction: MessageComponentInteraction,
         history: GuildQueueHistory,
-        translator: TFunction
+        translator: Translator
     ) {
         if (history.tracks.data.length === 0) {
             return await this.handleNoTracksInHistory(logger, interaction, translator);
@@ -55,7 +54,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
     private async handleNoTracksInHistory(
         logger: Logger,
         interaction: MessageComponentInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('No tracks in history.');
         return await interaction.reply({
@@ -73,7 +72,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
         });
     }
 
-    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
+    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: Translator) {
         return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
@@ -92,7 +91,7 @@ class ActionPreviousButton extends BaseComponentInteraction {
     private async handleSuccess(
         interaction: MessageComponentInteraction,
         recoveredTrack: Track,
-        translator: TFunction
+        translator: Translator
     ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))

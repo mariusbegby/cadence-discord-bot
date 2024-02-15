@@ -2,12 +2,12 @@ import osu from 'node-os-utils';
 import { ExtendedClient } from '../../types/clientTypes';
 import { fetchTotalGuildStatistics, fetchTotalPlayerStatistics } from './shardUtils';
 import { getUptimeFormatted } from './getUptimeFormatted';
-import { TFunction } from 'i18next';
+import { Translator } from './localeUtil';
 
 export async function getBotStatistics(
     client: ExtendedClient,
     version: string,
-    translator: TFunction
+    translator: Translator
 ): Promise<string> {
     const releaseVersion: string = version;
     const { totalGuildCount, totalMemberCount } = await fetchTotalGuildStatistics(client);
@@ -27,7 +27,7 @@ export async function getBotStatistics(
     );
 }
 
-export async function getPlayerStatistics(client: ExtendedClient, translator: TFunction): Promise<string> {
+export async function getPlayerStatistics(client: ExtendedClient, translator: Translator): Promise<string> {
     const { totalVoiceConnections, totalTracksInQueues, totalListeners } = await fetchTotalPlayerStatistics(client);
 
     return (
@@ -45,7 +45,7 @@ export async function getPlayerStatistics(client: ExtendedClient, translator: TF
     );
 }
 
-export async function getSystemStatus(executionId: string, extended: boolean, translator: TFunction): Promise<string> {
+export async function getSystemStatus(executionId: string, extended: boolean, translator: Translator): Promise<string> {
     const uptimeString: string = getUptimeFormatted({ executionId });
     const usedMemoryInMB: number = Math.ceil((await osu.mem.info()).usedMemMb);
     const cpuUsage: number = await osu.cpu.usage();
@@ -74,6 +74,6 @@ export async function getSystemStatus(executionId: string, extended: boolean, tr
     );
 }
 
-export function getDiscordStatus(client: ExtendedClient, translator: TFunction): string {
+export function getDiscordStatus(client: ExtendedClient, translator: Translator): string {
     return translator('statistics.discordStatus.apiLatency', { value: client.ws.ping });
 }

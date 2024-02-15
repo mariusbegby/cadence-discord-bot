@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class SeekCommand extends BaseSlashCommandInteraction {
@@ -70,7 +69,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         formattedDurationString: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Invalid duration format input.');
 
@@ -96,7 +95,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         durationInMilliseconds: number,
         formattedDurationString: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         queue.node.seek(durationInMilliseconds);
         logger.debug(`Seeked to '${formattedDurationString}' in current track.`);
@@ -123,7 +122,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         formattedDurationString: string,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Duration specified is longer than the track duration.');
 

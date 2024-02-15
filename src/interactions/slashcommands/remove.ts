@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { TFunction } from 'i18next';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class RemoveCommand extends BaseSlashCommandInteraction {
@@ -69,7 +68,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const targetUser = interaction.options.getUser('target')!;
         const removedTracks: Track[] = [];
@@ -95,7 +94,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const removedTracks: Track[] = [];
         const uniqueTrackUrls = new Set<string>();
@@ -123,7 +122,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const start: number = interaction.options.getInteger('start')!;
         const end: number = interaction.options.getInteger('end')!;
@@ -173,7 +172,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const queueLength = queue.tracks.data.length;
         queue.clear();
@@ -191,7 +190,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const trackPositionInput: number = interaction.options.getInteger('position')!;
 
@@ -230,7 +229,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     private async handleNoTracksRemoved(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Responding with warning embed.');
         await interaction.reply({
@@ -253,7 +252,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         removedAmount: number,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Responding with success embed.');
         await interaction.reply({
@@ -277,7 +276,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         trackPositionInput: number,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Specified track position is higher than total tracks.');
 

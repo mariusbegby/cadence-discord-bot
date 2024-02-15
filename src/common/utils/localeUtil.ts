@@ -10,9 +10,11 @@ import {
     SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
 import { lstatSync, readdirSync } from 'fs';
-import i18n from 'i18next';
+import i18n, { TFunction } from 'i18next';
 import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import { join } from 'path';
+
+export type Translator = TFunction;
 
 export const translatorInstance = i18n.createInstance();
 const localeDir = join(__dirname, '..', '..', '..', 'locales');
@@ -36,15 +38,15 @@ translatorInstance.use(i18nextFsBackend).init<FsBackendOptions>({
     }
 });
 
-export function useServerTranslator(interaction: BaseInteraction) {
+export function useServerTranslator(interaction: BaseInteraction): Translator {
     return translatorInstance.getFixedT(interaction.guildLocale ?? 'en-US');
 }
 
-export function useUserTranslator(interaction: BaseInteraction) {
+export function useUserTranslator(interaction: BaseInteraction): Translator {
     return translatorInstance.getFixedT(interaction.locale ?? 'en-US');
 }
 
-export function useLanguageTranslator(language: LocaleString) {
+export function useLanguageTranslator(language: LocaleString): Translator {
     return translatorInstance.getFixedT(language ?? 'en-US');
 }
 

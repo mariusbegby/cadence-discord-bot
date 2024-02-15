@@ -4,8 +4,7 @@ import { BaseComponentInteraction } from '../../common/classes/interactions';
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { TFunction } from 'i18next';
-import { useServerTranslator } from '../../common/utils/localeUtil';
+import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class ActionSkipButton extends BaseComponentInteraction {
@@ -39,7 +38,7 @@ class ActionSkipButton extends BaseComponentInteraction {
         return await this.handleSuccess(interaction, skippedTrack, queue, translator);
     }
 
-    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: TFunction) {
+    private async handleAlreadySkipped(interaction: MessageComponentInteraction, translator: Translator) {
         return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
@@ -59,7 +58,7 @@ class ActionSkipButton extends BaseComponentInteraction {
         interaction: MessageComponentInteraction,
         skippedTrack: Track,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))

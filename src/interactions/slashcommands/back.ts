@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkHistoryExists, checkQueueCurrentTrack } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class BackCommand extends BaseSlashCommandInteraction {
@@ -47,7 +46,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         history: GuildQueueHistory,
         backtoTrackPosition: number,
-        translator: TFunction
+        translator: Translator
     ) {
         if (backtoTrackPosition > history.tracks.data.length) {
             return await this.handleTrackPositionHigherThanHistoryLength(
@@ -70,7 +69,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         history: GuildQueueHistory,
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Specified track position was higher than total tracks.');
         return await interaction.reply({
@@ -94,7 +93,7 @@ class BackCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         history: GuildQueueHistory,
-        translator: TFunction
+        translator: Translator
     ) {
         if (history.tracks.data.length === 0) {
             return await this.handleNoTracksInHistory(logger, interaction, translator);
@@ -109,7 +108,7 @@ class BackCommand extends BaseSlashCommandInteraction {
     private async handleNoTracksInHistory(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('No tracks in history.');
         return await interaction.reply({
@@ -130,7 +129,7 @@ class BackCommand extends BaseSlashCommandInteraction {
     private async respondWithSuccessEmbed(
         recoveredTrack: Track,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         return await interaction.reply({
             embeds: [

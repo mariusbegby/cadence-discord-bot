@@ -12,8 +12,7 @@ import {
 import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -83,7 +82,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
         filterType: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         this.addFfmpegNormalizerIfRequired(selectMenuInteraction);
         this.toggleFfmpegFilters(selectMenuInteraction, queue, logger);
@@ -97,7 +96,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
         filterType: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         this.toggleBiquadFilter(selectMenuInteraction, queue, logger);
 
@@ -110,7 +109,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         selectMenuInteraction: StringSelectMenuInteraction,
         queue: GuildQueue,
         filterType: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         this.toggleEqualizerFilter(selectMenuInteraction, queue, logger);
 
@@ -197,7 +196,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         logger: Logger,
         interaction: StringSelectMenuInteraction,
         filterType: string,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         logger.debug('Responding with success embed.');
         return interaction.reply({
@@ -209,7 +208,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     private buildSuccessEmbed(
         selectMenuInteraction: StringSelectMenuInteraction,
         filterType: string,
-        translator: TFunction
+        translator: Translator
     ): EmbedBuilder {
         const availableFilters: FilterOption[] = this.getAvailableFilters(filterType);
         const enabledFilters: string = this.getEnabledFilters(selectMenuInteraction, availableFilters);
@@ -276,7 +275,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
     private async replyWithDisabledFiltersEmbed(
         logger: Logger,
         interaction: StringSelectMenuInteraction,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         logger.debug('Responding with success embed.');
         return await interaction.reply({

@@ -6,8 +6,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -161,7 +160,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusSearchQuery: string,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Responding with warning embed.');
         return await interaction.editReply({
@@ -182,7 +181,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Lyrics text too long, splitting into multiple messages.');
         const messageCount: number = Math.ceil(geniusLyricsResult.lyrics.length / 3800);
@@ -218,7 +217,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         geniusLyricsResult: LyricsData,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Responding with info embed.');
         return await interaction.editReply({

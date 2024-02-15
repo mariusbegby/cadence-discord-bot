@@ -25,7 +25,7 @@ import {
     BaseSlashCommandReturnType
 } from '../../types/interactionTypes';
 import { Validator, ValidatorParams } from '../../types/utilTypes';
-import { TFunction } from 'i18next';
+import { Translator } from '../utils/localeUtil';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
@@ -72,7 +72,7 @@ abstract class BaseInteraction {
         return durationFormat;
     }
 
-    protected getFormattedTrackUrl(track: Track, translator: TFunction): string {
+    protected getFormattedTrackUrl(track: Track, translator: Translator): string {
         const trackTitle = track.title ?? translator('musicPlayerCommon.unavailableTrackTitle');
         const trackUrl = track.url ?? track.raw.url;
         if (!trackTitle || !trackUrl) {
@@ -81,7 +81,7 @@ abstract class BaseInteraction {
         return `**[${trackTitle}](${trackUrl})**`;
     }
 
-    protected getDisplayTrackDurationAndUrl(track: Track, translator: TFunction): string {
+    protected getDisplayTrackDurationAndUrl(track: Track, translator: Translator): string {
         const formattedDuration = this.getFormattedDuration(track);
         const formattedUrl = this.getFormattedTrackUrl(track, translator);
 
@@ -117,7 +117,7 @@ abstract class BaseInteraction {
     protected getFooterDisplayPageInfo(
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue | GuildQueueHistory,
-        translator: TFunction
+        translator: Translator
     ): EmbedFooterData {
         const pageIndex: number = (interaction.options.getInteger('page') || 1) - 1;
         const totalPages: number = Math.ceil(queue.tracks.data.length / 10) || 1;
@@ -130,13 +130,13 @@ abstract class BaseInteraction {
         };
     }
 
-    protected getDisplayTrackRequestedBy = (track: Track, translator: TFunction): string => {
+    protected getDisplayTrackRequestedBy = (track: Track, translator: Translator): string => {
         return track.requestedBy
             ? `<@${track.requestedBy.id}>`
             : translator('musicPlayerCommon.unavailableRequestedBy');
     };
 
-    protected getDisplayQueueProgressBar(queue: GuildQueue, translator: TFunction): string {
+    protected getDisplayQueueProgressBar(queue: GuildQueue, translator: Translator): string {
         const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
         let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
@@ -189,7 +189,7 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
     protected getEmbedQueueAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ): EmbedAuthorOptions {
         const bitrate = queue.channel ? queue.channel.bitrate / 1000 : 0;
         return {

@@ -11,8 +11,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatRepeatMode } from '../../common/utils/formattingUtils';
 
 class LoopCommand extends BaseSlashCommandInteraction {
@@ -73,7 +72,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         currentRepeatMode: QueueRepeatMode,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         logger.debug('No repeat mode was provided, responding with current repeat mode.');
 
@@ -100,7 +99,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         currentRepeatMode: QueueRepeatMode,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         const repeatModeEmbedName = formatRepeatMode(currentRepeatMode, translator);
         logger.debug(`Loop mode is already set to '${repeatModeEmbedName}'.`);
@@ -126,7 +125,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         fromRepeatMode: QueueRepeatMode,
         toRepeatMode: QueueRepeatMode,
-        translator: TFunction
+        translator: Translator
     ): Promise<InteractionResponse<boolean>> {
         const newRepeatModeEmbedName = formatRepeatMode(toRepeatMode, translator);
         const getChangedRepeatModeEmbedReply = this.getChangedRepeatModeEmbedReply(
@@ -152,7 +151,7 @@ class LoopCommand extends BaseSlashCommandInteraction {
     private getChangedRepeatModeEmbedReply(
         fromRepeatMode: QueueRepeatMode,
         toRepeatMode: QueueRepeatMode,
-        translator: TFunction
+        translator: Translator
     ): string {
         const fromRepeatModeEmbedName = formatRepeatMode(fromRepeatMode, translator);
         const toRepeatModeEmbedName = formatRepeatMode(toRepeatMode, translator);

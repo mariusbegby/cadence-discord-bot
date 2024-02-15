@@ -26,8 +26,7 @@ import {
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -89,7 +88,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue<unknown>,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Handling ffmpeg filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
@@ -118,7 +117,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue<unknown>,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Handling biquad filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
@@ -145,7 +144,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
     private async handleEqualizerFilters(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Handling biquad filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
@@ -169,7 +168,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         filterProvider: string,
         filterOptions: StringSelectMenuOptionBuilder[],
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         const actionRows = this.buildFilterActionRows(filterOptions, filterProvider, translator);
 
@@ -191,7 +190,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
     private buildFilterActionRows(
         filterOptions: StringSelectMenuOptionBuilder[],
         filterProvider: string,
-        translator: TFunction
+        translator: Translator
     ): APIActionRowComponent<APIMessageActionRowComponent>[] {
         const filterSelect: APIStringSelectComponent = new StringSelectMenuBuilder()
             .setCustomId(`filters-select-menu_${filterProvider}`)
@@ -232,7 +231,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         if (queue.filters.ffmpeg.filters.length > 0) {
             queue.filters.ffmpeg.setFilters(false);

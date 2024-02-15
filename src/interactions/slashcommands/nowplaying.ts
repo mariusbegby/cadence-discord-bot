@@ -14,8 +14,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
@@ -114,7 +113,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private getDisplayPlays(currentTrack: Track | undefined, translator: TFunction): string {
+    private getDisplayPlays(currentTrack: Track | undefined, translator: Translator): string {
         const trackMetadata = currentTrack?.metadata as TrackMetadata;
 
         return translator('commands.nowplaying.playCount', {
@@ -122,7 +121,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private getDisplayTrackAuthor(currentTrack: Track | undefined, translator: TFunction): string {
+    private getDisplayTrackAuthor(currentTrack: Track | undefined, translator: Translator): string {
         let author = currentTrack?.author;
         if (!author || author === 'cdn.discordapp.com') {
             author = translator('musicPlayerCommon.unavailableAuthor');
@@ -130,7 +129,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return author;
     }
 
-    private getTrackSourceString(currentTrack: Track, translator: TFunction): string {
+    private getTrackSourceString(currentTrack: Track, translator: Translator): string {
         const sourceStringsFormatted: Map<string, string> = new Map([
             ['youtube', 'YouTube'],
             ['soundcloud', 'SoundCloud'],
@@ -156,20 +155,20 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         return sourceIcons.get(currentTrack.raw.source!) ?? '';
     }
 
-    private getDisplayTrackSource(currentTrack: Track, translator: TFunction) {
+    private getDisplayTrackSource(currentTrack: Track, translator: Translator) {
         const trackSource: string = this.getTrackSourceString(currentTrack, translator);
         const trackSourceIcon: string = this.getTrackSourceIcon(currentTrack) ?? '';
 
         return `**${trackSourceIcon} [${trackSource}](${currentTrack.raw.url ?? currentTrack.url})**`;
     }
 
-    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
+    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: Translator): string => {
         return queue.node.isPaused()
             ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
             : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
     };
 
-    private getEmbedFields = (currentTrack: Track, translator: TFunction): EmbedField[] => {
+    private getEmbedFields = (currentTrack: Track, translator: Translator): EmbedField[] => {
         const fields: EmbedField[] = [
             {
                 name: translator('commands.nowplaying.embedFields.author'),

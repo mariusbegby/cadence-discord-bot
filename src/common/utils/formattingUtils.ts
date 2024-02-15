@@ -1,5 +1,5 @@
 import { QueueRepeatMode } from 'discord-player';
-import { TFunction } from 'i18next';
+import { Translator } from './localeUtil';
 import { EmbedOptions } from '../../types/configTypes';
 
 export function formatDuration(durationMs: number): string {
@@ -22,14 +22,14 @@ export function formatDuration(durationMs: number): string {
     }
 }
 
-export function formatSlashCommand(commandName: string, translator: TFunction): string {
+export function formatSlashCommand(commandName: string, translator: Translator): string {
     const translatedName = translator(`commands.${commandName}.metadata.name`, {
         defaultValue: commandName
     });
     return `**\`/${translatedName}\`**`;
 }
 
-export function formatRepeatMode(repeatMode: QueueRepeatMode, translator: TFunction): string {
+export function formatRepeatMode(repeatMode: QueueRepeatMode, translator: Translator): string {
     switch (repeatMode) {
         case QueueRepeatMode.AUTOPLAY:
             return translator('musicPlayerCommon.queueRepeatMode.autoplay');
@@ -45,7 +45,7 @@ export function formatRepeatMode(repeatMode: QueueRepeatMode, translator: TFunct
 export function formatRepeatModeDetailed(
     repeatMode: QueueRepeatMode,
     embedOptions: EmbedOptions,
-    translator: TFunction,
+    translator: Translator,
     state: string = 'info'
 ) {
     let icon: string;

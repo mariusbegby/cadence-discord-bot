@@ -10,8 +10,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { ExtendedClient } from '../../types/clientTypes';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkValidGuildId } from '../../common/validation/systemCommandValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 class ReloadCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -55,7 +54,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         executionId: string,
         error: Error | unknown,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.error(error, 'Failed to reload interaction module across shards.');
 
@@ -78,7 +77,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
-        translator: TFunction
+        translator: Translator
     ) {
         const commands = this.getCommands(client);
         const embedDescription = this.buildEmbedDescription(commands, translator);
@@ -110,7 +109,7 @@ class ReloadCommand extends BaseSlashCommandInteraction {
         return params;
     }
 
-    private buildEmbedDescription(commands: string[] | undefined, translator: TFunction): string {
+    private buildEmbedDescription(commands: string[] | undefined, translator: Translator): string {
         return (
             translator('commands.reload.reloadedCommands', {
                 icon: this.embedOptions.icons.bot

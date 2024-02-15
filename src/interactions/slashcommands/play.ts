@@ -13,8 +13,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
 import { transformQuery } from '../../common/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
@@ -159,7 +158,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         searchResult: SearchResult,
         interaction: ChatInputCommandInteraction,
         logger: Logger,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug('Result found and added with player.play(), added to queue.');
         const queue: GuildQueue = useQueue(interaction.guild!.id)!;
@@ -219,7 +218,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         });
     }
 
-    private getDisplayFooterTrackPosition(position: number, translator: TFunction): EmbedFooterData {
+    private getDisplayFooterTrackPosition(position: number, translator: Translator): EmbedFooterData {
         const fullFooterData = {
             text: translator('commands.play.footerAddedPosition', {
                 position: position
@@ -233,7 +232,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         transformedQuery: string,
         interaction: ChatInputCommandInteraction,
         logger: Logger,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug(`No results found for query: '${transformedQuery}'`);
 
@@ -256,7 +255,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         query: string,
         interaction: ChatInputCommandInteraction,
         logger: Logger,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         logger.debug(`Playlist found but would exceed max queue size. Query: '${query}'.`);
 

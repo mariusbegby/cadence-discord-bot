@@ -5,9 +5,8 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkInVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
-import { TFunction } from 'i18next';
 
 class JoinCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -92,7 +91,7 @@ class JoinCommand extends BaseSlashCommandInteraction {
 
     private async handleCouldNotConnect(
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         return await interaction.editReply({
             embeds: [
@@ -111,7 +110,7 @@ class JoinCommand extends BaseSlashCommandInteraction {
     private async handleExisitingQueue(
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ): Promise<Message> {
         const connectedChannel = queue.dispatcher?.channel;
         const channelMention = connectedChannel?.id ? `<#${connectedChannel.id}>` : '<#0>';

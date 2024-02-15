@@ -5,8 +5,7 @@ import { Logger } from '../../common/services/logger';
 import { BaseAutocompleteInteraction } from '../../common/classes/interactions';
 import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/utils/autocompleteUtils';
 import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
-import { TFunction } from 'i18next';
-import { useUserTranslator } from '../../common/utils/localeUtil';
+import { useUserTranslator, Translator } from '../../common/utils/localeUtil';
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
 
@@ -47,7 +46,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private async getAutocompleteChoices(
         query: string,
         logger: Logger,
-        translator: TFunction
+        translator: Translator
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
         const genius = lyricsExtractor();
         const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
@@ -62,7 +61,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private async getAutocompleteChoicesFallback(
         query: string,
         logger: Logger,
-        translator: TFunction
+        translator: Translator
     ): Promise<ApplicationCommandOptionChoiceData<string>[]> {
         logger.debug(`No Genius lyrics found for query '${query}', using player.search() as fallback.`);
 
@@ -77,7 +76,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
 
     private getAutocompleteChoicesFromLyricsResult(
         lyricsResult: LyricsData,
-        translator: TFunction
+        translator: Translator
     ): ApplicationCommandOptionChoiceData<string>[] {
         return [
             {
@@ -87,7 +86,7 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
         ];
     }
 
-    private getLyricsResultName(lyricsResult: LyricsData, translator: TFunction): string {
+    private getLyricsResultName(lyricsResult: LyricsData, translator: Translator): string {
         return translator('commands.lyrics.autocompleteSearchResult', {
             title: lyricsResult.title,
             artist: lyricsResult.artist.name

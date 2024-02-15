@@ -17,8 +17,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 
 class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -73,7 +72,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         currentTrack: Track,
         queueTracksListString: string,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Queue exists with current track, gathering information.');
 
@@ -144,7 +143,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return Promise.resolve();
     }
 
-    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
+    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: Translator): string => {
         return queue.node.isPaused()
             ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
             : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
@@ -155,7 +154,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         queueTracksListString: string,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Queue exists but there is no current track.');
 
@@ -183,7 +182,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         pageIndex: number,
         totalPages: number,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Specified page was higher than total pages.');
 
@@ -213,7 +212,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return Math.ceil(queue.tracks.data.length / 10) || 1;
     }
 
-    private getQueueTracksListString(queue: GuildQueue, pageIndex: number, translator: TFunction): string {
+    private getQueueTracksListString(queue: GuildQueue, pageIndex: number, translator: Translator): string {
         if (!queue || queue.tracks.data.length === 0) {
             return translator('commands.queue.emptyQueue', {
                 playCommand: formatSlashCommand('play', translator)
@@ -228,7 +227,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
             .join('\n');
     }
 
-    private getDisplayQueueTotalDuration(queue: GuildQueue, translator: TFunction): string {
+    private getDisplayQueueTotalDuration(queue: GuildQueue, translator: Translator): string {
         if (queue.tracks.data.length > 1000) {
             return translator('commands.queue.estimatedReallyLongTime', {
                 playCommand: formatSlashCommand('play', translator)
@@ -254,7 +253,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
     private getDisplayFullFooterInfo(
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ): EmbedFooterData {
         const pagination = this.getFooterDisplayPageInfo(interaction, queue, translator);
         const totalDuration = this.getDisplayQueueTotalDuration(queue, translator);

@@ -16,8 +16,7 @@ import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkHistoryExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class HistoryCommand extends BaseSlashCommandInteraction {
@@ -83,7 +82,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         history: GuildQueueHistory,
         currentTrack: Track,
         historyTracksListString: string,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('History exists with current track, gathering information.');
 
@@ -152,7 +151,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         return Promise.resolve();
     }
 
-    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: TFunction): string => {
+    private getDisplayTrackPlayingStatus = (queue: GuildQueue, translator: Translator): string => {
         return queue.node.isPaused()
             ? translator('musicPlayerCommon.nowPausedTitle', { icon: this.embedOptions.icons.paused })
             : translator('musicPlayerCommon.nowPlayingTitle', { icon: this.embedOptions.icons.audioPlaying });
@@ -164,7 +163,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         history: GuildQueueHistory,
         historyTracksListString: string,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('History exists but there is no current track.');
 
@@ -192,7 +191,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         pageIndex: number,
         totalPages: number,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Specified page was higher than total pages.');
 
@@ -222,7 +221,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         return Math.ceil(history.tracks.data.length / 10) || 1;
     }
 
-    private getHistoryTracksListString(history: GuildQueueHistory, pageIndex: number, translator: TFunction): string {
+    private getHistoryTracksListString(history: GuildQueueHistory, pageIndex: number, translator: Translator): string {
         if (!history || history.tracks.data.length === 0) {
             return translator('commands.history.emptyHistory', {
                 playCommand: formatSlashCommand('play', translator)
@@ -240,7 +239,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
     private getDisplayFullFooterInfo(
         interaction: ChatInputCommandInteraction,
         history: GuildQueueHistory,
-        translator: TFunction
+        translator: Translator
     ): EmbedFooterData {
         const pagination = this.getFooterDisplayPageInfo(interaction, history, translator);
 

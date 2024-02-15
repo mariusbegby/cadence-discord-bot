@@ -5,8 +5,7 @@ import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import { TFunction } from 'i18next';
+import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class SkipCommand extends BaseSlashCommandInteraction {
@@ -47,7 +46,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
         trackPosition: number,
-        translator: TFunction
+        translator: Translator
     ) {
         if (trackPosition > queue.tracks.data.length) {
             return await this.handleTrackPositionHigherThanQueueLength(
@@ -70,7 +69,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         queue: GuildQueue,
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('Specified track position was higher than total tracks.');
         return await interaction.reply({
@@ -94,7 +93,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         logger: Logger,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         if (queue.tracks.data.length === 0 && !queue.currentTrack) {
             return await this.handleNoTracksInQueueAndNoCurrentTrack(logger, interaction, translator);
@@ -109,7 +108,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
     private async handleNoTracksInQueueAndNoCurrentTrack(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
-        translator: TFunction
+        translator: Translator
     ) {
         logger.debug('No tracks in queue and no current track.');
         return await interaction.reply({
@@ -131,7 +130,7 @@ class SkipCommand extends BaseSlashCommandInteraction {
         skippedTrack: Track,
         interaction: ChatInputCommandInteraction,
         queue: GuildQueue,
-        translator: TFunction
+        translator: Translator
     ) {
         return await interaction.reply({
             embeds: [
