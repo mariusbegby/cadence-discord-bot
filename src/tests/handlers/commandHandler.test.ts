@@ -7,9 +7,11 @@ import { loggerService } from '../../common/services/logger';
 
 jest.mock('../../common/validation/permissionValidator');
 jest.mock('../../common/services/logger', () => ({
-    child: jest.fn().mockReturnThis(),
-    debug: jest.fn(),
-    warn: jest.fn()
+    loggerService: {
+        child: jest.fn().mockReturnThis(),
+        debug: jest.fn(),
+        warn: jest.fn()
+    }
 }));
 
 describe('interactionCommandHandler', () => {
