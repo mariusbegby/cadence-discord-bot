@@ -3,16 +3,17 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./dev.db"
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
 model GuildConfig {
     guildId String @id @map("_id")
 
-    defaultVolume     Int     @default(50)
-    locale            String  @default("en-US")
-    actionPermissions String?
+    defaultVolume           Int     @default(50)
+    defaultSearchEngine     String  @default("spotify")
+    locale                  String  @default("en-US")
+    actionPermissions       String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

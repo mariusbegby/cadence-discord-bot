@@ -306,7 +306,7 @@
                                     "en-US": "English",
                                     "no": "Norwegian",
                                     "ro": "Romanian",
-                                    "en-ES": "Spanish"
+                                    "es-ES": "Spanish"
                                 }
                             }
                         }
@@ -321,16 +321,36 @@
                             }
                         }
                     },
-                    "action-permissions": {
-                        "name": "action-permissions",
-                        "description": "Set the roles required to perform certain actions."
+                    "default-search-engine": {
+                        "name": "default-search-engine",
+                        "description": "Set the default search engine for the bot.",
+                        "options": {
+                            "provider": {
+                                "name": "provider",
+                                "description": "Search engine provider to use.",
+                                "choices": {
+                                    "youtube": "YouTube",
+                                    "spotify": "Spotify"
+                                }
+                            }
+                        }
                     },
                     "view": {
                         "name": "view",
                         "description": "View the current settings for the bot."
                     }
                 }
-            }
+            },
+            "botLanguageChanged": "{{icon}} **Bot language changed**\nBot language has been changed to **`{{language}}`**.",
+            "botLanguageInformation": "{{icon}} **Bot language**\nThe bot language is currently set to **`{{language}}`**.",
+            "botLanguageError": "{{icon}} **Oops!**\nThere was an error while trying to change the bot language. Please try again later.",
+            "noDatabaseFound": "{{icon}} **Oops!**\nThere is no database found for this server. Please try again later.",
+            "errorGettingSettings": "{{icon}} **Oops!**\nThere was an error while trying to get the settings for this server. Please try again later.",
+            "invalidDefaultVolume": "{{icon}} **Oops!**\nYou cannot set the default volume to **`{{wrongVolume}}%`**, please pick a value between **`0%`** and **`100%`**.",
+            "defaultVolumeError": "{{icon}} **Oops!**\nThere was an error while trying to change the default volume. Please try again later.",
+            "defaultVolumeChanged": "{{icon}} **Default volume changed**\nDefault volume has been changed to **`{{volume}}%`**.",
+            "defaultSearchEngineError": "{{icon}} **Oops!**\nThere was an error while trying to change the default search engine. Please try again later.",
+            "defaultSearchEngineChanged": "{{icon}} **Default search engine changed**\nDefault search engine has been changed to **`{{provider}}`**."
         },
         "shards": {
             "metadata": {
@@ -441,7 +461,8 @@
             "off": "Disabled",
             "track": "Track",
             "queue": "Queue",
-            "autoplay": "Autoplay"
+            "autoplay": "Autoplay",
+            "set": "{{icon}} **Repeat mode**\nLoop mode is set to **{{mode}}**."
         },
         "requestedBy": "**Requested by:** {{user}}",
         "unavailableAuthor": "Unavailable",

@@ -15,6 +15,7 @@ function getLogger(executionId: string, interaction?: Interaction | MessageCompo
 
 export type GuildConfig = {
     defaultVolume?: number;
+    defaultSearchEngine?: string;
     locale?: string;
     actionPermissions?: Record<string, string[]>;
 };
@@ -27,8 +28,12 @@ const guildDatabaseClient = {
     ) {
         const logger = getLogger(executionId, interaction);
         logger.debug(`Getting config for guild ${guildId} from database.`);
+        
         const config = await prisma.guildConfig.findUnique({
             where: { guildId: guildId }
+        }).catch((error) => { 
+            logger.error(error, 'Error getting guild config from database.')
+            return null;
         });
 
         if (!config) {
@@ -87,7 +92,7 @@ export function validateGuildConfig(logger: Logger, configData: GuildConfig) {
     }
 
     // get available locale from i18next?
-    if (configData.locale && !['en-US', 'no', 'ro', 'en-ES'].includes(configData.locale)) {
+    if (configData.locale && !['en-US', 'no', 'ro', 'es-ES'].includes(configData.locale)) {
         logger.debug(`locale ${configData.locale} is not in list of available locales`);
         throw new Error(`locale ${configData.locale} is not in list of available locales`);
     }
@@ -96,8 +101,9 @@ export function validateGuildConfig(logger: Logger, configData: GuildConfig) {
 
     const validConfig = {
         defaultVolume: configData.defaultVolume,
+        defaultSearchEngine: configData.defaultSearchEngine,
         locale: configData.locale,
-        actionPermissions: serializeActionPermissions(configData.actionPermissions ?? {})
+        actionPermissions: serializeActionPermissions(configData.actionPermissions ?? {}),
     };
 
     return validConfig;

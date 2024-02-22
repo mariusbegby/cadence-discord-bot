@@ -290,10 +290,57 @@
             "durationLongerThanTrackDuration": "{{icon}} **Oops!**\nIngresaste **`{{wrongDuration}}`**, que es una marca de tiempo más larga que la duración de la canción actual.\n\nPor favor, intenta con una marca de tiempo que sea menor que la duración de la canción (**{{trackDuration}}**).",
             "seekingToTimestamp": "{{icon}} **Adelantando a la marca de tiempo**\nAdelantando a **`{{duration}}`** en la pista actual."
         },
+        "settings": {
+            "metadata": {
+                "name": "configuracion",
+                "description": "Configura varias opciones para el comportamiento del bot en el servidor.",
+                "options": {
+                    "bot-language": {
+                        "name": "lenguaje-del-bot",
+                        "description": "Cambia el idioma del bot",
+                        "options": {
+                            "language": {
+                                "name": "language",
+                                "description": "Idioma a utilizar para el bot en los mensajes.",
+                                "choices": {
+                                    "en-US": "English",
+                                    "no": "Norwegian",
+                                    "ro": "Romanian",
+                                    "es-ES": "Spanish"
+                                }
+                            }
+                        }
+                    },
+                    "default-volume": {
+                        "name": "volumen-predeterminado",
+                        "description": "Establece el volumen de reproducción predeterminado.",
+                        "options": {
+                            "percentage": {
+                                "name": "percentage",
+                                "description": "Volume percentage: From 0% to 100%."
+                            }
+                        }
+                    },
+                    "view": {
+                        "name": "ver",
+                        "description": "Muestra la configuración actual del servidor."
+                    }
+                }
+            },
+            "botLanguageChanged": "{{icon}} **Idioma del bot cambiado**\nEl idioma del bot ha sido cambiado a **`{{language}}`**.",
+            "botLanguageInformation": "{{icon}} **Idioma del bot**\nEl idioma del bot está actualmente configurado en **`{{language}}`**.",
+            "botLanguageError": "{{icon}} **Oops!**\nHubo un problema al cambiar el idioma del bot a **`{{language}}`**.\n\nPor favor, intenta de nuevo.",
+            "noDatabaseFound": "{{icon}} **Oops!**\nNo se encontró una base de datos para este servidor. Por favor, inténtalo de nuevo.",
+            "errorGettingSettings": "{{icon}} **Oops!**\nHubo un problema al obtener la configuración actual del servidor. Por favor, inténtalo de nuevo.",
+            "noRequestChannelFound": "{{icon}} **Oops!**\nUn canal de solicitudes ha sido guardado en la base de datos, pero no pude encontrarlo en el servidor. Por favor, ejecuta este comando de nuevo para establecer un nuevo canal de solicitudes.",
+            "requestChannelSet": "{{icon}} **Canal de solicitudes establecido**\nEl canal de texto **`{{channel}}`** ha sido establecido como el canal de solicitudes para las canciones.",
+            "requestChannelCleared": "{{icon}} **Canal de solicitudes eliminado**\nEl canal de solicitudes para las canciones ha sido eliminado.",
+            "invalidDefaultVolume": "{{icon}} **Oops!**\nNo puedes ajustar el volumen predeterminado a **`{{wrongVolume}}%`**, por favor elige un valor entre **`1%`** y **`100%`**."
+        },
         "shards": {
             "metadata": {
                 "name": "shards",
-                "description": "Mostrar información sobre todos los fragmentos conectados.",
+                "description": "Mostrar información sobre todos los shards conectados.",
                 "options": {
                     "sort": {
                         "name": "ordenar",
