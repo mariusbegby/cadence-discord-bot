@@ -321,21 +321,36 @@
                             }
                         }
                     },
+                    "default-search-engine": {
+                        "name": "motor-de-busqueda-predeterminado",
+                        "description": "Establece el proveedor de búsqueda predeterminado para usar en el bot.",
+                        "options": {
+                            "provider": {
+                                "name": "proveedor",
+                                "description": "Proveedor de búsqueda para usar en el bot.",
+                                "choices": {
+                                    "youtube": "YouTube",
+                                    "spotify": "Spotify"
+                                }
+                            }
+                        }
+                    },
                     "view": {
                         "name": "ver",
                         "description": "Muestra la configuración actual del servidor."
                     }
                 }
             },
-            "botLanguageChanged": "{{icon}} **Idioma del bot cambiado**\nEl idioma del bot ha sido cambiado a **`{{language}}`**.",
-            "botLanguageInformation": "{{icon}} **Idioma del bot**\nEl idioma del bot está actualmente configurado en **`{{language}}`**.",
-            "botLanguageError": "{{icon}} **Oops!**\nHubo un problema al cambiar el idioma del bot a **`{{language}}`**.\n\nPor favor, intenta de nuevo.",
-            "noDatabaseFound": "{{icon}} **Oops!**\nNo se encontró una base de datos para este servidor. Por favor, inténtalo de nuevo.",
-            "errorGettingSettings": "{{icon}} **Oops!**\nHubo un problema al obtener la configuración actual del servidor. Por favor, inténtalo de nuevo.",
-            "noRequestChannelFound": "{{icon}} **Oops!**\nUn canal de solicitudes ha sido guardado en la base de datos, pero no pude encontrarlo en el servidor. Por favor, ejecuta este comando de nuevo para establecer un nuevo canal de solicitudes.",
-            "requestChannelSet": "{{icon}} **Canal de solicitudes establecido**\nEl canal de texto **`{{channel}}`** ha sido establecido como el canal de solicitudes para las canciones.",
-            "requestChannelCleared": "{{icon}} **Canal de solicitudes eliminado**\nEl canal de solicitudes para las canciones ha sido eliminado.",
-            "invalidDefaultVolume": "{{icon}} **Oops!**\nNo puedes ajustar el volumen predeterminado a **`{{wrongVolume}}%`**, por favor elige un valor entre **`1%`** y **`100%`**."
+            "botLanguageChanged": "{{icon}} **Idioma del bot cambiado**\nEl idioma del bot se ha cambiado a **`{{language}}`**.",
+            "botLanguageInformation": "{{icon}} **Idioma del bot**\nEl idioma del bot actualmente está configurado en **`{{language}}`**.",
+            "botLanguageError": "{{icon}} **¡Vaya!**\nHubo un error al intentar cambiar el idioma del bot. Por favor, inténtalo de nuevo más tarde.",
+            "noDatabaseFound": "{{icon}} **¡Vaya!**\nNo se encontró ninguna base de datos para este servidor. Por favor, inténtalo de nuevo más tarde.",
+            "errorGettingSettings": "{{icon}} **¡Vaya!**\nHubo un error al intentar obtener la configuración de este servidor. Por favor, inténtalo de nuevo más tarde.",
+            "invalidDefaultVolume": "{{icon}} **¡Vaya!**\nNo puedes establecer el volumen predeterminado en **`{{wrongVolume}}%`**, por favor elige un valor entre **`0%`** y **`100%`**.",
+            "defaultVolumeError": "{{icon}} **¡Vaya!**\nHubo un error al intentar cambiar el volumen predeterminado. Por favor, inténtalo de nuevo más tarde.",
+            "defaultVolumeChanged": "{{icon}} **Volumen predeterminado cambiado**\nEl volumen predeterminado se ha cambiado a **`{{volume}}%`**.",
+            "defaultSearchEngineError": "{{icon}} **¡Vaya!**\nHubo un error al intentar cambiar el motor de búsqueda predeterminado. Por favor, inténtalo de nuevo más tarde.",
+            "defaultSearchEngineChanged": "{{icon}} **Motor de búsqueda predeterminado cambiado**\nEl motor de búsqueda predeterminado se ha cambiado a **`{{provider}}`**."
         },
         "shards": {
             "metadata": {
