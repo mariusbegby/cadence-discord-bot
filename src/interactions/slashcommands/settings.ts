@@ -1,20 +1,8 @@
-import {
-    ButtonBuilder,
-    APIButtonComponent,
-    ButtonStyle,
-    ChannelType,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    APIMessageActionRowComponent,
-    APIActionRowComponent,
-    ComponentType,
-    SlashCommandBuilder,
-    BaseGuildTextChannel
-} from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
-import { Translator, localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
-import guildDatabaseClient, { GuildConfig } from '../../common/services/guildDatabaseClient';
+import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
+import guildDatabaseClient from '../../common/services/guildDatabaseClient';
 import { Logger } from '../../common/services/logger';
 
 class SettingsCommand extends BaseSlashCommandInteraction {

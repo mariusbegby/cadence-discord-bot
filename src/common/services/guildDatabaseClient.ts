@@ -28,13 +28,15 @@ const guildDatabaseClient = {
     ) {
         const logger = getLogger(executionId, interaction);
         logger.debug(`Getting config for guild ${guildId} from database.`);
-        
-        const config = await prisma.guildConfig.findUnique({
-            where: { guildId: guildId }
-        }).catch((error) => { 
-            logger.error(error, 'Error getting guild config from database.')
-            return null;
-        });
+
+        const config = await prisma.guildConfig
+            .findUnique({
+                where: { guildId: guildId }
+            })
+            .catch((error) => {
+                logger.error(error, 'Error getting guild config from database.');
+                return null;
+            });
 
         if (!config) {
             logger.debug(`No config found for guild ${guildId}.`);
@@ -103,7 +105,7 @@ export function validateGuildConfig(logger: Logger, configData: GuildConfig) {
         defaultVolume: configData.defaultVolume,
         defaultSearchEngine: configData.defaultSearchEngine,
         locale: configData.locale,
-        actionPermissions: serializeActionPermissions(configData.actionPermissions ?? {}),
+        actionPermissions: serializeActionPermissions(configData.actionPermissions ?? {})
     };
 
     return validConfig;
