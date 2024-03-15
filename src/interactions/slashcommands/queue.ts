@@ -1,10 +1,7 @@
 import { GuildQueue, Track, useQueue } from 'discord-player';
 import {
     APIActionRowComponent,
-    APIButtonComponent,
     APIMessageActionRowComponent,
-    ButtonBuilder,
-    ButtonStyle,
     ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
@@ -18,6 +15,7 @@ import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { createNewActionButton } from '../../common/utils/createActionButton';
 
 class QueueCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -66,39 +64,33 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return await this.handleNoCurrentTrack(logger, interaction, queue, queueTracksListString, translator);
     }
 
-    private async handleCurrentTrack(
-        logger: Logger,
-        interaction: ChatInputCommandInteraction,
-        queue: GuildQueue,
+    private createEmbedActionRow(
         currentTrack: Track,
-        queueTracksListString: string,
+        queue: GuildQueue,
         translator: Translator
-    ) {
-        logger.debug('Queue exists with current track, gathering information.');
+    ): APIActionRowComponent<APIMessageActionRowComponent> {
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components: []
+        };
 
-        const components: APIMessageActionRowComponent[] = [];
+        const previousButton = createNewActionButton(
+            `action-previous-button_${currentTrack.id}`,
+            this.embedOptions.icons.previousTrack,
+            embedActionRow
+        );
 
-        const previousButton: APIButtonComponent = new ButtonBuilder()
-            .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
-            .setCustomId(`action-previous-button_${currentTrack.id}`)
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.previousTrack)
-            .toJSON();
-        components.push(previousButton);
+        const playPauseButton = createNewActionButton(
+            `action-pauseresume-button_${currentTrack.id}`,
+            this.embedOptions.icons.pauseResumeTrack,
+            embedActionRow
+        );
 
-        const playPauseButton: APIButtonComponent = new ButtonBuilder()
-            .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.pauseResumeTrack)
-            .toJSON();
-        components.push(playPauseButton);
-
-        const skipButton: APIButtonComponent = new ButtonBuilder()
-            .setCustomId(`action-skip-button_${currentTrack.id}`)
-            .setStyle(ButtonStyle.Secondary)
-            .setEmoji(this.embedOptions.icons.nextTrack)
-            .toJSON();
-        components.push(skipButton);
+        const skipButton = createNewActionButton(
+            `action-skip-button_${currentTrack.id}`,
+            this.embedOptions.icons.nextTrack,
+            embedActionRow
+        );
 
         if (this.embedOptions.components.showButtonLabels) {
             previousButton.label = translator('musicPlayerCommon.controls.previous');
@@ -108,10 +100,18 @@ class QueueCommand extends BaseSlashCommandInteraction {
             skipButton.label = translator('musicPlayerCommon.controls.skip');
         }
 
-        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
-            type: ComponentType.ActionRow,
-            components
-        };
+        return embedActionRow;
+    }
+
+    private async handleCurrentTrack(
+        logger: Logger,
+        interaction: ChatInputCommandInteraction,
+        queue: GuildQueue,
+        currentTrack: Track,
+        queueTracksListString: string,
+        translator: Translator
+    ) {
+        logger.debug('Queue exists with current track, gathering information.');
 
         logger.debug('Responding with info embed.');
         await interaction.reply({
@@ -138,7 +138,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                     .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)
             ],
-            components: [embedActionRow]
+            components: [this.createEmbedActionRow(currentTrack, queue, translator)]
         });
         return Promise.resolve();
     }
