@@ -64,45 +64,6 @@ class QueueCommand extends BaseSlashCommandInteraction {
         return await this.handleNoCurrentTrack(logger, interaction, queue, queueTracksListString, translator);
     }
 
-    private createEmbedActionRow(
-        currentTrack: Track,
-        queue: GuildQueue,
-        translator: Translator
-    ): APIActionRowComponent<APIMessageActionRowComponent> {
-        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
-            type: ComponentType.ActionRow,
-            components: []
-        };
-
-        const previousButton = createNewActionButton(
-            `action-previous-button_${currentTrack.id}`,
-            this.embedOptions.icons.previousTrack,
-            embedActionRow
-        );
-
-        const playPauseButton = createNewActionButton(
-            `action-pauseresume-button_${currentTrack.id}`,
-            this.embedOptions.icons.pauseResumeTrack,
-            embedActionRow
-        );
-
-        const skipButton = createNewActionButton(
-            `action-skip-button_${currentTrack.id}`,
-            this.embedOptions.icons.nextTrack,
-            embedActionRow
-        );
-
-        if (this.embedOptions.components.showButtonLabels) {
-            previousButton.label = translator('musicPlayerCommon.controls.previous');
-            playPauseButton.label = queue.node.isPaused()
-                ? translator('musicPlayerCommon.controls.resume')
-                : translator('musicPlayerCommon.controls.pause');
-            skipButton.label = translator('musicPlayerCommon.controls.skip');
-        }
-
-        return embedActionRow;
-    }
-
     private async handleCurrentTrack(
         logger: Logger,
         interaction: ChatInputCommandInteraction,
@@ -263,6 +224,45 @@ class QueueCommand extends BaseSlashCommandInteraction {
         };
 
         return fullFooterData;
+    }
+
+    private createEmbedActionRow(
+        currentTrack: Track,
+        queue: GuildQueue,
+        translator: Translator
+    ): APIActionRowComponent<APIMessageActionRowComponent> {
+        const embedActionRow: APIActionRowComponent<APIMessageActionRowComponent> = {
+            type: ComponentType.ActionRow,
+            components: []
+        };
+
+        const previousButton = createNewActionButton(
+            `action-previous-button_${currentTrack.id}`,
+            this.embedOptions.icons.previousTrack,
+            embedActionRow
+        );
+
+        const playPauseButton = createNewActionButton(
+            `action-pauseresume-button_${currentTrack.id}`,
+            this.embedOptions.icons.pauseResumeTrack,
+            embedActionRow
+        );
+
+        const skipButton = createNewActionButton(
+            `action-skip-button_${currentTrack.id}`,
+            this.embedOptions.icons.nextTrack,
+            embedActionRow
+        );
+
+        if (this.embedOptions.components.showButtonLabels) {
+            previousButton.label = translator('musicPlayerCommon.controls.previous');
+            playPauseButton.label = queue.node.isPaused()
+                ? translator('musicPlayerCommon.controls.resume')
+                : translator('musicPlayerCommon.controls.pause');
+            skipButton.label = translator('musicPlayerCommon.controls.skip');
+        }
+
+        return embedActionRow;
     }
 }
 
