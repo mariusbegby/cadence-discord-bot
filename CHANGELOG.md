@@ -1,5 +1,101 @@
 # Changelog
 
+## [6.0.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.7.0...v6.0.0) (2024-03-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* New folder structure and organize files
+* remove /guilds system command
+* Implement Prisma for persistent storage
+* Make pino-pretty and pino-loki optional dependencies, removed old pretty scripts and created new dev script
+* Localization support, breaking change.
+
+### deps
+
+* Make pino-pretty and pino-loki optional dependencies, removed old pretty scripts and created new dev script ([056e052](https://github.com/mariusbegby/cadence-discord-bot/commit/056e052ba4b50c1f20cbb2b7b803a80b9142129c))
+
+
+### Features
+
+* Add norwegian localization file (no) ([a0dd74e](https://github.com/mariusbegby/cadence-discord-bot/commit/a0dd74e8d86a54d0a515cdc56b2fe4d80c61f3c7))
+* Implement Prisma for persistent storage ([ad29a63](https://github.com/mariusbegby/cadence-discord-bot/commit/ad29a6388d491d0d1fcde0d976dfc6d94bada154))
+* Localization support, breaking change. ([28592b1](https://github.com/mariusbegby/cadence-discord-bot/commit/28592b13d836f52f501ab9d0b6168cdf7174804b))
+* **music:** implement Song Announce Feature ([99c3cd0](https://github.com/mariusbegby/cadence-discord-bot/commit/99c3cd006f075957a22eaa6f408706bab4592d66))
+* Optionally add pino-pretty and pino-loki transports if installed ([eb9eceb](https://github.com/mariusbegby/cadence-discord-bot/commit/eb9eceb5398564bfcf4c2b39db8edba1a5659b59))
+* **settings:** created settings command. ([1c98fd6](https://github.com/mariusbegby/cadence-discord-bot/commit/1c98fd6c41326fe3467f5da204409e0c38793dce))
+
+
+### Minor changes and bug fixes
+
+* add config option for open source url and icon ([4f29399](https://github.com/mariusbegby/cadence-discord-bot/commit/4f29399a8eb2204b72e89e5bffdac730aca5fc13))
+* add missing translator for /systemstatus title ([e216791](https://github.com/mariusbegby/cadence-discord-bot/commit/e21679152bc060e45e2a7089624806b714aa95e4))
+* Add Open source button to /status ([fa84e29](https://github.com/mariusbegby/cadence-discord-bot/commit/fa84e2925e048819e56b37f1257699653daf472b))
+* Add track position to footer when track(s) added to queue in /play ([d496945](https://github.com/mariusbegby/cadence-discord-bot/commit/d496945949e58d7430c61177a3d38f0e178195e2))
+* add translation of unexpected error ([b953179](https://github.com/mariusbegby/cadence-discord-bot/commit/b953179e965c64c1f3359d936b83a2d34d5baff3))
+* also translate command params for /help ([e2040ba](https://github.com/mariusbegby/cadence-discord-bot/commit/e2040baa8d0943d0295e62a9c29dceb67298cbdd))
+* Better handling of unavailable source  after added to queue ([69d23d1](https://github.com/mariusbegby/cadence-discord-bot/commit/69d23d1b77fc9066abd2cc532e5a54c36c0f064c))
+* check for duplicate /track/id in spotify url and trim ([b3b73ad](https://github.com/mariusbegby/cadence-discord-bot/commit/b3b73ad49f920dfd81598ea15c20b6ab87fa5ea4))
+* eslint formatting errors ([fec394f](https://github.com/mariusbegby/cadence-discord-bot/commit/fec394ffc0886c44d557c61f1dc3dd0aa2e39d84))
+* Fix not being able to select multiple ffmpeg filters ([83462ab](https://github.com/mariusbegby/cadence-discord-bot/commit/83462ab6265937d0c517436cbf2a9bc60d1c1aaa))
+* Fix playlist added position being incorrect in some cases ([664fa50](https://github.com/mariusbegby/cadence-discord-bot/commit/664fa50dfe65d85a86808e6aa712d821025bc8c1))
+* Fix showing repeat mode in skipped track ([88511f8](https://github.com/mariusbegby/cadence-discord-bot/commit/88511f87c1fffb7270a70fe4782789e1288c5f22))
+* **lang:** Fixed translation string bug ([1728503](https://github.com/mariusbegby/cadence-discord-bot/commit/1728503bb6c35ac0363214d3167216bfccc586d4))
+* New folder structure and organize files ([39ff5ec](https://github.com/mariusbegby/cadence-discord-bot/commit/39ff5ecb5d2d28b06e161054f0c793531ce06506))
+* override willAutoPlay event to set bot user as requestedBy ([aa36925](https://github.com/mariusbegby/cadence-discord-bot/commit/aa3692592dc876c10b0372df399c1fb0925359ec))
+* remove /guilds system command ([ccc4f19](https://github.com/mariusbegby/cadence-discord-bot/commit/ccc4f19cc0911f663b503b1dbef48842b902db29))
+* remove unnecessary queue.clear() call in /stop ([f9fa501](https://github.com/mariusbegby/cadence-discord-bot/commit/f9fa501125bc96ade97fc76dda65729712be5044))
+* Replace support server and add bot info with link buttons in /help ([612e3a0](https://github.com/mariusbegby/cadence-discord-bot/commit/612e3a00a65fc8c3aa36b5c0c0a012349d44ee09))
+* transform search query in /play autocomplete ([5601767](https://github.com/mariusbegby/cadence-discord-bot/commit/56017678062a343f94f18ebb1ed770c6d9efe49a))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @types/node from 20.10.4 to 20.10.5 ([a834e4b](https://github.com/mariusbegby/cadence-discord-bot/commit/a834e4bfa80d96dd7a9f75f14f6619c760f92576))
+* **deps-dev:** bump @types/node from 20.10.5 to 20.10.6 ([10513ba](https://github.com/mariusbegby/cadence-discord-bot/commit/10513baf19a40dfdfdeb4e1d0eae433463a7fceb))
+* **deps-dev:** bump @types/node from 20.10.6 to 20.10.7 ([8f37bfe](https://github.com/mariusbegby/cadence-discord-bot/commit/8f37bfe557b5a561462eee1aca5135483bd5906f))
+* **deps-dev:** bump @types/node from 20.10.7 to 20.11.2 ([c794128](https://github.com/mariusbegby/cadence-discord-bot/commit/c7941285c564e3ce64c71b55aa113fb341c962ee))
+* **deps-dev:** bump @types/node from 20.11.16 to 20.11.17 ([c7d6a30](https://github.com/mariusbegby/cadence-discord-bot/commit/c7d6a3063b5d673e524409d85f08165592b31b8c))
+* **deps-dev:** bump @types/node from 20.11.2 to 20.11.10 ([cd90e7f](https://github.com/mariusbegby/cadence-discord-bot/commit/cd90e7fc126b5b5afbf790e934af38427f2943fd))
+* **deps-dev:** bump @types/node from 20.11.20 to 20.11.24 ([44bc390](https://github.com/mariusbegby/cadence-discord-bot/commit/44bc390305035ce2568f33bbca4f8e8c0ebf3412))
+* **deps-dev:** bump @types/node from 20.11.24 to 20.11.25 ([931ab45](https://github.com/mariusbegby/cadence-discord-bot/commit/931ab456eff6be63150509eedf31d83872bf3dd5))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([3d7311e](https://github.com/mariusbegby/cadence-discord-bot/commit/3d7311edc2dc24107211a1ddd0710de6121415f1))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([21aa0ca](https://github.com/mariusbegby/cadence-discord-bot/commit/21aa0cae9e40075f97bb34b3d936a736095a7026))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([e59cd1f](https://github.com/mariusbegby/cadence-discord-bot/commit/e59cd1fd67e74eea39b91076fc55e13ec7769c69))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([90b13db](https://github.com/mariusbegby/cadence-discord-bot/commit/90b13dbdcf1b45d938b090ef9d9fd2491af8d4d8))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([c209881](https://github.com/mariusbegby/cadence-discord-bot/commit/c2098816de6d743a4bc49fa8bf1521e8f5b7326a))
+* **deps-dev:** bump @typescript-eslint/parser from 6.15.0 to 6.16.0 ([ba94891](https://github.com/mariusbegby/cadence-discord-bot/commit/ba9489175a42321a223353c791894a3e9d0ec2ad))
+* **deps-dev:** bump @typescript-eslint/parser from 6.16.0 to 6.18.1 ([3fd12e3](https://github.com/mariusbegby/cadence-discord-bot/commit/3fd12e3ff6b95a734e800ba5fa7f0c477f29cf6a))
+* **deps-dev:** bump @typescript-eslint/parser from 6.18.1 to 6.19.0 ([737e82c](https://github.com/mariusbegby/cadence-discord-bot/commit/737e82cc705e46f164922c63938aa98d49553b52))
+* **deps-dev:** bump @typescript-eslint/parser from 6.19.0 to 6.19.1 ([af559c8](https://github.com/mariusbegby/cadence-discord-bot/commit/af559c8654569a781e31c24d2463242a0c428d05))
+* **deps-dev:** bump @typescript-eslint/parser from 6.19.1 to 6.20.0 ([54ca9ec](https://github.com/mariusbegby/cadence-discord-bot/commit/54ca9ecfb9e4785fe0d463ee80be3f30a9c7856b))
+* **deps-dev:** bump @typescript-eslint/parser from 7.0.2 to 7.1.0 ([62a6ffb](https://github.com/mariusbegby/cadence-discord-bot/commit/62a6ffb2683d597847698a0e9a856fc9d0b9c81d))
+* **deps-dev:** bump @typescript-eslint/parser from 7.1.0 to 7.1.1 ([b337658](https://github.com/mariusbegby/cadence-discord-bot/commit/b337658dde5c30e7f1c7b7252d04bcb0a53f33c5))
+* **deps-dev:** bump eslint from 8.55.0 to 8.56.0 ([6c4f3a9](https://github.com/mariusbegby/cadence-discord-bot/commit/6c4f3a9d280631113f0b0f6a82428a069ae1fd94))
+* **deps-dev:** bump eslint-plugin-prettier from 5.1.1 to 5.1.2 ([72b6490](https://github.com/mariusbegby/cadence-discord-bot/commit/72b64909aec72329ec294dfd937c7e1e821ac9a4))
+* **deps-dev:** bump eslint-plugin-prettier from 5.1.2 to 5.1.3 ([01568d3](https://github.com/mariusbegby/cadence-discord-bot/commit/01568d3ef746b6a1fd1e3b283759193484a5a2f4))
+* **deps-dev:** bump i18next-resources-for-ts from 1.4.0 to 1.5.0 ([fc16137](https://github.com/mariusbegby/cadence-discord-bot/commit/fc16137427cbf5eec46646eae6b6e2a7f15c432f))
+* **deps-dev:** bump prettier from 3.1.1 to 3.2.2 ([18b010a](https://github.com/mariusbegby/cadence-discord-bot/commit/18b010ac80a12cddf134f539fd3aea9a16a5c259))
+* **deps-dev:** bump ts-jest from 29.1.1 to 29.1.2 ([ef09de8](https://github.com/mariusbegby/cadence-discord-bot/commit/ef09de8284bb670d92a973c3999a84fc9a289179))
+* **deps-dev:** bump typescript from 5.3.3 to 5.4.2 ([3495805](https://github.com/mariusbegby/cadence-discord-bot/commit/3495805073c97f074de494ffa068bc6ada1b20b0))
+* **deps:** bump @prisma/client from 5.7.1 to 5.8.1 ([82f352d](https://github.com/mariusbegby/cadence-discord-bot/commit/82f352d613ce34835e77edbd891d6092472d6847))
+* **deps:** bump config from 3.3.9 to 3.3.10 ([5c2cbab](https://github.com/mariusbegby/cadence-discord-bot/commit/5c2cbab0c495934f810c451c4ba6409624922872))
+* **deps:** bump discord-player from 6.6.6 to 6.6.7 ([d89e1e6](https://github.com/mariusbegby/cadence-discord-bot/commit/d89e1e60091b0730c2db72e5543196012a0f96fe))
+* **deps:** bump dotenv from 16.3.1 to 16.4.1 ([f55b18b](https://github.com/mariusbegby/cadence-discord-bot/commit/f55b18b0836b1a960470998fdb948bdf8e3a5605))
+* **deps:** bump dotenv from 16.4.1 to 16.4.3 ([fee5cd1](https://github.com/mariusbegby/cadence-discord-bot/commit/fee5cd166f74bafc179cd9a2fdbd0ed5e7caa1f3))
+* **deps:** bump i18next from 23.10.0 to 23.10.1 ([edfce65](https://github.com/mariusbegby/cadence-discord-bot/commit/edfce659b3c38875026270c23bd09756c7ed89de))
+* **deps:** bump i18next from 23.7.11 to 23.7.13 ([425aac5](https://github.com/mariusbegby/cadence-discord-bot/commit/425aac5ce6f3f89c9332370f43ede957d61c1398))
+* **deps:** bump i18next from 23.7.13 to 23.7.16 ([748742a](https://github.com/mariusbegby/cadence-discord-bot/commit/748742a2fceb22950f4fb41f5137eb8d060653e3))
+* **deps:** bump i18next from 23.7.16 to 23.8.1 ([75b7ebb](https://github.com/mariusbegby/cadence-discord-bot/commit/75b7ebb26adf6d9cd7503292e4b430142b4e6d94))
+* **deps:** bump ip from 1.1.8 to 1.1.9 ([d0be0ce](https://github.com/mariusbegby/cadence-discord-bot/commit/d0be0cea84e93d1a8b0c793b3034aab0f022c23c))
+* **deps:** bump pino from 8.16.2 to 8.17.1 ([d7a98c1](https://github.com/mariusbegby/cadence-discord-bot/commit/d7a98c1f8605e5364019e18f94da853e67d3f31e))
+* **deps:** bump pino from 8.17.1 to 8.17.2 ([80f8ec2](https://github.com/mariusbegby/cadence-discord-bot/commit/80f8ec2fc4ff7f257d395fedb51f9c6850b932b9))
+* **deps:** bump pino-loki from 2.1.3 to 2.2.1 ([1bd8e12](https://github.com/mariusbegby/cadence-discord-bot/commit/1bd8e125303b4bfa4c2b202a6f420b67dbd95355))
+* **deps:** bump pino-pretty from 10.3.0 to 10.3.1 ([637210b](https://github.com/mariusbegby/cadence-discord-bot/commit/637210b4e0898ff4af9b1161fd6f6a7f3de26923))
+* **deps:** Updated dependencies ([1728503](https://github.com/mariusbegby/cadence-discord-bot/commit/1728503bb6c35ac0363214d3167216bfccc586d4))
+* update volume command options ([46a81fb](https://github.com/mariusbegby/cadence-discord-bot/commit/46a81fb474b223c16584c88b9339c125c74003d1))
+* update volume command options and remove duplicate file ([d48503f](https://github.com/mariusbegby/cadence-discord-bot/commit/d48503f565f4b0104e9f48891ece6c808e1f81f9))
+
 ## [5.7.0](https://github.com/mariusbegby/cadence-discord-bot/compare/v5.6.8...v5.7.0) (2023-12-13)
 
 
