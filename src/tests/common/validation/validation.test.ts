@@ -13,7 +13,7 @@ describe('searchQueryValidator', () => {
     );
 
     it.each(['a', 'abcde', 'looooong', 'a-b', 'abcde-abcde'])(
-        'should not transform Spotify url without matching country-code patterh to normal Spotify url',
+        'should not transform Spotify url without matching country-code pattern to normal Spotify url',
         async (path) => {
             const trackId = '5T8EDUDqKcs6OSOwEsfqG7';
             const query: string = `https://open.spotify.com/${path}/track/${trackId}`;
