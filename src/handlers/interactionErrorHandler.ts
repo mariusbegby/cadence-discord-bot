@@ -49,7 +49,7 @@ export const handleError = async (
         ]
     };
 
-    logger.debug(`Error handling interaction '${interactionIdentifier}'`);
+    logger.error(error, `Error handling interaction '${interactionIdentifier}'`);
 
     if (interaction instanceof ChatInputCommandInteraction) {
         switch (interaction.replied) {
