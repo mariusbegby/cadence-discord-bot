@@ -127,5 +127,12 @@ This project is made possible by the contributions from the community and the us
             <sub style="font-size:14px"><b>Parker Owings</b></sub>
         </a>
     </td>
+    <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
+        <a href=https://github.com/missfrizzy>
+            <img src=https://avatars.githubusercontent.com/u/128760145?v=4 width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=MissFrizzy/>
+            <br />
+            <sub style="font-size:14px"><b>MissFrizzy</b></sub>
+        </a>
+    </td>
 </tr>
 </table>
