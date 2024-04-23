@@ -3,7 +3,7 @@
 # Images automatically published: docker pull mariusbegby/cadence
 
 # Using Node 18.16 (LTS) on bookworm-slim base
-ARG NODE_VERSION=18.16
+ARG NODE_VERSION=18.18
 FROM node:${NODE_VERSION}-bookworm-slim
 
 # Install npm build dependencies and ffmpeg
