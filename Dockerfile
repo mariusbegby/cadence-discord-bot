@@ -18,6 +18,7 @@ COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 COPY locales/ ./locales/
+COPY prisma/ ./prisma/
 
 # Install dependencies from package-lock.json
 RUN npm ci
@@ -26,6 +27,7 @@ RUN npm ci
 RUN npm run build && \
     rm -rf node_modules && \
     npm ci --omit=dev
+RUN npx prisma generate
 
 # Cleanup of unneeded packages, apk cache, and TypeScript source files
 RUN apt remove -y python3 make build-essential && \
