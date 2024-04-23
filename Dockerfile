@@ -17,6 +17,7 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
+COPY locales/ ./locales
 
 # Install dependencies from package-lock.json
 RUN npm ci
