@@ -33,7 +33,7 @@ const guildDatabaseClient = {
             .findUnique({
                 where: { guildId: guildId }
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 logger.error(error, 'Error getting guild config from database.');
                 return null;
             });
