@@ -91,5 +91,8 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
 })();
 
 async function refreshCommands(route: RouteLike, commands: object[]) {
-    await rest.put(route, { body: commands });
+    // Deploying Discord Commands, Runs POST call for each command Asynchronously
+    await Promise.all(commands.map(async (command) => {
+        await rest.post(route, { body: command });
+    }));
 }
