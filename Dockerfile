@@ -58,5 +58,5 @@ RUN npm install mediaplex
 # Cleanup unnecessary packages to minimize image size
 RUN apt-get purge -y python3 && apt-get autoremove -y
 
-# CMD /bin/sh -c "npm run deploy && npm run start"
-CMD /bin/sh -c "npm run start"
+# Start the application
+CMD /bin/sh -c "npm run deploy && npm run start"
