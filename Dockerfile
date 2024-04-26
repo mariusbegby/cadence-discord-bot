@@ -3,7 +3,7 @@
 # Images automatically published: docker pull mariusbegby/cadence
 
 # Using Node 18.16 (LTS) on bookworm-slim base
-ARG NODE_VERSION=18.16
+ARG NODE_VERSION=18.18
 FROM node:${NODE_VERSION}-bookworm-slim
 
 # Install npm build dependencies and ffmpeg
@@ -17,6 +17,8 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
+COPY locales/ ./locales/
+COPY prisma/ ./prisma/
 
 # Install dependencies from package-lock.json
 RUN npm ci
@@ -25,6 +27,7 @@ RUN npm ci
 RUN npm run build && \
     rm -rf node_modules && \
     npm ci --omit=dev
+RUN npx prisma generate
 
 # Cleanup of unneeded packages, apk cache, and TypeScript source files
 RUN apt remove -y python3 make build-essential && \
