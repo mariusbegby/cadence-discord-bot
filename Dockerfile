@@ -2,36 +2,56 @@
 # Dockerfile for https://hub.docker.com/r/mariusbegby/cadence/
 # Images automatically published: docker pull mariusbegby/cadence
 
-# Using Node 18.16 (LTS) on bookworm-slim base
-ARG NODE_VERSION=18.18
-FROM node:${NODE_VERSION}-bookworm-slim
+# Stage 1: Build and transpile TypeScript
+ARG NODE_VERSION=20.12
+FROM node:${NODE_VERSION}-bookworm-slim as builder
 
-# Install npm build dependencies and ffmpeg
-RUN apt-get update && apt-get install -y python3 make build-essential ffmpeg
+# Set working directory
+WORKDIR /app
 
-# Set work directory for subsequent commands
-WORKDIR /cadence-discord-bot
+# Install dependencies necessary to run npm install
+RUN apt-get update && \
+    apt-get install -y python3 make build-essential ffmpeg
 
-# Copy the rest of the source files into the image.
+# Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy tsconfig and other necessary files
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 COPY locales/ ./locales/
 COPY prisma/ ./prisma/
 
-# Install dependencies from package-lock.json
-RUN npm ci
-
-# Transpile TypeScript to JavaScript, remove dev dependencies, and install production dependencies
+# Transpile TypeScript to JavaScript
 RUN npm run build && \
-    rm -rf node_modules && \
+    npx prisma generate && \
     npm ci --omit=dev
-RUN npx prisma generate
+
+# Stage 2: Production environment (final, lighter image, after installing deps etc)
+FROM node:${NODE_VERSION}-bookworm-slim as production
+
+# Copy built artifacts from builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/locales ./locales
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
 
 # Cleanup of unneeded packages, apk cache, and TypeScript source files
-RUN apt remove -y python3 make build-essential && \
-    rm -rf /var/cache/apt/* /tmp/* ./src/
+RUN apt-get update && apt-get install -y ca-certificates && \
+    apt-get remove -y python3 make build-essential && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    update-ca-certificates
+
+# Set working directory
+WORKDIR /app
 
 # Startup command to run the bot after deploying slash commands
 CMD /bin/sh -c "npm run deploy && npm run start"
