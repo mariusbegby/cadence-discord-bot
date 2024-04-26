@@ -10,27 +10,26 @@ FROM node:${NODE_VERSION}-bookworm-slim as builder
 # Set working directory
 WORKDIR /app
 
-# Install build dependencies necessary for native modules
-RUN apt-get update && apt-get install -y \
-    python3 make build-essential
+# Install build dependencies necessary for native modules and clean up in one layer
+RUN apt-get update && apt-get install -y python3 make build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy package.json and package-lock.json
+# Install node dependencies
 COPY package*.json ./
-
-# Install dependencies with all required build scripts
 RUN npm ci
 
-# Copy tsconfig and other necessary files
+# Copy only necessary source files
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 COPY locales/ ./locales/
 COPY prisma/ ./prisma/
 
-# Transpile TypeScript to JavaScript
-RUN npm run build && \
-    npx prisma generate && \
-    npm ci --omit=dev
+# Build the application
+RUN npm run build && npx prisma generate
+
+# Remove development dependencies
+RUN npm prune --omit=dev
 
 # Stage 2: Production environment
 FROM node:${NODE_VERSION}-bookworm-slim as production
@@ -38,9 +37,9 @@ FROM node:${NODE_VERSION}-bookworm-slim as production
 # Set working directory
 WORKDIR /app
 
-# Install runtime dependencies for native modules
-RUN apt-get update && \
-    apt-get install -y ffmpeg
+# Install runtime dependencies necessary for the application
+RUN apt-get update && apt-get install -y ffmpeg ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy built artifacts from builder stage
 COPY --from=builder /app/node_modules ./node_modules
@@ -50,20 +49,14 @@ COPY --from=builder /app/config ./config
 COPY --from=builder /app/locales ./locales
 COPY --from=builder /app/prisma ./prisma
 
-# Clear npm cache and install mediaplex
-RUN npm cache clean --force && \
-    npm install mediaplex
+# Rebuild native dependencies
+RUN npm rebuild && npm cache clean --force
 
-# Rebuild all native dependencies
-RUN npm rebuild
+# Install mediaplex
+RUN npm install mediaplex
 
-# Cleanup of unneeded packages, apk cache, and TypeScript source files
-RUN apt-get update && apt-get install -y ca-certificates && \
-    apt-get remove -y python3 make build-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    update-ca-certificates
+# Cleanup unnecessary packages to minimize image size
+RUN apt-get purge -y python3 && apt-get autoremove -y
 
 # CMD /bin/sh -c "npm run deploy && npm run start"
 CMD /bin/sh -c "npm run start"
