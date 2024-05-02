@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
@@ -46,6 +46,7 @@ class SettingsCommand extends BaseSlashCommandInteraction {
                                 )
                         )
                 )
+                .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         );
         super(data);
     }
@@ -79,18 +80,31 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    /**
-     * Fetches settings from the database and displays them in an embed message.
-     * @param logger - The logger instance for logging debug information.
-     * @param executionId - The execution ID for tracking the execution of the function.
-     * @param interaction - The ChatInputCommandInteraction object representing the user interaction.
-     * @returns A Promise that resolves once the settings are displayed.
-     */
+    private async replyNotImplemented(
+        logger: Logger,
+        executionId: string,
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(this.embedOptions.colors.error)
+                    .setDescription(
+                        `${this.embedOptions.icons.error} **Not yet available**\n\nThis command is not yet implemented and cannot be used.`
+                    )
+            ]
+        });
+
+        logger.debug('Not implemented message sent.');
+    }
+
     private async showSettings(
         logger: Logger,
         executionId: string,
         interaction: ChatInputCommandInteraction
     ): Promise<void> {
+        return await this.replyNotImplemented(logger, executionId, interaction);
+
         logger.debug('Fetching settings from database.');
 
         const translator = useServerTranslator(interaction);
@@ -126,7 +140,9 @@ class SettingsCommand extends BaseSlashCommandInteraction {
                         new EmbedBuilder().setColor(this.embedOptions.colors.error).setDescription(
                             translator('commands.settings.botLanguageError', {
                                 icon: this.embedOptions.icons.error
-                            })
+                            }) +
+                                '\n\n' +
+                                '**Not implemented**\nThis command is not yet available.'
                         )
                     ]
                 });
@@ -134,19 +150,13 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    /**
-     * Handles the change of the bot's language.
-     *
-     * @param logger - The logger instance.
-     * @param executionId - The execution ID.
-     * @param interaction - The chat input command interaction.
-     * @returns A promise that resolves when the language change is handled.
-     */
     private async handleBotLanguageChange(
         logger: Logger,
         executionId: string,
         interaction: ChatInputCommandInteraction
     ): Promise<void> {
+        return await this.replyNotImplemented(logger, executionId, interaction);
+
         const language = interaction.options.getString('language')!;
         const translator = useServerTranslator(interaction);
         const guildId = interaction.guildId;
@@ -186,19 +196,13 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    /**
-     * Handles the change of the default volume.
-     *
-     * @param logger - The logger instance.
-     * @param executionId - The execution ID.
-     * @param interaction - The chat input command interaction.
-     * @returns A promise that resolves when the volume change is handled.
-     */
     private async handleDefaultVolumeChange(
         logger: Logger,
         executionId: string,
         interaction: ChatInputCommandInteraction
     ): Promise<void> {
+        return await this.replyNotImplemented(logger, executionId, interaction);
+
         const volume = interaction.options.getInteger('percentage')!;
         const translator = useServerTranslator(interaction);
         const guildId = interaction.guildId;
@@ -238,19 +242,13 @@ class SettingsCommand extends BaseSlashCommandInteraction {
         }
     }
 
-    /**
-     * Handles the change of the default search engine.
-     *
-     * @param logger - The logger instance.
-     * @param executionId - The execution ID.
-     * @param interaction - The chat input command interaction.
-     * @returns A promise that resolves when the search engine change is handled.
-     */
     private async handleDefaultSearchEngineChange(
         logger: Logger,
         executionId: string,
         interaction: ChatInputCommandInteraction
     ): Promise<void> {
+        return await this.replyNotImplemented(logger, executionId, interaction);
+
         const engine = interaction.options.getString('provider')!;
         const translator = useServerTranslator(interaction);
         const guildId = interaction.guildId;
