@@ -62,37 +62,15 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
     } catch (error) {
         logger.error(error, 'Failed to refresh user slash commands.');
     }
-
-    try {
-        logger.debug(
-            `Bot system slash commands found: ${systemSlashCommands
-                .map((systemCommand) => `/${systemCommand.name}`)
-                .join(', ')}`
-        );
-
-        logger.info('Started refreshing system slash commands.');
-        const systemGuildIds: string[] = systemOptions.systemGuildIds;
-        await Promise.all(
-            systemGuildIds.map((systemGuildId: string) => {
-                logger.debug(`Refreshing system slash command for guild id '${systemGuildId}'.`);
-                refreshCommands(
-                    Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID!, systemGuildId),
-                    systemSlashCommands
-                );
-            })
-        );
-        logger.info('Successfully refreshed system slash commands.');
-    } catch (error) {
-        logger.error(
-            error,
-            "Failed to refresh system slash commands. Make sure the bot is in the system guilds specified in 'systemOptions'."
-        );
-    }
 })();
 
-async function refreshCommands(route: RouteLike, commands: object[]) {
+async function refreshCommands(route: RouteLike, commands: RESTPostAPIChatInputApplicationCommandsJSONBody[]) {
     // Deploying Discord Commands, Runs POST call for each command Asynchronously
-    await Promise.all(commands.map(async (command) => {
-        await rest.post(route, { body: command });
-    }));
+    logger.info('Deploying commands... This could take some time, please allow a few minutes.');
+    await Promise.all(
+        commands.map(async (command) => {
+            logger.info(`Deploying command: ${command.name}`);
+            await rest.post(route, { body: command });
+        })
+    );
 }
