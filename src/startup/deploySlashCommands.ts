@@ -1,4 +1,3 @@
-import config from 'config';
 import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
 import 'dotenv/config';
 import { randomUUID as uuidv4 } from 'node:crypto';
@@ -7,9 +6,6 @@ import path from 'node:path';
 import { Logger } from '../common/services/logger';
 import { BaseSlashCommandInteraction } from '../common/classes/interactions';
 import { loggerService } from '../common/services/logger';
-import { SystemOptions } from '../types/configTypes';
-
-const systemOptions: SystemOptions = config.get('systemOptions');
 
 const executionId: string = uuidv4();
 const logger: Logger = loggerService.child({
