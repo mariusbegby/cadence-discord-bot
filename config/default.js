@@ -71,7 +71,7 @@ module.exports.embedOptions = {
         showButtonLabels: true
     },
     behavior: {
-        enablePlayerStartMessages: false,
+        enablePlayerStartMessages: false
     },
     icons: {
         logo: '🤖',
