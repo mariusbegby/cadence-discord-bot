@@ -6,6 +6,7 @@ import {
     Locale,
     LocaleString,
     SlashCommandBuilder,
+    SlashCommandOptionsOnlyBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
@@ -76,6 +77,7 @@ export function localizeCommand(
     command:
         | SlashCommandSubcommandBuilder
         | SlashCommandSubcommandsOnlyBuilder
+        | SlashCommandOptionsOnlyBuilder
         | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>,
     resourcePath?: string
 ) {
