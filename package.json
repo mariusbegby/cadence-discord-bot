@@ -86,7 +86,7 @@
         "typescript": "^5.4.5"
     },
     "optionalDependencies": {
-        "pino-loki": "^2.2.1",
+        "pino-loki": "^2.3.0",
         "pino-pretty": "^11.0.0"
     }
 }
