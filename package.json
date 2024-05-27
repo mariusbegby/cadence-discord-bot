@@ -87,6 +87,6 @@
     },
     "optionalDependencies": {
         "pino-loki": "^2.3.0",
-        "pino-pretty": "^11.0.0"
+        "pino-pretty": "^11.1.0"
     }
 }
