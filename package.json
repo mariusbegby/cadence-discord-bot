@@ -55,6 +55,7 @@
         "@discordjs/rest": "^2.3.0",
         "@discordjs/ws": "^1.1.0",
         "@prisma/client": "^5.14.0",
+        "@web-scrobbler/metadata-filter": "^3.1.0",
         "config": "^3.3.11",
         "discord-player": "^6.6.9",
         "discord-voip": "^0.1.3",
