@@ -14,16 +14,16 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y python3 make build-essential \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install node dependencies
-COPY package*.json ./
-RUN npm ci
-
 # Copy only necessary source files
+COPY package*.json ./
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 COPY locales/ ./locales/
 COPY prisma/ ./prisma/
+
+# Install node dependencies
+RUN npm ci
 
 # Build the application
 RUN npm run build && npx prisma generate
