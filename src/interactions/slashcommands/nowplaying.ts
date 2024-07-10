@@ -138,9 +138,8 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
             ['arbitrary', translator('commands.pause.directSource')]
         ]);
 
-        return (
-            sourceStringsFormatted.get(currentTrack.raw.source!) ?? translator('musicPlayerCommon.unavailableSource')
-        );
+        const trackSource = currentTrack.source ?? currentTrack.raw.source;
+        return sourceStringsFormatted.get(trackSource) ?? translator('musicPlayerCommon.unavailableSource');
     }
 
     private getTrackSourceIcon(currentTrack: Track): string {

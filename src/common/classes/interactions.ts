@@ -63,8 +63,10 @@ abstract class BaseInteraction {
 
     protected getFormattedDuration(track: Track): string {
         let durationFormat =
-            Number(track.raw.duration) === 0 || track.duration === '0:00' ? '' : `**\`${track.duration}\`**`;
+            Number(track.duration) === 0 || track.duration === '0:00' ? '' : `**\`${track.duration}\`**`;
 
+        // track.raw is not populated on youtubei extractor
+        // track.live does not exist, so we cannot check this anymore...
         if (track.raw.live) {
             durationFormat = `**${this.embedOptions.icons.liveTrack} \`LIVE\`**`;
         }
@@ -91,24 +93,12 @@ abstract class BaseInteraction {
     protected getTrackThumbnailUrl(track: Track): string {
         let thumbnailUrl = '';
 
-        if (track.source === 'youtube') {
-            if (track.raw.thumbnail) {
-                // @ts-ignore -- discord-player bug with thumbnail for youtube?
-                thumbnailUrl = track.raw.thumbnail.url;
-            } else if (track.thumbnail && !track.thumbnail.endsWith('maxresdefault.jpg')) {
-                // @ts-ignore -- discord-player bug with thumbnail for youtube?
-                thumbnailUrl = track.thumbnail.url;
-            } else {
-                thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
-            }
+        if (track.raw.thumbnail) {
+            thumbnailUrl = track.raw.thumbnail;
+        } else if (track.thumbnail) {
+            thumbnailUrl = track.thumbnail;
         } else {
-            if (track.raw.thumbnail) {
-                thumbnailUrl = track.raw.thumbnail;
-            } else if (track.thumbnail) {
-                thumbnailUrl = track.thumbnail;
-            } else {
-                thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
-            }
+            thumbnailUrl = this.embedOptions.info.fallbackThumbnailUrl;
         }
 
         return thumbnailUrl;
@@ -137,7 +127,10 @@ abstract class BaseInteraction {
     };
 
     protected getDisplayQueueProgressBar(queue: GuildQueue, translator: Translator): string {
-        const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+        //const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+
+        // Temporarily remove progress bar as discord-player throws error  Cannot read properties of null (reading 'duration')
+        /*
         let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
             length: this.playerOptions.progressBar.length ?? 12,
@@ -147,15 +140,19 @@ abstract class BaseInteraction {
             rightChar: this.playerOptions.progressBar.rightChar ?? '▬'
         })} **\`${timestamp.total.label}\`**`;
 
-        if (Number(queue.currentTrack?.raw.duration) === 0 || queue.currentTrack?.duration === '0:00') {
+        if (Number(queue.currentTrack?.duration) === 0 || queue.currentTrack?.duration === '0:00') {
             progressBar = translator('musicPlayerCommon.unavailableDuration');
         }
 
+        // track.raw is not populated  fully on youtubei extractor
+        // there is no .live property to use anymore
         if (queue.currentTrack?.raw.live) {
             progressBar = translator('musicPlayerCommon.playingLive', {
                 icon: this.embedOptions.icons.liveTrack
             });
         }
+        */
+        const progressBar = '';
 
         return progressBar;
     }
