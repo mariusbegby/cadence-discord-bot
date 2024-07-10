@@ -13,3 +13,4 @@
 /prisma/dev.db
 /pnpm-lock.yaml
 /.vscode
+/.dpy
