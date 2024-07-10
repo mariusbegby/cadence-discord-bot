@@ -1,5 +1,5 @@
 import config from 'config';
-import { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
+import { GuildQueue, GuildQueueHistory, Track } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -126,7 +126,7 @@ abstract class BaseInteraction {
             : translator('musicPlayerCommon.unavailableRequestedBy');
     };
 
-    protected getDisplayQueueProgressBar(queue: GuildQueue, translator: Translator): string {
+    protected getDisplayQueueProgressBar(): string {
         //const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
 
         // Temporarily remove progress bar as discord-player throws error  Cannot read properties of null (reading 'duration')
