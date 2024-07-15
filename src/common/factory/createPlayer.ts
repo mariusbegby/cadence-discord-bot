@@ -22,7 +22,8 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
         const player: Player = new Player(client, {
             useLegacyFFmpeg: false,
             skipFFmpeg: false,
-            ipconfig: ipRotationConfig,
+            ipconfig: ipRotationConfig
+            /* new youtube extractor is not ytdl based, so this is not needed
             ytdlOptions: {
                 quality: 'highestaudio',
                 highWaterMark: 1 << 25,
@@ -32,20 +33,15 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
                     }
                 }
             }
+            */
         });
 
-        // TEMPORARY FIX
-        // Need error handling
+        // Testing out new youtube extractor
         await player.extractors.register(YoutubeiExtractor, {
-            authentication: {
-                access_token: process.env.YT_ACCESS_TOKEN || '',
-                refresh_token: process.env.YT_REFRESH_TOKEN || '',
-                scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube-paid-content',
-                token_type: 'Bearer',
-                expiry_date: '2024-07-10T11:37:01.093Z'
-            }
+            authentication: process.env.YT_EXTRACTOR_AUTH || ''
         });
 
+        // Using new youtube extractor as bridge for spotify
         await player.extractors.register(SpotifyExtractor, {
             createStream: createYoutubeiStream
         });
