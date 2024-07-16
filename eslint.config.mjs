@@ -1,10 +1,10 @@
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import globals from 'globals';
+import tsParser from '@typescript-eslint/parser';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import js from '@eslint/js';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,79 +14,99 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default [{
-    ignores: ["config/**/*.js", "locales/**/*"],
-}, ...compat.extends(
-    "eslint:recommended",
-    "prettier",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-), {
-    plugins: {
-        "@typescript-eslint": typescriptEslint,
+export default [
+    {
+        ignores: ['config/**/*.js', 'locales/**/*']
     },
-
-    languageOptions: {
-        globals: {
-            ...globals.node,
+    ...compat.extends(
+        'eslint:recommended',
+        'prettier',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:prettier/recommended'
+    ),
+    {
+        plugins: {
+            '@typescript-eslint': typescriptEslint
         },
 
-        parser: tsParser,
-        ecmaVersion: "latest",
-        sourceType: "module",
+        languageOptions: {
+            globals: {
+                ...globals.node
+            },
 
-        parserOptions: {
-            project: "./tsconfig.json",
+            parser: tsParser,
+            ecmaVersion: 'latest',
+            sourceType: 'module'
         },
-    },
 
-    rules: {
-        "prettier/prettier": "error",
+        rules: {
+            'prettier/prettier': 'error',
 
-        indent: ["error", 4, {
-            SwitchCase: 1,
-        }],
+            indent: [
+                'error',
+                4,
+                {
+                    SwitchCase: 1
+                }
+            ],
 
-        "max-len": ["error", {
-            code: 120,
-            ignoreTemplateLiterals: true,
-            ignoreStrings: true,
-            ignoreComments: true,
-            ignoreRegExpLiterals: true,
-            ignoreUrls: true,
-        }],
+            'max-len': [
+                'error',
+                {
+                    code: 120,
+                    ignoreTemplateLiterals: true,
+                    ignoreStrings: true,
+                    ignoreComments: true,
+                    ignoreRegExpLiterals: true,
+                    ignoreUrls: true
+                }
+            ],
 
-        "linebreak-style": ["error", "windows"],
+            'linebreak-style': ['error', 'windows'],
 
-        quotes: ["error", "single", {
-            avoidEscape: true,
-        }],
+            quotes: [
+                'error',
+                'single',
+                {
+                    avoidEscape: true
+                }
+            ],
 
-        semi: ["error", "always"],
-        camelcase: "error",
-        "array-bracket-spacing": ["error", "never"],
-        "object-curly-spacing": ["error", "always"],
-        "jsx-quotes": ["error", "prefer-single"],
+            semi: ['error', 'always'],
+            camelcase: 'error',
+            'array-bracket-spacing': ['error', 'never'],
+            'object-curly-spacing': ['error', 'always'],
+            'jsx-quotes': ['error', 'prefer-single'],
 
-        "key-spacing": ["error", {
-            afterColon: true,
-            mode: "minimum",
-        }],
+            'key-spacing': [
+                'error',
+                {
+                    afterColon: true,
+                    mode: 'minimum'
+                }
+            ],
 
-        "no-trailing-spaces": ["error", {
-            skipBlankLines: true,
-            ignoreComments: true,
-        }],
+            'no-trailing-spaces': [
+                'error',
+                {
+                    skipBlankLines: true,
+                    ignoreComments: true
+                }
+            ],
 
-        curly: ["error", "all"],
-        "no-console": ["error"],
+            curly: ['error', 'all'],
+            'no-console': ['error'],
 
-        "@typescript-eslint/no-unused-vars": ["error", {
-            argsIgnorePattern: "^_",
-        }],
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    argsIgnorePattern: '^_'
+                }
+            ],
 
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-    },
-}];
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
+            '@typescript-eslint/ban-ts-comment': 'off',
+            '@typescript-eslint/consistent-type-definitions': ['error', 'type']
+        }
+    }
+];
