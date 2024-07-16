@@ -11,5 +11,5 @@
         "forceConsistentCasingInFileNames": true
     },
     "include": ["src/**/*.ts", "locales/**/*.ts"],
-    "exclude": ["node_modules", "*.config.mjs"]
+    "exclude": ["node_modules"]
 }
