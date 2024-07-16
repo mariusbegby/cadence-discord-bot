@@ -42,9 +42,11 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
     for (const file of commandFiles) {
         const { default: command } = await import(`../interactions/slashcommands/${file}`);
         const slashCommand = command as BaseSlashCommandInteraction;
-        slashCommand.isSystemCommand
-            ? systemSlashCommands.push(slashCommand.data.toJSON())
-            : userSlashCommands.push(slashCommand.data.toJSON());
+        if (slashCommand.isSystemCommand) {
+            systemSlashCommands.push(slashCommand.data.toJSON());
+        } else {
+            userSlashCommands.push(slashCommand.data.toJSON());
+        }
     }
 
     try {

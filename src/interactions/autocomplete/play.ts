@@ -33,7 +33,6 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
             logger.debug(`Responding with empty results due to < 3 length for query '${transformedQuery}'`);
             return interaction.respond([]);
         }
-
         const autocompleteChoices: ApplicationCommandOptionChoiceData<string>[] = await this.getAutocompleteChoices(
             transformedQuery,
             translator

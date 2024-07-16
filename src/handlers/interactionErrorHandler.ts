@@ -61,7 +61,11 @@ export const handleError = async (
                 return;
             case false:
                 logger.debug('Responding with error embed');
-                interaction.deferred ? await interaction.editReply(errorReply) : await interaction.reply(errorReply);
+                if (interaction.deferred) {
+                    await interaction.editReply(errorReply);
+                } else {
+                    await interaction.reply(errorReply);
+                }
                 return;
         }
     } else if (interaction instanceof MessageComponentInteraction) {
@@ -74,7 +78,11 @@ export const handleError = async (
                 return;
             case false:
                 logger.debug('Responding with error embed');
-                interaction.deferred ? await interaction.editReply(errorReply) : await interaction.reply(errorReply);
+                if (interaction.deferred) {
+                    await interaction.editReply(errorReply);
+                } else {
+                    await interaction.reply(errorReply);
+                }
                 return;
         }
     } else {

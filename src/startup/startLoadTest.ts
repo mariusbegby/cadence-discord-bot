@@ -29,7 +29,6 @@ export const startLoadTest = async ({ client, executionId }: StartLoadTestParams
             async (shardClient: Client, { channelId, track }: { channelId: string; track: string }) => {
                 const channel: Channel | undefined = shardClient.channels.cache.get(channelId);
                 if (channel) {
-                    /* eslint-disable no-undef */
                     // @ts-ignore
                     await player.play(channel.id, track, {
                         nodeOptions: {

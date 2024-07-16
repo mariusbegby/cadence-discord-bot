@@ -9,8 +9,8 @@ async function fetchGuildsPerShard(client?: Client): Promise<Map<string, Guild>[
 
     try {
         return (await client.shard.fetchClientValues('guilds.cache')) as Map<string, Guild>[];
-    } catch (error) {
-        throw new Error('Failed to fetch client values from shards.');
+    } catch (error: unknown) {
+        throw new Error(`Failed to fetch client values from shards: ${JSON.stringify(error)}`);
     }
 }
 
@@ -50,12 +50,11 @@ async function fetchPlayerStatisticsPerShard(client?: Client): Promise<PlayerSta
 
     try {
         const playerStatisticsPerShard: PlayerStatistics[] = await client.shard.broadcastEval(() => {
-            /* eslint-disable no-undef */
             return player.generateStatistics();
         });
         return playerStatisticsPerShard;
-    } catch (error) {
-        throw new Error('Failed to fetch player statistics from shards.');
+    } catch (error: unknown) {
+        throw new Error(`Failed to fetch player statistics from shards: ${JSON.stringify(error)}`);
     }
 }
 

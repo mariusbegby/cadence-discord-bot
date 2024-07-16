@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import config from 'config';
 import { IPRotationConfig, Player } from 'discord-player';
 import { SpotifyExtractor } from '@discord-player/extractor';

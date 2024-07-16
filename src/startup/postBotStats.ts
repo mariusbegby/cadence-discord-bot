@@ -99,9 +99,11 @@ async function postStatsToSites(enabledSites: PostBotStatsSite[], logger: Logger
 
 function handleResponse(res: IncomingMessage, site: PostBotStatsSite, logger: Logger): number | null {
     if (typeof res.statusCode === 'number') {
-        res.statusCode === 200
-            ? logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`)
-            : logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
+        if (res.statusCode === 200) {
+            logger.debug(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
+        } else {
+            logger.warn(`Request to ${site.hostname}: statusCode: ${res.statusCode}`);
+        }
         return res.statusCode;
     } else {
         logger.error(`Request to ${site.hostname}: statusCode is undefined or not a number (${res.statusCode}).`);

@@ -38,6 +38,7 @@ try {
     require.resolve('pino-pretty');
     pinoPrettyAvailable = true;
 } catch (e) {
+    console.error(e);
     console.log('pino-pretty not available. Falling back to default console logging.');
     console.log('install pino-pretty for better console logging: npm i pino-pretty');
 }
@@ -46,6 +47,7 @@ try {
     require.resolve('pino-loki');
     pinoLokiAvailable = true;
 } catch (e) {
+    console.error(e);
     console.log('pino-loki not available. Sending logs to Grafana Loki will be skipped.');
 }
 

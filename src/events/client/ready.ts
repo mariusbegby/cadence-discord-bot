@@ -43,7 +43,7 @@ module.exports = {
         // Check if the channel exists in curent shard and send a message
         if (channel) {
             logger.debug(`Sending system message for 'allShardsReady' to channel id ${channel.id}.`);
-            channel.send({
+            await channel.send({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(
@@ -54,6 +54,10 @@ module.exports = {
             });
         }
 
-        process.env.NODE_ENV === 'production' ? await postBotStats({ client, executionId }) : null;
+        if (process.env.NODE_ENV === 'production') {
+            await postBotStats({ client, executionId });
+        } else {
+            return;
+        }
     }
 };
