@@ -88,7 +88,7 @@ class QueueCommand extends BaseSlashCommandInteraction {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
                             }) +
                             '\n' +
-                            `${this.getDisplayQueueProgressBar()}\n` +
+                            `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
                             `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
                             `${translator('commands.queue.tracksInQueueTitle', {
                                 icon: this.embedOptions.icons.queue

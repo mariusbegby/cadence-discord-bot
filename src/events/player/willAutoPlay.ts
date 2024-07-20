@@ -20,7 +20,6 @@ module.exports = {
         });
 
         const [track] = tracks;
-
         track.requestedBy = queue.metadata?.client.user as User;
 
         done(track);

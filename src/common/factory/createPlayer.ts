@@ -22,17 +22,6 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
             useLegacyFFmpeg: false,
             skipFFmpeg: false,
             ipconfig: ipRotationConfig
-            /* new youtube extractor is not ytdl based, so this is not needed
-            ytdlOptions: {
-                quality: 'highestaudio',
-                highWaterMark: 1 << 25,
-                requestOptions: {
-                    headers: {
-                        cookie: process.env.YT_COOKIE || ''
-                    }
-                }
-            }
-            */
         });
 
         // Testing out new youtube extractor

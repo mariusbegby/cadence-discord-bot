@@ -16,12 +16,12 @@ export const createClient = async ({ executionId }: { executionId: string }): Pr
             intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
             makeCache: Discord.Options.cacheWithLimits({
                 ...Discord.Options.DefaultMakeCacheSettings,
-                MessageManager: 25,
-                ThreadManager: 25,
+                MessageManager: 10,
+                ThreadManager: 10,
                 PresenceManager: 0,
                 ReactionManager: 0,
                 GuildMemberManager: {
-                    maxSize: 50,
+                    maxSize: 10,
                     keepOverLimit: (member) => member.id === client.user?.id
                 }
             }),

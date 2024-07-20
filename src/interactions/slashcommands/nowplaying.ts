@@ -47,7 +47,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
             this.embedOptions,
             translator
         );
-        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar();
+        const displayEmbedProgressBar: string = this.getDisplayQueueProgressBar(queue, translator);
 
         const components: APIMessageActionRowComponent[] = [];
 

@@ -135,7 +135,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                             `${translator('musicPlayerCommon.requestedBy', {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
                             })}\n` +
-                            `${this.getDisplayQueueProgressBar()}\n` +
+                            `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
                             `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
                             `${translator('commands.history.tracksInHistoryTitle', {
                                 icon: this.embedOptions.icons.queue

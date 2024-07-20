@@ -1,5 +1,5 @@
 import config from 'config';
-import { GuildQueue, GuildQueueHistory, Track } from 'discord-player';
+import { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
 import {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
@@ -65,8 +65,6 @@ abstract class BaseInteraction {
         let durationFormat =
             Number(track.duration) === 0 || track.duration === '0:00' ? '' : `**\`${track.duration}\`**`;
 
-        // track.raw is not populated on youtubei extractor
-        // track.live does not exist, so we cannot check this anymore...
         if (track.raw.live) {
             durationFormat = `**${this.embedOptions.icons.liveTrack} \`LIVE\`**`;
         }
@@ -126,11 +124,9 @@ abstract class BaseInteraction {
             : translator('musicPlayerCommon.unavailableRequestedBy');
     };
 
-    protected getDisplayQueueProgressBar(): string {
-        //const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+    protected getDisplayQueueProgressBar(queue: GuildQueue, translator: Translator): string {
+        const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
 
-        // Temporarily remove progress bar as discord-player throws error  Cannot read properties of null (reading 'duration')
-        /*
         let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
             queue: false,
             length: this.playerOptions.progressBar.length ?? 12,
@@ -144,15 +140,11 @@ abstract class BaseInteraction {
             progressBar = translator('musicPlayerCommon.unavailableDuration');
         }
 
-        // track.raw is not populated  fully on youtubei extractor
-        // there is no .live property to use anymore
         if (queue.currentTrack?.raw.live) {
             progressBar = translator('musicPlayerCommon.playingLive', {
                 icon: this.embedOptions.icons.liveTrack
             });
         }
-        */
-        const progressBar = '';
 
         return progressBar;
     }
