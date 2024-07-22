@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of this project seriously. If you discover any security issues or vulnerabilities, please report them to us as soon as possible. 
+We take the security of this project seriously. If you discover any security issues or vulnerabilities, please report them to us as soon as possible.
 
 To report a vulnerability, please send an email to [mariusbegby@gmail.com](mailto:mariusbegby@gmail.com) with a detailed description of the issue. We appreciate your efforts and will respond to you promptly.
 
@@ -12,9 +12,9 @@ Please refrain from publicly disclosing any vulnerabilities until we have had an
 
 The following versions of our project are currently being supported with security updates:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| ^5.0.0   | :white_check_mark: |
+| Version | Supported |
+| ------- | --------- |
+| ^6.0.0  | ✅        |
 
 We strongly encourage users to upgrade to the latest supported version to ensure they have access to the latest security fixes and enhancements.
 
