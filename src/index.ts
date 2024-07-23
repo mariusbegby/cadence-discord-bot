@@ -3,22 +3,22 @@ import 'dotenv/config';
 
 // Import modules
 import config from 'config';
-import { type ShardManagerConfig } from '../config/types';
-import { ShardingManager } from './core/ShardManager';
-import { createLogger, type Logger } from './services/insights/LoggerService';
-import { MetricService } from './services/insights/MetricService';
-import { CoreValidator } from './validation/configuration/CoreValidator';
+import type { ShardManagerConfig } from '../config/types';
+import { CoreValidator } from './core/CoreValidator';
+import { ShardManager } from './core/ShardManager';
+import { LoggerService } from './services/insights/LoggerService';
 
 // Retrieve configuration
 const shardManagerConfig = config.get<ShardManagerConfig>('shardManagerConfig');
 
 // Initialize insights services
-const logger: Logger = createLogger({ location: __filename });
-const metricService = new MetricService(logger);
+const logger = new LoggerService();
+logger.setContext({ module: 'core' });
+//const metricService = new MetricService(logger);
 
 // Initialize core components
-const coreValidator = new CoreValidator();
-const shardManager = new ShardingManager(metricService, shardManagerConfig);
+const coreValidator = new CoreValidator(logger);
+const shardManager = new ShardManager(logger, shardManagerConfig);
 
 // Startup logic
 const startApplication = async (): Promise<void> => {

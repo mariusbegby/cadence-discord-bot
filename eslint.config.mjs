@@ -105,8 +105,7 @@ export default [
             ],
 
             '@typescript-eslint/explicit-module-boundary-types': 'off',
-            '@typescript-eslint/ban-ts-comment': 'off',
-            '@typescript-eslint/consistent-type-definitions': ['error', 'type']
+            '@typescript-eslint/ban-ts-comment': 'off'
         }
     }
 ];
