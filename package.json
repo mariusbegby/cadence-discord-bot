@@ -23,7 +23,24 @@
         "testMatch": [
             "**/__tests__/**/*.ts",
             "**/?(*.)+(spec|test).ts"
-        ]
+        ],
+        "moduleNameMapper": {
+            "^@core/(.*)$": "<rootDir>/src/core/$1",
+            "^@events/(.*)$": "<rootDir>/src/events/$1",
+            "^@interactions/(.*)$": "<rootDir>/src/interactions/$1",
+            "^@services/(.*)$": "<rootDir>/src/services/$1",
+            "^@utilities/(.*)$": "<rootDir>/src/utilities/$1",
+            "^@validation/(.*)$": "<rootDir>/src/validation/$1",
+            "^@config/(.*)$": "<rootDir>/config/$1",
+            "^@type/(.*)$": [
+                "<rootDir>/src/core/_types/$1",
+                "<rootDir>/src/events/_types/$1",
+                "<rootDir>/src/interactions/_types/$1",
+                "<rootDir>/src/services/_types/$1",
+                "<rootDir>/src/utilities/_types/$1",
+                "<rootDir>/src/validation/_types/$1"
+            ]
+        }
     },
     "scripts": {
         "postinstall": "npx prisma generate",
