@@ -4,6 +4,7 @@ import type { IStorageClient } from '@type/storage/IStorageClient';
 
 export class StorageClientHealth implements IHealthCheck {
     public name: string = 'DatabaseHealth';
+    private _lastStatus: HealthCheckStatus = HealthCheckStatus.UNKNOWN;
     private _storageClient: IStorageClient;
 
     constructor(storageClient: IStorageClient) {
@@ -15,23 +16,30 @@ export class StorageClientHealth implements IHealthCheck {
             logger.info('Checking storage client health...');
             if (await this._storageClient.ping()) {
                 logger.info('Storage client is healthy');
+                this._lastStatus = HealthCheckStatus.UP;
                 return {
-                    status: HealthCheckStatus.UP,
+                    status: this._lastStatus,
                     message: 'Storage client is healthy'
                 };
             }
 
             logger.warn('Storage client is unhealthy');
+            this._lastStatus = HealthCheckStatus.DOWN;
             return {
-                status: HealthCheckStatus.DOWN,
+                status: this._lastStatus,
                 message: 'Storage client is unhealthy'
             };
         } catch (error: unknown) {
             logger.error(error, 'An error occurred while checking storage client health.');
+            this._lastStatus = HealthCheckStatus.UNKNOWN;
             return {
-                status: HealthCheckStatus.UNKNOWN,
+                status: this._lastStatus,
                 message: 'An error occurred while checking storage client health.'
             };
         }
+    }
+
+    getStatus(): HealthCheckStatus {
+        return this._lastStatus;
     }
 }

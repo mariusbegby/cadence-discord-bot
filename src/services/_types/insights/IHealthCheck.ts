@@ -14,4 +14,5 @@ export type HealthCheckResult = {
 export interface IHealthCheck {
     name: string;
     check(logger: ILoggerService): Promise<HealthCheckResult>;
+    getStatus(): HealthCheckStatus;
 }

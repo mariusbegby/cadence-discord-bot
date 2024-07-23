@@ -4,4 +4,5 @@ export interface IHealthCheckService {
     start(interval: number): Promise<void>;
     stop(): Promise<void>;
     registerHealthCheck(healthCheck: IHealthCheck): void;
+    getHealthChecks(): IHealthCheck[];
 }

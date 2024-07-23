@@ -14,8 +14,6 @@ export class HealthCheckService implements IHealthCheckService {
 
     public async start(interval: number = 60_000): Promise<void> {
         this._logger.info('Starting health check service...');
-        throw new Error('Not implemented');
-
         if (this._timer) {
             clearInterval(this._timer);
         }
@@ -25,7 +23,6 @@ export class HealthCheckService implements IHealthCheckService {
 
     public async stop(): Promise<void> {
         this._logger.info('Stopping health check service...');
-        throw new Error('Not implemented');
 
         if (this._timer) {
             clearInterval(this._timer);
@@ -35,14 +32,15 @@ export class HealthCheckService implements IHealthCheckService {
 
     public registerHealthCheck(healthCheck: IHealthCheck): void {
         this._logger.info(healthCheck, 'Registering health check...');
-        throw new Error('Not implemented');
-
         this._healthChecks.push(healthCheck);
+    }
+
+    public getHealthChecks(): IHealthCheck[] {
+        return this._healthChecks;
     }
 
     private async runHealthChecks(): Promise<void> {
         this._logger.info('Running health checks...');
-        throw new Error('Not implemented');
 
         for (const healthCheck of this._healthChecks) {
             try {
