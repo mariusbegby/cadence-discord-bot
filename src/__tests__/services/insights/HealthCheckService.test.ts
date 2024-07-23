@@ -1,10 +1,9 @@
 import { MockLoggerService } from '@mocks/MockLoggerService';
 import { HealthCheckService } from '@services/insights/HealthCheckService';
 import { IHealthCheck } from '@type/insights/IHealthCheck';
-import { ILoggerService } from '@type/insights/ILoggerService';
 
 describe('HealthCheckService', () => {
-    let mockLoggerService: ILoggerService = MockLoggerService;
+    let mockLoggerService = MockLoggerService;
     let healthCheckService: HealthCheckService;
 
     beforeEach(() => {
