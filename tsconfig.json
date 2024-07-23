@@ -9,7 +9,17 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "noImplicitAny": false,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@core/*": ["src/core/*"],
+            "@events/*": ["src/events/*"],
+            "@interactions/*": ["src/interactions/*"],
+            "@services/*": ["src/services/*"],
+            "@utilities/*": ["src/utilities/*"],
+            "@validation/*": ["src/validation/*"],
+            "@config/*": ["config/*"]
+        }
     },
     "include": ["src/**/*.ts", "locales/**/*.ts"],
     "exclude": ["node_modules", "dist"]

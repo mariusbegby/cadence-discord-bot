@@ -1,6 +1,6 @@
-import type { IShardManager } from './_interfaces/IShardManager';
-import type { ILoggerService } from '../services/_interfaces/insights/ILoggerService';
-import type { ShardManagerConfig } from '../../config/types';
+import type { IShardManager } from '@core/_interfaces/IShardManager';
+import type { ILoggerService } from '@services/_interfaces/insights/ILoggerService';
+import type { ShardManagerConfig } from '@config/types';
 
 export class ShardManager implements IShardManager {
     private _logger: ILoggerService;

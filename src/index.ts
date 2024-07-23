@@ -3,10 +3,10 @@ import 'dotenv/config';
 
 // Import modules
 import config from 'config';
-import type { ShardManagerConfig } from '../config/types';
-import { CoreValidator } from './core/CoreValidator';
-import { ShardManager } from './core/ShardManager';
-import { useLogger } from './services/insights/LoggerService';
+import type { ShardManagerConfig } from '@config/types';
+import { CoreValidator } from '@core/CoreValidator';
+import { ShardManager } from '@core/ShardManager';
+import { useLogger } from '@services/insights/LoggerService';
 
 // Initialize core components
 const logger = useLogger();
