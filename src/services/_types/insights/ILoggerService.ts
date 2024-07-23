@@ -6,5 +6,7 @@ export interface ILoggerService {
 
     info(contextObject: unknown, message?: string): void;
 
+    warn(contextObject: unknown, message?: string): void;
+
     error(contextObject: unknown, message?: string): void;
 }

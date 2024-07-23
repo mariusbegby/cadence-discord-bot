@@ -19,13 +19,13 @@
             "@utilities/*": ["src/utilities/*"],
             "@validation/*": ["src/validation/*"],
             "@config/*": ["config/*"],
-            "@interfaces/*": [
-                "src/core/_interfaces/*",
-                "src/events/_interfaces/*",
-                "src/interactions/_interfaces/*",
-                "src/services/_interfaces/*",
-                "src/utilities/_interfaces/*",
-                "src/validation/_interfaces/*"
+            "@type/*": [
+                "src/core/_types/*",
+                "src/events/_types/*",
+                "src/interactions/_types/*",
+                "src/services/_types/*",
+                "src/utilities/_types/*",
+                "src/validation/_types/*"
             ]
         }
     },

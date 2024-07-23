@@ -1,4 +1,4 @@
-import type { ILoggerService, LogContext } from '@interfaces/insights/ILoggerService';
+import type { ILoggerService, LogContext } from '@type/insights/ILoggerService';
 import { type Logger as PinoLogger, pino } from 'pino';
 
 let loggerService: ILoggerService;
@@ -36,6 +36,14 @@ export class LoggerService implements ILoggerService {
             this._logger.info(arg1);
         } else {
             this._logger.info(arg1, arg2);
+        }
+    }
+
+    warn(arg1: string | unknown, arg2?: string): void {
+        if (typeof arg1 === 'string') {
+            this._logger.warn(arg1);
+        } else {
+            this._logger.warn(arg1, arg2);
         }
     }
 

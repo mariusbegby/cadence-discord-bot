@@ -1,4 +1,4 @@
-import type { ILoggerService } from '@interfaces/insights/ILoggerService';
+import type { ILoggerService } from '@type/insights/ILoggerService';
 
 export interface ICoreValidator {
     _logger: ILoggerService;
