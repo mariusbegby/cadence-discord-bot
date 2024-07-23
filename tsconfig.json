@@ -18,7 +18,15 @@
             "@services/*": ["src/services/*"],
             "@utilities/*": ["src/utilities/*"],
             "@validation/*": ["src/validation/*"],
-            "@config/*": ["config/*"]
+            "@config/*": ["config/*"],
+            "@interfaces/*": [
+                "src/core/_interfaces/*",
+                "src/events/_interfaces/*",
+                "src/interactions/_interfaces/*",
+                "src/services/_interfaces/*",
+                "src/utilities/_interfaces/*",
+                "src/validation/_interfaces/*"
+            ]
         }
     },
     "include": ["src/**/*.ts", "locales/**/*.ts"],

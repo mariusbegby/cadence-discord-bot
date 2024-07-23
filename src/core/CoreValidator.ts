@@ -1,5 +1,5 @@
-import type { ILoggerService } from '@services/_interfaces/insights/ILoggerService';
-import type { ICoreValidator } from '@core/_interfaces/ICoreValidator';
+import type { ICoreValidator } from '@interfaces/ICoreValidator';
+import type { ILoggerService } from '@interfaces/insights/ILoggerService';
 
 export class CoreValidator implements ICoreValidator {
     _logger: ILoggerService;

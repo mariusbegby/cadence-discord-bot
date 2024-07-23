@@ -1,5 +1,5 @@
+import type { ILoggerService, LogContext } from '@interfaces/insights/ILoggerService';
 import { type Logger as PinoLogger, pino } from 'pino';
-import type { ILoggerService, LogContext } from '@services/_interfaces/insights/ILoggerService';
 
 let loggerService: ILoggerService;
 
