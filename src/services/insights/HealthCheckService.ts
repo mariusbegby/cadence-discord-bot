@@ -1,4 +1,4 @@
-import type { IHealthCheck } from '@type/insights/IHealthCheck';
+import type { HealthCheckStatus, IHealthCheck } from '@type/insights/IHealthCheck';
 import type { IHealthCheckService } from '@type/insights/IHealthCheckService';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 
@@ -13,25 +13,29 @@ export class HealthCheckService implements IHealthCheckService {
     }
 
     public async start(interval: number = 60_000): Promise<void> {
-        this._logger.info('Starting health check service...');
+        this._logger.debug('Starting health check service...');
         if (this._timer) {
             clearInterval(this._timer);
         }
 
         this._timer = setInterval(() => this.runHealthChecks(), interval);
+
+        this._logger.info('Successfully started health check service.');
     }
 
     public async stop(): Promise<void> {
-        this._logger.info('Stopping health check service...');
+        this._logger.debug('Stopping health check service...');
 
         if (this._timer) {
             clearInterval(this._timer);
             this._timer = undefined;
         }
+
+        this._logger.info('Successfully stopped health check service.');
     }
 
     public registerHealthCheck(healthCheck: IHealthCheck): void {
-        this._logger.info(healthCheck, 'Registering health check...');
+        this._logger.debug(`Registering health check with identifier '${healthCheck.identifier}'...`);
         this._healthChecks.push(healthCheck);
     }
 
@@ -45,15 +49,25 @@ export class HealthCheckService implements IHealthCheckService {
         for (const healthCheck of this._healthChecks) {
             try {
                 const result = await healthCheck.check(this._logger);
-                if (!result) {
-                    this._logger.error(`Health check '${healthCheck.name}' failed.`);
-                    // do someting like alertingService.alert(...)
-                } else {
-                    this._logger.info(`Health check '${healthCheck.name}' passed.`);
+                switch (result.status) {
+                    case HealthCheckStatus.HEALTHY:
+                        this._logger.debug(`Health check '${healthCheck.identifier}' passed.`);
+                        break;
+                    case HealthCheckStatus.UNHEALTHY:
+                        this._logger.error(`Health check '${healthCheck.identifier}' failed.`);
+                        break;
+                    case HealthCheckStatus.UNKNOWN:
+                        this._logger.warn(`Health check '${healthCheck.identifier}' status is unknown.`);
+                        break;
+                    default:
+                        this._logger.error(`Health check '${healthCheck.identifier}' returned an unknown status.`);
+                        break;
                 }
             } catch (error) {
-                this._logger.error(error, `Health check '${healthCheck.name}' encountered an error.`);
+                this._logger.error(error, `Health check '${healthCheck.identifier}' encountered an error.`);
             }
         }
+
+        this._logger.info('Completed health checks.');
     }
 }

@@ -3,7 +3,7 @@ import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IStorageClient } from '@type/storage/IStorageClient';
 
 export class StorageClientHealth implements IHealthCheck {
-    public name: string = 'DatabaseHealth';
+    public identifier: string = 'DatabaseHealth';
     private _lastStatus: HealthCheckStatus = HealthCheckStatus.UNKNOWN;
     private _storageClient: IStorageClient;
 
@@ -16,7 +16,7 @@ export class StorageClientHealth implements IHealthCheck {
             logger.info('Checking storage client health...');
             if (await this._storageClient.ping()) {
                 logger.info('Storage client is healthy');
-                this._lastStatus = HealthCheckStatus.UP;
+                this._lastStatus = HealthCheckStatus.HEALTHY;
                 return {
                     status: this._lastStatus,
                     message: 'Storage client is healthy'
@@ -24,7 +24,7 @@ export class StorageClientHealth implements IHealthCheck {
             }
 
             logger.warn('Storage client is unhealthy');
-            this._lastStatus = HealthCheckStatus.DOWN;
+            this._lastStatus = HealthCheckStatus.UNHEALTHY;
             return {
                 status: this._lastStatus,
                 message: 'Storage client is unhealthy'

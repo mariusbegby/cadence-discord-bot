@@ -1,8 +1,8 @@
 import type { ILoggerService } from '@type/insights/ILoggerService';
 
 export enum HealthCheckStatus {
-    UP = 'UP',
-    DOWN = 'DOWN',
+    HEALTHY = 'HEALTHY',
+    UNHEALTHY = 'UNHEALTHY',
     UNKNOWN = 'UNKNOWN'
 }
 
@@ -12,7 +12,7 @@ export type HealthCheckResult = {
 };
 
 export interface IHealthCheck {
-    name: string;
+    identifier: string;
     check(logger: ILoggerService): Promise<HealthCheckResult>;
     getStatus(): HealthCheckStatus;
 }

@@ -21,7 +21,7 @@ describe('HealthCheckService', () => {
 
     it('should log start message and set interval on start', async () => {
         await healthCheckService.start(1000);
-        expect(mockLoggerService.info).toHaveBeenCalledWith('Starting health check service...');
+        expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully started health check service.');
         expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
     });
 
@@ -34,13 +34,13 @@ describe('HealthCheckService', () => {
     it('should log stop message and clear timer on stop', async () => {
         await healthCheckService.start(1000);
         await healthCheckService.stop();
-        expect(mockLoggerService.info).toHaveBeenCalledWith('Stopping health check service...');
+        expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully stopped health check service.');
         expect(clearInterval).toHaveBeenCalledTimes(1);
     });
 
     it('should add health check on registerHealthCheck', () => {
         const mockHealthCheck: IHealthCheck = {
-            name: 'MockHealthCheck',
+            identifier: 'MockHealthCheck',
             getStatus: jest.fn(),
             check: jest.fn()
         };

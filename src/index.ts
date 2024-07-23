@@ -2,7 +2,7 @@
 import 'dotenv/config';
 
 // Import modules
-import type { ShardManagerConfig } from '@config/types';
+import type { ShardManagerConfig, HealthCheckConfig } from '@config/types';
 import { CoreValidator } from '@core/CoreValidator';
 import { ShardManager } from '@core/ShardManager';
 import { StorageClientHealth } from '@services/insights/health-checks/StorageClientHealth';
@@ -20,15 +20,19 @@ healthCheckService.registerHealthCheck(new StorageClientHealth(storageClient));
 
 // Initialize core components
 const shardManagerConfig = config.get<ShardManagerConfig>('shardManagerConfig');
+const healthCheckConfig = config.get<HealthCheckConfig>('healthCheckConfig');
 const coreValidator = new CoreValidator(logger);
 const shardManager = new ShardManager(logger, shardManagerConfig);
 
 // Application startup logic
 const startApplication = async (): Promise<void> => {
-    await coreValidator.validateConfiguration(); // validate environment variables and critical configuration
-    await coreValidator.checkDependencies(); // check for required dependencies outside of npm, such as ffmpeg
-    await shardManager.start(); // calls manager.spawn() internally, throws if no token etc.
-    await healthCheckService.start(); // start the health check service
+    logger.info('Starting application...');
+    await coreValidator.validateConfiguration();
+    await coreValidator.checkDependencies();
+    await shardManager.start();
+    await healthCheckService.start(healthCheckConfig.interval);
+
+    logger.info('Application started successfully.');
 };
 
 // Start the application

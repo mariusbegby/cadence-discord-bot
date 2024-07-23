@@ -12,9 +12,11 @@ export class ShardManager implements IShardManager {
     }
 
     async start() {
-        this._logger.info('Starting shard manager...');
-        this._logger.info(this._shardManagerConfig, 'Found configuration');
+        this._logger.debug('Starting shard manager...');
+        this._logger.debug(this._shardManagerConfig, 'Using shard manager configuration');
 
         throw new Error('Not implemented');
+
+        this._logger.info('Successfully started shard manager.');
     }
 }

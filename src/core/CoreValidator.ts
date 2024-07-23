@@ -9,12 +9,16 @@ export class CoreValidator implements ICoreValidator {
     }
 
     async validateConfiguration() {
-        this._logger.info('Validating configuration...');
+        this._logger.debug('Validating configuration...');
         throw new Error('Not implemented');
+
+        this._logger.info('Successfully validated configuration.');
     }
 
     async checkDependencies() {
-        this._logger.info('Checking dependencies...');
+        this._logger.debug('Checking for required ependencies...');
         throw new Error('Not implemented');
+
+        this._logger.info('Successfully checked required depdendencies.');
     }
 }
