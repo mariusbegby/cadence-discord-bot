@@ -1,4 +1,4 @@
-import type { HealthCheckStatus, IHealthCheck } from '@type/insights/IHealthCheck';
+import { HealthCheckStatus, type IHealthCheck } from '@type/insights/IHealthCheck';
 import type { IHealthCheckService } from '@type/insights/IHealthCheckService';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 
