@@ -1,6 +1,16 @@
 import { type Logger as PinoLogger, pino } from 'pino';
 import type { ILoggerService, LogContext } from '../_interfaces/insights/ILoggerService';
 
+let loggerService: ILoggerService;
+
+export const useLogger = (): ILoggerService => {
+    if (!loggerService) {
+        loggerService = new LoggerService();
+    }
+
+    return loggerService;
+};
+
 export class LoggerService implements ILoggerService {
     private _logger: PinoLogger;
 
