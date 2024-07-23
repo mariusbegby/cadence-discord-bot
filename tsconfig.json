@@ -26,7 +26,8 @@
                 "src/services/_types/*",
                 "src/utilities/_types/*",
                 "src/validation/_types/*"
-            ]
+            ],
+            "@mocks/*": ["src/__tests__/_mocks/*"]
         }
     },
     "include": ["src/**/*.ts", "locales/**/*.ts"],

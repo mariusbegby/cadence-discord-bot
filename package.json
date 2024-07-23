@@ -24,6 +24,10 @@
             "**/__tests__/**/*.ts",
             "**/?(*.)+(spec|test).ts"
         ],
+        "testPathIgnorePatterns": [
+            "/node_modules/",
+            "src/__tests__/_mocks/"
+        ],
         "moduleNameMapper": {
             "^@core/(.*)$": "<rootDir>/src/core/$1",
             "^@events/(.*)$": "<rootDir>/src/events/$1",
@@ -39,7 +43,8 @@
                 "<rootDir>/src/services/_types/$1",
                 "<rootDir>/src/utilities/_types/$1",
                 "<rootDir>/src/validation/_types/$1"
-            ]
+            ],
+            "^@mocks/(.*)$": "<rootDir>/src/__tests__/_mocks/$1"
         }
     },
     "scripts": {
