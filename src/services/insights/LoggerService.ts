@@ -12,9 +12,9 @@ import {
 
 let loggerService: ILoggerService;
 
-export const useLogger = (): ILoggerService => {
+export const useLogger = (context?: LogContext): ILoggerService => {
     if (!loggerService) {
-        loggerService = new LoggerService();
+        loggerService = new LoggerService(context ?? { module: 'core' });
     }
 
     return loggerService;
@@ -24,23 +24,33 @@ export class LoggerService implements ILoggerService {
     private _logger: PinoLogger;
     private _logConfig: LoggerServiceConfig;
 
-    constructor() {
+    constructor(context: LogContext, parent?: ILoggerService) {
         this._logConfig = config.get<LoggerServiceConfig>('loggerServiceConfig');
-        const pinoOptions: LoggerOptions = {
-            level: this._logConfig.logLevel,
-            timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
-            base: {
-                environment: process.env.NODE_ENV || 'development'
-            }
-        };
 
-        const transport: DestinationStream = pino.transport({ targets: this.generateTransportTargets() });
+        if (parent) {
+            this._logger = parent.getLogger().child(context);
+        } else {
+            const pinoOptions: LoggerOptions = {
+                level: this._logConfig.logLevel,
+                timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
+                base: {
+                    environment: process.env.NODE_ENV || 'development',
+                    ...context
+                }
+            };
 
-        this._logger = pino(pinoOptions, transport);
+            const transport: DestinationStream = pino.transport({ targets: this.generateTransportTargets() });
+
+            this._logger = pino(pinoOptions, transport);
+        }
     }
 
-    public setContext(context: LogContext): void {
-        this._logger = this._logger.child(context);
+    public getLogger(): PinoLogger {
+        return this._logger;
+    }
+
+    public setContext(context: LogContext): ILoggerService {
+        return new LoggerService(context, this);
     }
 
     public debug(arg1: string | unknown, arg2?: string): void {

@@ -1,15 +1,16 @@
 import { MockLoggerService } from '@mocks/MockLoggerService';
+import { ILoggerService } from '@services/_types/insights/ILoggerService';
 import { HealthCheckService } from '@services/insights/HealthCheckService';
 import { IHealthCheck } from '@type/insights/IHealthCheck';
 
 describe('HealthCheckService', () => {
-    let mockLoggerService = MockLoggerService;
+    let mockLoggerService: ILoggerService;
     let healthCheckService: HealthCheckService;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        healthCheckService = new HealthCheckService(MockLoggerService);
-        mockLoggerService = MockLoggerService;
+        mockLoggerService = new MockLoggerService();
+        healthCheckService = new HealthCheckService(mockLoggerService);
         jest.useFakeTimers();
         jest.spyOn(global, 'setInterval');
         jest.spyOn(global, 'clearInterval');

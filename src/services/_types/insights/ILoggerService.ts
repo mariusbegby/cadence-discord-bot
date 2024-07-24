@@ -1,6 +1,10 @@
+import type { Logger as PinoLogger } from 'pino';
+
 export type LogContext = { module: string };
 export interface ILoggerService {
-    setContext(context: LogContext): void;
+    setContext(context: LogContext): ILoggerService;
+
+    getLogger(): PinoLogger;
 
     debug(contextObject: unknown, message?: string): void;
 

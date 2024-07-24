@@ -8,8 +8,7 @@ export class HealthCheckService implements IHealthCheckService {
     private _healthChecks: IHealthCheck[] = [];
 
     constructor(logger: ILoggerService) {
-        logger.setContext({ module: 'services' });
-        this._logger = logger;
+        this._logger = logger.setContext({ module: 'services' });
     }
 
     public async start(interval: number = 60_000): Promise<void> {

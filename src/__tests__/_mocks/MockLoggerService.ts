@@ -1,9 +1,10 @@
 import { ILoggerService } from '@services/_types/insights/ILoggerService';
 
-export const MockLoggerService: ILoggerService = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    setContext: jest.fn()
-};
+export class MockLoggerService implements ILoggerService {
+    debug = jest.fn();
+    info = jest.fn();
+    warn = jest.fn();
+    error = jest.fn();
+    getLogger = jest.fn().mockReturnValue({ child: jest.fn() });
+    setContext = jest.fn().mockReturnThis();
+}

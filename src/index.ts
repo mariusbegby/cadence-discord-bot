@@ -16,7 +16,6 @@ import { performance, PerformanceObserver } from 'perf_hooks';
 
 // Initialize services
 const logger = useLogger();
-logger.setContext({ module: 'core' });
 const storageClient = new StorageClient(logger);
 const healthCheckService = new HealthCheckService(logger);
 healthCheckService.registerHealthCheck(new StorageClientHealth(storageClient));

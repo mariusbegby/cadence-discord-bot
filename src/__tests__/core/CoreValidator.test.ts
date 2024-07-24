@@ -5,7 +5,7 @@ import type { exec } from 'child_process';
 import type { HealthCheckConfig, ShardManagerConfig, LoggerServiceConfig } from '@config/types';
 
 describe('CoreValidator', () => {
-    let mockLoggerService = MockLoggerService;
+    let mockLoggerService = new MockLoggerService();
     let mockConfig: Partial<IConfig>;
     let mockExecute: Partial<typeof exec>;
     let mockLoadedConfiguration: {
@@ -68,7 +68,7 @@ describe('CoreValidator', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         process.exit = jest.fn() as unknown as typeof process.exit;
-        mockLoggerService = MockLoggerService;
+        mockLoggerService = new MockLoggerService();
         updateTestSetup();
     });
 
