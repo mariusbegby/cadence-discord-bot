@@ -15,5 +15,5 @@ export const loggerServiceConfig: LoggerServiceConfig = {
 };
 
 export const healthCheckConfig: HealthCheckConfig = {
-    interval: 60_000
+    interval: 300_000
 };
