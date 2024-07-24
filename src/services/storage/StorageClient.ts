@@ -9,7 +9,7 @@ export class StorageClient implements IStorageClient {
     }
 
     async ping(): Promise<boolean> {
-        this._logger.info('Pinging storage client...');
+        this._logger.debug('Pinging storage client...');
         throw new Error('Not implemented');
 
         // Connect to DB and execute query to check if it's healthy

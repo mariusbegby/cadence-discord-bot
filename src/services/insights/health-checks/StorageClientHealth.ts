@@ -3,7 +3,7 @@ import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IStorageClient } from '@type/storage/IStorageClient';
 
 export class StorageClientHealth implements IHealthCheck {
-    public identifier: string = 'DatabaseHealth';
+    public identifier: string = 'StorageClientHealth';
     private _lastStatus: HealthCheckStatus = HealthCheckStatus.UNKNOWN;
     private _storageClient: IStorageClient;
 
