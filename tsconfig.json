@@ -30,6 +30,6 @@
             "@mocks/*": ["src/__tests__/_mocks/*"]
         }
     },
-    "include": ["src/**/*.ts", "locales/**/*.ts"],
+    "include": ["src/**/*.ts", "locales/**/*.ts", "src/globals.d.ts"],
     "exclude": ["node_modules", "dist"]
 }
