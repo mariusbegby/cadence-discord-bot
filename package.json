@@ -42,8 +42,8 @@
         }
     },
     "scripts": {
-        "postinstall": "npx prisma generate",
-        "prebuild": "npm run toc",
+        "postinstall": "pnpm dlx prisma generate",
+        "prebuild": "pnpm toc",
         "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts",
         "build": "tsc && tsc-alias -p tsconfig.json",
         "start": "node .",
@@ -51,7 +51,7 @@
         "coverage": "jest --coverage",
         "lint": "biome lint --write",
         "format": "biome format --write",
-        "restart": "npm run build && npm run start"
+        "restart": "pnpm build && pnpm start"
     },
     "dependencies": {
         "@discord-player/extractor": "^4.4.7",
