@@ -30,7 +30,7 @@ export class StorageClientHealth implements IHealthCheck {
                 message: 'Storage client is unhealthy'
             };
         } catch (error: unknown) {
-            logger.error(error, 'An error occurred while checking storage client health.');
+            logger.warn(error, 'An error occurred while checking storage client health.');
             this._lastStatus = HealthCheckStatus.Unknown;
             return {
                 status: this._lastStatus,
