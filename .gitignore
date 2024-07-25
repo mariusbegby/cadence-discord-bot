@@ -11,6 +11,6 @@
 /coverage
 /locales/resources.d.ts
 /prisma/dev.db
-/pnpm-lock.yaml
+/package-lock.json
 /.vscode
 /.dpy
