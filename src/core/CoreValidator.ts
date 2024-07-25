@@ -3,6 +3,7 @@ import type { ICoreValidator } from '@type/ICoreValidator';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IConfig } from 'config';
 import type { exec } from 'node:child_process';
+import packageJson from '../../package.json';
 
 type ConfigurationOptions = {
     shardManagerConfig?: ShardManagerConfig;
@@ -10,12 +11,12 @@ type ConfigurationOptions = {
     healthCheckConfig?: HealthCheckConfig;
 };
 
-type EnvironmentVariables = {
-    NODE_ENV: 'development' | 'production';
-    DISCORD_BOT_TOKEN: string;
-    DISCORD_APPLICATION_ID: number;
-    TOTAL_SHARDS: 'AUTO' | number;
-};
+enum EnvironmentVariables {
+    NodeEnv = 'NODE_ENV',
+    DiscordBotToken = 'DISCORD_BOT_TOKEN',
+    DiscordApplicationId = 'DISCORD_APPLICATION_ID',
+    TotalShards = 'TOTAL_SHARDS'
+}
 
 export class CoreValidator implements ICoreValidator {
     _logger: ILoggerService;
@@ -30,14 +31,14 @@ export class CoreValidator implements ICoreValidator {
 
     async validateEnvironmentVariables() {
         this._logger.debug('Validating environment variables...');
-        const requiredEnvironmentVariables: Array<keyof EnvironmentVariables> = [
-            'NODE_ENV',
-            'DISCORD_BOT_TOKEN',
-            'DISCORD_APPLICATION_ID',
-            'TOTAL_SHARDS'
+        const requiredEnvironmentVariables: EnvironmentVariables[] = [
+            EnvironmentVariables.NodeEnv,
+            EnvironmentVariables.DiscordBotToken,
+            EnvironmentVariables.DiscordApplicationId,
+            EnvironmentVariables.TotalShards
         ];
 
-        const missingEnvironmentVariables: Array<keyof EnvironmentVariables> = [];
+        const missingEnvironmentVariables: EnvironmentVariables[] = [];
         for (const requiredEnvironmentVariable of requiredEnvironmentVariables) {
             if (!process.env[requiredEnvironmentVariable] || process.env[requiredEnvironmentVariable].length === 0) {
                 missingEnvironmentVariables.push(requiredEnvironmentVariable);
@@ -119,6 +120,32 @@ export class CoreValidator implements ICoreValidator {
         this._logger.info('Successfully checked required dependencies.');
     }
 
+    async checkApplicationVersion() {
+        this._logger.debug('Checking application version...');
+        const currentVersion = packageJson.version;
+        this._logger.debug(`Current version is ${currentVersion}`);
+
+        const latestVersion = (await this.getLatestVersion()).replace('v', '');
+        if (latestVersion !== currentVersion) {
+            this._logger.warn(`New version available: ${latestVersion}`);
+            this._logger.warn(`You are currently using version: ${currentVersion}`);
+            this._logger.warn("Please consider updating the application with 'git pull'.");
+        }
+
+        this._logger.info('Successfully checked application version.');
+    }
+
+    private async getLatestVersion(): Promise<string> {
+        const repoUrlArray = packageJson.repository.url.split('/');
+        const repoIdentifier = `${repoUrlArray[3]}/${repoUrlArray[4]}`;
+        if (!repoIdentifier) {
+            return 'undefined';
+        }
+        const response = await fetch(`https://api.github.com/repos/${repoIdentifier}/releases/latest`);
+        const data = await response.json();
+        return data.tag_name ?? 'undefined';
+    }
+
     private async checkYouTubeExtractorAuthTokens() {
         const ytAuthTokens = this.retreiveYouTubeExtractorAuthTokens();
         if (ytAuthTokens.length === 0) {
@@ -127,14 +154,14 @@ export class CoreValidator implements ICoreValidator {
             );
         }
 
-        const validAuthTokens: Array<string> = [];
+        const validAuthTokens: string[] = [];
         ytAuthTokens.forEach((authToken, index) => {
-            if (!(authToken.startsWith('access_token=') || authToken.includes('token_type'))) {
+            if (authToken.startsWith('access_token=') || authToken.includes('token_type')) {
+                validAuthTokens.push(authToken);
+            } else {
                 this._logger.warn(
                     `YT_EXTRACTOR_AUTH token at index ${index} is not valid. This is required for the YouTube extractor to work properly.`
                 );
-            } else {
-                validAuthTokens.push(authToken);
             }
         });
 
@@ -184,10 +211,10 @@ export class CoreValidator implements ICoreValidator {
                     if (typeof nodeMajorVersion !== 'number' || Number.isNaN(nodeMajorVersion)) {
                         nodeMajorVersion = 0;
                     }
-                    const LATEST_SUPPORTED_VERSION = 20;
-                    if (nodeMajorVersion < LATEST_SUPPORTED_VERSION) {
+                    const latestSupportedVersion = 20;
+                    if (nodeMajorVersion < latestSupportedVersion) {
                         this._logger.warn(
-                            `Node.js version is below supported version ${LATEST_SUPPORTED_VERSION}. Please consider upgrading to LTS version.`
+                            `Node.js version is below supported version ${latestSupportedVersion}. Please consider upgrading to LTS version.`
                         );
                     }
                 }

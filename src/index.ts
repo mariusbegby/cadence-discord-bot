@@ -43,6 +43,7 @@ const startApplication = async (): Promise<void> => {
     await coreValidator.validateEnvironmentVariables();
     await coreValidator.validateConfiguration();
     await coreValidator.checkDependencies();
+    await coreValidator.checkApplicationVersion();
     await shardManager.start();
     await healthCheckService.start(healthCheckConfig.interval);
 

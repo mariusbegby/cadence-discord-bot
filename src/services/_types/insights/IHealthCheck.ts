@@ -1,9 +1,9 @@
 import type { ILoggerService } from '@type/insights/ILoggerService';
 
 export enum HealthCheckStatus {
-    HEALTHY = 'HEALTHY',
-    UNHEALTHY = 'UNHEALTHY',
-    UNKNOWN = 'UNKNOWN'
+    Healthy = 'HEALTHY',
+    Unhealthy = 'UNHEALTHY',
+    Unknown = 'UNKNOWN'
 }
 
 export type HealthCheckResult = {

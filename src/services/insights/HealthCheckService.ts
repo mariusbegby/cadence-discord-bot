@@ -49,13 +49,13 @@ export class HealthCheckService implements IHealthCheckService {
             try {
                 const result = await healthCheck.check(this._logger);
                 switch (result.status) {
-                    case HealthCheckStatus.HEALTHY:
+                    case HealthCheckStatus.Healthy:
                         this._logger.debug(`Health check '${healthCheck.identifier}' passed.`);
                         break;
-                    case HealthCheckStatus.UNHEALTHY:
+                    case HealthCheckStatus.Unhealthy:
                         this._logger.error(`Health check '${healthCheck.identifier}' failed.`);
                         break;
-                    case HealthCheckStatus.UNKNOWN:
+                    case HealthCheckStatus.Unknown:
                         this._logger.warn(`Health check '${healthCheck.identifier}' status is unknown.`);
                         break;
                     default:

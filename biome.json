@@ -24,9 +24,44 @@
                     "level": "error",
                     "fix": "safe"
                 }
+            },
+            "nursery": {
+                "noConsole": "warn",
+                "noDuplicateJsonKeys": "warn",
+                "noUselessStringConcat": "warn",
+                "noUnusedFunctionParameters": "warn",
+                "noUselessUndefinedInitialization": "warn",
+                "useDateNow": "warn",
+                "useDefaultSwitchClause": "warn",
+                "useErrorMessage": "warn",
+                "useExplicitLengthCheck": "warn",
+                "useNumberToFixedDigitsArgument": "warn",
+                "useThrowNewError": "warn",
+                "useThrowOnlyError": "warn",
+                "useTopLevelRegex": "warn"
+            },
+            "performance": {
+                "noBarrelFile": "warn",
+                "noReExportAll": "warn"
+            },
+            "style": {
+                "noDefaultExport": "warn",
+                "noNegationElse": "warn",
+                "useBlockStatements": "error",
+                "useCollapsedElseIf": "error",
+                "useConsistentArrayType": "warn",
+                "useForOf": "warn",
+                "useNamingConvention": {
+                    "level": "warn",
+                    "options": {
+                        "strictCase": false,
+                        "enumMemberCase": "PascalCase"
+                    },
+                    "fix": "safe"
+                }
             }
         },
-        "ignore": ["**/__tests__/**/*.ts"]
+        "ignore": ["**/__tests__/**/*.ts", "**/locales/**/*.d.ts", "**/src/services/insights/LoggerService.ts"]
     },
     "javascript": {
         "formatter": {
