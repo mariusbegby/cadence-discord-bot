@@ -32,7 +32,7 @@ const shardManager = new ShardManager(logger, shardManagerConfig);
 const obs = new PerformanceObserver((items) => {
     for (const entry of items.getEntries()) {
         if (!entry.name.includes('benchmark')) {
-            logger.info(`[Metrics] Measurement '${entry.name}' took ${entry.duration.toFixed(2)}ms`);
+            logger.debug(`[Metrics] Measurement '${entry.name}' took ${entry.duration.toFixed(2)}ms`);
         }
     }
 });
