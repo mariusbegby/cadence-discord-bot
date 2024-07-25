@@ -1,18 +1,19 @@
 // Load environment variables from .env file
 import 'dotenv/config';
-
-// Import modules
 import '@utilities/FormattingUtility';
-import type { HealthCheckConfig, ShardManagerConfig } from '@config/types';
+
+import config from 'config';
+import packageJson from '../package.json';
+
 import { CoreValidator } from '@core/CoreValidator';
-import { ShardManager } from '@core/ShardManager';
-import { StorageClientHealth } from '@services/insights/health-checks/StorageClientHealth';
 import { HealthCheckService } from '@services/insights/HealthCheckService';
-import { useLogger } from '@services/insights/LoggerService';
+import { ShardManager } from '@core/ShardManager';
 import { StorageClient } from '@services/storage/StorageClient';
+import { StorageClientHealth } from '@services/insights/health-checks/StorageClientHealth';
+import { useLogger } from '@services/insights/LoggerService';
 import { exec } from 'node:child_process';
 import { performance, PerformanceObserver } from 'node:perf_hooks';
-import config from 'config';
+import type { HealthCheckConfig, ShardManagerConfig } from '@config/types';
 
 // Initialize services
 const logger = useLogger();
@@ -23,7 +24,7 @@ healthCheckService.registerHealthCheck(new StorageClientHealth(storageClient));
 // Initialize core components
 const shardManagerConfig = config.get<ShardManagerConfig>('shardManagerConfig');
 const healthCheckConfig = config.get<HealthCheckConfig>('healthCheckConfig');
-const coreValidator = new CoreValidator(logger, config, exec);
+const coreValidator = new CoreValidator(logger, config, exec, fetch, packageJson);
 const shardManager = new ShardManager(logger, shardManagerConfig);
 
 // TESTING - Performance Observer

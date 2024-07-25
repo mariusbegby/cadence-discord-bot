@@ -1,6 +1,6 @@
 import { CoreValidator } from '@core/CoreValidator';
 import { MockLoggerService } from '@mocks/MockLoggerService';
-import { IConfig } from 'config';
+import type { IConfig } from 'config';
 import type { exec } from 'child_process';
 import type { HealthCheckConfig, ShardManagerConfig, LoggerServiceConfig } from '@config/types';
 
@@ -8,11 +8,19 @@ describe('CoreValidator', () => {
     let mockLoggerService = new MockLoggerService();
     let mockConfig: Partial<IConfig>;
     let mockExecute: Partial<typeof exec>;
+    let mockFetch: Partial<typeof fetch>;
     let mockLoadedConfiguration: {
         shardManagerConfig?: ShardManagerConfig;
         loggerServiceConfig?: LoggerServiceConfig;
         healthCheckConfig?: HealthCheckConfig;
     };
+    let mockPackageJson: {
+        version: string;
+        repository: {
+            url: string;
+        };
+    };
+    let mockLatestVersion: string;
     let coreValidator: CoreValidator;
 
     function updateTestSetup() {
@@ -51,7 +59,43 @@ describe('CoreValidator', () => {
             }) as unknown as typeof exec;
         }
 
-        coreValidator = new CoreValidator(mockLoggerService, mockConfig as IConfig, mockExecute as typeof exec);
+        if (!mockFetch) {
+            mockFetch = jest.fn((url) => {
+                if (url === 'https://api.github.com/repos/user/repo/releases/latest') {
+                    return Promise.resolve({
+                        json: jest.fn().mockResolvedValue({
+                            tag_name: mockLatestVersion
+                        })
+                    });
+                }
+                return Promise.resolve({
+                    json: jest.fn().mockResolvedValue({
+                        message: 'Not Found',
+                        documentation_url: 'https://docs.github.com/rest/releases/releases#get-the-latest-release',
+                        status: '404'
+                    })
+                });
+            }) as unknown as typeof fetch;
+        }
+
+        if (!mockPackageJson) {
+            mockPackageJson = {
+                version: '1.0.0',
+                repository: { url: 'https://github.com/user/repo' }
+            };
+        }
+
+        if (!mockLatestVersion) {
+            mockLatestVersion = '1.0.0';
+        }
+
+        coreValidator = new CoreValidator(
+            mockLoggerService,
+            mockConfig as IConfig,
+            mockExecute as typeof exec,
+            mockFetch as typeof global.fetch,
+            mockPackageJson
+        );
     }
 
     // create mock of exec function
@@ -67,7 +111,6 @@ describe('CoreValidator', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        process.exit = jest.fn() as unknown as typeof process.exit;
         // mock process.exit to prevent the application from exiting but still stop execution
         process.exit = jest.fn().mockImplementation(() => {
             throw new Error('[MOCK] process.exit() called');
@@ -410,6 +453,78 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Found 2 valid YT_EXTRACTOR_AUTH tokens.');
             expect(mockLoggerService.error).not.toHaveBeenCalled();
             expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated environment variables.');
+        });
+    });
+
+    describe('checkApplicationVersion', () => {
+        it('should check application version and not warn if up to date', async () => {
+            // Arrange
+            mockLatestVersion = '1.0.0';
+            updateTestSetup();
+
+            // Act
+            await coreValidator.checkApplicationVersion();
+
+            // Assert
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking application version...');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith(`Current version is ${mockPackageJson.version}`);
+            expect(mockLoggerService.warn).not.toHaveBeenCalled();
+            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked application version.');
+        });
+
+        it('should check the application version and warn if out of date', async () => {
+            // Arrange
+            mockLatestVersion = '2.0.0';
+            updateTestSetup();
+
+            // Act
+            await coreValidator.checkApplicationVersion();
+
+            // Assert
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking application version...');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith(`Current version is ${mockPackageJson.version}`);
+            expect(mockLoggerService.warn).toHaveBeenCalledWith(`New version available: ${mockLatestVersion}`);
+            expect(mockLoggerService.warn).toHaveBeenCalledWith(
+                `You are currently using version: ${mockPackageJson.version}`
+            );
+            expect(mockLoggerService.warn).toHaveBeenCalledWith(
+                "Please consider updating the application with 'git pull'."
+            );
+            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked application version.');
+        });
+
+        it('should check the application version and warn if fetch fails', async () => {
+            // Arrange
+            mockLatestVersion = '1.0.0';
+            mockFetch = jest.fn(() => {
+                return Promise.reject(new Error('Fetch failed'));
+            }) as unknown as typeof fetch;
+            updateTestSetup();
+
+            // Act
+            await coreValidator.checkApplicationVersion();
+
+            // Assert
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking application version...');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith(`Current version is ${mockPackageJson.version}`);
+            expect(mockLoggerService.warn).toHaveBeenCalledWith('Failed to fetch the latest version from GitHub.');
+        });
+
+        it('should return "undefined" if the repository URL is invalid', async () => {
+            // Arrange
+            mockPackageJson = {
+                version: '1.0.0',
+                repository: { url: 'asdf' } // Invalid URL
+            };
+            updateTestSetup();
+
+            // Act
+            await coreValidator.checkApplicationVersion();
+
+            // Assert
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking application version...');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith(`Current version is ${mockPackageJson.version}`);
+            expect(mockLoggerService.warn).toHaveBeenCalledWith('Failed to fetch the latest version from GitHub.');
         });
     });
 });

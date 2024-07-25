@@ -3,7 +3,6 @@ import type { ICoreValidator } from '@type/ICoreValidator';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IConfig } from 'config';
 import type { exec } from 'node:child_process';
-import packageJson from '../../package.json';
 
 type ConfigurationOptions = {
     shardManagerConfig?: ShardManagerConfig;
@@ -18,15 +17,32 @@ enum EnvironmentVariables {
     TotalShards = 'TOTAL_SHARDS'
 }
 
+type PackageJson = {
+    version: string;
+    repository: {
+        url: string;
+    };
+};
+
 export class CoreValidator implements ICoreValidator {
     _logger: ILoggerService;
     _config: IConfig;
     _execute: typeof exec;
+    _fetch: typeof fetch;
+    _packageJson: PackageJson;
 
-    constructor(logger: ILoggerService, config: IConfig, execute: typeof exec) {
+    constructor(
+        logger: ILoggerService,
+        config: IConfig,
+        execute: typeof exec,
+        fetch: typeof global.fetch,
+        packageJson: PackageJson
+    ) {
         this._logger = logger;
         this._config = config;
         this._execute = execute;
+        this._fetch = fetch;
+        this._packageJson = packageJson;
     }
 
     async validateEnvironmentVariables() {
@@ -122,10 +138,14 @@ export class CoreValidator implements ICoreValidator {
 
     async checkApplicationVersion() {
         this._logger.debug('Checking application version...');
-        const currentVersion = packageJson.version;
+        const currentVersion = this._packageJson.version;
         this._logger.debug(`Current version is ${currentVersion}`);
 
         const latestVersion = (await this.getLatestVersion()).replace('v', '');
+        if (latestVersion === 'undefined') {
+            this._logger.warn('Failed to fetch the latest version from GitHub.');
+            return;
+        }
         if (latestVersion !== currentVersion) {
             this._logger.warn(`New version available: ${latestVersion}`);
             this._logger.warn(`You are currently using version: ${currentVersion}`);
@@ -136,14 +156,19 @@ export class CoreValidator implements ICoreValidator {
     }
 
     private async getLatestVersion(): Promise<string> {
-        const repoUrlArray = packageJson.repository.url.split('/');
+        const repoUrlArray = this._packageJson.repository.url.split('/');
         const repoIdentifier = `${repoUrlArray[3]}/${repoUrlArray[4]}`;
-        if (!repoIdentifier) {
+        if (!repoIdentifier || repoIdentifier === '/' || repoIdentifier.includes('undefined')) {
             return 'undefined';
         }
-        const response = await fetch(`https://api.github.com/repos/${repoIdentifier}/releases/latest`);
-        const data = await response.json();
-        return data.tag_name ?? 'undefined';
+        try {
+            const response = await this._fetch(`https://api.github.com/repos/${repoIdentifier}/releases/latest`);
+            const data = await response.json();
+            return data.tag_name ?? 'undefined';
+        } catch (error) {
+            this._logger.warn('Failed to fetch the latest version from GitHub.');
+            return 'undefined';
+        }
     }
 
     private async checkYouTubeExtractorAuthTokens() {
