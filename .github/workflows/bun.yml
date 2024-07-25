@@ -1,26 +1,40 @@
-name: Bun CI
+name: Bun latest CI with pnpm
 
 on:
     pull_request:
         branches: ['main']
 
 jobs:
-    build:
-        name: Bun ${{ matrix.bun-version }} on ${{ matrix.os }}
-        runs-on: ${{ matrix.os }}
+  cache-and-install:
+    name: Cache and install
+    runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                bun-version: [latest]
-                os: ['ubuntu-latest']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        steps:
-            - uses: actions/checkout@v4
-            - name: Bun ${{ matrix.bun-version }}
-              uses: oven-sh/setup-bun@v1
-              with:
-                  bun-version: ${{ matrix.bun-version }}
-            - run: bun install
-            - run: bun run eslint
-            - run: bun run build
-            - run: bun run test
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Format code
+        run: pnpm format
+    
+      - name: Build project
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test

@@ -1,5 +1,5 @@
 import type { ILoggerService } from '@type/insights/ILoggerService';
-import { IConfig } from 'config';
+import type { IConfig } from 'config';
 
 export interface ICoreValidator {
     _logger: ILoggerService;

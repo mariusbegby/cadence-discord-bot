@@ -1,4 +1,4 @@
-import { ShardingManagerOptions } from 'discord.js';
+import type { ShardingManagerOptions } from 'discord.js';
 
 type ShardManagerConfig = {} & ShardingManagerOptions;
 

@@ -1,5 +1,5 @@
-import { ILoggerService } from '@type/insights/ILoggerService';
-import { IStorageClient } from '@type/storage/IStorageClient';
+import type { ILoggerService } from '@type/insights/ILoggerService';
+import type { IStorageClient } from '@type/storage/IStorageClient';
 
 export class StorageClient implements IStorageClient {
     private _logger: ILoggerService;
@@ -14,6 +14,6 @@ export class StorageClient implements IStorageClient {
 
         // Connect to DB and execute query to check if it's healthy
         // Return true if successful, false otherwise
-        return true;
+        //return true;
     }
 }

@@ -1,4 +1,4 @@
-import { HealthCheckConfig, LoggerServiceConfig, ShardManagerConfig } from './types';
+import type { HealthCheckConfig, LoggerServiceConfig, ShardManagerConfig } from './types';
 
 export const shardManagerConfig: ShardManagerConfig = {
     totalShards: 'auto',

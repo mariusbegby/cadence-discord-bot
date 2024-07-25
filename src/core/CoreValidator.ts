@@ -65,7 +65,7 @@ export class CoreValidator implements ICoreValidator {
         this._logger.debug(`NODE_ENV is set to ${process.env.NODE_ENV}.`);
 
         // Check TOTAL_SHARDS
-        if (process.env.TOTAL_SHARDS != 'AUTO' && isNaN(Number(process.env.TOTAL_SHARDS))) {
+        if (process.env.TOTAL_SHARDS !== 'AUTO' && Number.isNaN(Number(process.env.TOTAL_SHARDS))) {
             const errorMessage =
                 'TOTAL_SHARDS is not set to AUTO or a valid number. Please set it to AUTO or the total number of shards. Exiting...';
             this._logger.error(errorMessage);
@@ -175,11 +175,13 @@ export class CoreValidator implements ICoreValidator {
                     process.exit(1);
                 } else {
                     const nodeVersionString = stdout.trim();
-                    const nodeVersionArray = nodeVersionString.split('.').map((n) => parseInt(n.replace('v', '')));
+                    const nodeVersionArray = nodeVersionString
+                        .split('.')
+                        .map((n) => Number.parseInt(n.replace('v', '')));
                     this._logger.debug(`Detected Node.js version: ${nodeVersionString}`);
 
                     let nodeMajorVersion = nodeVersionArray[0];
-                    if (typeof nodeMajorVersion !== 'number' || isNaN(nodeMajorVersion)) {
+                    if (typeof nodeMajorVersion !== 'number' || Number.isNaN(nodeMajorVersion)) {
                         nodeMajorVersion = 0;
                     }
                     const LATEST_SUPPORTED_VERSION = 20;

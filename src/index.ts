@@ -2,6 +2,7 @@
 import 'dotenv/config';
 
 // Import modules
+import '@utilities/FormattingUtility';
 import type { HealthCheckConfig, ShardManagerConfig } from '@config/types';
 import { CoreValidator } from '@core/CoreValidator';
 import { ShardManager } from '@core/ShardManager';
@@ -9,10 +10,9 @@ import { StorageClientHealth } from '@services/insights/health-checks/StorageCli
 import { HealthCheckService } from '@services/insights/HealthCheckService';
 import { useLogger } from '@services/insights/LoggerService';
 import { StorageClient } from '@services/storage/StorageClient';
-import '@utilities/FormattingUtility';
-import config from 'config';
 import { exec } from 'node:child_process';
-import { performance, PerformanceObserver } from 'perf_hooks';
+import { performance, PerformanceObserver } from 'node:perf_hooks';
+import config from 'config';
 
 // Initialize services
 const logger = useLogger();
@@ -29,11 +29,11 @@ const shardManager = new ShardManager(logger, shardManagerConfig);
 // TESTING - Performance Observer
 // Will be integrated into the metrics service later
 const obs = new PerformanceObserver((items) => {
-    items.getEntries().forEach((entry) => {
+    for (const entry of items.getEntries()) {
         if (!entry.name.includes('benchmark')) {
             logger.info(`[Metrics] Measurement '${entry.name}' took ${entry.duration.toFixed(2)}ms`);
         }
-    });
+    }
 });
 obs.observe({ type: 'measure' });
 

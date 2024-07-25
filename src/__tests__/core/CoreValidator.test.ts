@@ -354,6 +354,7 @@ describe('CoreValidator', () => {
             process.env.DISCORD_BOT_TOKEN = 'bot-token';
             process.env.DISCORD_APPLICATION_ID = '12345';
             process.env.TOTAL_SHARDS = 'AUTO';
+            // biome-ignore lint/performance/noDelete: <explanation>
             delete process.env.YT_EXTRACTOR_AUTH;
 
             // Act

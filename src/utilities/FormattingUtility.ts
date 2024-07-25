@@ -1,11 +1,11 @@
-Number.prototype.formatAsCompact = function (this: number, thresholds?: { value: number; symbol: string }[]): string {
-    if (!thresholds) {
-        thresholds = [
-            { value: 1_000, symbol: 'K' },
-            { value: 1_000_000, symbol: 'M' },
-            { value: 1_000_000_000, symbol: 'B' }
-        ];
-    }
+Number.prototype.formatAsCompact = function (
+    this: number,
+    thresholds: { value: number; symbol: string }[] = [
+        { value: 1_000, symbol: 'K' },
+        { value: 1_000_000, symbol: 'M' },
+        { value: 1_000_000_000, symbol: 'B' }
+    ]
+): string {
     thresholds.sort((a, b) => b.value - a.value);
 
     const absNumber = Math.abs(this);
@@ -20,13 +20,11 @@ Number.prototype.formatAsCompact = function (this: number, thresholds?: { value:
             // Use up to one decimal place if not a whole compact number and less than 10
             if (isWholeNumber) {
                 return `${Math.round(compactNumber)}${symbol}`;
-            } else {
-                if (roundedCompactNumber < 10) {
-                    return `${roundedCompactNumber.toFixed(1)}${symbol}`;
-                } else {
-                    return `${Math.round(roundedCompactNumber)}${symbol}`;
-                }
             }
+            if (roundedCompactNumber < 10) {
+                return `${roundedCompactNumber.toFixed(1)}${symbol}`;
+            }
+            return `${Math.round(roundedCompactNumber)}${symbol}`;
         }
     }
 
@@ -34,7 +32,7 @@ Number.prototype.formatAsCompact = function (this: number, thresholds?: { value:
     return this.toString();
 };
 
-Number.prototype.formatWithSeparator = function (this: number, separator: string = ' '): string {
+Number.prototype.formatWithSeparator = function (this: number, separator = ' '): string {
     if (typeof this !== 'number') {
         throw new Error('Required parameter "number" is not a number.');
     }

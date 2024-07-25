@@ -142,8 +142,8 @@ export class LoggerService implements ILoggerService {
             });
         }
 
-        if (usePinoLokiTransport && process.env.LOKI_AUTH_PASSWORD != '' && process.env.LOKI_AUTH_USERNAME != '') {
-            console.log('Sending logs to Loki at ' + process.env.LOKI_HOST);
+        if (usePinoLokiTransport && process.env.LOKI_AUTH_PASSWORD !== '' && process.env.LOKI_AUTH_USERNAME !== '') {
+            console.log(`Sending logs to Loki at ${process.env.LOKI_HOST}`);
             targets.push({
                 target: 'pino-loki',
                 level: this._logConfig.logLevel,

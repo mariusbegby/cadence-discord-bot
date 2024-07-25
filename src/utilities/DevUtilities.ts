@@ -1,13 +1,13 @@
 import type { ILoggerService } from '@type/insights/ILoggerService';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export function benchmark(logger: ILoggerService, executable: Function, times = 1): void {
+export function benchmark(logger: ILoggerService, executable: () => void, times = 1): void {
     const benchmarkObserver = new PerformanceObserver((items) => {
-        items.getEntries().forEach((entry) => {
+        for (const entry of items.getEntries()) {
             if (entry.name.includes('benchmark')) {
                 logger.info(`Performance Observer: Benchmark took ${entry.duration.toFixed(2)}ms`);
             }
-        });
+        }
     });
     benchmarkObserver.observe({ type: 'measure', buffered: true });
 

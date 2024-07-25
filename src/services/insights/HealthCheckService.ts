@@ -11,7 +11,7 @@ export class HealthCheckService implements IHealthCheckService {
         this._logger = logger.setContext({ module: 'services' });
     }
 
-    public async start(interval: number = 60_000): Promise<void> {
+    public async start(interval = 60_000): Promise<void> {
         this._logger.debug('Starting health check service...');
         if (this._timer) {
             clearInterval(this._timer);

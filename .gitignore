@@ -12,5 +12,6 @@
 /locales/resources.d.ts
 /prisma/dev.db
 /package-lock.json
+/bun.lockb
 /.vscode
 /.dpy
