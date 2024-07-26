@@ -24,9 +24,21 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
             ipconfig: ipRotationConfig
         });
 
+        function getAuthArrayFromEnv(): string[] {
+            return Object.keys(process.env)
+                .filter((v) => v.startsWith('YT_EXTRACTOR_AUTH'))
+                .map((k) => process.env[k])
+                .filter((v) => v !== undefined);
+        }
+
         // Testing out new youtube extractor
         await player.extractors.register(YoutubeiExtractor, {
-            authentication: process.env.YT_EXTRACTOR_AUTH || ''
+            //authentication: process.env.YT_EXTRACTOR_AUTH || '',
+            rotator: {
+                rotationStrategy: 'shard',
+                authentications: getAuthArrayFromEnv() || [''],
+                currentShard: client.shard?.ids[0] || 0
+            }
         });
 
         // Using new youtube extractor as bridge for spotify
