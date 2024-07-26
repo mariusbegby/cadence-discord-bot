@@ -11,9 +11,6 @@ importers:
       '@discord-player/extractor':
         specifier: ^4.5.0
         version: 4.5.0
-      '@discord-player/opus':
-        specifier: ^0.1.2
-        version: 0.1.2
       '@prisma/client':
         specifier: ^5.17.0
         version: 5.17.0

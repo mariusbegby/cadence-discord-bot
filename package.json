@@ -60,7 +60,6 @@
     },
     "dependencies": {
         "@discord-player/extractor": "^4.5.0",
-        "@discord-player/opus": "^0.1.2",
         "@prisma/client": "^5.17.0",
         "config": "^3.3.12",
         "discord-player": "^6.7.0",
