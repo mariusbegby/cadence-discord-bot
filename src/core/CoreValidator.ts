@@ -181,7 +181,7 @@ export class CoreValidator implements ICoreValidator {
 
         const validAuthTokens: string[] = [];
         ytAuthTokens.forEach((authToken, index) => {
-            if (authToken.startsWith('access_token=') || authToken.includes('token_type')) {
+            if (authToken.startsWith('access_token=') && authToken.includes('token_type')) {
                 validAuthTokens.push(authToken);
             } else {
                 this._logger.warn(
