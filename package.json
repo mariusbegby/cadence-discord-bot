@@ -80,7 +80,9 @@
         "typescript": "^5.5.4"
     },
     "optionalDependencies": {
+        "bufferutil": "^4.0.8",
         "pino-loki": "^2.3.0",
-        "pino-pretty": "^11.2.2"
+        "pino-pretty": "^11.2.2",
+        "sodium-native": "^4.1.1"
     }
 }
