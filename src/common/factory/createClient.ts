@@ -16,24 +16,42 @@ export const createClient = async ({ executionId }: { executionId: string }): Pr
             intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildVoiceStates],
             makeCache: Discord.Options.cacheWithLimits({
                 ...Discord.Options.DefaultMakeCacheSettings,
+                AutoModerationRuleManager: 0,
+                ApplicationCommandManager: 10,
+                BaseGuildEmojiManager: 0,
+                DMMessageManager: 0,
+                GuildEmojiManager: 0,
+                GuildMemberManager: 10,
+                GuildBanManager: 0,
+                GuildForumThreadManager: 10,
+                GuildInviteManager: 0,
+                GuildMessageManager: 10,
+                GuildScheduledEventManager: 0,
+                GuildStickerManager: 0,
+                GuildTextThreadManager: 10,
                 MessageManager: 10,
-                ThreadManager: 10,
                 PresenceManager: 0,
                 ReactionManager: 0,
-                GuildMemberManager: {
-                    maxSize: 10,
-                    keepOverLimit: (member) => member.id === client.user?.id
-                }
+                ReactionUserManager: 0,
+                StageInstanceManager: 0,
+                ThreadManager: 0,
+                ThreadMemberManager: 0,
+                UserManager: 10,
+                VoiceStateManager: 10
             }),
             sweepers: {
                 ...Discord.Options.DefaultSweeperSettings,
                 messages: {
-                    interval: 3600,
-                    lifetime: 1800
+                    interval: 1800,
+                    lifetime: 900
                 },
                 users: {
-                    interval: 3600,
+                    interval: 1800,
                     filter: () => (user) => user.id !== client.user?.id
+                },
+                voiceStates: {
+                    interval: 1800,
+                    filter: () => (voiceState) => voiceState.member?.id !== client.user?.id
                 }
             }
         });

@@ -3,7 +3,7 @@ import { IPRotationConfig, Player } from 'discord-player';
 import { SpotifyExtractor } from '@discord-player/extractor';
 import { loggerService, Logger } from '../services/logger';
 import { CreatePlayerParams } from '../../types/playerTypes';
-import { YoutubeiExtractor, createYoutubeiStream } from 'discord-player-youtubei';
+import { YoutubeiExtractor } from 'discord-player-youtubei';
 
 export const createPlayer = async ({ client, executionId }: CreatePlayerParams): Promise<Player> => {
     const logger: Logger = loggerService.child({
@@ -41,18 +41,12 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
             }
         });
 
-        // Using new youtube extractor as bridge for spotify
-        await player.extractors.register(SpotifyExtractor, {
-            createStream: createYoutubeiStream
-        });
-
         // make player accessible from anywhere in the application
         // primarily to be able to use it in broadcastEval and other sharding methods
         // @ts-ignore
         global.player = player;
 
-        await player.extractors.loadDefault();
-        await player.extractors.loadDefault((ext) => !['YouTubeExtractor', 'SpotifyExtractor'].includes(ext));
+        await player.extractors.loadDefault((ext) => !['YouTubeExtractor'].includes(ext));
         logger.trace(`discord-player loaded dependencies:\n${player.scanDeps()}`);
 
         return player;
