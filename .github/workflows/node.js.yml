@@ -2,7 +2,7 @@ name: Node.js v20 CI with pnpm
 
 on:
     pull_request:
-        branches: ['main']
+        branches: ['main', 'v6-rewrite']
 
 jobs:
   cache-and-install:
