@@ -27,9 +27,9 @@ export class ShardClient implements IShardClient {
         this._logger.debug('Starting shard client...');
 
         try {
-            this._logger.info('CONNECTING TO DISCORD...');
+            this._logger.debug('Connecting client to Discord...');
             await this._shardClient.connect();
-            this._logger.info('CONNECTED TO DISCORD!');
+            this._logger.debug('Successfully connected client to Discord!');
             this._shardClient.editStatus('online', [
                 {
                     name: '/help 🎶',
@@ -41,7 +41,7 @@ export class ShardClient implements IShardClient {
             this._logger.warn('Make sure the DISCORD_BOT_TOKEN environment variable is set and valid.');
         }
 
-        this._logger.info('Successfully started shard client.');
+        this._logger.debug('Successfully started shard client.');
     }
 
     public registerEventListener(eventName: string, once: boolean, listener: () => void): void {

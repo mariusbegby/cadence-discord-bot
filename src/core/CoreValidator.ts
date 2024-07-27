@@ -93,7 +93,7 @@ export class CoreValidator implements ICoreValidator {
         // Check if YT_EXTRACTOR_AUTH is set and valid, warn if not
         this._checkYouTubeExtractorAuthTokens();
 
-        this._logger.info('Successfully validated environment variables.');
+        this._logger.debug('Successfully validated environment variables.');
     }
 
     public async validateConfiguration() {
@@ -121,7 +121,7 @@ export class CoreValidator implements ICoreValidator {
             throw new Error(errorMessage);
         }
 
-        this._logger.info('Successfully validated configuration.');
+        this._logger.debug('Successfully validated configuration.');
     }
 
     public async checkDependencies() {
@@ -133,7 +133,7 @@ export class CoreValidator implements ICoreValidator {
         // Check Node.js version
         await this._checkNodeJsVersion();
 
-        this._logger.info('Successfully checked required dependencies.');
+        this._logger.debug('Successfully checked required dependencies.');
     }
 
     public async checkApplicationVersion() {
@@ -152,7 +152,7 @@ export class CoreValidator implements ICoreValidator {
             this._logger.warn("Please consider updating the application with 'git pull'.");
         }
 
-        this._logger.info('Successfully checked application version.');
+        this._logger.debug('Successfully checked application version.');
     }
 
     private async _getLatestVersion(): Promise<string> {

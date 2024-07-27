@@ -13,9 +13,9 @@ export class StorageClientHealth implements IHealthCheck {
 
     async check(logger: ILoggerService): Promise<HealthCheckResult> {
         try {
-            logger.info('Checking storage client health...');
+            logger.debug('Checking storage client health...');
             if (await this._storageClient.ping()) {
-                logger.info('Storage client is healthy');
+                logger.debug('Storage client is healthy');
                 this._lastStatus = HealthCheckStatus.Healthy;
                 return {
                     status: this._lastStatus,

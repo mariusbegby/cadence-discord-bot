@@ -30,15 +30,15 @@ export class EventHandlerManager implements IEventHandlerManager {
         for (const name of directoryContents) {
             switch (name) {
                 case 'shardclient':
-                    this._logger.info(`Loading client event handlers from ${name} directory`);
+                    this._logger.debug(`Loading client event handlers from ${name} directory`);
                     this._loadClientEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'player':
-                    this._logger.info(`Loading player event handlers from ${name} directory`);
+                    this._logger.debug(`Loading player event handlers from ${name} directory`);
                     this._loadPlayerEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'process':
-                    this._logger.info(`Loading process event handlers from ${name} directory`);
+                    this._logger.debug(`Loading process event handlers from ${name} directory`);
                     this._loadProcessEventHandlers(path.join(this._eventsPath, name));
                     break;
                 default:
@@ -115,7 +115,7 @@ export class EventHandlerManager implements IEventHandlerManager {
     public _reloadEventHandlers(): void {
         this._shardClient.removeAllListeners();
         this.loadEventHandlers();
-        this._logger.info('Event handlers reloaded.');
+        this._logger.debug('Event handlers reloaded.');
     }
 
     private _setMaxListeners(maxListeners: number): void {

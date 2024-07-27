@@ -46,7 +46,7 @@ export class RateLimitService implements IRateLimitService {
 
     private _startCleanup(): void {
         this._cleanupTimer = setInterval(() => this._cleanup(), this._cleanupIntervalMs);
-        this._logger.info(`Started rate limiter cleanup with interval ${this._cleanupIntervalMs}ms`);
+        this._logger.debug(`Started rate limiter cleanup with interval ${this._cleanupIntervalMs}ms`);
     }
 
     private _cleanup(): void {
@@ -57,14 +57,14 @@ export class RateLimitService implements IRateLimitService {
                 this._logger.debug(`Removed user '${userId}' from rate limiter`);
             }
         }
-        this._logger.info('Completed rate limiter cleanup');
+        this._logger.debug('Completed rate limiter cleanup');
     }
 
     public stopCleanup(): void {
         if (this._cleanupTimer) {
             clearInterval(this._cleanupTimer);
             this._cleanupTimer = undefined;
-            this._logger.info('Stopped rate limiter cleanup');
+            this._logger.debug('Stopped rate limiter cleanup');
         }
     }
 }

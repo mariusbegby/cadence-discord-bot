@@ -19,7 +19,7 @@ export class HealthCheckService implements IHealthCheckService {
 
         this._timer = setInterval(async () => await this._runHealthChecks(), interval);
 
-        this._logger.info('Successfully started health check service.');
+        this._logger.debug('Successfully started health check service.');
     }
 
     public stop(): void {
@@ -30,7 +30,7 @@ export class HealthCheckService implements IHealthCheckService {
             this._timer = undefined;
         }
 
-        this._logger.info('Successfully stopped health check service.');
+        this._logger.debug('Successfully stopped health check service.');
     }
 
     public registerHealthCheck(healthCheck: IHealthCheck): void {
@@ -43,7 +43,7 @@ export class HealthCheckService implements IHealthCheckService {
     }
 
     private async _runHealthChecks(): Promise<void> {
-        this._logger.info('Running health checks...');
+        this._logger.debug('Running health checks...');
 
         for (const healthCheck of this._healthChecks) {
             try {
@@ -67,6 +67,6 @@ export class HealthCheckService implements IHealthCheckService {
             }
         }
 
-        this._logger.info('Completed health checks.');
+        this._logger.debug('Completed health checks.');
     }
 }

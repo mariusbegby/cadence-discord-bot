@@ -145,7 +145,7 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Validating configuration...');
             expect(mockLoggerService.debug).toHaveBeenCalledWith(mockLoadedConfiguration, 'Using configuration:');
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated configuration.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully validated configuration.');
         });
 
         it('should throw an error if a required configuration option is missing', async () => {
@@ -194,7 +194,7 @@ describe('CoreValidator', () => {
             // Assert
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking for required dependencies...');
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked required dependencies.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully checked required dependencies.');
         });
 
         it('should throw an error if a ffmpeg is missing', async () => {
@@ -250,7 +250,7 @@ describe('CoreValidator', () => {
                 'Node.js version is below supported version 20. Please consider upgrading to LTS version.'
             );
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked required dependencies.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully checked required dependencies.');
         });
 
         it('should log error if error occurs while checking Node.js version', async () => {
@@ -298,7 +298,7 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.debug).toHaveBeenCalledWith('DISCORD_APPLICATION_ID is set.');
             expect(mockLoggerService.debug).toHaveBeenCalledWith('TOTAL_SHARDS is set to AUTO.');
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated environment variables.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully validated environment variables.');
         });
 
         it('should throw an error if NODE_ENV is not set to development or production', async () => {
@@ -409,7 +409,7 @@ describe('CoreValidator', () => {
                 'YT_EXTRACTOR_AUTH token is not set. This is required for the YouTube extractor to work properly.'
             );
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated environment variables.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully validated environment variables.');
         });
 
         it('should log a warning if any YT_EXTRACTOR_AUTH is not valid', async () => {
@@ -433,7 +433,7 @@ describe('CoreValidator', () => {
                 'YT_EXTRACTOR_AUTH token at index 1 is not valid. This is required for the YouTube extractor to work properly.'
             );
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated environment variables.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully validated environment variables.');
         });
 
         it('should log amount of valid YT_EXTRACTOR_AUTH tokens', async () => {
@@ -452,7 +452,7 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Validating environment variables...');
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Found 2 valid YT_EXTRACTOR_AUTH tokens.');
             expect(mockLoggerService.error).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully validated environment variables.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully validated environment variables.');
         });
     });
 
@@ -469,7 +469,7 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.debug).toHaveBeenCalledWith('Checking application version...');
             expect(mockLoggerService.debug).toHaveBeenCalledWith(`Current version is ${mockPackageJson.version}`);
             expect(mockLoggerService.warn).not.toHaveBeenCalled();
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked application version.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully checked application version.');
         });
 
         it('should check the application version and warn if out of date', async () => {
@@ -490,7 +490,7 @@ describe('CoreValidator', () => {
             expect(mockLoggerService.warn).toHaveBeenCalledWith(
                 "Please consider updating the application with 'git pull'."
             );
-            expect(mockLoggerService.info).toHaveBeenCalledWith('Successfully checked application version.');
+            expect(mockLoggerService.debug).toHaveBeenCalledWith('Successfully checked application version.');
         });
 
         it('should check the application version and warn if fetch fails', async () => {
