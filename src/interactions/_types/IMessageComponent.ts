@@ -4,5 +4,5 @@ import type { ComponentInteraction } from 'eris';
 
 export interface IMessageComponent {
     customId: string;
-    handle: (logger: ILoggerService, shardClient: IShardClient, interaction: ComponentInteraction) => Promise<void>;
+    run: (logger: ILoggerService, shardClient: IShardClient, interaction: ComponentInteraction) => Promise<void>;
 }

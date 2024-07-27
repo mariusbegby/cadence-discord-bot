@@ -5,11 +5,11 @@ import type { IShardClient } from '@core/_types/IShardClient';
 import type { Guild } from 'eris';
 
 export class GuildDeleteEventHandler implements IEventHandler {
-    public eventName = ShardEvents.GuildDelete;
-    public triggerOnce = false;
+    public name = ShardEvents.GuildDelete;
+    public once = false;
 
-    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, guild: Guild) {
-        logger.info(`Event '${this.eventName}' received: Bot removed from guild with ID ${guild.id}.`);
+    public async run(logger: ILoggerService, _shardClient: IShardClient, guild: Guild) {
+        logger.info(`Event '${this.name}' received: Bot removed from guild with ID ${guild.id}.`);
     }
 }
 

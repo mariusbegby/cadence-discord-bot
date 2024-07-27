@@ -13,9 +13,10 @@ import { StorageClientHealth } from '@services/insights/health-checks/StorageCli
 import { useLogger } from '@services/insights/LoggerService';
 import { exec } from 'node:child_process';
 import { performance, PerformanceObserver } from 'node:perf_hooks';
-import type { HealthCheckConfig, ShardClientConfig } from '@config/types';
 import { EventHandlerManager } from '@events/EventHandlerManager';
 import { join } from 'node:path';
+import { DeploymentDispatcher } from '@core/DeploymentDispatcher';
+import type { HealthCheckConfig, ShardClientConfig } from '@config/types';
 
 // Get logger instance
 const logger = useLogger();
@@ -25,6 +26,8 @@ const shardClientConfig = config.get<ShardClientConfig>('shardClientConfig');
 const healthCheckConfig = config.get<HealthCheckConfig>('healthCheckConfig');
 const coreValidator = new CoreValidator(logger, config, exec, fetch, packageJson);
 const shardClient = new ShardClient(logger, shardClientConfig);
+const interactionsPath = join(__dirname, 'interactions');
+const deploymentDispatcher = new DeploymentDispatcher(logger, shardClient, interactionsPath);
 
 // Initialize services
 const storageClient = new StorageClient(logger);
@@ -47,11 +50,13 @@ obs.observe({ type: 'measure' });
 // Application startup logic
 const startApplication = async (): Promise<void> => {
     logger.info('Starting application...');
+
     await coreValidator.validateEnvironmentVariables();
     await coreValidator.validateConfiguration();
     await coreValidator.checkDependencies();
     await coreValidator.checkApplicationVersion();
     await shardClient.start();
+    await deploymentDispatcher.refreshSlashCommands();
     eventHandlerManager.loadEventHandlers();
     healthCheckService.start(healthCheckConfig.interval);
 

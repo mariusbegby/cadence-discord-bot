@@ -20,8 +20,13 @@
     "jest": {
         "preset": "ts-jest",
         "testEnvironment": "node",
-        "testMatch": ["**/__tests__/**/*.(spec|test).ts"],
-        "testPathIgnorePatterns": ["/node_modules/", "src/__tests__/_mocks/"],
+        "testMatch": [
+            "**/__tests__/**/*.(spec|test).ts"
+        ],
+        "testPathIgnorePatterns": [
+            "/node_modules/",
+            "src/__tests__/_mocks/"
+        ],
         "moduleNameMapper": {
             "^@core/(.*)$": "<rootDir>/src/core/$1",
             "^@events/(.*)$": "<rootDir>/src/events/$1",

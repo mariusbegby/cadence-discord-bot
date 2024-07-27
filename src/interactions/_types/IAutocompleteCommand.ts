@@ -3,7 +3,7 @@ import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { AutocompleteInteraction } from 'eris';
 
 export interface IAutocompleteCommand {
-    commandName: string;
+    name: string;
     aliases?: string[];
-    handle: (logger: ILoggerService, shardClient: IShardClient, interaction: AutocompleteInteraction) => Promise<void>;
+    run: (logger: ILoggerService, shardClient: IShardClient, interaction: AutocompleteInteraction) => Promise<void>;
 }

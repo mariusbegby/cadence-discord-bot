@@ -4,14 +4,11 @@ import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class ErrorEventHandler implements IEventHandler {
-    public eventName = ShardEvents.Error;
-    public triggerOnce = false;
+    public name = ShardEvents.Error;
+    public once = false;
 
-    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, message: string, shardId: number) {
-        logger.error(
-            message,
-            `Event '${this.eventName}' received: Shard with ID ${shardId} received an error message.`
-        );
+    public async run(logger: ILoggerService, _shardClient: IShardClient, message: string, shardId: number) {
+        logger.error(message, `Event '${this.name}' received: Shard with ID ${shardId} received an error message.`);
     }
 }
 

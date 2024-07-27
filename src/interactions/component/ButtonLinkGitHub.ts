@@ -6,7 +6,7 @@ import type { IMessageComponent } from '@type/IMessageComponent';
 export class ButtonLinkGithubComponent implements IMessageComponent {
     public customId = 'button-link-github';
 
-    public async handle(
+    public async run(
         logger: ILoggerService,
         _shardClient: IShardClient,
         _interaction: ComponentInteraction

@@ -39,7 +39,7 @@ export class InteractionHandler implements IInteractionHandler {
             return;
         }
 
-        await slashCommand.handle(logger, shardClient, interaction);
+        await slashCommand.run(logger, shardClient, interaction);
     }
 
     public async handleAutocompleteInteraction(
@@ -63,7 +63,7 @@ export class InteractionHandler implements IInteractionHandler {
         }
 
         logger.debug(`Handling autocomplete interaction with name '${interaction.data.name}'.`);
-        await autocompleteCommand.handle(logger, shardClient, interaction);
+        await autocompleteCommand.run(logger, shardClient, interaction);
     }
 
     public async handleComponentInteraction(
@@ -84,7 +84,7 @@ export class InteractionHandler implements IInteractionHandler {
             return;
         }
 
-        await component.handle(logger, shardClient, interaction);
+        await component.run(logger, shardClient, interaction);
     }
 
     public async handlePingInteraction(
@@ -128,13 +128,13 @@ export class InteractionHandler implements IInteractionHandler {
         const interactionFiles = this._getInteractionFileNames(folderPath);
         for (const file of interactionFiles) {
             const slashCommand: ISlashCommand = require(join(folderPath, file));
-            if (!slashCommand.commandName || !slashCommand.handle) {
+            if (!slashCommand.data.name || !slashCommand.run) {
                 this._logger.error(`Slash command '${file}' does not implement ISlashCommand properly. Skipping...`);
                 continue;
             }
-            this._logger.debug(`Slash command '${slashCommand.commandName}' loaded.`);
+            this._logger.debug(`Slash command '${slashCommand.data.name}' loaded.`);
 
-            slashCommands.set(slashCommand.commandName, slashCommand);
+            slashCommands.set(slashCommand.data.name, slashCommand);
         }
 
         this._slashCommands = slashCommands;
@@ -145,15 +145,15 @@ export class InteractionHandler implements IInteractionHandler {
         const interactionFiles = this._getInteractionFileNames(folderPath);
         for (const file of interactionFiles) {
             const autocompleteCommand: IAutocompleteCommand = require(join(folderPath, file));
-            if (!autocompleteCommand.commandName || !autocompleteCommand.handle) {
+            if (!autocompleteCommand.name || !autocompleteCommand.run) {
                 this._logger.error(
                     `Autocomplete command '${file}' does not implement IAutocompleteCommand properly. Skipping...`
                 );
                 continue;
             }
-            this._logger.debug(`Autocomplete command '${autocompleteCommand.commandName}' loaded.`);
+            this._logger.debug(`Autocomplete command '${autocompleteCommand.name}' loaded.`);
 
-            autocompleteCommands.set(autocompleteCommand.commandName, autocompleteCommand);
+            autocompleteCommands.set(autocompleteCommand.name, autocompleteCommand);
         }
 
         this._autocompleteCommands = autocompleteCommands;
@@ -164,7 +164,7 @@ export class InteractionHandler implements IInteractionHandler {
         const interactionFiles = this._getInteractionFileNames(folderPath);
         for (const file of interactionFiles) {
             const component: IMessageComponent = require(join(folderPath, file));
-            if (!component.customId || !component.handle) {
+            if (!component.customId || !component.run) {
                 this._logger.error(`Component '${file}' does not implement IMessageComponent properly. Skipping...`);
                 continue;
             }

@@ -3,10 +3,10 @@ import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class UnhandledRejectionEventHandler implements IEventHandler {
-    public eventName = ProcessEvents.UnhandledRejection;
-    public triggerOnce = false;
+    public name = ProcessEvents.UnhandledRejection;
+    public once = false;
 
-    public async handleEvent(
+    public async run(
         logger: ILoggerService,
         _shardClient: IShardClient,
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -14,7 +14,7 @@ export class UnhandledRejectionEventHandler implements IEventHandler {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         promise: Promise<any>
     ) {
-        logger.error({ reason, promise }, `Event '${this.eventName}' received: An unhandled rejection has occurred.`);
+        logger.error({ reason, promise }, `Event '${this.name}' received: An unhandled rejection has occurred.`);
     }
 }
 

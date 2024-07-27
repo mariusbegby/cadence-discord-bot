@@ -4,11 +4,11 @@ import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class HelloEventHandler implements IEventHandler {
-    public eventName = ShardEvents.Hello;
-    public triggerOnce = false;
+    public name = ShardEvents.Hello;
+    public once = false;
 
-    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, trace: string[], shardId: number) {
-        logger.debug(trace, `Event '${this.eventName}' received: Shard with ID ${shardId} received an HELLO packet.`);
+    public async run(logger: ILoggerService, _shardClient: IShardClient, trace: string[], shardId: number) {
+        logger.debug(trace, `Event '${this.name}' received: Shard with ID ${shardId} received an HELLO packet.`);
     }
 }
 

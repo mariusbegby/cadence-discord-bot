@@ -2,17 +2,22 @@ import Eris, { Client } from 'eris';
 import type { ShardClientConfig } from '@config/types';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IShardClient } from '@type/IShardClient';
+import type { ISlashCommand } from '@type/ISlashCommand';
 
 export class ShardClient implements IShardClient {
     private _logger: ILoggerService;
     private _shardClientConfig: ShardClientConfig;
     private _shardClient: Client;
+    private _applicationId: string;
 
     constructor(logger: ILoggerService, shardClientConfig: ShardClientConfig) {
         this._logger = logger;
         this._shardClientConfig = shardClientConfig;
 
         const token = process.env.DISCORD_BOT_TOKEN || '';
+        const applicationId = process.env.DISCORD_APPLICATION_ID || '';
+        this._applicationId = applicationId;
+        this._logger.debug(`Application ID: ${this._applicationId}`);
         this._shardClient = new Client(token, {
             intents: this._shardClientConfig.intents,
             shardConcurrency: this._shardClientConfig.shardConcurrency ?? 'auto',
@@ -21,6 +26,11 @@ export class ShardClient implements IShardClient {
             maxShards: this._shardClientConfig.maxShards ?? 'auto',
             getAllUsers: false
         });
+
+        this._shardClient.application = {
+            id: this._applicationId,
+            flags: 1 << 23
+        };
     }
 
     public async start() {
@@ -86,5 +96,28 @@ export class ShardClient implements IShardClient {
         }
 
         return totalShardCount;
+    }
+
+    public async deployCommand(command: ISlashCommand): Promise<Eris.ApplicationCommand> {
+        const slashCommandData: Eris.ChatInputApplicationCommand = {
+            ...command.data,
+            // biome-ignore lint/style/useNamingConvention: <explanation>
+            application_id: this._applicationId,
+            type: Eris.Constants.ApplicationCommandTypes.CHAT_INPUT,
+            id: command.data.name
+        };
+        return await this._shardClient.createCommand(slashCommandData);
+    }
+
+    public async getCommands(): Promise<Eris.ApplicationCommand[]> {
+        return await this._shardClient.getCommands();
+    }
+
+    public async deleteCommands(): Promise<void> {
+        const commands = await this.getCommands();
+        for (const command of commands) {
+            this._logger.debug(`Deleting slash command '${command.name}'...`);
+            await this._shardClient.deleteCommand(command.id);
+        }
     }
 }

@@ -4,11 +4,11 @@ import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class ShardReadyEventHandler implements IEventHandler {
-    public eventName = ShardEvents.ShardReady;
-    public triggerOnce = false;
+    public name = ShardEvents.ShardReady;
+    public once = false;
 
-    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
-        logger.info(`Event '${this.eventName}' received: Shard with ID ${shardId} is ready.`);
+    public async run(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
+        logger.info(`Event '${this.name}' received: Shard with ID ${shardId} is ready.`);
     }
 }
 

@@ -15,15 +15,15 @@ import { join } from 'node:path';
 import { useLogger } from '@services/insights/LoggerService';
 
 export class InteractionCreateEventHandler implements IEventHandler {
-    public eventName = ShardEvents.InteractionCreate;
-    public triggerOnce = false;
+    public name = ShardEvents.InteractionCreate;
+    public once = false;
     private _interactionHandler: IInteractionHandler = new InteractionHandler(
         useLogger(),
         join(__dirname, '..', '..', 'interactions')
     );
 
-    public async handleEvent(logger: ILoggerService, shardClient: IShardClient, interaction: Interaction) {
-        logger.debug(`Event '${this.eventName}' received: Interaction ID: ${interaction.id}`);
+    public async run(logger: ILoggerService, shardClient: IShardClient, interaction: Interaction) {
+        logger.debug(`Event '${this.name}' received: Interaction ID: ${interaction.id}`);
 
         switch (interaction.constructor.name) {
             case 'CommandInteraction':

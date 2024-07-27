@@ -4,11 +4,11 @@ import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class AllShardsDisconnectEventHandler implements IEventHandler {
-    public eventName = ShardClientEvents.AllShardsDisconnect;
-    public triggerOnce = false;
+    public name = ShardClientEvents.AllShardsDisconnect;
+    public once = false;
 
-    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient) {
-        logger.info(`Event '${this.eventName}' received: All shards are disconnected.`);
+    public async run(logger: ILoggerService, _shardClient: IShardClient) {
+        logger.info(`Event '${this.name}' received: All shards are disconnected.`);
     }
 }
 
