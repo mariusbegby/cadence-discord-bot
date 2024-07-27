@@ -74,6 +74,8 @@ export class InteractionCreateEventHandler implements IEventHandler {
                     interaction.createMessage('Unknown command.');
                     break;
             }
+
+            interactionLogger.info(`Handled command interaction '${interaction.data.name}'.`);
         });
     }
 
