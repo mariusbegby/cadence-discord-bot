@@ -4,59 +4,38 @@
 
 ARG NODE_VERSION=20.12
 
-# Stage 1: Build and transpile TypeScript
-FROM node:${NODE_VERSION}-bookworm-slim as builder
+# Use Node.js image as the base image
+FROM node:${NODE_VERSION}-bookworm-slim
 
 # Set working directory
 WORKDIR /app
 
 # Install build dependencies necessary for native modules and clean up in one layer
-RUN apt-get update && apt-get install -y python3 make build-essential \
+RUN apt-get update && apt-get install -y python3 make build-essential ffmpeg ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install pnpm globally
+RUN npm install -g pnpm
+
 # Copy only necessary source files
-COPY package*.json ./
-COPY tsconfig.json ./
-COPY src/ ./src/
-COPY config/ ./config/
-COPY locales/ ./locales/
+COPY package*.json ./ 
+COPY tsconfig.json ./ 
+COPY src/ ./src/ 
+COPY config/ ./config/ 
+COPY locales/ ./locales/ 
 COPY prisma/ ./prisma/
 
 # Install node dependencies
-RUN npm ci
-
-# Build the application
-RUN npm run build && npx prisma generate
-
-# Remove development dependencies
-RUN npm prune --omit=dev
-
-# Stage 2: Production environment
-FROM node:${NODE_VERSION}-bookworm-slim as production
-
-# Set working directory
-WORKDIR /app
-
-# Install runtime dependencies necessary for the application
-RUN apt-get update && apt-get install -y ffmpeg ca-certificates \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Copy built artifacts from builder stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/config ./config
-COPY --from=builder /app/locales ./locales
-COPY --from=builder /app/prisma ./prisma
-
-# Rebuild native dependencies
-RUN npm rebuild && npm cache clean --force
+RUN pnpm install
 
 # Install mediaplex
-RUN npm install mediaplex
+RUN pnpm install mediaplex
+
+# Build the application
+RUN pnpm build && pnpm dlx prisma generate
 
 # Cleanup unnecessary packages to minimize image size
 RUN apt-get purge -y python3 && apt-get autoremove -y
 
 # Start the application
-CMD /bin/sh -c "npm run deploy && npm run start"
+CMD pnpm start
