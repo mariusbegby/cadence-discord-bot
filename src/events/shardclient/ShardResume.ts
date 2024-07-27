@@ -7,7 +7,7 @@ export class ShardResumeEventHandler implements IEventHandler {
     public eventName = ShardEvents.ShardResume;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
         logger.info(`Event '${this.eventName}' received: Shard with ID ${shardId} has resumed.`);
     }
 }

@@ -7,7 +7,7 @@ export class AllShardsDisconnectEventHandler implements IEventHandler {
     public eventName = ShardClientEvents.AllShardsDisconnect;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient) {
         logger.info(`Event '${this.eventName}' received: All shards are disconnected.`);
     }
 }

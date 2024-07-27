@@ -3,9 +3,8 @@ import type { IShardClient } from '@core/_types/IShardClient';
 import type { ISlashCommand } from '@interactions/_types/ISlashCommand';
 import type { CommandInteraction } from 'eris';
 
-export class HelpCommand implements ISlashCommand {
-    public commandName = 'help';
-    public aliases = ['h'];
+export class StatusCommand implements ISlashCommand {
+    public commandName = 'status';
 
     public async handle(
         logger: ILoggerService,
@@ -13,8 +12,13 @@ export class HelpCommand implements ISlashCommand {
         _interaction: CommandInteraction
     ): Promise<void> {
         logger.debug(`Handling '${this.commandName}' command...`);
-        await _interaction.createMessage("Sorry, can't help ya");
+
+        const nodeProcessMemUsageInMb: number = Number.parseFloat(
+            (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+        );
+        const replyString = `**Node.js memory:** ${nodeProcessMemUsageInMb.toLocaleString('en-US')} MB`;
+        await _interaction.createMessage(replyString);
     }
 }
 
-module.exports = new HelpCommand();
+module.exports = new StatusCommand();

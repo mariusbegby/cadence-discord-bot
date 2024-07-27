@@ -8,7 +8,7 @@ export class GuildCreateEventHandler implements IEventHandler {
     public eventName = ShardEvents.GuildCreate;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, guild: Guild) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, guild: Guild) {
         logger.info(`Event '${this.eventName}' received: Bot added to guild with ID ${guild.id}.`);
     }
 }

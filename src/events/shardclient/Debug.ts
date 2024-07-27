@@ -7,7 +7,7 @@ export class DebugEventHandler implements IEventHandler {
     public eventName = ShardEvents.Debug;
     public triggerOnce = false;
 
-    public handleEvent(_logger: ILoggerService, _shardClient: IShardClient, _message: string, _shardId: number) {
+    public async handleEvent(_logger: ILoggerService, _shardClient: IShardClient, _message: string, _shardId: number) {
         //logger.debug(message, `Event '${this.eventName}' received: Shard with ID ${shardId} received a debug message.`);
         return;
     }

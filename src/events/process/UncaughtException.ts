@@ -6,7 +6,7 @@ export class UncaughtExceptionEventHandler implements IEventHandler {
     public eventName = ProcessEvents.UncaughtException;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, error: Error, origin: string) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, error: Error, origin: string) {
         logger.error(error, `Event '${this.eventName}' received: An uncaught exception occurred in ${origin}.`);
     }
 }

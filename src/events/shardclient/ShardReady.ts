@@ -7,7 +7,7 @@ export class ShardReadyEventHandler implements IEventHandler {
     public eventName = ShardEvents.ShardReady;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
         logger.info(`Event '${this.eventName}' received: Shard with ID ${shardId} is ready.`);
     }
 }

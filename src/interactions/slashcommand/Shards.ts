@@ -3,9 +3,8 @@ import type { IShardClient } from '@core/_types/IShardClient';
 import type { ISlashCommand } from '@interactions/_types/ISlashCommand';
 import type { CommandInteraction } from 'eris';
 
-export class HelpCommand implements ISlashCommand {
-    public commandName = 'help';
-    public aliases = ['h'];
+export class ShardsCommand implements ISlashCommand {
+    public commandName = 'shards';
 
     public async handle(
         logger: ILoggerService,
@@ -13,8 +12,11 @@ export class HelpCommand implements ISlashCommand {
         _interaction: CommandInteraction
     ): Promise<void> {
         logger.debug(`Handling '${this.commandName}' command...`);
-        await _interaction.createMessage("Sorry, can't help ya");
+
+        const shardCount = _shardClient.getShardCount();
+        const replyString = `**Shard count:** ${shardCount}`;
+        await _interaction.createMessage(replyString);
     }
 }
 
-module.exports = new HelpCommand();
+module.exports = new ShardsCommand();

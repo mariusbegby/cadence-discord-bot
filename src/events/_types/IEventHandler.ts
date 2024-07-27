@@ -31,5 +31,5 @@ export interface IEventHandler {
     eventName: string;
     triggerOnce: boolean;
     // biome-ignore lint/suspicious/noExplicitAny: Events have different arguments and types
-    handleEvent: (logger: ILoggerService, shardClient: ShardClient, ...args: any[]) => void;
+    handleEvent: (logger: ILoggerService, shardClient: ShardClient, ...args: any[]) => Promise<void>;
 }

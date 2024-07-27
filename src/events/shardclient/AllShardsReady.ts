@@ -7,7 +7,7 @@ export class AllShardsReadyEventHandler implements IEventHandler {
     public eventName = ShardClientEvents.AllShardsReady;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient) {
         logger.info(`Event '${this.eventName}' received: All shards are ready.`);
     }
 }

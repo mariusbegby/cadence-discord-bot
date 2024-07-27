@@ -1,15 +1,19 @@
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IShardClient } from '@type/IShardClient';
 import type { CommandInteraction, AutocompleteInteraction, ComponentInteraction, PingInteraction } from 'eris';
-import type { IInteractionHandler } from '@type/IInteractionHandler';
+import { MessageResponseFlags, type IInteractionHandler } from '@type/IInteractionHandler';
 import type { ISlashCommand } from '@type/ISlashCommand';
 import { readdirSync } from 'node:fs';
 import path, { join } from 'node:path';
+import type { IMessageComponent } from '@type/IMessageComponent';
+import type { IAutocompleteCommand } from '@type/IAutocompleteCommand';
 
 export class InteractionHandler implements IInteractionHandler {
     private _logger: ILoggerService;
     private _interactionsPath: string;
-    private _slashCommands: ISlashCommand[] | undefined;
+    private _slashCommands = new Map<string, ISlashCommand>();
+    private _autocompleteCommands = new Map<string, IAutocompleteCommand>();
+    private _components = new Map<string, IMessageComponent>();
 
     constructor(logger: ILoggerService, interactionsPath: string) {
         this._logger = logger.updateContext({ module: 'interactions' }, false);
@@ -17,50 +21,78 @@ export class InteractionHandler implements IInteractionHandler {
         this.loadInteractionHandlers();
     }
 
-    public handleCommandInteraction(
+    public async handleCommandInteraction(
         logger: ILoggerService,
         shardClient: IShardClient,
         interaction: CommandInteraction
-    ): void {
-        const shardId = shardClient.getShardId(interaction.guildID);
-        const interactionLogger = logger.updateContext(
-            { module: 'events', shardId: shardId, interactionId: interaction.id },
-            false
-        );
+    ): Promise<void> {
+        const interactionLogger = this._getInteractionLogger(logger, shardClient, interaction);
+        interactionLogger.debug(`Received command interaction with name '${interaction.data.name}'.`);
 
-        interactionLogger.debug(
-            `Received command interaction '${interaction.data.name}' with ID ${interaction.id} on shard ID ${shardId}`
-        );
-
-        for (const slashCommand of this._slashCommands || []) {
-            if (interaction.data.name === slashCommand.commandName) {
-                slashCommand.handleCommand(logger, shardClient, interaction);
-            }
+        const slashCommand = this._slashCommands.get(interaction.data.name);
+        if (!slashCommand) {
+            interactionLogger.debug(`No command handler found for '${interaction.data.name}'`);
+            await interaction.createMessage({
+                content: 'No command handler found for this command.',
+                flags: MessageResponseFlags.Ephemeral
+            });
+            return;
         }
+
+        await slashCommand.handle(logger, shardClient, interaction);
     }
 
-    public handleAutocompleteInteraction(
-        _logger: ILoggerService,
-        _shardClient: IShardClient,
-        _interaction: AutocompleteInteraction
-    ): void {
-        // TODO: Implement autocomplete interaction handler
+    public async handleAutocompleteInteraction(
+        logger: ILoggerService,
+        shardClient: IShardClient,
+        interaction: AutocompleteInteraction
+    ): Promise<void> {
+        const interactionLogger = this._getInteractionLogger(logger, shardClient, interaction);
+        interactionLogger.debug(`Received autocomplete interaction with name '${interaction.data.name}'.`);
+
+        const autocompleteCommand = this._autocompleteCommands.get(interaction.data.name);
+        if (!autocompleteCommand) {
+            interactionLogger.debug(`No autocomplete command handler found for '${interaction.data.name}'`);
+            await interaction.result([
+                {
+                    name: `name: ${interaction.data.name}`,
+                    value: `value: ${interaction.data.name}`
+                }
+            ]);
+            return;
+        }
+
+        logger.debug(`Handling autocomplete interaction with name '${interaction.data.name}'.`);
+        await autocompleteCommand.handle(logger, shardClient, interaction);
     }
 
-    public handleComponentInteraction(
-        _logger: ILoggerService,
-        _shardClient: IShardClient,
-        _interaction: ComponentInteraction
-    ): void {
-        // TODO: Implement component interaction handler
+    public async handleComponentInteraction(
+        logger: ILoggerService,
+        shardClient: IShardClient,
+        interaction: ComponentInteraction
+    ): Promise<void> {
+        const interactionLogger = this._getInteractionLogger(logger, shardClient, interaction);
+        interactionLogger.debug(`Received component interaction with custom id '${interaction.data.custom_id}'.`);
+
+        const component = this._components.get(interaction.data.custom_id);
+        if (!component) {
+            interactionLogger.debug(`No component handler found for '${interaction.data.custom_id}'`);
+            await interaction.createMessage({
+                content: 'No component handler found for this command.',
+                flags: MessageResponseFlags.Ephemeral
+            });
+            return;
+        }
+
+        await component.handle(logger, shardClient, interaction);
     }
 
-    public handlePingInteraction(
+    public async handlePingInteraction(
         _logger: ILoggerService,
         _shardClient: IShardClient,
         _interaction: PingInteraction
-    ): void {
-        // TODO: Implement ping interaction handler
+    ): Promise<void> {
+        await _interaction.pong();
     }
 
     public loadInteractionHandlers(): void {
@@ -78,9 +110,11 @@ export class InteractionHandler implements IInteractionHandler {
                     break;
                 case 'autocomplete':
                     this._logger.debug(`Loading autocomplete interaction handlers from '${name}' directory`);
+                    this._loadAutocompleteInteractionHandlers(path.join(this._interactionsPath, name));
                     break;
                 case 'component':
                     this._logger.debug(`Loading component interaction handlers from '${name}' directory`);
+                    this._loadComponentInteractionHandlers(path.join(this._interactionsPath, name));
                     break;
                 default:
                     // Unknown interaction type folder, ignore
@@ -90,23 +124,68 @@ export class InteractionHandler implements IInteractionHandler {
     }
 
     private _loadSlashCommandInteractionHandlers(folderPath: string): void {
-        const slashCommands: ISlashCommand[] = [];
+        const slashCommands: Map<string, ISlashCommand> = new Map<string, ISlashCommand>();
         const interactionFiles = this._getInteractionFileNames(folderPath);
         for (const file of interactionFiles) {
             const slashCommand: ISlashCommand = require(join(folderPath, file));
-            if (!slashCommand.commandName || !slashCommand.handleCommand) {
+            if (!slashCommand.commandName || !slashCommand.handle) {
                 this._logger.error(`Slash command '${file}' does not implement ISlashCommand properly. Skipping...`);
                 continue;
             }
-            this._logger.error(`Slash command '${slashCommand.commandName}' loaded.`);
+            this._logger.debug(`Slash command '${slashCommand.commandName}' loaded.`);
 
-            slashCommands.push(slashCommand);
+            slashCommands.set(slashCommand.commandName, slashCommand);
         }
 
         this._slashCommands = slashCommands;
     }
 
+    private _loadAutocompleteInteractionHandlers(folderPath: string): void {
+        const autocompleteCommands: Map<string, IAutocompleteCommand> = new Map<string, IAutocompleteCommand>();
+        const interactionFiles = this._getInteractionFileNames(folderPath);
+        for (const file of interactionFiles) {
+            const autocompleteCommand: IAutocompleteCommand = require(join(folderPath, file));
+            if (!autocompleteCommand.commandName || !autocompleteCommand.handle) {
+                this._logger.error(
+                    `Autocomplete command '${file}' does not implement IAutocompleteCommand properly. Skipping...`
+                );
+                continue;
+            }
+            this._logger.debug(`Autocomplete command '${autocompleteCommand.commandName}' loaded.`);
+
+            autocompleteCommands.set(autocompleteCommand.commandName, autocompleteCommand);
+        }
+
+        this._autocompleteCommands = autocompleteCommands;
+    }
+
+    private _loadComponentInteractionHandlers(folderPath: string): void {
+        const components: Map<string, IMessageComponent> = new Map<string, IMessageComponent>();
+        const interactionFiles = this._getInteractionFileNames(folderPath);
+        for (const file of interactionFiles) {
+            const component: IMessageComponent = require(join(folderPath, file));
+            if (!component.customId || !component.handle) {
+                this._logger.error(`Component '${file}' does not implement IMessageComponent properly. Skipping...`);
+                continue;
+            }
+            this._logger.debug(`Component '${component.customId}' loaded.`);
+
+            components.set(component.customId, component);
+        }
+
+        this._components = components;
+    }
+
     private _getInteractionFileNames(folderPath: string): string[] {
         return readdirSync(folderPath).filter((file) => file.endsWith('.js'));
+    }
+
+    private _getInteractionLogger(
+        logger: ILoggerService,
+        shardClient: IShardClient,
+        interaction: CommandInteraction | AutocompleteInteraction | ComponentInteraction
+    ): ILoggerService {
+        const shardId = shardClient.getShardId(interaction.guildID);
+        return logger.updateContext({ module: 'events', shardId: shardId, interactionId: interaction.id }, false);
     }
 }

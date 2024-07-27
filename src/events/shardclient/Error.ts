@@ -7,7 +7,7 @@ export class ErrorEventHandler implements IEventHandler {
     public eventName = ShardEvents.Error;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, message: string, shardId: number) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, message: string, shardId: number) {
         logger.error(
             message,
             `Event '${this.eventName}' received: Shard with ID ${shardId} received an error message.`

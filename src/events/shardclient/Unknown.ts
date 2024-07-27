@@ -7,7 +7,7 @@ export class UnknownEventHandler implements IEventHandler {
     public eventName = ShardEvents.Unknown;
     public triggerOnce = false;
 
-    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, packet: unknown, shardId: number) {
+    public async handleEvent(logger: ILoggerService, _shardClient: IShardClient, packet: unknown, shardId: number) {
         logger.debug(
             packet,
             `Event '${this.eventName}' received: Shard with ID ${shardId} received an unknown packet.`
