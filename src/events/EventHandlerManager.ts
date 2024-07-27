@@ -98,7 +98,7 @@ export class EventHandlerManager implements IEventHandlerManager {
         for (const file of eventFiles) {
             const eventHandler: IEventHandler = require(join(folderPath, file));
             // check if eventHandler implements IEventHandler
-            if (!eventHandler.eventName || !eventHandler.triggerOnce || !eventHandler.handleEvent) {
+            if (!eventHandler.eventName || !eventHandler.handleEvent) {
                 this._logger.error(`Event handler ${file} does not implement IEventHandler properly. Skipping...`);
                 continue;
             }

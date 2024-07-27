@@ -1,4 +1,4 @@
-import { ShardEvents } from '@core/ShardClient';
+import { ShardEvents } from '@type/IEventHandler';
 import type { IEventHandler } from '@type/IEventHandler';
 import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
