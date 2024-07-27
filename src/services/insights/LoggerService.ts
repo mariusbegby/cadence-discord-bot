@@ -59,12 +59,12 @@ export class LoggerService implements ILoggerService {
         return this._logger;
     }
 
-    public updateContext(context: LogContext, generateUuid = true): ILoggerService {
+    public updateContext(context: LogContext, newExecutionId = true): ILoggerService {
         const appliedContext: LogContext = {
             ...context
         };
 
-        if (generateUuid) {
+        if (newExecutionId) {
             appliedContext.executionId = generateExecutionId();
         }
 

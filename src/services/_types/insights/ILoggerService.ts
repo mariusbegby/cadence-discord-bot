@@ -8,7 +8,7 @@ export type LogContext = {
     guildId?: string;
 };
 export interface ILoggerService {
-    updateContext(context: LogContext, generateUuid?: boolean): ILoggerService;
+    updateContext(context: LogContext, newExecutionId?: boolean): ILoggerService;
 
     getLogger(): PinoLogger;
 

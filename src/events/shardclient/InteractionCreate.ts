@@ -10,17 +10,29 @@ import type {
     PingInteraction
 } from 'eris';
 import { benchmark } from '@utilities/DevUtilities';
+import { InteractionHandler } from '@interactions/InteractionHandler';
+import type { IInteractionHandler } from '@type/IInteractionHandler';
+import { join } from 'node:path';
+import { useLogger } from '@services/insights/LoggerService';
 
 export class InteractionCreateEventHandler implements IEventHandler {
     public eventName = ShardEvents.InteractionCreate;
     public triggerOnce = false;
+    private _interactionHandler: IInteractionHandler = new InteractionHandler(
+        useLogger(),
+        join(__dirname, '..', '..', 'interactions')
+    );
 
     public handleEvent(logger: ILoggerService, _shardClient: IShardClient, interaction: Interaction) {
         logger.debug(`Event '${this.eventName}' received: Interaction ID: ${interaction.id}`);
 
         switch (interaction.constructor.name) {
             case 'CommandInteraction':
-                this._handleCommandInteraction(logger, _shardClient, interaction as CommandInteraction);
+                this._interactionHandler.handleCommandInteraction(
+                    logger,
+                    _shardClient,
+                    interaction as CommandInteraction
+                );
                 break;
             case 'AutocompleteInteraction':
                 this._handleAutocompleteInteraction(logger, interaction as AutocompleteInteraction);

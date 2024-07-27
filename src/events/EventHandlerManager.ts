@@ -21,7 +21,7 @@ export class EventHandlerManager implements IEventHandlerManager {
     }
 
     public loadEventHandlers(): void {
-        const directoryContents: string[] = readdirSync(this._eventsPath);
+        const directoryContents: string[] = readdirSync(this._eventsPath).filter((file) => !file.endsWith('.js'));
         if (!directoryContents || directoryContents.length === 0) {
             this._logger.error(`No event folders found in path: ${this._eventsPath}`);
             throw new Error(`No event folders found in path ${this._eventsPath}. Exiting...`); // move validation to corevalidator
@@ -30,19 +30,19 @@ export class EventHandlerManager implements IEventHandlerManager {
         for (const name of directoryContents) {
             switch (name) {
                 case 'shardclient':
-                    this._logger.debug(`Loading client event handlers from ${name} directory`);
+                    this._logger.debug(`Loading client event handlers from '${name}' directory`);
                     this._loadClientEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'player':
-                    this._logger.debug(`Loading player event handlers from ${name} directory`);
+                    this._logger.debug(`Loading player event handlers from '${name}' directory`);
                     this._loadPlayerEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'process':
-                    this._logger.debug(`Loading process event handlers from ${name} directory`);
+                    this._logger.debug(`Loading process event handlers from '${name}' directory`);
                     this._loadProcessEventHandlers(path.join(this._eventsPath, name));
                     break;
                 default:
-                    // probably .ts files or _types folder, ignore
+                    // Unknown folder, ignore
                     break;
             }
         }
@@ -97,9 +97,8 @@ export class EventHandlerManager implements IEventHandlerManager {
         const eventFiles = this._getEventFileNames(folderPath);
         for (const file of eventFiles) {
             const eventHandler: IEventHandler = require(join(folderPath, file));
-            // check if eventHandler implements IEventHandler
             if (!eventHandler.eventName || !eventHandler.handleEvent) {
-                this._logger.error(`Event handler ${file} does not implement IEventHandler properly. Skipping...`);
+                this._logger.error(`Event handler '${file}' does not implement IEventHandler properly. Skipping...`);
                 continue;
             }
 
@@ -108,14 +107,14 @@ export class EventHandlerManager implements IEventHandlerManager {
         return eventHandlers;
     }
 
-    private _getEventFileNames(folderPath: string): string[] {
-        return readdirSync(folderPath).filter((file) => file.endsWith('.js'));
-    }
-
-    public _reloadEventHandlers(): void {
+    public reloadEventHandlers(): void {
         this._shardClient.removeAllListeners();
         this.loadEventHandlers();
         this._logger.debug('Event handlers reloaded.');
+    }
+
+    private _getEventFileNames(folderPath: string): string[] {
+        return readdirSync(folderPath).filter((file) => file.endsWith('.js'));
     }
 
     private _setMaxListeners(maxListeners: number): void {
