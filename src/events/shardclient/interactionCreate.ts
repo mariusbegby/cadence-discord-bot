@@ -1,5 +1,5 @@
 import { ShardEvents } from '@core/ShardClient';
-import type { IEventHandler } from '@events/EventHandlerManager';
+import type { IEventHandler } from '@type/IEventHandler';
 import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 import type {
@@ -12,10 +12,10 @@ import type {
 import { benchmark } from '@utilities/DevUtilities';
 
 export class InteractionCreateEventHandler implements IEventHandler {
-    eventName = ShardEvents.InteractionCreate;
-    triggerOnce = false;
+    public eventName = ShardEvents.InteractionCreate;
+    public triggerOnce = false;
 
-    execute(logger: ILoggerService, _shardClient: IShardClient, interaction: Interaction) {
+    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, interaction: Interaction) {
         logger.debug(`Event '${this.eventName}' received: Interaction ID: ${interaction.id}`);
 
         switch (interaction.constructor.name) {

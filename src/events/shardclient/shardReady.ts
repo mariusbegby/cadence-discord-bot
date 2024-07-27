@@ -1,13 +1,13 @@
 import { ShardEvents } from '@core/ShardClient';
-import type { IEventHandler } from '@events/EventHandlerManager';
+import type { IEventHandler } from '@type/IEventHandler';
 import type { ILoggerService } from '@services/_types/insights/ILoggerService';
 import type { IShardClient } from '@core/_types/IShardClient';
 
 export class ShardReadyEventHandler implements IEventHandler {
-    eventName = ShardEvents.ShardReady;
-    triggerOnce = false;
+    public eventName = ShardEvents.ShardReady;
+    public triggerOnce = false;
 
-    execute(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
+    public handleEvent(logger: ILoggerService, _shardClient: IShardClient, shardId: number) {
         logger.info(`Event '${this.eventName}' received: Shard with ID ${shardId} is ready.`);
     }
 }

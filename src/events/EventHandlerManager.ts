@@ -1,15 +1,9 @@
 import { readdirSync } from 'node:fs';
 import path, { join } from 'node:path';
+import type { IEventHandler } from '@type/IEventHandler';
 import type { IEventHandlerManager } from '@type/IEventHandlerManager';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { ShardClient } from '@core/ShardClient';
-
-export interface IEventHandler {
-    eventName: string;
-    triggerOnce: boolean;
-    // biome-ignore lint/suspicious/noExplicitAny: Events have different arguments and types
-    execute: (logger: ILoggerService, shardClient: ShardClient, ...args: any[]) => void;
-}
 
 export class EventHandlerManager implements IEventHandlerManager {
     private _logger: ILoggerService;
@@ -40,9 +34,8 @@ export class EventHandlerManager implements IEventHandlerManager {
                     this._loadClientEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'player':
-                    this._logger.warn('Loading player event handlers is not implemented yet.');
-                    //this._logger.info(`Loading player event handlers from ${name} directory`);
-                    //this.loadPlayerEventHandlers(path.join(this._eventsPath, name));
+                    this._logger.info(`Loading player event handlers from ${name} directory`);
+                    this._loadPlayerEventHandlers(path.join(this._eventsPath, name));
                     break;
                 case 'process':
                     this._logger.info(`Loading process event handlers from ${name} directory`);
@@ -59,21 +52,23 @@ export class EventHandlerManager implements IEventHandlerManager {
         const eventHandlerModules = this._parseEventsFromFolder(folderPath);
         for (const eventHandler of eventHandlerModules) {
             this._shardClient.registerEventListener(eventHandler.eventName, eventHandler.triggerOnce, (...args) => {
-                eventHandler.execute(this._logger.updateContext({ module: 'events' }), this._shardClient, ...args);
+                eventHandler.handleEvent(this._logger.updateContext({ module: 'events' }), this._shardClient, ...args);
             });
         }
     }
 
-    private _loadPlayerEventHandlers(folderPath: string): void {
+    private _loadPlayerEventHandlers(_folderPath: string): void {
+        this._logger.warn('Loading player event handlers is not implemented yet.');
+        return;
+        /*
         const eventHandlerModules = this._parseEventsFromFolder(folderPath);
         for (const eventHandler of eventHandlerModules) {
             // TODO: Register player event listeners
-            /*
-            this._playerService.registerEventListener(eventHandler.eventName, eventHandler.onlyOnce, (...args) => {
-                eventHandler.execute(this._logger, this._shardClient, ...args);
+            this._playerService.registerEventListener(eventHandler.eventName, eventHandler.triggerOnce, (...args) => {
+                eventHandler.handleEvent(this._logger.updateContext({ module: 'events' }), this._shardClient, ...args);
             });
-            */
         }
+        */
     }
 
     private _loadProcessEventHandlers(folderPath: string): void {
@@ -81,14 +76,14 @@ export class EventHandlerManager implements IEventHandlerManager {
         for (const eventHandler of eventHandlerModules) {
             eventHandler.triggerOnce
                 ? process.once(eventHandler.eventName, (...args) => {
-                      eventHandler.execute(
+                      eventHandler.handleEvent(
                           this._logger.updateContext({ module: 'events' }),
                           this._shardClient,
                           ...args
                       );
                   })
                 : process.on(eventHandler.eventName, (...args) => {
-                      eventHandler.execute(
+                      eventHandler.handleEvent(
                           this._logger.updateContext({ module: 'events' }),
                           this._shardClient,
                           ...args
@@ -102,6 +97,12 @@ export class EventHandlerManager implements IEventHandlerManager {
         const eventFiles = this._getEventFileNames(folderPath);
         for (const file of eventFiles) {
             const eventHandler: IEventHandler = require(join(folderPath, file));
+            // check if eventHandler implements IEventHandler
+            if (!eventHandler.eventName || !eventHandler.triggerOnce || !eventHandler.handleEvent) {
+                this._logger.error(`Event handler ${file} does not implement IEventHandler properly. Skipping...`);
+                continue;
+            }
+
             eventHandlers.push(eventHandler);
         }
         return eventHandlers;
