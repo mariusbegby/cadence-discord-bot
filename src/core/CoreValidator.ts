@@ -25,11 +25,11 @@ type PackageJson = {
 };
 
 export class CoreValidator implements ICoreValidator {
-    private _logger: ILoggerService;
-    private _config: IConfig;
-    private _execute: typeof exec;
-    private _fetch: typeof global.fetch;
-    private _packageJson: PackageJson;
+    _logger: ILoggerService;
+    _config: IConfig;
+    _execute: typeof exec;
+    _fetch: typeof fetch;
+    _packageJson: PackageJson;
 
     constructor(
         logger: ILoggerService,
