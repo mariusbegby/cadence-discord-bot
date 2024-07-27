@@ -47,7 +47,7 @@ obs.observe({ type: 'measure' });
 // Application startup logic
 const startApplication = async (): Promise<void> => {
     logger.info('Starting application...');
-    await coreValidator.validateEnvironmentVariables();
+    coreValidator.validateEnvironmentVariables();
     await coreValidator.validateConfiguration();
     await coreValidator.checkDependencies();
     await coreValidator.checkApplicationVersion();

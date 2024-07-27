@@ -45,7 +45,7 @@ export class CoreValidator implements ICoreValidator {
         this._packageJson = packageJson;
     }
 
-    public async validateEnvironmentVariables() {
+    public validateEnvironmentVariables() {
         this._logger.debug('Validating environment variables...');
         const requiredEnvironmentVariables: EnvironmentVariables[] = [
             EnvironmentVariables.NodeEnv,
@@ -171,7 +171,7 @@ export class CoreValidator implements ICoreValidator {
         }
     }
 
-    private async _checkYouTubeExtractorAuthTokens() {
+    private _checkYouTubeExtractorAuthTokens() {
         const ytAuthTokens = this._retreiveYouTubeExtractorAuthTokens();
         if (ytAuthTokens.length === 0) {
             this._logger.warn(
