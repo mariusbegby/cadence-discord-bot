@@ -1,10 +1,8 @@
-import type { HealthCheckConfig, LoggerServiceConfig, ShardManagerConfig } from './types';
+import type { HealthCheckConfig, LoggerServiceConfig, ShardClientConfig } from './types';
 
-export const shardManagerConfig: ShardManagerConfig = {
-    totalShards: 'auto',
-    shardList: 'auto',
-    mode: 'process',
-    respawn: true
+export const shardClientConfig: ShardClientConfig = {
+    intents: ['guilds', 'guildVoiceStates'],
+    maxShards: 'auto'
 };
 
 export const loggerServiceConfig: LoggerServiceConfig = {

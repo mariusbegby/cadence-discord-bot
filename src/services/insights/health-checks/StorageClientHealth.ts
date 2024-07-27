@@ -39,7 +39,7 @@ export class StorageClientHealth implements IHealthCheck {
         }
     }
 
-    getStatus(): HealthCheckStatus {
+    public getStatus(): HealthCheckStatus {
         return this._lastStatus;
     }
 }

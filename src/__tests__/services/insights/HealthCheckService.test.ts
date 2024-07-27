@@ -17,7 +17,7 @@ describe('HealthCheckService', () => {
     });
 
     it('should set logger context on construction', () => {
-        expect(mockLoggerService.setContext).toHaveBeenCalledWith({ module: 'services' });
+        expect(mockLoggerService.updateContext).toHaveBeenCalledWith({ module: 'services' });
     });
 
     it('should log start message and set interval on start', async () => {

@@ -1,6 +1,11 @@
-import type { ShardingManagerOptions } from 'discord.js';
+import type { ClientOptions } from 'eris';
 
-type ShardManagerConfig = {} & ShardingManagerOptions;
+type ShardClientConfig = {
+    maxShards: number | 'auto';
+    shardConcurrency?: number | 'auto';
+    firstShardID?: number | undefined;
+    lastShardID?: number | undefined;
+} & ClientOptions;
 
 type LoggerServiceConfig = {
     logLevel: 'debug' | 'info' | 'warn' | 'error';

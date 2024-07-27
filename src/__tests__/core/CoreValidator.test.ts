@@ -2,7 +2,7 @@ import { CoreValidator } from '@core/CoreValidator';
 import { MockLoggerService } from '@mocks/MockLoggerService';
 import type { IConfig } from 'config';
 import type { exec } from 'child_process';
-import type { HealthCheckConfig, ShardManagerConfig, LoggerServiceConfig } from '@config/types';
+import type { HealthCheckConfig, ShardClientConfig, LoggerServiceConfig } from '@config/types';
 
 describe('CoreValidator', () => {
     let mockLoggerService = new MockLoggerService();
@@ -10,7 +10,7 @@ describe('CoreValidator', () => {
     let mockExecute: Partial<typeof exec>;
     let mockFetch: Partial<typeof fetch>;
     let mockLoadedConfiguration: {
-        shardManagerConfig?: ShardManagerConfig;
+        shardClientConfig?: ShardClientConfig;
         loggerServiceConfig?: LoggerServiceConfig;
         healthCheckConfig?: HealthCheckConfig;
     };
@@ -26,7 +26,7 @@ describe('CoreValidator', () => {
     function updateTestSetup() {
         if (!mockLoadedConfiguration) {
             mockLoadedConfiguration = {
-                shardManagerConfig: {} as ShardManagerConfig,
+                shardClientConfig: {} as ShardClientConfig,
                 loggerServiceConfig: {} as LoggerServiceConfig,
                 healthCheckConfig: {} as HealthCheckConfig
             };
@@ -132,7 +132,7 @@ describe('CoreValidator', () => {
         it('should validate the configuration', async () => {
             // Arrange
             mockLoadedConfiguration = {
-                shardManagerConfig: {} as ShardManagerConfig,
+                shardClientConfig: {} as ShardClientConfig,
                 loggerServiceConfig: {} as LoggerServiceConfig,
                 healthCheckConfig: {} as HealthCheckConfig
             };
@@ -151,7 +151,7 @@ describe('CoreValidator', () => {
         it('should throw an error if a required configuration option is missing', async () => {
             // Arrange
             const loadedConfiguration = {
-                shardManagerConfig: {}
+                shardClientConfig: {}
             };
             mockConfig = {
                 util: {

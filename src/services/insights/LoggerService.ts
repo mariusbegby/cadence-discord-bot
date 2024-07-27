@@ -12,6 +12,15 @@ import {
 
 let loggerService: ILoggerService;
 
+function generateExecutionId(): string {
+    // uuid v4 generator (temporary to avoid external dependency)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
+
 export const useLogger = (context?: LogContext): ILoggerService => {
     if (!loggerService) {
         loggerService = new LoggerService(context ?? { module: 'core' });
@@ -35,11 +44,12 @@ export class LoggerService implements ILoggerService {
                 timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
                 base: {
                     environment: process.env.NODE_ENV || 'development',
+                    executionId: generateExecutionId(),
                     ...context
                 }
             };
 
-            const transport: DestinationStream = pino.transport({ targets: this.generateTransportTargets() });
+            const transport: DestinationStream = pino.transport({ targets: this._generateTransportTargets() });
 
             this._logger = pino(pinoOptions, transport);
         }
@@ -49,8 +59,16 @@ export class LoggerService implements ILoggerService {
         return this._logger;
     }
 
-    public setContext(context: LogContext): ILoggerService {
-        return new LoggerService(context, this);
+    public updateContext(context: LogContext, generateUuid = true): ILoggerService {
+        const appliedContext: LogContext = {
+            ...context
+        };
+
+        if (generateUuid) {
+            appliedContext.executionId = generateExecutionId();
+        }
+
+        return new LoggerService(appliedContext, this);
     }
 
     public debug(arg1: string | unknown, arg2?: string): void {
@@ -85,7 +103,7 @@ export class LoggerService implements ILoggerService {
         }
     }
 
-    private generateTransportTargets(): TransportTargetOptions[] {
+    private _generateTransportTargets(): TransportTargetOptions[] {
         const targets: TransportTargetOptions[] = [];
 
         targets.push({

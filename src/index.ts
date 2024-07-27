@@ -7,25 +7,31 @@ import packageJson from '../package.json';
 
 import { CoreValidator } from '@core/CoreValidator';
 import { HealthCheckService } from '@services/insights/HealthCheckService';
-import { ShardManager } from '@core/ShardManager';
+import { ShardClient } from '@core/ShardClient';
 import { StorageClient } from '@services/storage/StorageClient';
 import { StorageClientHealth } from '@services/insights/health-checks/StorageClientHealth';
 import { useLogger } from '@services/insights/LoggerService';
 import { exec } from 'node:child_process';
 import { performance, PerformanceObserver } from 'node:perf_hooks';
-import type { HealthCheckConfig, ShardManagerConfig } from '@config/types';
+import type { HealthCheckConfig, ShardClientConfig } from '@config/types';
+import { EventHandlerManager } from '@events/EventHandlerManager';
+import { join } from 'node:path';
 
-// Initialize services
+// Get logger instance
 const logger = useLogger();
-const storageClient = new StorageClient(logger);
-const healthCheckService = new HealthCheckService(logger);
-healthCheckService.registerHealthCheck(new StorageClientHealth(storageClient));
 
 // Initialize core components
-const shardManagerConfig = config.get<ShardManagerConfig>('shardManagerConfig');
+const shardClientConfig = config.get<ShardClientConfig>('shardClientConfig');
 const healthCheckConfig = config.get<HealthCheckConfig>('healthCheckConfig');
 const coreValidator = new CoreValidator(logger, config, exec, fetch, packageJson);
-const shardManager = new ShardManager(logger, shardManagerConfig);
+const shardClient = new ShardClient(logger, shardClientConfig);
+
+// Initialize services
+const storageClient = new StorageClient(logger);
+const eventsPath = join(__dirname, 'events');
+const eventHandlerManager = new EventHandlerManager(logger, shardClient, eventsPath);
+const healthCheckService = new HealthCheckService(logger);
+healthCheckService.registerHealthCheck(new StorageClientHealth(storageClient));
 
 // TESTING - Performance Observer
 // Will be integrated into the metrics service later
@@ -45,8 +51,9 @@ const startApplication = async (): Promise<void> => {
     await coreValidator.validateConfiguration();
     await coreValidator.checkDependencies();
     await coreValidator.checkApplicationVersion();
-    await shardManager.start();
-    await healthCheckService.start(healthCheckConfig.interval);
+    await shardClient.start();
+    eventHandlerManager.loadEventHandlers();
+    healthCheckService.start(healthCheckConfig.interval);
 
     logger.info('Application started successfully.');
 };

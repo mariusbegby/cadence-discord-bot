@@ -18,7 +18,7 @@ export class RateLimitService implements IRateLimitService {
         this._logger = logger.setContext({ module: 'services' });
         this._cooldownPeriodMs = cooldownPeriodMs;
         this._cleanupIntervalMs = cleanupIntervalMs;
-        this.startCleanup();
+        this._startCleanup();
     }
 
     public checkLimit(userId: string): boolean {
@@ -44,12 +44,12 @@ export class RateLimitService implements IRateLimitService {
         return true;
     }
 
-    private startCleanup(): void {
-        this._cleanupTimer = setInterval(() => this.cleanup(), this._cleanupIntervalMs);
+    private _startCleanup(): void {
+        this._cleanupTimer = setInterval(() => this._cleanup(), this._cleanupIntervalMs);
         this._logger.info(`Started rate limiter cleanup with interval ${this._cleanupIntervalMs}ms`);
     }
 
-    private cleanup(): void {
+    private _cleanup(): void {
         const now = Date.now();
         for (const [userId, requestData] of this._limits) {
             if (now - requestData.lastRequestTime >= this._cooldownPeriodMs * 2) {

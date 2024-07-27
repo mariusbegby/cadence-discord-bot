@@ -1,11 +1,11 @@
-import type { HealthCheckConfig, LoggerServiceConfig, ShardManagerConfig } from '@config/types';
+import type { HealthCheckConfig, LoggerServiceConfig, ShardClientConfig } from '@config/types';
 import type { ICoreValidator } from '@type/ICoreValidator';
 import type { ILoggerService } from '@type/insights/ILoggerService';
 import type { IConfig } from 'config';
 import type { exec } from 'node:child_process';
 
 type ConfigurationOptions = {
-    shardManagerConfig?: ShardManagerConfig;
+    shardClientConfig?: ShardClientConfig;
     loggerServiceConfig?: LoggerServiceConfig;
     healthCheckConfig?: HealthCheckConfig;
 };
@@ -45,7 +45,7 @@ export class CoreValidator implements ICoreValidator {
         this._packageJson = packageJson;
     }
 
-    async validateEnvironmentVariables() {
+    public async validateEnvironmentVariables() {
         this._logger.debug('Validating environment variables...');
         const requiredEnvironmentVariables: EnvironmentVariables[] = [
             EnvironmentVariables.NodeEnv,
@@ -91,19 +91,19 @@ export class CoreValidator implements ICoreValidator {
         this._logger.debug(`TOTAL_SHARDS is set to ${process.env.TOTAL_SHARDS}.`);
 
         // Check if YT_EXTRACTOR_AUTH is set and valid, warn if not
-        this.checkYouTubeExtractorAuthTokens();
+        this._checkYouTubeExtractorAuthTokens();
 
         this._logger.info('Successfully validated environment variables.');
     }
 
-    async validateConfiguration() {
+    public async validateConfiguration() {
         this._logger.debug('Validating configuration...');
 
         const loadedConfiguration: ConfigurationOptions = this._config.util.loadFileConfigs();
         this._logger.debug(loadedConfiguration, 'Using configuration:');
 
         const requiredConfiguration: Array<keyof ConfigurationOptions> = [
-            'shardManagerConfig',
+            'shardClientConfig',
             'loggerServiceConfig',
             'healthCheckConfig'
         ];
@@ -124,24 +124,24 @@ export class CoreValidator implements ICoreValidator {
         this._logger.info('Successfully validated configuration.');
     }
 
-    async checkDependencies() {
+    public async checkDependencies() {
         this._logger.debug('Checking for required dependencies...');
 
         // Check if FFmpeg is installed on the system
-        await this.checkFFmpegInstalled();
+        await this._checkFFmpegInstalled();
 
         // Check Node.js version
-        await this.checkNodeJsVersion();
+        await this._checkNodeJsVersion();
 
         this._logger.info('Successfully checked required dependencies.');
     }
 
-    async checkApplicationVersion() {
+    public async checkApplicationVersion() {
         this._logger.debug('Checking application version...');
         const currentVersion = this._packageJson.version;
         this._logger.debug(`Current version is ${currentVersion}`);
 
-        const latestVersion = (await this.getLatestVersion()).replace('v', '');
+        const latestVersion = (await this._getLatestVersion()).replace('v', '');
         if (latestVersion === 'undefined') {
             this._logger.warn('Failed to fetch the latest version from GitHub.');
             return;
@@ -155,7 +155,7 @@ export class CoreValidator implements ICoreValidator {
         this._logger.info('Successfully checked application version.');
     }
 
-    private async getLatestVersion(): Promise<string> {
+    private async _getLatestVersion(): Promise<string> {
         const repoUrlArray = this._packageJson.repository.url.split('/');
         const repoIdentifier = `${repoUrlArray[3]}/${repoUrlArray[4]}`;
         if (!repoIdentifier || repoIdentifier === '/' || repoIdentifier.includes('undefined')) {
@@ -171,8 +171,8 @@ export class CoreValidator implements ICoreValidator {
         }
     }
 
-    private async checkYouTubeExtractorAuthTokens() {
-        const ytAuthTokens = this.retreiveYouTubeExtractorAuthTokens();
+    private async _checkYouTubeExtractorAuthTokens() {
+        const ytAuthTokens = this._retreiveYouTubeExtractorAuthTokens();
         if (ytAuthTokens.length === 0) {
             this._logger.warn(
                 'YT_EXTRACTOR_AUTH token is not set. This is required for the YouTube extractor to work properly.'
@@ -193,14 +193,14 @@ export class CoreValidator implements ICoreValidator {
         this._logger.debug(`Found ${validAuthTokens.length} valid YT_EXTRACTOR_AUTH tokens.`);
     }
 
-    private retreiveYouTubeExtractorAuthTokens(): string[] {
+    private _retreiveYouTubeExtractorAuthTokens(): string[] {
         return Object.keys(process.env)
             .filter((v) => v.startsWith('YT_EXTRACTOR_AUTH'))
             .map((k) => process.env[k])
             .filter((v) => v !== undefined);
     }
 
-    private async checkFFmpegInstalled() {
+    private async _checkFFmpegInstalled() {
         await new Promise<void>((resolve, reject) => {
             this._execute('ffmpeg -version', (error) => {
                 if (error) {
@@ -218,7 +218,7 @@ export class CoreValidator implements ICoreValidator {
         });
     }
 
-    private async checkNodeJsVersion() {
+    private async _checkNodeJsVersion() {
         await new Promise<void>((resolve, reject) => {
             this._execute('node -v', (error, stdout) => {
                 if (error) {

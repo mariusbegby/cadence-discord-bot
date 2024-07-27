@@ -8,21 +8,21 @@ export class HealthCheckService implements IHealthCheckService {
     private _healthChecks: IHealthCheck[] = [];
 
     constructor(logger: ILoggerService) {
-        this._logger = logger.setContext({ module: 'services' });
+        this._logger = logger.updateContext({ module: 'services' });
     }
 
-    public async start(interval = 60_000): Promise<void> {
+    public start(interval = 60_000): void {
         this._logger.debug('Starting health check service...');
         if (this._timer) {
             clearInterval(this._timer);
         }
 
-        this._timer = setInterval(() => this.runHealthChecks(), interval);
+        this._timer = setInterval(async () => await this._runHealthChecks(), interval);
 
         this._logger.info('Successfully started health check service.');
     }
 
-    public async stop(): Promise<void> {
+    public stop(): void {
         this._logger.debug('Stopping health check service...');
 
         if (this._timer) {
@@ -42,7 +42,7 @@ export class HealthCheckService implements IHealthCheckService {
         return this._healthChecks;
     }
 
-    private async runHealthChecks(): Promise<void> {
+    private async _runHealthChecks(): Promise<void> {
         this._logger.info('Running health checks...');
 
         for (const healthCheck of this._healthChecks) {
