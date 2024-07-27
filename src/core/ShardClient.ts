@@ -59,6 +59,19 @@ export class ShardClient implements IShardClient {
         this._shardClient.setMaxListeners(maxListeners);
     }
 
+    public getShardId(guildId: string | undefined): number {
+        if (!guildId) {
+            return -1;
+        }
+
+        const guild = this._shardClient.guilds.get(guildId);
+        if (guild) {
+            return guild.shard.id;
+        }
+
+        return -1;
+    }
+
     // Only count of shards that this client manages
     public getShardCount(): number {
         return this._shardClient.shards.size;

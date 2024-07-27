@@ -9,7 +9,7 @@ export const loggerServiceConfig: LoggerServiceConfig = {
     logLevel: 'info',
     pushLogsToLoki: false,
     prettyConsoleFormat: true,
-    prettyConsoleIgnoreFields: ['environment', 'module', 'executionId', 'shardId', 'guildId']
+    prettyConsoleIgnoreFields: ['environment', 'module', 'executionId', 'shardId', 'interactionId', 'guildId']
 };
 
 export const healthCheckConfig: HealthCheckConfig = {

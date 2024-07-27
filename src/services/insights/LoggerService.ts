@@ -44,7 +44,7 @@ export class LoggerService implements ILoggerService {
                 timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
                 base: {
                     environment: process.env.NODE_ENV || 'development',
-                    executionId: generateExecutionId(),
+                    executionId: context.executionId || generateExecutionId(),
                     ...context
                 }
             };

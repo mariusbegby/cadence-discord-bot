@@ -43,7 +43,15 @@ export class InteractionCreateEventHandler implements IEventHandler {
         interaction: CommandInteraction
     ): void {
         benchmark(logger, '_handleCommandInteraction', () => {
-            logger.debug(`Received command interaction '${interaction.data.name}' with ID ${interaction.id}`);
+            const shardId = _shardClient.getShardId(interaction.guildID);
+            const interactionLogger = logger.updateContext(
+                { module: 'events', shardId: shardId, interactionId: interaction.id },
+                false
+            );
+
+            interactionLogger.debug(
+                `Received command interaction '${interaction.data.name}' with ID ${interaction.id}`
+            );
             switch (interaction.data.name) {
                 case 'help':
                     interaction.createMessage('Help command invoked.');

@@ -1,8 +1,14 @@
 import type { Logger as PinoLogger } from 'pino';
 
-export type LogContext = { module: string; executionId?: string };
+export type LogContext = {
+    module: string;
+    executionId?: string;
+    shardId?: number;
+    interactionId?: string;
+    guildId?: string;
+};
 export interface ILoggerService {
-    updateContext(context: LogContext): ILoggerService;
+    updateContext(context: LogContext, generateUuid?: boolean): ILoggerService;
 
     getLogger(): PinoLogger;
 
