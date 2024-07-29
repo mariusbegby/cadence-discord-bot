@@ -36,12 +36,14 @@ export const createPlayer = async ({
 
 		// Testing out new youtube extractor
 		await player.extractors.register(YoutubeiExtractor, {
-			//authentication: process.env.YT_EXTRACTOR_AUTH || '',
+			authentication: process.env.YT_EXTRACTOR_AUTH || "",
+			/*
 			rotator: {
 				rotationStrategy: "shard",
 				authentications: getAuthArrayFromEnv() || [""],
 				currentShard: client.shard?.ids[0] || 0,
 			},
+			*/
 			streamOptions: {
 				useClient: "ANDROID",
 			},
