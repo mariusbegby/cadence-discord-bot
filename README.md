@@ -20,6 +20,12 @@
     <a href="https://hub.docker.com/r/mariusbegby/cadence"><img src="https://img.shields.io/docker/pulls/mariusbegby/cadence.svg?style=for-the-badge&label=Pulls&labelColor=1b1c1d&logo=docker&logoColor=white&color=4c73df" alt="Docker pulls for Cadence"></a>
 </p>
 
+## 🚨 Deprecation notice 🚨
+
+This project will soon be deprecated. The codebase is being completely rewritten from scratch to optimize for performance and maintainability. The new repository can be found at: [mariusbegby/cadence](https://github.com/mariusbegby/cadence). Stay tuned for updates about this in our [Discord server](https://discord.gg/t6Bm8wPpXB)!
+
+<br>
+
 ## Core Features 🌟
 
 Cadence offers an enriching audio experience on Discord with features such as:
