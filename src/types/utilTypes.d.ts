@@ -1,6 +1,6 @@
-import { GuildQueue, Player } from 'discord-player';
-import { ChatInputCommandInteraction, MessageComponentInteraction } from 'discord.js';
-import { ExtendedClient } from './clientTypes';
+import type { GuildQueue, Player } from 'discord-player';
+import type { ChatInputCommandInteraction, MessageComponentInteraction } from 'discord.js';
+import type { ExtendedClient } from './clientTypes';
 
 export type RegisterEventListenersParams = {
     client: ExtendedClient;
@@ -15,7 +15,7 @@ export type RegisterClientInteractionsParams = {
 
 export type CustomEvent = {
     name: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     execute: (...args: any) => void;
     once?: boolean;
     isDebug?: boolean;
@@ -43,20 +43,6 @@ export type GetUptimeFormattedParams = {
 export type StartLoadTestParams = {
     client: ExtendedClient;
     executionId: string;
-};
-
-export type PostBotStatsParams = {
-    client: ExtendedClient;
-    executionId: string;
-};
-
-export type PostBotStatsSite = {
-    enabled: boolean;
-    hostname: string;
-    path: string;
-    method: string;
-    body: object;
-    token: string;
 };
 
 export type ShardPlayerStatistics = {

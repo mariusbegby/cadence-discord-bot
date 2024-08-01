@@ -1,7 +1,7 @@
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle
 } from 'discord.js';

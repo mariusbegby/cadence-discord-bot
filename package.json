@@ -1,6 +1,6 @@
 {
     "name": "cadence-discord-bot",
-    "version": "5.7.0",
+    "version": "6.0.0",
     "description": "A free Discord music and audio bot.",
     "repository": {
         "type": "git",
@@ -20,28 +20,18 @@
     "scripts": {
         "start": "node .",
         "deploy": "node ./dist/startup/deploySlashCommands.js",
-        "dev": "concurrently --names \"TSC,TOC,BOT\" --prefix-colors \"yellow,blue,green\" \"npx tsc -w\" \"nodemon -w locales/en -x npm run toc\" \"nodemon -x npm run start\"",
-        "eslint": "eslint ./src --fix",
-        "prebuild": "npm run toc",
+        "lint": "biome lint --write",
+        "format": "biome format --write",
+        "prebuild": "pnpm run toc",
         "build": "tsc",
+        "restart": "pnpm build && pnpm start",
         "toc": "i18next-resources-for-ts interface -i ./locales/en -o ./locales/resources.d.ts"
-    },
-    "nodemonConfig": {
-        "ignore": [
-            "src/**",
-            "logs/**"
-        ],
-        "execMap": {}
     },
     "dependencies": {
         "@discord-player/extractor": "^4.5.0",
-        "@discord-player/opus": "^0.1.2",
-        "@discordjs/rest": "^2.3.0",
-        "@discordjs/ws": "^1.1.1",
         "config": "^3.3.12",
         "discord-player": "^6.7.1",
         "discord-player-youtubei": "^1.2.4",
-        "discord-voip": "^0.1.3",
         "discord.js": "^14.15.3",
         "dotenv": "^16.4.5",
         "i18next": "^23.12.2",
@@ -49,25 +39,16 @@
         "mediaplex": "^0.0.9",
         "node-os-utils": "^1.3.7",
         "pino": "^9.3.2",
-        "ytdl-core": "^4.11.5"
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@types/config": "^3.3.4",
         "@types/node": "^22.0.2",
         "@types/node-os-utils": "^1.3.4",
-        "@typescript-eslint/eslint-plugin": "^8.0.0",
-        "@typescript-eslint/parser": "^8.0.0",
-        "concurrently": "^8.2.2",
-        "eslint": "^9.8.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-prettier": "^5.2.1",
         "i18next-resources-for-ts": "^1.5.0",
-        "nodemon": "^3.1.4",
-        "prettier": "^3.3.3",
         "typescript": "^5.5.4"
     },
     "optionalDependencies": {
-        "pino-loki": "^2.3.0",
         "pino-pretty": "^11.2.2"
     }
 }

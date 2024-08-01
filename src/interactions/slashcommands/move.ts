@@ -1,11 +1,11 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class MoveCommand extends BaseSlashCommandInteraction {
@@ -63,12 +63,11 @@ class MoveCommand extends BaseSlashCommandInteraction {
                 interaction,
                 translator
             );
-        } else {
-            const trackToMove: Track = queue.tracks.data[fromPosition - 1];
-            queue.node.move(trackToMove, toPosition - 1);
-            logger.debug(`Moved track from position ${fromPosition} to position ${toPosition} in queue`);
-            return await this.respondWithSuccessEmbed(trackToMove, interaction, fromPosition, toPosition, translator);
         }
+        const trackToMove: Track = queue.tracks.data[fromPosition - 1];
+        queue.node.move(trackToMove, toPosition - 1);
+        logger.debug(`Moved track from position ${fromPosition} to position ${toPosition} in queue`);
+        return await this.respondWithSuccessEmbed(trackToMove, interaction, fromPosition, toPosition, translator);
     }
 
     private async handleTrackPositionHigherThanQueueLength(

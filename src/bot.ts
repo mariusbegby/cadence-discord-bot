@@ -2,11 +2,11 @@
 import 'dotenv/config';
 
 // Only after loading .ENV file, we can load other modules
-import { Player } from 'discord-player';
-import { Client } from 'discord.js';
+import type { Player } from 'discord-player';
+import type { Client } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from './common/services/logger';
-import { ExtendedClient } from './types/clientTypes';
+import { loggerService, type Logger } from './common/services/logger';
+import type { ExtendedClient } from './types/clientTypes';
 import { createClient } from './common/factory/createClient';
 import { createPlayer } from './common/factory/createPlayer';
 import { registerClientInteractions } from './startup/registerClientInteractions';
@@ -25,7 +25,7 @@ const logger: Logger = loggerService.child({
         const client: ExtendedClient = await createClient({ executionId });
         const player: Player = await createPlayer({ client, executionId });
 
-        let allShardsReadyReceived: boolean = false;
+        let allShardsReadyReceived = false;
 
         client.on('allShardsReady', async () => {
             if (allShardsReadyReceived) {

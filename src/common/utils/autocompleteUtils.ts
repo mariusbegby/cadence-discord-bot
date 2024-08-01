@@ -1,5 +1,5 @@
-import { Track } from 'discord-player';
-import { Translator } from './localeUtil';
+import type { Track } from 'discord-player';
+import type { Translator } from './localeUtil';
 
 export function shouldUseLastQuery(query: string, lastQuery?: string, timestamp?: number): boolean {
     return Boolean(

@@ -53,20 +53,20 @@ Cadence offers an enriching audio experience on Discord with features such as:
 **Self-Hosting Steps**:
 
 1. Install [Node.js](https://nodejs.org/en/download/) v20.x LTS and latest version of [FFmpeg](https://ffmpeg.org/download.html).
-2. Clone this repository and run `npm install` (use `npm install --legacy-peer-deps` if errors occur).
-3. Build the project with `npm run build`.
-4. Configure `.env` file in the root directory with your bot token and client id (details in `.env.example`).
-5. Deploy slash commands using `npm run deploy`.
-6. Start the bot with `npm start`, the bot should now appear online and be operational.
+2. Install `pnpm` using `npm install -g pnpm`.
+3. Clone this repository and run `pnpm install`.
+4. Build the project with `pnpm build`.
+5. Create a `.env` file in with your bot token and client id (see details in `.env.example`).
+6. Deploy slash commands using `pnpm run deploy`.
+7. Start the bot with `pnpm start`, the bot should now appear online and be operational.
 
 **Note:** Refer to [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) for help on inviting the bot to your server.
 
 ### Configuration and Logging:
 
--   Override default configuration by creating `/config/local.js`.
--   Install [pino-pretty](https://www.npmjs.com/package/pino-pretty) for formatted, colorized console output, this is included in optional dependencies.
+-   Override default configuration by creating `/config/local.ts`, copy over settings from `/config/default.ts`.
+-   Have [pino-pretty](https://www.npmjs.com/package/pino-pretty) installed for formatted, colorized console output.
 -   Logs are stored in `/logs` folder. Configure the logging level in the config file.
--   For production, usage of `pm2` or similar to manage the bot process is recommended.
 
 <br>
 

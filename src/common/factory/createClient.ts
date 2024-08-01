@@ -1,5 +1,5 @@
-import Discord, { Client } from 'discord.js';
-import { loggerService, Logger } from '../services/logger';
+import Discord, { type Client } from 'discord.js';
+import { loggerService, type Logger } from '../services/logger';
 
 export const createClient = async ({ executionId }: { executionId: string }): Promise<Client> => {
     const logger: Logger = loggerService.child({

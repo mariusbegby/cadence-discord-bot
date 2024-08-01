@@ -1,20 +1,20 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
     EmbedBuilder,
-    EmbedField,
+    type EmbedField,
     SlashCommandBuilder
 } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType, TrackMetadata } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class NowPlayingCommand extends BaseSlashCommandInteraction {
@@ -52,7 +52,7 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
         const components: APIMessageActionRowComponent[] = [];
 
         const previousButton: APIButtonComponent = new ButtonBuilder()
-            .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
+            .setDisabled(queue.history.tracks.data.length === 0)
             .setCustomId(`action-previous-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)

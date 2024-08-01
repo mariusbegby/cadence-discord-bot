@@ -1,42 +1,38 @@
-import config from "config";
-import { IPRotationConfig, Player } from "discord-player";
-import { SpotifyExtractor } from "@discord-player/extractor";
-import { loggerService, Logger } from "../services/logger";
-import { CreatePlayerParams } from "../../types/playerTypes";
-import { YoutubeiExtractor } from "discord-player-youtubei";
+import config from 'config';
+import { type IPRotationConfig, Player } from 'discord-player';
+import { loggerService, type Logger } from '../services/logger';
+import type { CreatePlayerParams } from '../../types/playerTypes';
+import { YoutubeiExtractor } from 'discord-player-youtubei';
 
-export const createPlayer = async ({
-    client,
-    executionId,
-}: CreatePlayerParams): Promise<Player> => {
+export const createPlayer = async ({ client, executionId }: CreatePlayerParams): Promise<Player> => {
     const logger: Logger = loggerService.child({
-        module: "utilFactory",
-        name: "createPlayer",
+        module: 'utilFactory',
+        name: 'createPlayer',
         executionId: executionId,
-        shardId: client.shard?.ids[0],
+        shardId: client.shard?.ids[0]
     });
 
-    const ipRotationConfig = config.get<IPRotationConfig>("ipRotationConfig");
+    const ipRotationConfig = config.get<IPRotationConfig>('ipRotationConfig');
 
     try {
-        logger.debug("Creating discord-player player...");
+        logger.debug('Creating discord-player player...');
 
         const player: Player = new Player(client, {
             useLegacyFFmpeg: false,
             skipFFmpeg: false,
-            ipconfig: ipRotationConfig,
+            ipconfig: ipRotationConfig
         });
 
         function getAuthArrayFromEnv(): string[] {
             return Object.keys(process.env)
-                .filter((v) => v.startsWith("YT_EXTRACTOR_AUTH"))
+                .filter((v) => v.startsWith('YT_EXTRACTOR_AUTH'))
                 .map((k) => process.env[k])
                 .filter((v) => v !== undefined);
         }
 
         // Testing out new youtube extractor
         await player.extractors.register(YoutubeiExtractor, {
-            authentication: process.env.YT_EXTRACTOR_AUTH || "",
+            authentication: process.env.YT_EXTRACTOR_AUTH || ''
             /*
             rotator: {
                 rotationStrategy: "shard",
@@ -51,14 +47,12 @@ export const createPlayer = async ({
         // @ts-ignore
         global.player = player;
 
-        await player.extractors.loadDefault(
-            (ext) => !["YouTubeExtractor"].includes(ext),
-        );
+        await player.extractors.loadDefault((ext) => !['YouTubeExtractor'].includes(ext));
         logger.trace(`discord-player loaded dependencies:\n${player.scanDeps()}`);
 
         return player;
     } catch (error) {
-        logger.error(error, "Failed to create discord-player player");
+        logger.error(error, 'Failed to create discord-player player');
         throw error;
     }
 };

@@ -1,46 +1,34 @@
 // Import Discord.js types for TypeScript support.
-const { ActivityType, PresenceUpdateStatus } = require('discord.js');
+import { ActivityType, PresenceUpdateStatus } from 'discord.js';
 
-// Description: Config file for Cadence Discord bot.
-
-// General metadata about the bot displayed in certain embeds.
-module.exports.botOptions = {
+export const botOptions = {
     name: 'Cadence',
     botInviteUrl: '',
     serverInviteUrl: '',
     openSourceUrl: ''
 };
 
-// Configuration for bot sharding. Refers to splitting a Discord bot into multiple processes.
-// For more information, refer to Discord.js sharding documentation: https://discordjs.guide/sharding/
-module.exports.shardingOptions = {
+export const shardingOptions = {
     totalShards: 'auto',
     shardList: 'auto',
     mode: 'process',
     respawn: true
 };
 
-// Configuration for logging bot actions.
-// You can set logging level to file and console separately.
-module.exports.loggerOptions = {
-    minimumLogLevel: 'debug',
+export const loggerOptions = {
+    minimumLogLevel: 'info',
     minimumLogLevelConsole: 'info',
     discordPlayerDebug: false
 };
 
-// Options for identifying specific system command.
-module.exports.systemOptions = {
-    // List of guild IDs where system commands can be executed. e.g. ['123456789012345678', '123456789012345678']
-    systemGuildIds: [],
+export const systemOptions = {
     // Channel for sending system messages, such as bot errors and disconnect events. e.g. '123456789012345678'
     systemMessageChannelId: '',
     // Bot administrator user ID for specific notifications through mentions in system channel. e.g. '123456789012345678'
     systemUserId: ''
 };
 
-// Configuration for the bot's presence and activity status.
-// Incude const { ActivityType, PresenceUpdateStatus } = require('discord.js'); at the top of config file.
-module.exports.presenceStatusOptions = {
+export const presenceStatusOptions = {
     status: PresenceUpdateStatus.Online,
     activities: [
         {
@@ -50,10 +38,7 @@ module.exports.presenceStatusOptions = {
     ]
 };
 
-// Configurations for visual embed messages.
-// Includes design elements like colors and custom emojis/symbols.
-// Also includes behavior options like button labels and player start messages.
-module.exports.embedOptions = {
+export const embedOptions = {
     info: {
         fallbackThumbnailUrl:
             'https://raw.githubusercontent.com/mariusbegby/cadence-discord-bot/main/assets/logo-rounded-128px.png',
@@ -122,8 +107,7 @@ module.exports.embedOptions = {
     }
 };
 
-// Configuration for the audio player. Includes behavior upon various events and UI components.
-module.exports.playerOptions = {
+export const playerOptions = {
     leaveOnEmpty: true,
     leaveOnEmptyCooldown: 600_000,
     leaveOnEnd: false,
@@ -145,15 +129,13 @@ module.exports.playerOptions = {
     }
 };
 
-// Configuration for ip rotation. Used for avoiding rate limits on certain APIs.
-module.exports.ipRotationConfig = {
+export const ipRotationConfig = {
     blocks: [],
     exclude: [],
     maxRetries: 3
 };
 
-// Configuration for ffmpeg filters for audio processing.
-module.exports.ffmpegFilterOptions = {
+export const ffmpegFilterOptions = {
     threadAmount: '2',
     forceNormalizerByBassBoost: true,
     maxFilters: 10,
@@ -227,7 +209,7 @@ module.exports.ffmpegFilterOptions = {
     ]
 };
 
-module.exports.biquadFilterOptions = {
+export const biquadFilterOptions = {
     availableFilters: [
         {
             label: 'Basic low pass (approx.)',
@@ -292,7 +274,7 @@ module.exports.biquadFilterOptions = {
     ]
 };
 
-module.exports.equalizerFilterOptions = {
+export const equalizerFilterOptions = {
     availableFilters: [
         {
             label: 'Flat',
@@ -405,9 +387,7 @@ module.exports.equalizerFilterOptions = {
     ]
 };
 
-// Configuration for load testing. Enables the bot to simulate certain behaviors for testing purposes.
-// If enabled, the bot will join the specified channels and play specified track.
-module.exports.loadTestOptions = {
+export const loadTestOptions = {
     enabled: false,
     trackUrl: 'https://www.youtube.com/watch?v=tTR4D9h3zAE',
     channelIdsToJoin: []

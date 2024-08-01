@@ -1,7 +1,7 @@
-import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
+import { type GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';

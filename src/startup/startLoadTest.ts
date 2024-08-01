@@ -1,8 +1,8 @@
 import config from 'config';
-import { Channel, Client } from 'discord.js';
-import { loggerService, Logger } from '../common/services/logger';
-import { LoadTestOptions } from '../types/configTypes';
-import { StartLoadTestParams } from '../types/utilTypes';
+import type { Channel, Client } from 'discord.js';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { LoadTestOptions } from '../types/configTypes';
+import type { StartLoadTestParams } from '../types/utilTypes';
 
 const loadTestOptions: LoadTestOptions = config.get('loadTestOptions');
 
@@ -24,8 +24,8 @@ export const startLoadTest = async ({ client, executionId }: StartLoadTestParams
 
     logger.info(`Starting load test in ${channelIds.length} specified channels.`);
 
-    channelIds.forEach((each) => {
-        client.shard?.broadcastEval(
+    for (const each of channelIds) {
+        await client.shard?.broadcastEval(
             async (shardClient: Client, { channelId, track }: { channelId: string; track: string }) => {
                 const channel: Channel | undefined = shardClient.channels.cache.get(channelId);
                 if (channel) {
@@ -44,7 +44,7 @@ export const startLoadTest = async ({ client, executionId }: StartLoadTestParams
             },
             { context: { channelId: each, track: track } }
         );
-    });
+    }
 
     logger.info('Load test started across shards in specified channels.');
 };

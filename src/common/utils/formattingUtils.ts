@@ -1,6 +1,6 @@
 import { QueueRepeatMode } from 'discord-player';
-import { Translator } from './localeUtil';
-import { EmbedOptions } from '../../types/configTypes';
+import type { Translator } from './localeUtil';
+import type { EmbedOptions } from '../../types/configTypes';
 
 export function formatDuration(durationMs: number): string {
     const durationDate: Date = new Date(0);
@@ -13,13 +13,14 @@ export function formatDuration(durationMs: number): string {
 
     if (durationDays >= 1) {
         return `${durationDays}d ${durationHours}h`;
-    } else if (durationHours >= 1) {
-        return `${durationHours}h ${durationMinutes}m`;
-    } else if (durationMinutes >= 1) {
-        return `${durationMinutes}m ${durationSeconds}s`;
-    } else {
-        return `${durationSeconds}s`;
     }
+    if (durationHours >= 1) {
+        return `${durationHours}h ${durationMinutes}m`;
+    }
+    if (durationMinutes >= 1) {
+        return `${durationMinutes}m ${durationSeconds}s`;
+    }
+    return `${durationSeconds}s`;
 }
 
 export function formatSlashCommand(commandName: string, translator: Translator): string {
@@ -39,6 +40,8 @@ export function formatRepeatMode(repeatMode: QueueRepeatMode, translator: Transl
             return translator('musicPlayerCommon.queueRepeatMode.track');
         case QueueRepeatMode.QUEUE:
             return translator('musicPlayerCommon.queueRepeatMode.queue');
+        default:
+            return '';
     }
 }
 
@@ -46,7 +49,7 @@ export function formatRepeatModeDetailed(
     repeatMode: QueueRepeatMode,
     embedOptions: EmbedOptions,
     translator: Translator,
-    state: string = 'info'
+    state = 'info'
 ) {
     let icon: string;
 
@@ -64,12 +67,9 @@ export function formatRepeatModeDetailed(
             return '';
     }
 
-    return (
-        '\n' +
-        translator('musicPlayerCommon.loopingInfo', {
-            icon,
-            loopMode: formatRepeatMode(repeatMode, translator),
-            loopCommand: formatSlashCommand('loop', translator)
-        })
-    );
+    return `\n${translator('musicPlayerCommon.loopingInfo', {
+        icon,
+        loopMode: formatRepeatMode(repeatMode, translator),
+        loopCommand: formatSlashCommand('loop', translator)
+    })}`;
 }

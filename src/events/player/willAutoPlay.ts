@@ -1,8 +1,8 @@
-import { Track } from 'discord-player';
+import type { Track } from 'discord-player';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
-import { User } from 'discord.js';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import type { User } from 'discord.js';
 
 // Emitted when the audio player will add a new track to the queue from autoplay.
 module.exports = {

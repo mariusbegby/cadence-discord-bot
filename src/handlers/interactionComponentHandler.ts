@@ -1,7 +1,7 @@
-import { MessageComponentInteraction } from 'discord.js';
-import { BaseComponentInteraction } from '../common/classes/interactions';
-import { loggerService, Logger } from '../common/services/logger';
-import { ExtendedClient } from '../types/clientTypes';
+import type { MessageComponentInteraction } from 'discord.js';
+import type { BaseComponentInteraction } from '../common/classes/interactions';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { ExtendedClient } from '../types/clientTypes';
 import { checkChannelPermissionViewable } from '../common/validation/permissionValidator';
 
 export const handleComponent = async (

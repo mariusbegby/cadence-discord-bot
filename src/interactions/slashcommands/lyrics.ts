@@ -1,12 +1,20 @@
-import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
-import { GuildQueue, Player, QueryType, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import { type LyricsData, lyricsExtractor } from '@discord-player/extractor';
+import {
+    type GuildQueue,
+    type Player,
+    QueryType,
+    type SearchResult,
+    type Track,
+    useMainPlayer,
+    useQueue
+} from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, type Message, SlashCommandBuilder } from 'discord.js';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 
 class LyricsCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -66,7 +74,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
 
     private getGeniusSearchQuery(logger: Logger, query: string, queue: GuildQueue): string {
         const geniusSearchQuery =
-            query ?? queue.currentTrack!.title.slice(0, 50) + ' ' + queue.currentTrack!.author.split(', ')[0];
+            query ?? `${queue.currentTrack!.title.slice(0, 50)} ${queue.currentTrack!.author.split(', ')[0]}`;
         logger.debug(`Using query for genius search: '${geniusSearchQuery}'`);
         return geniusSearchQuery;
     }
@@ -128,17 +136,22 @@ class LyricsCommand extends BaseSlashCommandInteraction {
         playerSearchResult: Track | null,
         queue: GuildQueue
     ): LyricsData | null {
-        if (geniusLyricsResult && !this.doesArtistNameMatch(playerSearchResult, geniusLyricsResult, queue)) {
+        let updatedGeniusLyricsResult = geniusLyricsResult;
+
+        if (
+            updatedGeniusLyricsResult &&
+            !this.doesArtistNameMatch(playerSearchResult, updatedGeniusLyricsResult, queue)
+        ) {
             logger.debug('Found Genius lyrics but artist name did not match from player.search() result.');
-            geniusLyricsResult = null;
+            updatedGeniusLyricsResult = null;
         }
 
-        if (!geniusLyricsResult || geniusLyricsResult.lyrics.length === 0) {
+        if (!updatedGeniusLyricsResult || updatedGeniusLyricsResult.lyrics.length === 0) {
             logger.debug('No Genius lyrics found.');
-            geniusLyricsResult = null;
+            updatedGeniusLyricsResult = null;
         }
 
-        return geniusLyricsResult;
+        return updatedGeniusLyricsResult;
     }
 
     private doesArtistNameMatch(
@@ -199,7 +212,7 @@ class LyricsCommand extends BaseSlashCommandInteraction {
                 )
                 .setColor(this.embedOptions.colors.info)
         );
-        for (let i: number = 0; i < messageCount; i++) {
+        for (let i = 0; i < messageCount; i++) {
             logger.debug(`Adding message ${i + 1} of ${messageCount} to embed list.`);
             const message: string = geniusLyricsResult.lyrics.slice(i * 3800, (i + 1) * 3800);
             embedList.push(
@@ -224,16 +237,13 @@ class LyricsCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        translator('commands.lyrics.lyricsEmbed', {
+                        `${translator('commands.lyrics.lyricsEmbed', {
                             icon: this.embedOptions.icons.queue,
                             trackTitle: geniusLyricsResult.title,
                             trackUrl: geniusLyricsResult.url,
                             artistName: geniusLyricsResult.artist.name,
                             artistUrl: geniusLyricsResult.artist.url
-                        }) +
-                            '\n' +
-                            '\n' +
-                            `\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
+                        })}\n\n\`\`\`fix\n${geniusLyricsResult.lyrics}\`\`\``
                     )
                     .setColor(this.embedOptions.colors.info)
             ]

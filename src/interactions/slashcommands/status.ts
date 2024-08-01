@@ -1,9 +1,9 @@
 // @ts-ignore
 import { version } from '../../../package.json';
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
@@ -17,7 +17,7 @@ import {
     getPlayerStatistics,
     getSystemStatus
 } from '../../common/utils/statusUtils';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
 
 class StatusCommand extends BaseSlashCommandInteraction {
@@ -37,7 +37,7 @@ class StatusCommand extends BaseSlashCommandInteraction {
         const [botStatisticsEmbedString, playerStatisticsEmbedString, systemStatusEmbedString] = await Promise.all([
             getBotStatistics(client!, version, translator),
             getPlayerStatistics(client!, translator),
-            getSystemStatus(executionId, false, translator)
+            getSystemStatus(executionId, translator)
         ]);
         const discordStatusEmbedString = getDiscordStatus(client!, translator);
 
@@ -62,9 +62,7 @@ class StatusCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        translator('statistics.botStatus.title', { icon: this.embedOptions.icons.bot }) +
-                            '\n' +
-                            botStatisticsEmbedString
+                        `${translator('statistics.botStatus.title', { icon: this.embedOptions.icons.bot })}\n${botStatisticsEmbedString}`
                     )
                     .addFields(
                         {

@@ -1,18 +1,24 @@
 import config from 'config';
-import { BiquadFilters, EqualizerConfigurationPreset, GuildQueue, QueueFilters, useQueue } from 'discord-player';
-import { EmbedBuilder, InteractionResponse, StringSelectMenuInteraction } from 'discord.js';
-import { Logger } from '../../common/services/logger';
-import { BaseComponentInteraction } from '../../common/classes/interactions';
 import {
+    type BiquadFilters,
+    EqualizerConfigurationPreset,
+    type GuildQueue,
+    type QueueFilters,
+    useQueue
+} from 'discord-player';
+import { EmbedBuilder, type InteractionResponse, type StringSelectMenuInteraction } from 'discord.js';
+import type { Logger } from '../../common/services/logger';
+import { BaseComponentInteraction } from '../../common/classes/interactions';
+import type {
     EqualizerFilterOptions,
     BiquadFilterOptions,
     FFmpegFilterOptions,
     FilterOption
 } from '../../types/configTypes';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import type { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -216,12 +222,10 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         return new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(selectMenuInteraction))
             .setDescription(
-                translator('commands.filters.nowUsingFilters', {
+                `${translator('commands.filters.nowUsingFilters', {
                     icon: this.embedOptions.icons.success,
                     mode: filterType
-                }) +
-                    '\n' +
-                    enabledFilters
+                })}\n${enabledFilters}`
             )
             .setColor(this.embedOptions.colors.success);
     }
@@ -253,7 +257,7 @@ class FiltersSelectMenuComponent extends BaseComponentInteraction {
         return selectMenuInteraction.values
             .map((enabledFilter: string) => {
                 const filter: FilterOption | undefined = availableFilters.find(
-                    (filter) => enabledFilter == filter.value
+                    (filter) => enabledFilter === filter.value
                 );
 
                 return filter ? `- **${filter.emoji} ${filter.label}**` : enabledFilter;

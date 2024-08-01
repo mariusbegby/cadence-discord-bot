@@ -1,10 +1,10 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, MessageComponentInteraction } from 'discord.js';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
+import { EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import type { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class ActionPauseResumeButton extends BaseComponentInteraction {

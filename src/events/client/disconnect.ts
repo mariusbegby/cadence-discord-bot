@@ -1,9 +1,9 @@
 import config from 'config';
-import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-import { EmbedOptions, SystemOptions } from '../../types/configTypes';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { ExtendedClient } from '../../types/clientTypes';
+import type { EmbedOptions, SystemOptions } from '../../types/configTypes';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
 const systemOptions: SystemOptions = config.get('systemOptions');

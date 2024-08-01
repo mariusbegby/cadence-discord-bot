@@ -1,21 +1,21 @@
 import config from 'config';
-import { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
+import type { GuildQueue, GuildQueueHistory, PlayerTimestamp, Track } from 'discord-player';
 import {
-    ApplicationCommandOptionChoiceData,
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
-    EmbedAuthorOptions,
-    EmbedFooterData,
+    type ApplicationCommandOptionChoiceData,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
+    type EmbedAuthorOptions,
+    type EmbedFooterData,
     GuildMember,
-    Interaction,
-    Message,
-    MessageComponentInteraction,
-    SlashCommandBuilder,
-    SlashCommandSubcommandsOnlyBuilder
+    type Interaction,
+    type Message,
+    type MessageComponentInteraction,
+    type SlashCommandBuilder,
+    type SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
-import { loggerService, Logger } from '../services/logger';
-import { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
-import {
+import { loggerService, type Logger } from '../services/logger';
+import type { BotOptions, EmbedOptions, PlayerOptions } from '../../types/configTypes';
+import type {
     BaseAutocompleteParams,
     BaseAutocompleteReturnType,
     BaseComponentParams,
@@ -24,9 +24,8 @@ import {
     BaseSlashCommandParams,
     BaseSlashCommandReturnType
 } from '../../types/interactionTypes';
-import { Validator, ValidatorParams } from '../../types/utilTypes';
-import { Translator } from '../utils/localeUtil';
-import { captureRejectionSymbol } from 'node:events';
+import type { Validator, ValidatorParams } from '../../types/utilTypes';
+import type { Translator } from '../utils/localeUtil';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
@@ -150,7 +149,6 @@ abstract class BaseInteraction {
                     });
                 }
             }
-
         } catch {
             return progressBar;
         }
@@ -164,14 +162,10 @@ abstract class BaseInteraction {
 }
 
 abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
-    constructor() {
-        super();
-    }
-
     protected getEmbedUserAuthor(
         interaction: MessageComponentInteraction | ChatInputCommandInteraction
     ): EmbedAuthorOptions {
-        let authorName: string = '';
+        let authorName = '';
         if (interaction.member instanceof GuildMember) {
             authorName = interaction.member.nickname || interaction.user.username;
         } else {
@@ -202,20 +196,17 @@ abstract class BaseInteractionWithEmbedResponse extends BaseInteraction {
 
 export abstract class BaseSlashCommandInteraction extends BaseInteractionWithEmbedResponse {
     data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder;
-    isSystemCommand: boolean;
     isNew: boolean;
     isBeta: boolean;
     name: string;
 
     constructor(
         data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandSubcommandsOnlyBuilder,
-        isSystemCommand: boolean = false,
-        isNew: boolean = false,
-        isBeta: boolean = false
+        isNew = false,
+        isBeta = false
     ) {
         super();
         this.data = data.setDMPermission(false).setNSFW(false);
-        this.isSystemCommand = isSystemCommand;
         this.isNew = isNew;
         this.isBeta = isBeta;
         this.name = data.name;

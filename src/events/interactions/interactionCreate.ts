@@ -1,25 +1,25 @@
 import {
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
+    type AutocompleteInteraction,
+    type ChatInputCommandInteraction,
     Events,
-    Interaction,
+    type Interaction,
     InteractionType,
-    MessageComponentInteraction
+    type MessageComponentInteraction
 } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { CustomError } from '../../common/classes/interactions';
+import type { CustomError } from '../../common/classes/interactions';
 import { handleAutocomplete } from '../../handlers/interactionAutocompleteHandler';
 import { handleCommand } from '../../handlers/interactionCommandHandler';
 import { handleComponent } from '../../handlers/interactionComponentHandler';
 import { handleError } from '../../handlers/interactionErrorHandler';
-import { loggerService, Logger } from '../../common/services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { ExtendedClient } from '../../types/clientTypes';
 
 module.exports = {
     name: Events.InteractionCreate,
     isDebug: false,
     execute: async (interaction: Interaction, { client }: { client: ExtendedClient }) => {
-        const inputTime: number = new Date().getTime();
+        const inputTime: number = Date.now();
         const executionId: string = uuidv4();
         const logger: Logger = loggerService.child({
             module: 'event',
@@ -41,7 +41,7 @@ module.exports = {
             await handleError(interaction, error as CustomError, executionId, interactionIdentifier);
         }
 
-        const executionTime: number = new Date().getTime() - inputTime;
+        const executionTime: number = Date.now() - inputTime;
         const interactionType: string = InteractionType[interaction.type];
 
         logger.info(
@@ -102,7 +102,8 @@ function getInteractionIdentifier(interaction: Interaction): string {
         interaction.type === InteractionType.ApplicationCommandAutocomplete
     ) {
         return (interaction as ChatInputCommandInteraction).commandName;
-    } else if (interaction.type === InteractionType.MessageComponent) {
+    }
+    if (interaction.type === InteractionType.MessageComponent) {
         return (interaction as MessageComponentInteraction).customId;
     }
     return 'Unknown';

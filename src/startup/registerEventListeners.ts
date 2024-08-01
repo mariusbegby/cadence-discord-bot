@@ -1,22 +1,20 @@
 import config from 'config';
-import { GuildQueueEvents, Player, PlayerEvents } from 'discord-player';
-import { Client } from 'discord.js';
+import type { GuildQueueEvents, Player, PlayerEvents } from 'discord-player';
+import type { Client } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loggerService, Logger } from '../common/services/logger';
-import { CustomLoggerOptions } from '../types/configTypes';
-import { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
-import { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { CustomLoggerOptions } from '../types/configTypes';
+import type { ClientEventArguments, PlayerEventArguments, ProcessEventArguments } from '../types/eventTypes';
+import type { CustomEvent, RegisterEventListenersParams } from '../types/utilTypes';
 
 const loggerOptions: CustomLoggerOptions = config.get('loggerOptions');
 
 const registerClientEventListeners = (client: Client, event: CustomEvent) => {
     if (event.once) {
         client.once(event.name, (...args: ClientEventArguments) => event.execute(...args));
-    } else {
-        if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
-            client.on(event.name, (...args: ClientEventArguments) => event.execute(...args));
-        }
+    } else if (!event.isDebug || process.env.MINIMUM_LOG_LEVEL === 'debug') {
+        client.on(event.name, (...args: ClientEventArguments) => event.execute(...args));
     }
 };
 

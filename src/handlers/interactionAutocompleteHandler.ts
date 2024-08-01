@@ -1,7 +1,7 @@
-import { AutocompleteInteraction } from 'discord.js';
-import { BaseAutocompleteInteraction } from '../common/classes/interactions';
-import { loggerService, Logger } from '../common/services/logger';
-import { ExtendedClient } from '../types/clientTypes';
+import type { AutocompleteInteraction } from 'discord.js';
+import type { BaseAutocompleteInteraction } from '../common/classes/interactions';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { ExtendedClient } from '../types/clientTypes';
 
 export const handleAutocomplete = async (
     interaction: AutocompleteInteraction,

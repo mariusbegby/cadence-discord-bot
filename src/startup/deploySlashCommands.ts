@@ -14,8 +14,7 @@ const logger: Logger = loggerService.child({
     executionId: executionId
 });
 
-const userSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
-const systemSlashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
+const slashCommands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
 if (!process.env.DISCORD_BOT_TOKEN) {
     throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
@@ -42,20 +41,14 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
     for (const file of commandFiles) {
         const { default: command } = await import(`../interactions/slashcommands/${file}`);
         const slashCommand = command as BaseSlashCommandInteraction;
-        if (slashCommand.isSystemCommand) {
-            systemSlashCommands.push(slashCommand.data.toJSON());
-        } else {
-            userSlashCommands.push(slashCommand.data.toJSON());
-        }
+        slashCommands.push(slashCommand.data.toJSON());
     }
 
     try {
-        logger.debug(
-            `Bot user slash commands found: ${userSlashCommands.map((command) => `/${command.name}`).join(', ')}`
-        );
+        logger.debug(`Bot user slash commands found: ${slashCommands.map((command) => `/${command.name}`).join(', ')}`);
 
         logger.info('Started refreshing user slash commands.');
-        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), userSlashCommands);
+        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), slashCommands);
         logger.info('Successfully refreshed user slash commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh user slash commands.');

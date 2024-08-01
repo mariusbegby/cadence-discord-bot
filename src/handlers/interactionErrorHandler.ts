@@ -2,14 +2,14 @@ import config from 'config';
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
-    Interaction,
-    InteractionReplyOptions,
+    type Interaction,
+    type InteractionReplyOptions,
     InteractionType,
     MessageComponentInteraction
 } from 'discord.js';
-import { CustomError, InteractionValidationError } from '../common/classes/interactions';
-import { loggerService, Logger } from '../common/services/logger';
-import { BotOptions, EmbedOptions } from '../types/configTypes';
+import { type CustomError, InteractionValidationError } from '../common/classes/interactions';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { BotOptions, EmbedOptions } from '../types/configTypes';
 import { useServerTranslator } from '../common/utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -52,6 +52,7 @@ export const handleError = async (
     logger.error(error, `Error handling interaction '${interactionIdentifier}'`);
 
     if (interaction instanceof ChatInputCommandInteraction) {
+        // biome-ignore lint/nursery/useDefaultSwitchClause: <explanation>
         switch (interaction.replied) {
             case true:
                 logger.warn(
@@ -68,7 +69,9 @@ export const handleError = async (
                 }
                 return;
         }
-    } else if (interaction instanceof MessageComponentInteraction) {
+    }
+    if (interaction instanceof MessageComponentInteraction) {
+        // biome-ignore lint/nursery/useDefaultSwitchClause: <explanation>
         switch (interaction.replied) {
             case true:
                 logger.warn(
@@ -85,22 +88,21 @@ export const handleError = async (
                 }
                 return;
         }
-    } else {
-        logger.debug(
-            `${
-                InteractionType[interaction.type]
-            } interaction '${interactionIdentifier}' threw an error. Cannot send error reply.`
-        );
+    }
+    logger.debug(
+        `${
+            InteractionType[interaction.type]
+        } interaction '${interactionIdentifier}' threw an error. Cannot send error reply.`
+    );
 
-        if (error.message === 'Unknown interaction') {
-            logger.debug('Interaction no longer exists, timed out or has already been responded to.');
-            return;
-        }
+    if (error.message === 'Unknown interaction') {
+        logger.debug('Interaction no longer exists, timed out or has already been responded to.');
+        return;
+    }
 
-        if (error.message === 'Collector received no interactions before ending with reason: time') {
-            logger.debug('Interaction collector response timed out.');
-            return;
-        }
+    if (error.message === 'Collector received no interactions before ending with reason: time') {
+        logger.debug('Interaction collector response timed out.');
+        return;
     }
 
     logger.fatal(

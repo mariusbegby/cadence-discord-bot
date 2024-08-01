@@ -1,4 +1,4 @@
-import { Player } from 'discord-player';
+import type { Player } from 'discord-player';
 
 declare global {
     const player: Player;

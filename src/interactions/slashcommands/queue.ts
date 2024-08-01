@@ -1,20 +1,20 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
 import {
-    APIActionRowComponent,
-    APIMessageActionRowComponent,
-    ChatInputCommandInteraction,
+    type APIActionRowComponent,
+    type APIMessageActionRowComponent,
+    type ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
-    EmbedFooterData,
+    type EmbedFooterData,
     SlashCommandBuilder
 } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { formatDuration, formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { createNewActionButton } from '../../common/utils/createActionButton';
 
 class QueueCommand extends BaseSlashCommandInteraction {
@@ -80,20 +80,17 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        this.getDisplayTrackPlayingStatus(queue, translator) +
-                            '\n' +
-                            this.getFormattedTrackUrl(currentTrack, translator) +
-                            '\n' +
-                            translator('musicPlayerCommon.requestedBy', {
+                        `${this.getDisplayTrackPlayingStatus(queue, translator)}\n${this.getFormattedTrackUrl(currentTrack, translator)}\n${translator(
+                            'musicPlayerCommon.requestedBy',
+                            {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
-                            }) +
-                            '\n' +
-                            `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
-                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
-                            `${translator('commands.queue.tracksInQueueTitle', {
+                            }
+                        )}\n${this.getDisplayQueueProgressBar(queue, translator)}\n${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n${translator(
+                            'commands.queue.tracksInQueueTitle',
+                            {
                                 icon: this.embedOptions.icons.queue
-                            })}\n` +
-                            queueTracksListString
+                            }
+                        )}\n${queueTracksListString}`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
                     .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
@@ -125,11 +122,12 @@ class QueueCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}` +
-                            `${translator('commands.queue.tracksInQueueTitle', {
+                        `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}${translator(
+                            'commands.queue.tracksInQueueTitle',
+                            {
                                 icon: this.embedOptions.icons.queue
-                            })}\n` +
-                            queueTracksListString
+                            }
+                        )}\n${queueTracksListString}`
                     )
                     .setFooter(this.getDisplayFullFooterInfo(interaction, queue, translator))
                     .setColor(this.embedOptions.colors.info)

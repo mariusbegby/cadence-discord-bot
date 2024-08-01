@@ -1,6 +1,6 @@
-import { GuildQueueStatisticsMetadata } from 'discord-player';
-import { Client, Guild } from 'discord.js';
-import { PlayerStatistics, ShardPlayerStatistics } from '../../types/utilTypes';
+import type { GuildQueueStatisticsMetadata } from 'discord-player';
+import type { Client, Guild } from 'discord.js';
+import type { PlayerStatistics, ShardPlayerStatistics } from '../../types/utilTypes';
 
 async function fetchGuildsPerShard(client?: Client): Promise<Map<string, Guild>[]> {
     if (!client || !client.shard) {

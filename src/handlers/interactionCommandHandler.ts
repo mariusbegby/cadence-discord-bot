@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction } from 'discord.js';
-import { BaseSlashCommandInteraction } from '../common/classes/interactions';
-import { loggerService, Logger } from '../common/services/logger';
-import { ExtendedClient } from '../types/clientTypes';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import type { BaseSlashCommandInteraction } from '../common/classes/interactions';
+import { loggerService, type Logger } from '../common/services/logger';
+import type { ExtendedClient } from '../types/clientTypes';
 import { checkChannelPermissionViewable } from '../common/validation/permissionValidator';
 
 export const handleCommand = async (

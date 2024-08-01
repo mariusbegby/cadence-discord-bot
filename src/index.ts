@@ -2,10 +2,10 @@
 import 'dotenv/config';
 // Only after loading .ENV file, we can load other modules
 import config from 'config';
-import { Client, Shard, ShardEvents, ShardingManager, ShardingManagerOptions } from 'discord.js';
+import { type Client, type Shard, ShardEvents, ShardingManager, type ShardingManagerOptions } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { exec } from 'child_process';
-import { loggerService, Logger } from './common/services/logger';
+import { exec } from 'node:child_process';
+import { loggerService, type Logger } from './common/services/logger';
 const shardingOptions: ShardingManagerOptions = config.get('shardingOptions');
 
 const manager: ShardingManager = new ShardingManager('./dist/bot.js', {

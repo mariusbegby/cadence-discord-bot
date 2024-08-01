@@ -1,10 +1,10 @@
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import type { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { useLanguageTranslator } from '../../common/utils/localeUtil';
-import { EmbedBuilder, LocaleString } from 'discord.js';
-import { EmbedOptions } from '../../types/configTypes';
+import { EmbedBuilder, type LocaleString } from 'discord.js';
+import type { EmbedOptions } from '../../types/configTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { Track } from 'discord-player';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { Track } from 'discord-player';
 import config from 'config';
 
 module.exports = {

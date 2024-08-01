@@ -1,8 +1,8 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { localizeCommand, useServerTranslator } from '../../common/utils/localeUtil';
@@ -37,16 +37,14 @@ class PauseCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        translator(
+                        `${translator(
                             queue.node.isPaused()
                                 ? 'commands.pause.pauseConfirmation'
                                 : 'commands.pause.resumeConfirmation',
                             {
                                 icon: this.embedOptions.icons.success
                             }
-                        ) +
-                            '\n' +
-                            this.getDisplayTrackDurationAndUrl(currentTrack, translator)
+                        )}\n${this.getDisplayTrackDurationAndUrl(currentTrack, translator)}`
                     )
                     .setThumbnail(currentTrack.thumbnail)
                     .setColor(this.embedOptions.colors.success)

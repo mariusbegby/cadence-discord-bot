@@ -1,11 +1,11 @@
-import { LyricsData, lyricsExtractor } from '@discord-player/extractor';
-import { Player, SearchResult, useMainPlayer } from 'discord-player';
-import { ApplicationCommandOptionChoiceData } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import { type LyricsData, lyricsExtractor } from '@discord-player/extractor';
+import { type Player, type SearchResult, useMainPlayer } from 'discord-player';
+import type { ApplicationCommandOptionChoiceData } from 'discord.js';
+import type { Logger } from '../../common/services/logger';
 import { BaseAutocompleteInteraction } from '../../common/classes/interactions';
 import { getTrackName, isQueryTooShort, shouldUseLastQuery } from '../../common/utils/autocompleteUtils';
-import { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
-import { useUserTranslator, Translator } from '../../common/utils/localeUtil';
+import type { BaseAutocompleteParams, BaseAutocompleteReturnType, RecentQuery } from '../../types/interactionTypes';
+import { useUserTranslator, type Translator } from '../../common/utils/localeUtil';
 class LyricsAutocomplete extends BaseAutocompleteInteraction {
     private recentQueries = new Map<string, RecentQuery>();
 
@@ -51,11 +51,10 @@ class LyricsAutocomplete extends BaseAutocompleteInteraction {
         const genius = lyricsExtractor();
         const lyricsResult: LyricsData = (await genius.search(query).catch(() => null)) as LyricsData;
 
-        if (!lyricsResult) {
-            return this.getAutocompleteChoicesFallback(query, logger, translator);
-        } else {
+        if (lyricsResult) {
             return this.getAutocompleteChoicesFromLyricsResult(lyricsResult, translator);
         }
+        return this.getAutocompleteChoicesFallback(query, logger, translator);
     }
 
     private async getAutocompleteChoicesFallback(

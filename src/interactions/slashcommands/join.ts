@@ -1,11 +1,17 @@
-import { GuildQueue, useMainPlayer, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, Message, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, useMainPlayer, useQueue } from 'discord-player';
+import {
+    type ChatInputCommandInteraction,
+    EmbedBuilder,
+    type GuildMember,
+    type Message,
+    SlashCommandBuilder
+} from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkInVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class JoinCommand extends BaseSlashCommandInteraction {

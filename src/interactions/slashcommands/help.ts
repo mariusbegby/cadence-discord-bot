@@ -1,27 +1,27 @@
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
-    Collection,
+    type ChatInputCommandInteraction,
+    type Collection,
     ComponentType,
-    LocaleString,
+    type LocaleString,
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandNumberOption,
     SlashCommandStringOption
 } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import {
-    CommandMetadata,
+    type CommandMetadata,
     localizeCommand,
     translatorInstance,
     useServerTranslator
 } from '../../common/utils/localeUtil';
-import { ExtendedClient } from '../../types/clientTypes';
+import type { ExtendedClient } from '../../types/clientTypes';
 
 class HelpCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -68,11 +68,9 @@ class HelpCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        translator('commands.help.listTitle', {
+                        `${translator('commands.help.listTitle', {
                             icon: this.embedOptions.icons.rule
-                        }) +
-                            '\n' +
-                            commandEmbedString
+                        })}\n${commandEmbedString}`
                     )
                     .setColor(this.embedOptions.colors.info)
             ],
@@ -81,14 +79,11 @@ class HelpCommand extends BaseSlashCommandInteraction {
     }
 
     private getNonSystemCommands(client: ExtendedClient): Collection<string, BaseSlashCommandInteraction> {
-        const clientSlashCommands = client.slashCommandInteractions;
-        const nonSystemCommands = clientSlashCommands?.filter((command) => !command.isSystemCommand);
-
-        if (!nonSystemCommands) {
-            throw new Error('No non-system commands found.');
+        if (!client.slashCommandInteractions) {
+            throw new Error('No commands found.');
         }
 
-        return nonSystemCommands;
+        return client.slashCommandInteractions;
     }
 
     private async getCommandEmbedString(
@@ -109,8 +104,9 @@ class HelpCommand extends BaseSlashCommandInteraction {
     private getCommandString(command: BaseSlashCommandInteraction, locale: LocaleString): string {
         const commandName = command.data.name;
         const metadataKey = `commands.${commandName}.metadata`;
-        let translatedData: CommandMetadata | undefined = undefined;
-        translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
+        const translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as
+            | CommandMetadata
+            | undefined;
 
         const commandParams: string = this.getCommandParams(command, locale);
 
@@ -128,8 +124,9 @@ class HelpCommand extends BaseSlashCommandInteraction {
 
         if (option instanceof SlashCommandNumberOption || option instanceof SlashCommandStringOption) {
             const metadataKey = `commands.${commandName}.metadata.options.${option.name}`;
-            let translatedData: CommandMetadata | undefined = undefined;
-            translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as CommandMetadata | undefined;
+            const translatedData = translatorInstance.getResource(locale, 'bot', metadataKey) as
+                | CommandMetadata
+                | undefined;
             return `**\`${translatedData?.name ?? option.name}\`** `;
         }
 

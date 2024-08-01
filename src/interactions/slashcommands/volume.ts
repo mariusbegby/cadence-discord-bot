@@ -1,11 +1,11 @@
-import { GuildQueue, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 
 class VolumeCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -37,9 +37,8 @@ class VolumeCommand extends BaseSlashCommandInteraction {
 
         if (!volume && volume !== 0) {
             return await this.handleShowCurrentVolume(queue, logger, interaction, translator);
-        } else {
-            return await this.handleValidVolumeInput(volume, queue, logger, interaction, translator);
         }
+        return await this.handleValidVolumeInput(volume, queue, logger, interaction, translator);
     }
 
     private async handleShowCurrentVolume(

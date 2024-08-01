@@ -1,11 +1,11 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class RemoveCommand extends BaseSlashCommandInteraction {
@@ -72,14 +72,14 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     ) {
         const targetUser = interaction.options.getUser('target')!;
         const removedTracks: Track[] = [];
-        queue.tracks.data.forEach((track) => {
+        for (const track of queue.tracks.data) {
             if (track.requestedBy?.id === targetUser.id) {
                 const removedTrack = queue.node.remove(track);
                 if (removedTrack) {
                     removedTracks.push(removedTrack);
                 }
             }
-        });
+        }
 
         if (removedTracks.length === 0) {
             return await this.handleNoTracksRemoved(logger, interaction, translator);
@@ -98,7 +98,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
     ) {
         const removedTracks: Track[] = [];
         const uniqueTrackUrls = new Set<string>();
-        queue.tracks.data.forEach((track) => {
+        for (const track of queue.tracks.data) {
             if (uniqueTrackUrls.has(track.url)) {
                 const removedTrack = queue.node.remove(track);
                 if (removedTrack) {
@@ -107,7 +107,7 @@ class RemoveCommand extends BaseSlashCommandInteraction {
             } else {
                 uniqueTrackUrls.add(track.url);
             }
-        });
+        }
 
         if (removedTracks.length === 0) {
             return await this.handleNoTracksRemoved(logger, interaction, translator);
@@ -129,7 +129,8 @@ class RemoveCommand extends BaseSlashCommandInteraction {
 
         if (start > queue.tracks.data.length || end > queue.tracks.data.length) {
             return await this.handleTrackPositionHigherThanQueueLength(logger, interaction, start, queue, translator);
-        } else if (start > end) {
+        }
+        if (start > end) {
             logger.debug('Start position is higher than end position.');
 
             logger.debug('Responding with warning embed.');
@@ -213,11 +214,9 @@ class RemoveCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        translator('commands.remove.removedTrack', {
+                        `${translator('commands.remove.removedTrack', {
                             icon: this.embedOptions.icons.success
-                        }) +
-                            '\n' +
-                            this.getDisplayTrackDurationAndUrl(removedTrack, translator)
+                        })}\n${this.getDisplayTrackDurationAndUrl(removedTrack, translator)}`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(removedTrack))
                     .setColor(this.embedOptions.colors.success)

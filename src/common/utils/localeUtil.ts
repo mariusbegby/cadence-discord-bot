@@ -1,19 +1,19 @@
-import assert from 'assert';
 import {
-    APIApplicationCommandOption,
+    type APIApplicationCommandOption,
     ApplicationCommandOptionType,
-    BaseInteraction,
+    type BaseInteraction,
     Locale,
-    LocaleString,
-    SlashCommandBuilder,
-    SlashCommandOptionsOnlyBuilder,
-    SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandsOnlyBuilder
+    type LocaleString,
+    type SlashCommandBuilder,
+    type SlashCommandOptionsOnlyBuilder,
+    type SlashCommandSubcommandBuilder,
+    type SlashCommandSubcommandsOnlyBuilder
 } from 'discord.js';
-import { lstatSync, readdirSync } from 'fs';
-import i18n, { TFunction } from 'i18next';
-import i18nextFsBackend, { FsBackendOptions } from 'i18next-fs-backend';
-import { join } from 'path';
+import i18n, { type TFunction } from 'i18next';
+import i18nextFsBackend, { type FsBackendOptions } from 'i18next-fs-backend';
+import assert from 'node:assert';
+import { lstatSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 export type Translator = TFunction;
 

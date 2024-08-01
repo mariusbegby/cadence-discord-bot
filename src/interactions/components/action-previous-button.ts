@@ -1,11 +1,11 @@
-import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
-import { EmbedBuilder, MessageComponentInteraction } from 'discord.js';
+import { type GuildQueue, type GuildQueueHistory, type Track, useHistory, useQueue } from 'discord-player';
+import { EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import type { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class ActionPreviousButton extends BaseComponentInteraction {

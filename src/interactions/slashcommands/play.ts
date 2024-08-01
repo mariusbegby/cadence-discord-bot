@@ -1,19 +1,19 @@
-import { GuildQueue, Player, SearchResult, Track, useMainPlayer, useQueue } from 'discord-player';
+import { type GuildQueue, type Player, type SearchResult, type Track, useMainPlayer, useQueue } from 'discord-player';
 import {
-    ChatInputCommandInteraction,
+    type ChatInputCommandInteraction,
     EmbedBuilder,
-    EmbedFooterData,
-    GuildMember,
-    Message,
+    type EmbedFooterData,
+    type GuildMember,
+    type Message,
     SlashCommandBuilder
 } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction, CustomError } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkVoicePermissionJoinAndTalk } from '../../common/validation/permissionValidator';
 import { transformQuery } from '../../common/validation/searchQueryValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class PlayCommand extends BaseSlashCommandInteraction {
@@ -57,7 +57,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         queue = useQueue(interaction.guild!.id)!;
         const queueSize = queue?.size ?? 0;
 
-        if ((searchResult.playlist! && searchResult.tracks.length) > this.playerOptions.maxQueueSize - queueSize) {
+        if (searchResult.playlist && searchResult.tracks.length >= this.playerOptions.maxQueueSize - queueSize) {
             return await this.handlePlaylistTooLarge(searchQuery, interaction, logger, translator);
         }
 
@@ -104,7 +104,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
         executionId: string,
         query: string
     ): Promise<Track | void> {
-        let track;
+        let track: void | Track<unknown> | PromiseLike<void | Track<unknown>>;
         try {
             logger.debug(`Attempting to add track with player.play(). Query: '${query}'.`);
 
@@ -168,35 +168,23 @@ class PlayCommand extends BaseSlashCommandInteraction {
             queue.tracks.data.length ?? 0,
             translator
         );
-        let message =
-            translator('commands.play.addedToQueueTitle', {
-                icon: this.embedOptions.icons.success
-            }) +
-            '\n' +
-            trackUrl;
+        let message = `${translator('commands.play.addedToQueueTitle', {
+            icon: this.embedOptions.icons.success
+        })}\n${trackUrl}`;
         if (searchResult.playlist) {
-            message =
-                translator('commands.play.playlistAddedTitle', {
-                    icon: this.embedOptions.icons.success
-                }) +
-                '\n' +
-                trackUrl +
-                '\n' +
-                '\n' +
-                translator('commands.play.playlistAddedTrackCount', {
-                    count: searchResult.tracks.length,
-                    queueCommand: formatSlashCommand('queue', translator)
-                });
+            message = `${translator('commands.play.playlistAddedTitle', {
+                icon: this.embedOptions.icons.success
+            })}\n${trackUrl}\n\n${translator('commands.play.playlistAddedTrackCount', {
+                count: searchResult.tracks.length,
+                queueCommand: formatSlashCommand('queue', translator)
+            })}`;
             const posistionFirstTrackInPlaylist = queue.tracks.data.length - searchResult.tracks.length + 1;
             embedFooter = this.getDisplayFooterTrackPosition(posistionFirstTrackInPlaylist, translator);
         } else if (queue.currentTrack === track && queue.tracks.data.length === 0) {
             if (!this.embedOptions.behavior.enablePlayerStartMessages) {
-                message =
-                    translator('musicPlayerCommon.nowPlayingTitle', {
-                        icon: this.embedOptions.icons.audioStartedPlaying
-                    }) +
-                    '\n' +
-                    trackUrl;
+                message = `${translator('musicPlayerCommon.nowPlayingTitle', {
+                    icon: this.embedOptions.icons.audioStartedPlaying
+                })}\n${trackUrl}`;
                 embedFooter = undefined;
             }
         }
@@ -286,9 +274,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -308,9 +294,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\n` +
-                            'This audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -332,10 +316,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\n` +
-                            'After finding a result, I was unable to retrieve audio for the track.\n\n' +
-                            'You can try to perform the command again.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -356,10 +337,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**` +
-                            '\nSomething unexpected happened and the operation was cancelled.\n\n' +
-                            'You can try to perform the command again.\n\n' +
-                            `_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })

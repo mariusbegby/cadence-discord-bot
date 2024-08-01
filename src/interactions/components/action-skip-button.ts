@@ -1,10 +1,10 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
-import { EmbedBuilder, MessageComponentInteraction } from 'discord.js';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
+import { EmbedBuilder, type MessageComponentInteraction } from 'discord.js';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import type { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed } from '../../common/utils/formattingUtils';
 
 class ActionSkipButton extends BaseComponentInteraction {
@@ -63,12 +63,9 @@ class ActionSkipButton extends BaseComponentInteraction {
         const successEmbed = new EmbedBuilder()
             .setAuthor(this.getEmbedUserAuthor(interaction))
             .setDescription(
-                translator('commands.skip.skippedTrack', {
+                `${translator('commands.skip.skippedTrack', {
                     icon: this.embedOptions.icons.skipped
-                }) +
-                    '\n' +
-                    `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n` +
-                    `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
+                })}\n${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
             )
             .setThumbnail(skippedTrack.thumbnail)
             .setColor(this.embedOptions.colors.success);

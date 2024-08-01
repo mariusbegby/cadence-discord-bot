@@ -1,11 +1,11 @@
-import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, type GuildQueueHistory, type Track, useHistory, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkHistoryExists, checkQueueCurrentTrack } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class BackCommand extends BaseSlashCommandInteraction {
@@ -36,9 +36,8 @@ class BackCommand extends BaseSlashCommandInteraction {
 
         if (backToTrackInput) {
             return await this.handleBackToTrackPosition(logger, interaction, history, backToTrackInput, translator);
-        } else {
-            return await this.handleBackToPreviousTrack(logger, interaction, history, translator);
         }
+        return await this.handleBackToPreviousTrack(logger, interaction, history, translator);
     }
 
     private async handleBackToTrackPosition(
@@ -56,12 +55,11 @@ class BackCommand extends BaseSlashCommandInteraction {
                 interaction,
                 translator
             );
-        } else {
-            await history.back();
-            const recoveredTrack: Track = history.currentTrack! ?? history.tracks.data[backtoTrackPosition - 1];
-            logger.debug('Went back to specified track position in history.');
-            return await this.respondWithSuccessEmbed(recoveredTrack, interaction, translator);
         }
+        await history.back();
+        const recoveredTrack: Track = history.currentTrack! ?? history.tracks.data[backtoTrackPosition - 1];
+        logger.debug('Went back to specified track position in history.');
+        return await this.respondWithSuccessEmbed(recoveredTrack, interaction, translator);
     }
 
     private async handleTrackPositionHigherThanHistoryLength(

@@ -1,9 +1,9 @@
 import config from 'config';
 import { EmbedBuilder, GuildMember, InteractionType } from 'discord.js';
 import { InteractionValidationError } from '../classes/interactions';
-import { loggerService, Logger } from '../services/logger';
-import { EmbedOptions } from '../../types/configTypes';
-import { ValidatorParams } from '../../types/utilTypes';
+import { loggerService, type Logger } from '../services/logger';
+import type { EmbedOptions } from '../../types/configTypes';
+import type { ValidatorParams } from '../../types/utilTypes';
 import { useServerTranslator } from '../utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');

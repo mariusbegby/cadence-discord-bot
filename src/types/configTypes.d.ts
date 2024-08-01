@@ -1,5 +1,5 @@
-import { ActivityType, ColorResolvable, PresenceUpdateStatus } from 'discord.js';
-import { LogLevel } from './serviceTypes';
+import type { ActivityType, ColorResolvable, PresenceUpdateStatus } from 'discord.js';
+import type { LogLevel } from './serviceTypes';
 
 export type BotOptions = {
     name: string;
@@ -15,7 +15,6 @@ export type CustomLoggerOptions = {
 };
 
 export type SystemOptions = {
-    systemGuildIds: string[];
     systemMessageChannelId: string;
     systemUserId: string;
 };

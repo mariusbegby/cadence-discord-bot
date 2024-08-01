@@ -1,6 +1,6 @@
-import { BaseGuildTextChannel, Message } from 'discord.js';
-import { GuildQueuePlayerNode } from 'discord-player';
-import { ExtendedClient } from './clientTypes';
+import type { BaseGuildTextChannel, Message } from 'discord.js';
+import type { GuildQueuePlayerNode } from 'discord-player';
+import type { ExtendedClient } from './clientTypes';
 
 export type ClientEventArguments = unknown[];
 export type ProcessEventArguments = unknown[];

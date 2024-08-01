@@ -1,17 +1,17 @@
-import { GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
+import { type GuildQueue, QueueRepeatMode, useQueue } from 'discord-player';
 import {
-    ChatInputCommandInteraction,
+    type ChatInputCommandInteraction,
     EmbedBuilder,
-    InteractionResponse,
+    type InteractionResponse,
     SlashCommandBuilder,
     SlashCommandIntegerOption
 } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatMode } from '../../common/utils/formattingUtils';
 
 class LoopCommand extends BaseSlashCommandInteraction {
@@ -171,16 +171,11 @@ class LoopCommand extends BaseSlashCommandInteraction {
             newRepeatModeMessage = translator('commands.loop.willAutoplay');
         }
 
-        return (
-            translator('commands.loop.modeChanged', {
-                icon: repeatModeIcon,
-                fromName: fromRepeatModeEmbedName,
-                toName: toRepeatModeEmbedName
-            }) +
-            '\n' +
-            '\n' +
-            newRepeatModeMessage
-        );
+        return `${translator('commands.loop.modeChanged', {
+            icon: repeatModeIcon,
+            fromName: fromRepeatModeEmbedName,
+            toName: toRepeatModeEmbedName
+        })}\n\n${newRepeatModeMessage}`;
     }
 }
 

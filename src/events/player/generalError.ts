@@ -1,9 +1,9 @@
 import config from 'config';
-import { BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
+import type { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { useLanguageTranslator } from '../../common/utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');

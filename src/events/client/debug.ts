@@ -1,6 +1,6 @@
 import { Events } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
+import { loggerService, type Logger } from '../../common/services/logger';
 
 module.exports = {
     name: Events.Debug,

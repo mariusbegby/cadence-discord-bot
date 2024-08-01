@@ -1,5 +1,5 @@
-import { Client, Collection } from 'discord.js';
-import {
+import type { Client, Collection } from 'discord.js';
+import type {
     BaseAutocompleteInteraction,
     BaseComponentInteraction,
     BaseSlashCommandInteraction

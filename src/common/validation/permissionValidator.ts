@@ -3,15 +3,15 @@ import {
     EmbedBuilder,
     GuildMember,
     InteractionType,
-    TextBasedChannel,
+    type TextBasedChannel,
     TextChannel,
-    VoiceBasedChannel,
+    type VoiceBasedChannel,
     VoiceChannel
 } from 'discord.js';
 import { InteractionValidationError } from '../classes/interactions';
-import { loggerService, Logger } from '../services/logger';
-import { EmbedOptions } from '../../types/configTypes';
-import { ValidatorParams } from '../../types/utilTypes';
+import { loggerService, type Logger } from '../services/logger';
+import type { EmbedOptions } from '../../types/configTypes';
+import type { ValidatorParams } from '../../types/utilTypes';
 import { useServerTranslator } from '../utils/localeUtil';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -108,7 +108,7 @@ export const checkChannelPermissionViewable = async ({ interaction, executionId 
             });
         } catch (error) {
             if (error instanceof Error) {
-                if (error.message == 'The reply to this interaction has already been sent or deferred.') {
+                if (error.message === 'The reply to this interaction has already been sent or deferred.') {
                     logger.warn(
                         'Error while sending ephemereal message about insufficient permissions to send message in channel.'
                     );

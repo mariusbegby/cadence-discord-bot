@@ -1,0 +1,83 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+    "files": {
+        "ignore": ["**/dist/", "**/coverage/*", "**/node_modules/", "**/dist/**/*.js"]
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "crlf",
+        "lineWidth": 120,
+        "attributePosition": "auto"
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUnusedImports": {
+                    "level": "error",
+                    "fix": "safe"
+                }
+            },
+            "nursery": {
+                "noConsole": "warn",
+                "noDuplicateJsonKeys": "warn",
+                "noUselessStringConcat": "warn",
+                "noUnusedFunctionParameters": "warn",
+                "noUselessUndefinedInitialization": "warn",
+                "useDateNow": "warn",
+                "useDefaultSwitchClause": "warn",
+                "useErrorMessage": "warn",
+                "useExplicitLengthCheck": "warn",
+                "useNumberToFixedDigitsArgument": "warn",
+                "useThrowNewError": "warn",
+                "useThrowOnlyError": "warn",
+                "useTopLevelRegex": "warn"
+            },
+            "performance": {
+                "noBarrelFile": "warn",
+                "noReExportAll": "warn"
+            },
+            "style": {
+                "noDefaultExport": "off",
+                "noNegationElse": "warn",
+                "useBlockStatements": "error",
+                "useCollapsedElseIf": "error",
+                "useConsistentArrayType": "warn",
+                "useForOf": "warn",
+                "useNamingConvention": {
+                    "level": "warn",
+                    "options": {
+                        "strictCase": false,
+                        "enumMemberCase": "PascalCase"
+                    },
+                    "fix": "safe"
+                },
+                "noNonNullAssertion": "off"
+            },
+            "suspicious": {
+                "noConfusingVoidType": "off"
+            }
+        },
+        "ignore": ["**/locales/**/*.d.ts", "**/src/common/services/logger.ts"]
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "always",
+            "attributePosition": "auto",
+            "bracketSameLine": false,
+            "bracketSpacing": true,
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "quoteStyle": "single",
+            "semicolons": "always",
+            "trailingCommas": "none"
+        }
+    }
+}

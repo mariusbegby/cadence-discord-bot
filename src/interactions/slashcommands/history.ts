@@ -1,22 +1,22 @@
-import { GuildQueue, GuildQueueHistory, Track, useHistory, useQueue } from 'discord-player';
+import { type GuildQueue, type GuildQueueHistory, type Track, useHistory, useQueue } from 'discord-player';
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
+    type ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
-    EmbedFooterData,
+    type EmbedFooterData,
     SlashCommandBuilder
 } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkHistoryExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class HistoryCommand extends BaseSlashCommandInteraction {
@@ -89,7 +89,7 @@ class HistoryCommand extends BaseSlashCommandInteraction {
         const components: APIMessageActionRowComponent[] = [];
 
         const previousButton: APIButtonComponent = new ButtonBuilder()
-            .setDisabled(queue.history.tracks.data.length > 0 ? false : true)
+            .setDisabled(queue.history.tracks.data.length === 0)
             .setCustomId(`action-previous-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)
@@ -129,18 +129,17 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        this.getDisplayTrackPlayingStatus(queue, translator) +
-                            '\n' +
-                            `${this.getFormattedTrackUrl(currentTrack, translator)}\n` +
-                            `${translator('musicPlayerCommon.requestedBy', {
+                        `${this.getDisplayTrackPlayingStatus(queue, translator)}\n${this.getFormattedTrackUrl(currentTrack, translator)}\n${translator(
+                            'musicPlayerCommon.requestedBy',
+                            {
                                 user: this.getDisplayTrackRequestedBy(currentTrack, translator)
-                            })}\n` +
-                            `${this.getDisplayQueueProgressBar(queue, translator)}\n` +
-                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n` +
-                            `${translator('commands.history.tracksInHistoryTitle', {
+                            }
+                        )}\n${this.getDisplayQueueProgressBar(queue, translator)}\n${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator)}\n${translator(
+                            'commands.history.tracksInHistoryTitle',
+                            {
                                 icon: this.embedOptions.icons.queue
-                            })}\n` +
-                            historyTracksListString
+                            }
+                        )}\n${historyTracksListString}`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(currentTrack))
                     .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
@@ -173,11 +172,9 @@ class HistoryCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedQueueAuthor(interaction, queue, translator))
                     .setDescription(
-                        translator('commands.history.tracksInHistoryTitle', {
+                        `${translator('commands.history.tracksInHistoryTitle', {
                             icon: this.embedOptions.icons.queue
-                        }) +
-                            '\n' +
-                            historyTracksListString
+                        })}\n${historyTracksListString}`
                     )
                     .setFooter(this.getDisplayFullFooterInfo(interaction, history, translator))
                     .setColor(this.embedOptions.colors.info)

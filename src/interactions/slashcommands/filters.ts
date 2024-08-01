@@ -1,32 +1,27 @@
 import config from 'config';
-import { GuildQueue, QueueFilters, useQueue } from 'discord-player';
+import { type GuildQueue, type QueueFilters, useQueue } from 'discord-player';
 import {
-    APIActionRowComponent,
-    APIButtonComponent,
-    APIMessageActionRowComponent,
-    APIStringSelectComponent,
+    type APIActionRowComponent,
+    type APIButtonComponent,
+    type APIMessageActionRowComponent,
+    type APIStringSelectComponent,
     ButtonBuilder,
     ButtonStyle,
-    ChatInputCommandInteraction,
+    type ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
-    Message,
+    type Message,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder
 } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import {
-    BiquadFilterOptions,
-    EqualizerFilterOptions,
-    FFmpegFilterOptions,
-    FilterOption
-} from '../../types/configTypes';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BiquadFilterOptions, EqualizerFilterOptions, FFmpegFilterOptions } from '../../types/configTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 
 const ffmpegFilterOptions: FFmpegFilterOptions = config.get('ffmpegFilterOptions');
 const biquadFilterOptions: BiquadFilterOptions = config.get('biquadFilterOptions');
@@ -34,7 +29,6 @@ const equalizerFilterOptions: EqualizerFilterOptions = config.get('equalizerFilt
 
 class FiltersCommand extends BaseSlashCommandInteraction {
     constructor() {
-        // TODO: Implement system for localized filter names and descriptions
         const data = localizeCommand(
             new SlashCommandBuilder()
                 .setName('filters')
@@ -81,6 +75,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                 return await this.handleEqualizerFilters(logger, interaction, translator);
             case 'disable':
                 return await this.disableAllFiltersAndRespondWithSuccess(logger, interaction, queue, translator);
+            default:
+                break;
         }
     }
 
@@ -93,8 +89,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger.debug('Handling ffmpeg filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
-        ffmpegFilterOptions.availableFilters.forEach((filter: FilterOption) => {
-            let isEnabled: boolean = false;
+        for (const filter of ffmpegFilterOptions.availableFilters) {
+            let isEnabled = false;
 
             if (queue.filters.ffmpeg.filters.includes(filter.value as keyof QueueFilters)) {
                 isEnabled = true;
@@ -108,7 +104,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     .setEmoji(filter.emoji)
                     .setDefault(isEnabled)
             );
-        });
+        }
 
         return await this.sendFiltersEmbed(logger, interaction, 'ffmpeg', filterOptions, translator);
     }
@@ -122,8 +118,8 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger.debug('Handling biquad filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
-        biquadFilterOptions.availableFilters.forEach((filter: FilterOption) => {
-            let isEnabled: boolean = false;
+        for (const filter of biquadFilterOptions.availableFilters) {
+            let isEnabled = false;
             if (queue.filters.biquad!.biquadFilter === (filter.value as keyof BiquadFilterType)) {
                 isEnabled = true;
             }
@@ -136,7 +132,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     .setEmoji(filter.emoji)
                     .setDefault(isEnabled)
             );
-        });
+        }
 
         return await this.sendFiltersEmbed(logger, interaction, 'biquad', filterOptions, translator);
     }
@@ -149,7 +145,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
         logger.debug('Handling biquad filters.');
         const filterOptions: StringSelectMenuOptionBuilder[] = [];
 
-        equalizerFilterOptions.availableFilters.forEach((filter: FilterOption) => {
+        for (const filter of equalizerFilterOptions.availableFilters) {
             filterOptions.push(
                 new StringSelectMenuOptionBuilder()
                     .setLabel(filter.label)
@@ -158,7 +154,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
                     .setEmoji(filter.emoji)
                     .setDefault(false)
             );
-        });
+        }
 
         return await this.sendFiltersEmbed(logger, interaction, 'equalizer', filterOptions, translator);
     }

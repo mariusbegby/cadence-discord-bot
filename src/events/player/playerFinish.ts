@@ -1,8 +1,8 @@
-import { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
+import type { ExtendedGuildQueuePlayerNode } from '../../types/eventTypes';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { Track } from 'discord-player';
-import { Snowflake } from 'discord.js';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { Track } from 'discord-player';
+import type { Snowflake } from 'discord.js';
 
 // Emitted when the audio player finish playing a track.
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
         const fetchLastAnnounceMessage =
             (await queue.metadata?.channel.messages.fetch(lastMessage?.id as Snowflake)) || undefined;
 
-        if (fetchLastAnnounceMessage && fetchLastAnnounceMessage.deletable) {
+        if (fetchLastAnnounceMessage?.deletable) {
             try {
                 await fetchLastAnnounceMessage.delete();
             } catch (error) {

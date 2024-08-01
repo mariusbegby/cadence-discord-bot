@@ -1,11 +1,11 @@
-import {
+import type {
     ApplicationCommandOptionChoiceData,
     AutocompleteInteraction,
     ChatInputCommandInteraction,
     Message,
     MessageComponentInteraction
 } from 'discord.js';
-import { ExtendedClient } from './clientTypes';
+import type { ExtendedClient } from './clientTypes';
 
 export type PlayerStatistics = {
     activeVoiceConnections: number;

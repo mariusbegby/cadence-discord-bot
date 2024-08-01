@@ -1,10 +1,9 @@
 import config from 'config';
-import { BaseGuildTextChannel, EmbedBuilder, Events, PresenceData } from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder, Events, type PresenceData } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
-import { loggerService, Logger } from '../../common/services/logger';
-import { ExtendedClient } from '../../types/clientTypes';
-import { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
-import { postBotStats } from '../../startup/postBotStats';
+import { loggerService, type Logger } from '../../common/services/logger';
+import type { ExtendedClient } from '../../types/clientTypes';
+import type { EmbedOptions, LoadTestOptions, SystemOptions } from '../../types/configTypes';
 import { startLoadTest } from '../../startup/startLoadTest';
 
 const embedOptions: EmbedOptions = config.get('embedOptions');
@@ -52,12 +51,6 @@ module.exports = {
                         .setColor(embedOptions.colors.success)
                 ]
             });
-        }
-
-        if (process.env.NODE_ENV === 'production') {
-            await postBotStats({ client, executionId });
-        } else {
-            return;
         }
     }
 };

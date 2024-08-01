@@ -1,8 +1,8 @@
-import { GuildQueue, useQueue } from 'discord-player';
+import { type GuildQueue, useQueue } from 'discord-player';
 import { EmbedBuilder } from 'discord.js';
-import { Logger } from '../../common/services/logger';
+import type { Logger } from '../../common/services/logger';
 import { BaseComponentInteraction } from '../../common/classes/interactions';
-import { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
+import type { BaseComponentParams, BaseComponentReturnType } from '../../types/interactionTypes';
 import { checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
 import { useServerTranslator } from '../../common/utils/localeUtil';

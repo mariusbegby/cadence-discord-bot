@@ -1,11 +1,11 @@
-import { GuildQueue, Track, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, type Track, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatRepeatModeDetailed, formatSlashCommand } from '../../common/utils/formattingUtils';
 
 class SkipCommand extends BaseSlashCommandInteraction {
@@ -36,9 +36,8 @@ class SkipCommand extends BaseSlashCommandInteraction {
 
         if (trackPositionInput) {
             return await this.handleSkipToTrackPosition(logger, interaction, queue, trackPositionInput, translator);
-        } else {
-            return await this.handleSkipToNextTrack(logger, interaction, queue, translator);
         }
+        return await this.handleSkipToNextTrack(logger, interaction, queue, translator);
     }
 
     private async handleSkipToTrackPosition(
@@ -56,12 +55,11 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 interaction,
                 translator
             );
-        } else {
-            const skippedTrack: Track = queue.currentTrack!;
-            queue.node.skipTo(trackPosition - 1);
-            logger.debug('Skipped to specified track position.');
-            return await this.respondWithSuccessEmbed(skippedTrack, interaction, queue, translator);
         }
+        const skippedTrack: Track = queue.currentTrack!;
+        queue.node.skipTo(trackPosition - 1);
+        logger.debug('Skipped to specified track position.');
+        return await this.respondWithSuccessEmbed(skippedTrack, interaction, queue, translator);
     }
 
     private async handleTrackPositionHigherThanQueueLength(
@@ -137,12 +135,9 @@ class SkipCommand extends BaseSlashCommandInteraction {
                 new EmbedBuilder()
                     .setAuthor(this.getEmbedUserAuthor(interaction))
                     .setDescription(
-                        translator('commands.skip.skippedTrack', {
+                        `${translator('commands.skip.skippedTrack', {
                             icon: this.embedOptions.icons.skipped
-                        }) +
-                            '\n' +
-                            `${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n` +
-                            `${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
+                        })}\n${this.getDisplayTrackDurationAndUrl(skippedTrack, translator)}\n${formatRepeatModeDetailed(queue.repeatMode, this.embedOptions, translator, 'success')}`
                     )
                     .setThumbnail(this.getTrackThumbnailUrl(skippedTrack))
                     .setColor(this.embedOptions.colors.success)

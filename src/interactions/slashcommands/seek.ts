@@ -1,12 +1,14 @@
-import { GuildQueue, useQueue } from 'discord-player';
-import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
+import { type GuildQueue, useQueue } from 'discord-player';
+import { type ChatInputCommandInteraction, EmbedBuilder, type Message, SlashCommandBuilder } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
-import { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
+import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
 import { checkQueueCurrentTrack, checkQueueExists } from '../../common/validation/queueValidator';
 import { checkInVoiceChannel, checkSameVoiceChannel } from '../../common/validation/voiceChannelValidator';
-import { Logger } from '../../common/services/logger';
-import { localizeCommand, useServerTranslator, Translator } from '../../common/utils/localeUtil';
+import type { Logger } from '../../common/services/logger';
+import { localizeCommand, useServerTranslator, type Translator } from '../../common/utils/localeUtil';
 import { formatSlashCommand } from '../../common/utils/formattingUtils';
+
+const checkValidDurationRegex: RegExp = /([0-1][0-9]|2[0-3]):?[0-5][0-9]:?[0-5][0-9]/;
 
 class SeekCommand extends BaseSlashCommandInteraction {
     constructor() {
@@ -154,11 +156,11 @@ class SeekCommand extends BaseSlashCommandInteraction {
                 break;
         }
 
-        durationInputSplit = durationInputSplit.map((value) => {
+        const formattedDurationSplit = durationInputSplit.map((value) => {
             return value.padStart(2, '0');
         });
 
-        return durationInputSplit.join(':');
+        return formattedDurationSplit.join(':');
     }
 
     private validateDurationFormat(formattedDurationString: string): boolean {
@@ -171,8 +173,7 @@ class SeekCommand extends BaseSlashCommandInteraction {
             return false;
         }
 
-        const regex: RegExp = new RegExp('([0-1][0-9]|2[0-3]):?[0-5][0-9]:?[0-5][0-9]');
-        const isValidDuration: boolean = regex.test(formattedDurationString);
+        const isValidDuration: boolean = checkValidDurationRegex.test(formattedDurationString);
         return isValidDuration;
     }
 
