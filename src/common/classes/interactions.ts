@@ -26,6 +26,7 @@ import {
 } from '../../types/interactionTypes';
 import { Validator, ValidatorParams } from '../../types/utilTypes';
 import { Translator } from '../utils/localeUtil';
+import { captureRejectionSymbol } from 'node:events';
 
 abstract class BaseInteraction {
     embedOptions: EmbedOptions;
@@ -125,25 +126,33 @@ abstract class BaseInteraction {
     };
 
     protected getDisplayQueueProgressBar(queue: GuildQueue, translator: Translator): string {
-        const timestamp: PlayerTimestamp = queue.node.getTimestamp()!;
+        let progressBar = '';
+        try {
+            const timestamp: PlayerTimestamp | null = queue.node.getTimestamp();
 
-        let progressBar: string = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
-            queue: false,
-            length: this.playerOptions.progressBar.length ?? 12,
-            timecodes: this.playerOptions.progressBar.timecodes ?? false,
-            indicator: this.playerOptions.progressBar.indicator ?? '🔘',
-            leftChar: this.playerOptions.progressBar.leftChar ?? '▬',
-            rightChar: this.playerOptions.progressBar.rightChar ?? '▬'
-        })} **\`${timestamp.total.label}\`**`;
+            if (timestamp) {
+                progressBar = `**\`${timestamp.current.label}\`** ${queue.node.createProgressBar({
+                    queue: false,
+                    length: this.playerOptions.progressBar.length ?? 12,
+                    timecodes: this.playerOptions.progressBar.timecodes ?? false,
+                    indicator: this.playerOptions.progressBar.indicator ?? '🔘',
+                    leftChar: this.playerOptions.progressBar.leftChar ?? '▬',
+                    rightChar: this.playerOptions.progressBar.rightChar ?? '▬'
+                })} **\`${timestamp.total.label}\`**`;
 
-        if (Number(queue.currentTrack?.duration) === 0 || queue.currentTrack?.duration === '0:00') {
-            progressBar = translator('musicPlayerCommon.unavailableDuration');
-        }
+                if (Number(queue.currentTrack?.duration) === 0 || queue.currentTrack?.duration === '0:00') {
+                    progressBar = translator('musicPlayerCommon.unavailableDuration');
+                }
 
-        if (queue.currentTrack?.raw.live) {
-            progressBar = translator('musicPlayerCommon.playingLive', {
-                icon: this.embedOptions.icons.liveTrack
-            });
+                if (queue.currentTrack?.raw.live) {
+                    progressBar = translator('musicPlayerCommon.playingLive', {
+                        icon: this.embedOptions.icons.liveTrack
+                    });
+                }
+            }
+
+        } catch {
+            return progressBar;
         }
 
         return progressBar;

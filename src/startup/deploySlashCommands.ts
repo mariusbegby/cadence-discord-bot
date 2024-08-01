@@ -1,10 +1,10 @@
-import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, RouteLike, Routes } from 'discord.js';
+import { REST, type RESTPostAPIChatInputApplicationCommandsJSONBody, type RouteLike, Routes } from 'discord.js';
 import 'dotenv/config';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Logger } from '../common/services/logger';
-import { BaseSlashCommandInteraction } from '../common/classes/interactions';
+import type { Logger } from '../common/services/logger';
+import type { BaseSlashCommandInteraction } from '../common/classes/interactions';
 import { loggerService } from '../common/services/logger';
 
 const executionId: string = uuidv4();
@@ -55,7 +55,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
         );
 
         logger.info('Started refreshing user slash commands.');
-        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID!), userSlashCommands);
+        await refreshCommands(Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), userSlashCommands);
         logger.info('Successfully refreshed user slash commands.');
     } catch (error) {
         logger.error(error, 'Failed to refresh user slash commands.');
@@ -63,12 +63,7 @@ const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_
 })();
 
 async function refreshCommands(route: RouteLike, commands: RESTPostAPIChatInputApplicationCommandsJSONBody[]) {
-    // Deploying Discord Commands, Runs POST call for each command Asynchronously
-    logger.info('Deploying commands... This could take some time, please allow a few minutes.');
-    await Promise.all(
-        commands.map(async (command) => {
-            logger.info(`Deploying command: ${command.name}`);
-            await rest.post(route, { body: command });
-        })
-    );
+    // Deploying Discord Commands, Runs POST call for each command Synchronously
+    logger.info('Deploying commands...');
+    await rest.put(route, { body: commands });
 }

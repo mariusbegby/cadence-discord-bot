@@ -20,13 +20,12 @@ COPY tsconfig.json ./
 COPY src/ ./src/
 COPY config/ ./config/
 COPY locales/ ./locales/
-COPY prisma/ ./prisma/
 
 # Install node dependencies
 RUN npm ci
 
 # Build the application
-RUN npm run build && npx prisma generate
+RUN npm run build
 
 # Remove development dependencies
 RUN npm prune --omit=dev
@@ -47,7 +46,6 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/config ./config
 COPY --from=builder /app/locales ./locales
-COPY --from=builder /app/prisma ./prisma
 
 # Rebuild native dependencies
 RUN npm rebuild && npm cache clean --force
