@@ -1,8 +1,7 @@
 /node_modules
 /.env
-/config/*.js
-!/config/default.js
-!/config/test.js
+/config/*.ts
+!/config/default.ts
 /logs
 /logs/app-*.log
 /cookies.json
