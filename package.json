@@ -31,7 +31,7 @@
         "@discord-player/extractor": "^4.5.0",
         "config": "^3.3.12",
         "discord-player": "^6.7.1",
-        "discord-player-youtubei": "1.2.5-beta.6",
+        "discord-player-youtubei": "1.2.6-alpha.4",
         "discord.js": "^14.15.3",
         "dotenv": "^16.4.5",
         "i18next": "^23.12.2",

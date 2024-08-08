@@ -11,7 +11,7 @@ export const botOptions = {
 export const shardingOptions = {
     totalShards: 'auto',
     shardList: 'auto',
-    mode: 'process',
+    mode: 'worker',
     respawn: true
 };
 
