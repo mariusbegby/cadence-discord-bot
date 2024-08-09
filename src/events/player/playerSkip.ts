@@ -41,34 +41,44 @@ module.exports = {
             logger.warn(`player.events.on('playerSkip'): Failed to play '${track.url}'.\n${description}`);
 
             if (description.includes('Could not extract stream for this track')) {
-                return await queue.metadata?.channel.send({
+                try {
+                    return await queue.metadata?.channel.send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setDescription(
+                                    translator('errors.cannotExtractAudioStream', {
+                                        icon: embedOptions.icons.warning,
+                                        trackTitle: track.title,
+                                        trackUrl: track.url
+                                    })
+                                )
+                                .setColor(embedOptions.colors.warning)
+                        ]
+                    });
+                }
+                catch (error) {
+                    logger.error('Failed to send \'errors.cannotExtractAudioStream\' ,error message to channel.');
+                }
+            }
+
+            try {
+                await queue.metadata?.channel.send({
                     embeds: [
                         new EmbedBuilder()
                             .setDescription(
-                                translator('errors.cannotExtractAudioStream', {
-                                    icon: embedOptions.icons.warning,
-                                    trackTitle: track.title,
-                                    trackUrl: track.url
+                                translator('errors.cannotLoadAudioStream', {
+                                    icon: embedOptions.icons.error,
+                                    serverInviteUrl: botOptions.serverInviteUrl
                                 })
                             )
-                            .setColor(embedOptions.colors.warning)
+                            .setColor(embedOptions.colors.error)
+                            .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
                     ]
                 });
+            } catch (error) {
+                logger.error('Failed to send \'errors.cannotLoadAudioStream\' error message to channel.');
             }
 
-            await queue.metadata?.channel.send({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            translator('errors.cannotLoadAudioStream', {
-                                icon: embedOptions.icons.error,
-                                serverInviteUrl: botOptions.serverInviteUrl
-                            })
-                        )
-                        .setColor(embedOptions.colors.error)
-                        .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
-                ]
-            });
             if (systemOptions.systemMessageChannelId && systemOptions.systemUserId) {
                 const channel: BaseGuildTextChannel = queue.metadata?.client.channels.cache.get(
                     systemOptions.systemMessageChannelId
