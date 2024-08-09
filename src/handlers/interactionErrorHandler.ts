@@ -35,6 +35,11 @@ export const handleError = async (
         return;
     }
 
+    if (error instanceof Error && error.message.includes('Unknown interaction')) {
+        logger.debug('Interaction no longer exists, timed out or has already been responded to.');
+        return;
+    }
+
     const errorReply: InteractionReplyOptions = {
         embeds: [
             new EmbedBuilder()
@@ -90,8 +95,7 @@ export const handleError = async (
         }
     }
     logger.debug(
-        `${
-            InteractionType[interaction.type]
+        `${InteractionType[interaction.type]
         } interaction '${interactionIdentifier}' threw an error. Cannot send error reply.`
     );
 

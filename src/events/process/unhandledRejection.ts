@@ -12,6 +12,11 @@ module.exports = {
             executionId: executionId
         });
 
+        if (error instanceof Error && error.message.includes('The server responded with a non 2xx status code')) {
+            logger.debug('InnertubeError: The server responded with a non 2xx status code');
+            return;
+        }
+
         logger.fatal(error, 'UNHANDLED REJECTION ERROR:');
         return;
     }
