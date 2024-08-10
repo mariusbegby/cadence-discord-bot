@@ -30,7 +30,7 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
         }
 
         if (isQueryTooShort(transformedQuery)) {
-            logger.debug(`Responding with empty results due to < 3 length for query '${transformedQuery}'`);
+            logger.debug(`Responding with empty results due to < 4 length for query '${transformedQuery}'`);
             return interaction.respond([]);
         }
         const autocompleteChoices: ApplicationCommandOptionChoiceData<string>[] = await this.getAutocompleteChoices(
@@ -57,7 +57,7 @@ class PlayAutocomplete extends BaseAutocompleteInteraction {
         const searchResults: SearchResult = await player.search(query);
         return searchResults.tracks.slice(0, 5).map((track) => ({
             name: getTrackName(track, translator),
-            value: track.url
+            value: track.url.length > 100 ? `${track.author} - ${track.title}`.slice(0, 100) : track.url
         }));
     }
 

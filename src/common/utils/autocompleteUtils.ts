@@ -8,7 +8,7 @@ export function shouldUseLastQuery(query: string, lastQuery?: string, timestamp?
 }
 
 export function isQueryTooShort(query: string): boolean {
-    return query.length < 3;
+    return query.length < 4;
 }
 
 export function getTrackName(track: Track, translator: Translator): string {
