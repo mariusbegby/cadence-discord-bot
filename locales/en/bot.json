@@ -522,7 +522,7 @@
     "errors": {
         "unexpectedError": "**{{icon}} Uh-oh... _Something_ went wrong!**\nThere was an unexpected error while trying to perform this action. You can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
         "footerExecutionId": "Execution ID: {{executionId}}",
-        "cannotExtractAudioStream": "**{{icon}} Oops!**\nUnable to retrieve audio for the track **[{{trackTitle}}]({{trackUrl}})**.\n\nIt seems that the source is not available publicly, or the source is not supported.",
+        "cannotExtractAudioStream": "**{{icon}} Oops!**\nUnable to retrieve audio for the track **[{{trackTitle}}]({{trackUrl}})**.\nThis could happen with tracks added from YouTube (and Spotify).\n-# If you encounter a lot of issues, playing audio from Soundcloud should still work fine.",
         "cannotLoadAudioStream": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while loading stream for the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
         "cannotPlayAudioStream": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue while streaming the track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._",
         "generalPlayerError": "**{{icon}} Uh-oh... _Something_ went wrong!**\nIt seems there was an issue related to the queue or current track.\n\nIf you performed a command, you can try again.\n\n_If this problem persists, please submit a bug report in the **[support server]({{serverInviteUrl}})**._"
