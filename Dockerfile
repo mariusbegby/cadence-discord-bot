@@ -11,7 +11,7 @@ FROM node:${NODE_VERSION}-bookworm-slim
 WORKDIR /app
 
 # Install build dependencies necessary for native modules and clean up in one layer
-RUN apt-get update && apt-get install -y python3 make build-essential ffmpeg ca-certificates chromium-browser \
+RUN apt-get update && apt-get install -y python3 make build-essential ffmpeg ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm globally
