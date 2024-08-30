@@ -2,7 +2,7 @@ import config from 'config';
 import { type IPRotationConfig, Player } from 'discord-player';
 import { loggerService, type Logger } from '../services/logger';
 import type { CreatePlayerParams } from '../../types/playerTypes';
-import { YoutubeiExtractor } from 'discord-player-youtubei';
+import { YoutubeiExtractor, generateTrustedToken, generateTrustedTokenInterval } from 'discord-player-youtubei';
 
 export const createPlayer = async ({ client, executionId }: CreatePlayerParams): Promise<Player> => {
     const logger: Logger = loggerService.child({
@@ -23,21 +23,28 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
             ipconfig: ipRotationConfig
         });
 
-        function getAuthArrayFromEnv(): string[] {
-            return Object.keys(process.env)
-                .filter((v) => v.startsWith('YT_EXTRACTOR_AUTH'))
-                .map((k) => process.env[k])
-                .filter((v) => v !== undefined);
-        }
-
-        // Testing out new youtube extractor
+        const tokens = await generateTrustedToken();
         await player.extractors.register(YoutubeiExtractor, {
             authentication: process.env.YT_EXTRACTOR_AUTH || '',
             streamOptions: {
-                useClient: 'iOS',
+                useClient: 'IOS',
                 highWaterMark: 2 * 1_024 * 1_024 // 2MB, default is 512 KB (512 * 1_024)
+            },
+            disablePlayer: true,
+            trustedTokens: tokens
+        });
+
+        const cronJob = generateTrustedTokenInterval({
+            onGenerate: (tokens) => {
+                const instance = YoutubeiExtractor.getInstance();
+                instance?.setTrustedTokens(tokens);
+            },
+            onError: (err) => {
+                logger.error(err, 'Failed to generate trusted tokens');
             }
         });
+
+        (await cronJob).background();
 
         // make player accessible from anywhere in the application
         // primarily to be able to use it in broadcastEval and other sharding methods

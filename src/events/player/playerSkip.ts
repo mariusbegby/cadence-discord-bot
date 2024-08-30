@@ -1,6 +1,6 @@
 import config from 'config';
 import { type Track, TrackSkipReason } from 'discord-player';
-import { type BaseGuildTextChannel, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { randomUUID as uuidv4 } from 'node:crypto';
 import { loggerService, type Logger } from '../../common/services/logger';
 import type { BotOptions, EmbedOptions, SystemOptions } from '../../types/configTypes';
@@ -55,9 +55,8 @@ module.exports = {
                                 .setColor(embedOptions.colors.warning)
                         ]
                     });
-                }
-                catch (error) {
-                    logger.warn('Failed to send \'errors.cannotExtractAudioStream\' ,error message to channel.');
+                } catch (error) {
+                    logger.warn("Failed to send 'errors.cannotExtractAudioStream' ,error message to channel.");
                 }
             } else {
                 try {
@@ -71,11 +70,13 @@ module.exports = {
                                     })
                                 )
                                 .setColor(embedOptions.colors.error)
-                                .setFooter({ text: translator('errors.footerExecutionId', { executionId: executionId }) })
+                                .setFooter({
+                                    text: translator('errors.footerExecutionId', { executionId: executionId })
+                                })
                         ]
                     });
                 } catch (error) {
-                    logger.warn('Failed to send \'errors.cannotLoadAudioStream\' error message to channel.');
+                    logger.warn("Failed to send 'errors.cannotLoadAudioStream' error message to channel.");
                 }
             }
         }
