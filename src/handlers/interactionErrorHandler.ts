@@ -95,8 +95,7 @@ export const handleError = async (
         }
     }
     logger.debug(
-        `${
-            InteractionType[interaction.type]
+        `${InteractionType[interaction.type]
         } interaction '${interactionIdentifier}' threw an error. Cannot send error reply.`
     );
 
