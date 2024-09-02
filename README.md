@@ -22,7 +22,7 @@
 
 ## 🚨 Deprecation notice 🚨
 
-This project will soon be deprecated, meaning it will not receive any new updates. The codebase is being completely rewritten from scratch to optimize for performance and maintainability. The new repository can be found at: [mariusbegby/cadence](https://github.com/mariusbegby/cadence). Stay tuned for updates about this in our [Discord server](https://discord.gg/t6Bm8wPpXB)!
+This project will soon be deprecated, meaning it will not receive any new updates.
 
 <br>
 
