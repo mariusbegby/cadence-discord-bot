@@ -34,7 +34,7 @@ export const createPlayer = async ({ client, executionId }: CreatePlayerParams):
         await player.extractors.register(YoutubeiExtractor, {
             authentication: process.env.YT_EXTRACTOR_AUTH || '',
             streamOptions: {
-                useClient: 'iOS',
+                useClient: 'IOS',
                 highWaterMark: 2 * 1_024 * 1_024 // 2MB, default is 512 KB (512 * 1_024)
             }
         });

@@ -48,7 +48,7 @@ class StatusCommand extends BaseSlashCommandInteraction {
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.openSource)
                 .setLabel(translator('commands.status.openSourceButtonLabel'))
-                .toJSON();
+                .toJSON() as APIButtonComponent;
             components.push(openSourceButton);
         }
 

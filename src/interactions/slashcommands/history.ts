@@ -93,21 +93,21 @@ class HistoryCommand extends BaseSlashCommandInteraction {
             .setCustomId(`action-previous-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)
-            .toJSON();
+            .toJSON() as APIButtonComponent;
         components.push(previousButton);
 
         const playPauseButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.pauseResumeTrack)
-            .toJSON();
+            .toJSON() as APIButtonComponent;
         components.push(playPauseButton);
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-skip-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.nextTrack)
-            .toJSON();
+            .toJSON() as APIButtonComponent;
         components.push(skipButton);
 
         if (this.embedOptions.components.showButtonLabels) {

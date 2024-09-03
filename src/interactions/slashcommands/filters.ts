@@ -209,7 +209,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             .setCustomId('filters-disable-button')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.disable)
-            .toJSON();
+            .toJSON() as APIButtonComponent;
 
         if (this.embedOptions.components.showButtonLabels) {
             disableButton.label = translator('commands.filters.disableAllFiltersButton');

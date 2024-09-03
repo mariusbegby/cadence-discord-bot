@@ -44,7 +44,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.bot)
                 .setLabel(translator('commands.help.addBotButton'))
-                .toJSON();
+                .toJSON() as APIButtonComponent;
             components.push(addBotButton);
         }
 

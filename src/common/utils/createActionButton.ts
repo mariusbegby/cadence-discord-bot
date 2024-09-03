@@ -15,7 +15,7 @@ export function createNewActionButton(
         .setCustomId(customId)
         .setStyle(ButtonStyle.Secondary)
         .setEmoji(emoji)
-        .toJSON();
+        .toJSON() as APIButtonComponent;
 
     if (embedActionRow) {
         embedActionRow.components.push(actionButton);
