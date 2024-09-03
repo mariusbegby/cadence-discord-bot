@@ -3,6 +3,7 @@ import { version } from '../../../package.json';
 import {
     type APIActionRowComponent,
     type APIButtonComponent,
+    type APIButtonComponentWithCustomId,
     type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
@@ -48,7 +49,7 @@ class StatusCommand extends BaseSlashCommandInteraction {
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.openSource)
                 .setLabel(translator('commands.status.openSourceButtonLabel'))
-                .toJSON() as APIButtonComponent;
+                .toJSON() as APIButtonComponentWithCustomId;
             components.push(openSourceButton);
         }
 

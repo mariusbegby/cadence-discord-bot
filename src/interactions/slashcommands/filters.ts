@@ -3,6 +3,7 @@ import { type GuildQueue, type QueueFilters, useQueue } from 'discord-player';
 import {
     type APIActionRowComponent,
     type APIButtonComponent,
+    type APIButtonComponentWithCustomId,
     type APIMessageActionRowComponent,
     type APIStringSelectComponent,
     ButtonBuilder,
@@ -209,7 +210,7 @@ class FiltersCommand extends BaseSlashCommandInteraction {
             .setCustomId('filters-disable-button')
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.disable)
-            .toJSON() as APIButtonComponent;
+            .toJSON() as APIButtonComponentWithCustomId;
 
         if (this.embedOptions.components.showButtonLabels) {
             disableButton.label = translator('commands.filters.disableAllFiltersButton');

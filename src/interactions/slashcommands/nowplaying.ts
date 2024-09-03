@@ -2,6 +2,7 @@ import { type GuildQueue, type Track, useQueue } from 'discord-player';
 import {
     type APIActionRowComponent,
     type APIButtonComponent,
+    type APIButtonComponentWithCustomId,
     type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle,
@@ -56,21 +57,21 @@ class NowPlayingCommand extends BaseSlashCommandInteraction {
             .setCustomId(`action-previous-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.previousTrack)
-            .toJSON() as APIButtonComponent;
+            .toJSON() as APIButtonComponentWithCustomId;
         components.push(previousButton);
 
         const playPauseButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-pauseresume-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.pauseResumeTrack)
-            .toJSON() as APIButtonComponent;
+            .toJSON() as APIButtonComponentWithCustomId;
         components.push(playPauseButton);
 
         const skipButton: APIButtonComponent = new ButtonBuilder()
             .setCustomId(`action-skip-button_${currentTrack.id}`)
             .setStyle(ButtonStyle.Secondary)
             .setEmoji(this.embedOptions.icons.nextTrack)
-            .toJSON() as APIButtonComponent;
+            .toJSON() as APIButtonComponentWithCustomId;
         components.push(skipButton);
 
         if (this.embedOptions.components.showButtonLabels) {

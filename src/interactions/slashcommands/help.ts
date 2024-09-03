@@ -11,7 +11,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
     SlashCommandNumberOption,
-    SlashCommandStringOption
+    SlashCommandStringOption,
+    type APIButtonComponentWithCustomId
 } from 'discord.js';
 import { BaseSlashCommandInteraction } from '../../common/classes/interactions';
 import type { BaseSlashCommandParams, BaseSlashCommandReturnType } from '../../types/interactionTypes';
@@ -44,7 +45,7 @@ class HelpCommand extends BaseSlashCommandInteraction {
                 .setStyle(ButtonStyle.Link)
                 .setEmoji(this.embedOptions.icons.bot)
                 .setLabel(translator('commands.help.addBotButton'))
-                .toJSON() as APIButtonComponent;
+                .toJSON() as APIButtonComponentWithCustomId;
             components.push(addBotButton);
         }
 
@@ -103,8 +104,9 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
         const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
 
-        return `- **\`/${translatedData?.name ?? command.data.name}\`** ${commandParams}- ${beta}${newCommand}${translatedData?.description ?? command.data.description
-            }`;
+        return `- **\`/${translatedData?.name ?? command.data.name}\`** ${commandParams}- ${beta}${newCommand}${
+            translatedData?.description ?? command.data.description
+        }`;
     }
 
     public getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {

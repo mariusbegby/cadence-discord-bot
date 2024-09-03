@@ -1,6 +1,7 @@
 import { type GuildQueue, type Track, useQueue } from 'discord-player';
 import {
     type APIActionRowComponent,
+    type APIButtonComponentWithCustomId,
     type APIMessageActionRowComponent,
     type ChatInputCommandInteraction,
     ComponentType,
@@ -238,19 +239,19 @@ class QueueCommand extends BaseSlashCommandInteraction {
             `action-previous-button_${currentTrack.id}`,
             this.embedOptions.icons.previousTrack,
             embedActionRow
-        );
+        ) as APIButtonComponentWithCustomId;
 
         const playPauseButton = createNewActionButton(
             `action-pauseresume-button_${currentTrack.id}`,
             this.embedOptions.icons.pauseResumeTrack,
             embedActionRow
-        );
+        ) as APIButtonComponentWithCustomId;
 
         const skipButton = createNewActionButton(
             `action-skip-button_${currentTrack.id}`,
             this.embedOptions.icons.nextTrack,
             embedActionRow
-        );
+        ) as APIButtonComponentWithCustomId;
 
         if (this.embedOptions.components.showButtonLabels) {
             previousButton.label = translator('musicPlayerCommon.controls.previous');

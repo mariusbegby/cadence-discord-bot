@@ -1,6 +1,7 @@
 import {
     type APIActionRowComponent,
     type APIButtonComponent,
+    type APIButtonComponentWithCustomId,
     type APIMessageActionRowComponent,
     ButtonBuilder,
     ButtonStyle
@@ -15,7 +16,7 @@ export function createNewActionButton(
         .setCustomId(customId)
         .setStyle(ButtonStyle.Secondary)
         .setEmoji(emoji)
-        .toJSON() as APIButtonComponent;
+        .toJSON() as APIButtonComponentWithCustomId;
 
     if (embedActionRow) {
         embedActionRow.components.push(actionButton);
