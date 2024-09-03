@@ -14,7 +14,6 @@
 <p align="center">
     <a href="https://github.com/mariusbegby/cadence-discord-bot/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/mariusbegby/cadence-discord-bot?style=for-the-badge&label=License&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot license"></a>
     <a href="https://github.com/mariusbegby/cadence-discord-bot/releases"><img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=Version&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release"></a>&nbsp;
-    <a href="https://hub.docker.com/r/mariusbegby/cadence"><img src="https://img.shields.io/docker/pulls/mariusbegby/cadence.svg?style=for-the-badge&label=Pulls&labelColor=1b1c1d&logo=docker&logoColor=white&color=4c73df" alt="Docker pulls for Cadence"></a>
 </p>
 
 ## 🚨 Deprecation notice 🚨
