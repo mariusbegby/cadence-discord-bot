@@ -1,6 +1,6 @@
 <h1 align="center">
     <br>
-    Cadence - A Free Discord Music Bot
+    Cadence - The free Discord music bot.
     <br><br>
     <img src="./assets/logo-rounded-128px.png" alt="Cadence icon">
     <br><br>
@@ -8,21 +8,18 @@
 
 <h3 align="center">
     Enhance your Discord experience with high-quality music.<br>
-    Completely free and open source!
+    Free, open source, community-driven!
 </h3>
 
 <p align="center">
-    <a href="https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands"><img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Add%20bot&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Add Cadence Discord bot"></a>&nbsp;
-    <a href="https://discord.gg/t6Bm8wPpXB"><img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&label=Support%20Server&labelColor=1b1c1d&logo=discord&logoColor=white&color=4c73df" alt="Cadence Discord support server"></a>&nbsp;
     <a href="https://github.com/mariusbegby/cadence-discord-bot/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/mariusbegby/cadence-discord-bot?style=for-the-badge&label=License&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot license"></a>
-    <br>
     <a href="https://github.com/mariusbegby/cadence-discord-bot/releases"><img src="https://img.shields.io/github/package-json/v/mariusbegby/cadence-discord-bot/main?style=for-the-badge&label=Version&labelColor=1b1c1d&logo=github&logoColor=white&color=4c73df" alt="Cadence bot release"></a>&nbsp;
     <a href="https://hub.docker.com/r/mariusbegby/cadence"><img src="https://img.shields.io/docker/pulls/mariusbegby/cadence.svg?style=for-the-badge&label=Pulls&labelColor=1b1c1d&logo=docker&logoColor=white&color=4c73df" alt="Docker pulls for Cadence"></a>
 </p>
 
 ## 🚨 Deprecation notice 🚨
 
-This project will soon be deprecated, meaning it will not receive any new updates.
+This project is deprecated, meaning it will not receive any new updates. You can still download the code and setup hosting yourself if desired, but no support will be provided.
 
 <br>
 
@@ -34,17 +31,8 @@ Cadence offers an enriching audio experience on Discord with features such as:
 -   Slash commands, autocompleting search queries, select menus, buttons and more interactive features!
 -   Full queue management system to add, remove, skip or move tracks, view queue and history.
 -   Audio filters, shuffle mode, repeat track, queue or autoplay similar tracks!
--   Localization with support for multiple languages both for Slash Commands and embed replies.
--   Open-source codebase and community based development, open to feedback and improvements.
--   No locked functionality, no premium tier, no ads; everything's free, always.
-
-<br>
-
-## Adding Cadence to Your Discord Server 🤖
-
-1. **Invite Cadence**: Click [here](https://discord.com/oauth2/authorize?client_id=1125742835946237992&permissions=0&scope=bot%20applications.commands) to invite Cadence to your Discord server.
-2. **Start Using**: After Cadence has joined your server, use the **`/help`** command for a list of available commands.
-3. **Enjoy**: That's it! There is no additional setup, but you might want to join our [support server](https://discord.gg/t6Bm8wPpXB) to stay updated.
+-   Open-source codebase and and fully configurable. Download, setup and host yourself.
+-   No locked functionality, no premium tier, no ads; everything is free, always.
 
 <br>
 
@@ -57,8 +45,9 @@ Cadence offers an enriching audio experience on Discord with features such as:
 3. Clone this repository and run `pnpm install`.
 4. Build the project with `pnpm build`.
 5. Create a `.env` file in with your bot token and client id (see details in `.env.example`).
-6. Deploy slash commands using `pnpm run deploy`.
-7. Start the bot with `pnpm start`, the bot should now appear online and be operational.
+6. For use with YouTube, it is highly recommended to set YT_EXTRACTOR_AUTH in `.env` file.
+7. Deploy slash commands using `pnpm run deploy`.
+8. Start the bot with `pnpm start`, the bot should now appear online and be operational.
 
 **Note:** Refer to [Adding your bot to servers](https://discordjs.guide/preparations/adding-your-bot-to-servers.html#bot-invite-links) for help on inviting the bot to your server.
 
@@ -67,12 +56,6 @@ Cadence offers an enriching audio experience on Discord with features such as:
 -   Override default configuration by creating `/config/local.ts`, copy over settings from `/config/default.ts`.
 -   Have [pino-pretty](https://www.npmjs.com/package/pino-pretty) installed for formatted, colorized console output.
 -   Logs are stored in `/logs` folder. Configure the logging level in the config file.
-
-<br>
-
-## Get help and support 🛟
-
-Encounter an issue? Open an issue in this repository or join our [Discord support server](https://discord.gg/t6Bm8wPpXB) for assistance.
 
 <br>
 
