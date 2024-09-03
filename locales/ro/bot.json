@@ -57,8 +57,7 @@
                 "description": "Afișează lista de comenzi a botului."
             },
             "addBotButton": "Adaugă botul",
-            "listTitle": "{{icon}} **Lista de comenzi**",
-            "supportServerButton": "Server de asistență"
+            "listTitle": "{{icon}} **Lista de comenzi**"
         },
         "history": {
             "metadata": {

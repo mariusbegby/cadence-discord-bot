@@ -4,7 +4,6 @@ import { ActivityType, PresenceUpdateStatus } from 'discord.js';
 export const botOptions = {
     name: 'Cadence',
     botInviteUrl: '',
-    serverInviteUrl: '',
     openSourceUrl: ''
 };
 

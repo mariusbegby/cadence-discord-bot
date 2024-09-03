@@ -38,16 +38,6 @@ class HelpCommand extends BaseSlashCommandInteraction {
 
         const components: APIMessageActionRowComponent[] = [];
 
-        if (this.botOptions.serverInviteUrl && this.botOptions.serverInviteUrl !== '') {
-            const supportServerButton: APIButtonComponent = new ButtonBuilder()
-                .setURL(this.botOptions.serverInviteUrl)
-                .setStyle(ButtonStyle.Link)
-                .setEmoji(this.embedOptions.icons.support)
-                .setLabel(translator('commands.help.supportServerButton'))
-                .toJSON();
-            components.push(supportServerButton);
-        }
-
         if (this.botOptions.botInviteUrl && this.botOptions.botInviteUrl !== '') {
             const addBotButton: APIButtonComponent = new ButtonBuilder()
                 .setURL(this.botOptions.botInviteUrl)
@@ -113,9 +103,8 @@ class HelpCommand extends BaseSlashCommandInteraction {
         const beta: string = command.isBeta ? `${this.embedOptions.icons.beta} ` : '';
         const newCommand: string = command.isNew ? `${this.embedOptions.icons.new} ` : '';
 
-        return `- **\`/${translatedData?.name ?? command.data.name}\`** ${commandParams}- ${beta}${newCommand}${
-            translatedData?.description ?? command.data.description
-        }`;
+        return `- **\`/${translatedData?.name ?? command.data.name}\`** ${commandParams}- ${beta}${newCommand}${translatedData?.description ?? command.data.description
+            }`;
     }
 
     public getCommandParams(command: BaseSlashCommandInteraction, locale: LocaleString): string {

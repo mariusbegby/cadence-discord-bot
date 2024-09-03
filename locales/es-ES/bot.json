@@ -57,8 +57,7 @@
                 "description": "Mostrar la lista de comandos del bot."
             },
             "addBotButton": "Añadir bot",
-            "listTitle": "{{icon}} **Lista de comandos**",
-            "supportServerButton": "Servidor de soporte"
+            "listTitle": "{{icon}} **Lista de comandos**"
         },
         "history": {
             "metadata": {

@@ -274,7 +274,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source is age restricted and requires login to access. Because of this I cannot retrieve the audio for the track.`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -294,7 +294,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.warning} Cannot retrieve audio for track**\nThis audio source cannot be played as the video source has a warning for graphic or sensistive topics. It requires a manual confirmation to to play the video, and because of this I am unable to extract the audio for this source.`
                     )
                     .setColor(this.embedOptions.colors.warning)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -316,7 +316,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nAfter finding a result, I was unable to retrieve audio for the track.\n\nYou can try to perform the command again.`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })
@@ -337,7 +337,7 @@ class PlayCommand extends BaseSlashCommandInteraction {
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
-                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.\n\n_If you think this message is incorrect, please submit a bug report in the **[support server](${this.botOptions.serverInviteUrl})**._`
+                        `**${this.embedOptions.icons.error} Uh-oh... Failed to add track!**\nSomething unexpected happened and the operation was cancelled.\n\nYou can try to perform the command again.`
                     )
                     .setColor(this.embedOptions.colors.error)
                     .setFooter({ text: `Execution ID: ${executionId}` })

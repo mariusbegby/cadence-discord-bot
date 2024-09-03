@@ -57,8 +57,7 @@
                 "description": "Vis listen over bot-kommandoer."
             },
             "addBotButton": "Legg til bot",
-            "listTitle": "{{icon}} **Liste over kommandoer**",
-            "supportServerButton": "Støtteserver"
+            "listTitle": "{{icon}} **Liste over kommandoer**"
         },
         "history": {
             "metadata": {
